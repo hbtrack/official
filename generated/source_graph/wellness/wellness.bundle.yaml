@@ -5,7 +5,7 @@ module: wellness
 graph_root: docs/hbtrack/modulos/wellness/graph
 inputs:
 - relpath: contracts/openapi/components/schemas/wellness/wellness_entry.yaml
-  sha256: 644f1449ac84b1066f8b29471eee306ce582709fb5dc6c7fbb6f00a7f7d6683f
+  sha256: 0b699e5fef75703962d564be3006303ca18b90e36d67c1cec029b53b0d9b117d
 - relpath: contracts/openapi/paths/wellness.yaml
   sha256: d2bf5badc1c8f144c17d39dfdfcd80046630f2e3ece63ac9049e44b4de2ebaca
 - relpath: contracts/schemas/wellness/.gitkeep

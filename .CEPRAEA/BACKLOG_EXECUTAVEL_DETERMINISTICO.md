@@ -2331,23 +2331,27 @@ python3 scripts/validate_contracts.py --profile ci
 
 Evidencia implementada e validada no sistema atual:
 
-- `reports`, `analytics`, `exercises`, `notifications` e `wellness` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
-- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py` e `test_wellness_source_graph_integrity.py` em `PASS`
-- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py` e `test_source_graph_compiler_wellness.py` em `PASS`
-- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py` e `test_context_bundle_wellness.py` em `PASS`
+- `reports`, `analytics`, `exercises`, `notifications`, `wellness` e `medical` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
+- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py`, `test_wellness_source_graph_integrity.py` e `test_medical_source_graph_integrity.py` em `PASS`
+- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py`, `test_source_graph_compiler_wellness.py` e `test_source_graph_compiler_medical.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py`, `test_context_bundle_wellness.py` e `test_context_bundle_medical.py` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module wellness` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module wellness` em `PASS`
-- `python3 scripts/compile/compile_context_bundle.py --all` em `PASS` apos a entrada de `wellness`
-- `python3 scripts/contracts/validate/api/compile_api_policy.py --all` em `PASS` apos as entradas de `notifications` e `wellness`
+- `python3 scripts/compile/compile_source_graph.py --module medical` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module medical` em `PASS`
+- `python3 scripts/compile/compile_source_graph.py --all --check --format json` em `PASS` apos a entrada de `medical`
+- `python3 scripts/compile/compile_context_bundle.py --all --check --format json` em `PASS` apos a entrada de `medical`
+- `python3 scripts/contracts/validate/api/compile_api_policy.py --all` em `PASS` apos a entrada de `medical`
 - `python3 scripts/repair_manifests.py` executado para recompor `generated/manifests/*.sync.traceability.yaml`
 - `python3 scripts/generate/docs/gen_runtime_current_state.py --write` executado para recompor `docs/_canon/RUNTIME_CURRENT_STATE.md`
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_notifications_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_notifications.py tests/pipeline_gates/test_context_bundle_notifications.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_wellness_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_wellness.py tests/pipeline_gates/test_context_bundle_wellness.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
-- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` em `PASS` (`15 passed`)
-- `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` em `PASS` apos a entrada de `wellness`
-- proximo modulo obrigatorio da fila: `medical`
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_medical_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_medical.py tests/pipeline_gates/test_context_bundle_medical.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py tests/pipeline_gates/test_runtime_current_state_generator.py` em `PASS` (`20 passed`)
+- `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` em `PASS` apos a entrada de `medical`
+- proximo modulo obrigatorio da fila: `ai_ingestion`
 
 Criterio de saida:
 
@@ -2702,7 +2706,7 @@ Ordem remanescente obrigatoria a partir do estado atual:
 33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
 35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
-36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications` e `wellness` concluidos; proximo `medical`)
+36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness` e `medical` concluidos; proximo `ai_ingestion`)
 37. B10-002
 38. B10-003
 39. B11-001

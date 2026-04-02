@@ -7,6 +7,8 @@ from ninja import Schema
 
 from medical.domain.entities import MedicalRecord
 
+# Source graph authority: docs/hbtrack/modulos/medical/graph/entities.yaml
+
 
 class MedicalRecordOut(Schema):
     id: uuid.UUID

@@ -421,10 +421,70 @@
       "sha256": "0f5fcdbcf49b58f9cb7b2a67b662e383826b408b5da1934a37a79a91a5b4d4f4",
       "created_at": "2026-04-02T08:05:51.601632+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/medical/medical_record.yaml",
+      "sha256": "3ab8ecdb1dc5700f01bfd840be1b1a98589fe8076e3b6ddf979843fcbb377d6b",
+      "created_at": "2026-04-02T08:25:31.906804+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/medical.yaml",
+      "sha256": "f20cdefa471f07c3de326daf109d71c4091b0627f92bd2650df04f5a40b2f158",
+      "created_at": "2026-04-02T08:25:35.384387+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
+      "sha256": "fe6049c325c809bf2e54491b02a72e8b6e27409a2fdb5e19cc10238cbe6a3746",
+      "created_at": "2026-04-02T08:25:38.437642+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/README.md",
+      "sha256": "0749f3b9e731151a83dc25987dfb5ec368a75b7a10e4c6269ff8d722345f38b0",
+      "created_at": "2026-04-02T08:25:41.481957+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md",
+      "sha256": "4c01b4a031f349078ec5b4731ca02c3dabd6263157d99e0b6dc768163ff82f04",
+      "created_at": "2026-04-02T08:25:44.477454+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/graph/endpoints.yaml",
+      "sha256": "47a9b2dc228f871c2e1e97cebf55feee8b6d078b60103294d9ad0edc77216e63",
+      "created_at": "2026-04-02T08:25:47.469279+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/graph/entities.yaml",
+      "sha256": "14c0d087dd5d15883baa9cac7c848d7f6d19d1acc98b64327873892c985f7f9b",
+      "created_at": "2026-04-02T08:25:50.441931+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/graph/errors.yaml",
+      "sha256": "c919df24c7c43f869226e4e905785e8d1cb5c6f016b2f94b4c089950d7085124",
+      "created_at": "2026-04-02T08:25:53.440576+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
+      "sha256": "25591744d9ce0f1bca92d261220e337f2fb0d545c150c49291b5309d232f44d0",
+      "created_at": "2026-04-02T08:25:56.414859+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/graph/test_obligations.yaml",
+      "sha256": "48eee0ce49b47c51cc6581930f3cb78d1f82339770ea05258985cc511cfb70ff",
+      "created_at": "2026-04-02T08:25:59.348158+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-02T08:13:30.371913+00:00",
+  "hook_validated_at": "2026-04-02T08:32:31.491295+00:00",
   "stage3_exit_code": 2
 }

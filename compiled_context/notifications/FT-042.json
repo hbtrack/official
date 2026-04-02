@@ -90,7 +90,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c90eaa98af30c5e092c5085122af5d4a6d333d839c7f885548848584642fbc6c"
+      "sha256": "c1fa9ac1c2540c4f0d1fbb75fd53bfc42a1dd009e3c14e36f0596ab5606837f1"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.bundle.yaml",
@@ -137,7 +137,7 @@
     "unit_tests": "src/notifications/tests/unit/test_notifications.py",
     "use_cases": "src/notifications/application/use_cases.py"
   },
-  "source_fingerprint": "5168dcd844414c45dea6729eb96293c8a09e83eb04001fdac4f7f6a2c0d99352",
+  "source_fingerprint": "6d7f0ee08951f7c25cb744ac0cfb9688cbd3a0dcabc063b87e431ca97d0eaa67",
   "source_graph": {
     "entities": {
       "NotificationDelivery": {

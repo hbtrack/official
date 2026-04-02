@@ -1,2 +1,3 @@
 # HTTP projection is semantically identical to the sovereign domain shape.
+# Source graph authority: docs/hbtrack/modulos/medical/graph/entities.yaml
 $ref: "../../../../schemas/medical/medical_record.schema.json"

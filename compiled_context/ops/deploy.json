@@ -1,6 +1,6 @@
 {
   "artifact_id": "HBTRACK_OPS_DEPLOY_CONTEXT_BUNDLE",
-  "compiled_at": "2026-04-02T08:00:51Z",
+  "compiled_at": "2026-04-02T08:21:34Z",
   "compiler": "hbtrack_ops_context_bundle_compiler",
   "compiler_version": "0.1.0",
   "deploy_contract": {
@@ -100,7 +100,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c90eaa98af30c5e092c5085122af5d4a6d333d839c7f885548848584642fbc6c"
+      "sha256": "c1fa9ac1c2540c4f0d1fbb75fd53bfc42a1dd009e3c14e36f0596ab5606837f1"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -128,7 +128,7 @@
     "PRODUCTION_URL"
   ],
   "scope": "ops/deploy",
-  "source_fingerprint": "dae1af4572d643dd971c729644762b7007ffe8f745329309857a07e92a5d57c9",
+  "source_fingerprint": "03797aa64c79ab5619c83eebcc2343751112d33080b6ab5f98ec4e568173accb",
   "validation": {
     "freshness_gate": "CONTEXT_BUNDLE_FRESHNESS_GATE",
     "required_commands": [

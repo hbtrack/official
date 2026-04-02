@@ -1,0 +1,116 @@
+version: "1.0.0"
+status: active
+module: medical
+
+endpoints:
+  - operation_id: listMedicalRecords
+    method: GET
+    path: /medical/records
+    openapi_ref: "../../../../../contracts/openapi/paths/medical.yaml#/medical/records/get"
+    runtime_handler_ref: "../../../../../src/medical/api.py#list_medical_records"
+    use_case_ref: "../../../../../src/medical/application/use_cases.py#ListMedicalRecords"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 422
+      - 500
+  - operation_id: createMedicalRecord
+    method: POST
+    path: /medical/records
+    openapi_ref: "../../../../../contracts/openapi/paths/medical.yaml#/medical/records/post"
+    runtime_handler_ref: "../../../../../src/medical/api.py#create_medical_record"
+    use_case_ref: "../../../../../src/medical/application/use_cases.py#CreateMedicalRecord"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 409
+      - 422
+      - 500
+  - operation_id: getMedicalRecord
+    method: GET
+    path: /medical/records/{recordId}
+    openapi_ref: "../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/get"
+    runtime_handler_ref: "../../../../../src/medical/api.py#get_medical_record"
+    use_case_ref: "../../../../../src/medical/application/use_cases.py#GetMedicalRecord"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+  - operation_id: updateMedicalRecord
+    method: PATCH
+    path: /medical/records/{recordId}
+    openapi_ref: "../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/patch"
+    runtime_handler_ref: "../../../../../src/medical/api.py#update_medical_record"
+    use_case_ref: "../../../../../src/medical/application/use_cases.py#UpdateMedicalRecord"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coach
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+      - 500
+  - operation_id: deleteMedicalRecord
+    method: DELETE
+    path: /medical/records/{recordId}
+    openapi_ref: "../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/delete"
+    runtime_handler_ref: "../../../../../src/medical/api.py#delete_medical_record"
+    use_case_ref: "../../../../../src/medical/application/use_cases.py#DeleteMedicalRecord"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500

@@ -26,7 +26,7 @@
   "inputs": [
     {
       "relpath": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
-      "sha256": "644f1449ac84b1066f8b29471eee306ce582709fb5dc6c7fbb6f00a7f7d6683f"
+      "sha256": "0b699e5fef75703962d564be3006303ca18b90e36d67c1cec029b53b0d9b117d"
     },
     {
       "relpath": "contracts/openapi/paths/wellness.yaml",
@@ -145,5 +145,5 @@
     "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
     "generated/source_graph/wellness/impact_report.json"
   ],
-  "source_fingerprint": "ccf1de429d44f9aa753f82e75fb50f0e91d30992947dd1d171df4e6b67a7d3e1"
+  "source_fingerprint": "06e383eab928c20e091f0640ccb3bec750b9840f954f927aa516db6c3f82518b"
 }

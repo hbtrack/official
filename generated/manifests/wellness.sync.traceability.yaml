@@ -64,7 +64,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/components/schemas/medical/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/medical/medical_record.yaml
-    sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
+    sha256: 3ab8ecdb1dc5700f01bfd840be1b1a98589fe8076e3b6ddf979843fcbb377d6b
   - path: generated/contracts/openapi/components/schemas/notifications/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/notifications/notification_delivery.yaml
@@ -164,7 +164,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/paths/matches.yaml
     sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
   - path: generated/contracts/openapi/paths/medical.yaml
-    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+    sha256: f20cdefa471f07c3de326daf109d71c4091b0627f92bd2650df04f5a40b2f158
   - path: generated/contracts/openapi/paths/notifications.yaml
     sha256: 00c1361f75c1c87a6d9d2d9c3e432b5470433062fb8556e7e5bcf400d7354fd7
   - path: generated/contracts/openapi/paths/reports.yaml
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: c560ebabab0b0d80e43572eb0f2cd00f9fe3a4f64287d3d5c94ee1d6693b95ca
+  generated_tree_sha256: 3df25fa89785d49e8f782c37ec6c8ae383f962d503b93d3af770d40908db412d
   policy_path: generated/resolved_policy/wellness.sync.resolved.yaml
   policy_sha256: d51a794254182f161a6dc225c477309ae7c418b48ae37e34c95b91fc58d2d563
   source_contracts:
@@ -384,7 +384,7 @@ traceability_manifest:
   - path: contracts/openapi/components/schemas/medical/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/medical/medical_record.yaml
-    sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
+    sha256: 3ab8ecdb1dc5700f01bfd840be1b1a98589fe8076e3b6ddf979843fcbb377d6b
   - path: contracts/openapi/components/schemas/notifications/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/notifications/notification_delivery.yaml
@@ -484,7 +484,7 @@ traceability_manifest:
   - path: contracts/openapi/paths/matches.yaml
     sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
   - path: contracts/openapi/paths/medical.yaml
-    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+    sha256: f20cdefa471f07c3de326daf109d71c4091b0627f92bd2650df04f5a40b2f158
   - path: contracts/openapi/paths/notifications.yaml
     sha256: 00c1361f75c1c87a6d9d2d9c3e432b5470433062fb8556e7e5bcf400d7354fd7
   - path: contracts/openapi/paths/reports.yaml
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 4a9d4e370904df44879b3cf9a916d96059090171856f853c0ef3c503e8a41666
+  source_tree_sha256: 8be6832b871df5cbe07a75d32b74e07d0d4422defa754b38551417689c3b3ad0

@@ -1,0 +1,44 @@
+version: "1.0.0"
+status: active
+module: medical
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_MEDICAL.md"
+  domain_rules: "../DOMAIN_RULES_MEDICAL.md"
+  invariants: "../INVARIANTS_MEDICAL.md"
+  permissions: "../PERMISSIONS_MEDICAL.md"
+  test_matrix: "../TEST_MATRIX_MEDICAL.md"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/medical.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/medical/"
+  primary_schema: "../../../../../contracts/schemas/medical/medical_record.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/medical/medical_record.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/medical/api.py"
+  domain_entity: "../../../../../src/medical/domain/entities.py"
+  domain_rules: "../../../../../src/medical/domain/rules.py"
+  use_cases: "../../../../../src/medical/application/use_cases.py"
+  unit_tests: "../../../../../src/medical/tests/unit/test_medical_domain.py"
+
+structured_ir:
+  entities: "./entities.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "MedicalRecordOut ainda expõe campos de runtime/auditoria (isDeleted, createdAt, updatedAt) fora do schema soberano medical_record.schema.json."
+  - "Delete/soft-delete e retention LGPD seguem descritos no contrato, mas a trilha de auditoria externa permanece governada fora do source graph local."
+  - "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada."

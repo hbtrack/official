@@ -1,0 +1,73 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: medical
+entity: MedicalRecord
+primary_entity: MedicalRecord
+primary_schema_ref: contracts/schemas/medical/medical_record.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/medical/medical_record.yaml
+required: &id001
+- id
+- athleteUserId
+- recordDate
+- recordLabel
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: athleteUserId
+  runtime_name: athlete_user_id
+  required: true
+  type: uuid_v4
+- name: teamId
+  runtime_name: team_id
+  required: false
+  type: uuid_v4
+- name: recordDate
+  runtime_name: record_date
+  required: true
+  type: date_only
+- name: recordLabel
+  runtime_name: record_label
+  required: true
+  type: string
+- name: assessmentSummary
+  runtime_name: assessment_summary
+  required: false
+  type: string
+- name: restrictionSummary
+  runtime_name: restriction_summary
+  required: false
+  type: string
+- name: returnToTrainingAuthorized
+  runtime_name: return_to_training_authorized
+  required: false
+  type: boolean
+- name: returnToPlayAuthorized
+  runtime_name: return_to_play_authorized
+  required: false
+  type: boolean
+- name: clinicalNotes
+  runtime_name: clinical_notes
+  required: false
+  type: string
+runtime_extension_fields: &id003
+- name: isDeleted
+  runtime_name: is_deleted
+  type: boolean
+- name: deletedAt
+  runtime_name: deleted_at
+  type: datetime
+- name: createdAt
+  runtime_name: created_at
+  type: datetime
+- name: updatedAt
+  runtime_name: updated_at
+  type: datetime
+entities:
+  MedicalRecord:
+    schema_ref: contracts/schemas/medical/medical_record.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: *id003

@@ -1,5 +1,6 @@
 # Path items for module: medical
 # Source of truth: contracts/openapi/openapi.yaml
+# Source graph authority: docs/hbtrack/modulos/medical/graph/module_manifest.yaml
 # Related docs:
 # - docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md
 # - docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md

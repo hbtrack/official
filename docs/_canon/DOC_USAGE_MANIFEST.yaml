@@ -336,6 +336,25 @@ entries:
       - "src/wellness/"
       - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_MEDICAL_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/medical/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/medical/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/medical/README.md"
+      - "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md"
+      - "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md"
+      - "tests/pipeline_gates/test_medical_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/medical/*.md"
+      - "contracts/schemas/medical/"
+      - "contracts/openapi/paths/medical.yaml"
+      - "contracts/openapi/components/schemas/medical/"
+      - "src/medical/"
+      - "tests/pipeline_gates/test_medical_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

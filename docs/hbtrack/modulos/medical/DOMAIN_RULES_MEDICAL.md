@@ -19,6 +19,9 @@ Registrar as regras de negócio do módulo `medical`.
 - `contracts/schemas/medical/medical_record.schema.json`
 - `docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md`
 - Fontes técnico-científicas permitidas via authority matrix (`ASPETAR`, `ACSM`, `IHF` quando aplicável)
+- `docs/hbtrack/modulos/medical/graph/entities.yaml`
+- `docs/hbtrack/modulos/medical/graph/errors.yaml`
+- `docs/hbtrack/modulos/medical/graph/endpoints.yaml`
 
 ## Regras de negócio
 | ID | Regra | Entidades afetadas | Fonte | Observações |
@@ -33,3 +36,8 @@ Registrar as regras de negócio do módulo `medical`.
 - Não tratar `wellness` como prontuário clínico.
 - Não mover autenticação, sessão ou política de autorização para `medical`.
 - Não aceitar diagnóstico, tratamento ou clearance sem contrato explícito do módulo.
+
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/medical/graph/entities.yaml`.
+- O mapa mínimo de operações e permissões publicadas está em `docs/hbtrack/modulos/medical/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/medical/graph/errors.yaml`.

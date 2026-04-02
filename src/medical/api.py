@@ -22,6 +22,7 @@ from medical.schemas import (
     MedicalRecordOut, UpdateMedicalRecordIn,
 )
 
+# Source graph authority: docs/hbtrack/modulos/medical/graph/endpoints.yaml
 router = Router(tags=["medical"])
 _repo = MedicalRecordRepository()
 

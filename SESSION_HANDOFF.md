@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-04-02"
 branch_ativo: main
 modo_operacao: CDD
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: reports
 fase_roadmap: 5
 task_type: generate_code
@@ -22,7 +22,7 @@ evidence_paths:
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`.
 
 ## Estado Geral
-**Data:** 2026-04-02 | **Branch:** main | **CI:** PASS
+**Data:** 2026-04-02 | **Branch:** main | **CI:** UNKNOWN
 **Modo:** CDD | **task_type:** generate_code | **boot_profile:** contract_execution
 **Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B10-001-source-graph-rollout | **Resultado:** PENDENTE
 
