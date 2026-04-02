@@ -1,6 +1,7 @@
 # ============================================================
 # Module: wellness — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
+# Source graph authority: docs/hbtrack/modulos/wellness/graph/module_manifest.yaml
 # Docs: docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md
 # Domain rules: DR-WELL-001..005
 # Invariants: INV-WELL-001..005

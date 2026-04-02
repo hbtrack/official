@@ -1,0 +1,53 @@
+version: "1.0.0"
+status: active
+module: notifications
+
+entities:
+  NotificationDelivery:
+    schema_ref: "../../../../../contracts/schemas/notifications/notification_delivery.schema.json"
+    runtime_entity_ref: "../../../../../src/notifications/domain/entities.py#NotificationDelivery"
+    docs_refs:
+      - "../DOMAIN_RULES_NOTIFICATIONS.md"
+      - "../INVARIANTS_NOTIFICATIONS.md"
+      - "../PERMISSIONS_NOTIFICATIONS.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: recipientUserId
+        runtime_name: recipient_user_id
+        required: true
+        type: uuid_v4
+      - name: notificationTemplateRef
+        runtime_name: notification_template_ref
+        required: false
+        type: string
+      - name: eventEnvelopeRef
+        runtime_name: event_envelope_ref
+        required: false
+        type: string
+      - name: channelLabel
+        runtime_name: channel_label
+        required: true
+        type: string
+      - name: preferenceLabel
+        runtime_name: preference_label
+        required: false
+        type: string
+      - name: deliveryStatusLabel
+        runtime_name: delivery_status_label
+        required: false
+        type: string
+      - name: retryCount
+        runtime_name: retry_count
+        required: false
+        type: integer
+      - name: requestedAt
+        runtime_name: requested_at
+        required: true
+        type: timestamp_utc
+      - name: deliveredAt
+        runtime_name: delivered_at
+        required: false
+        type: timestamp_utc|null

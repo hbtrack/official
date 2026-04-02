@@ -2260,6 +2260,24 @@ Rollback:
 
 - restaurar politica de warning anterior
 
+Evidencia implementada e validada no sistema atual:
+
+- `scripts/contracts/validate/validate_contracts.py` — `ALLOWED_SKIP_GATES` whitelist adicionada: `HTTP_RUNTIME_CONTRACT_GATE`, `PACT_PROVIDER_GATE`, `READINESS_HUMAN_CONFIRMATION_GATE`
+- `scripts/contracts/validate/validate_contracts.py` — `PASS_WITH_WARNINGS` eliminado: status→`FAIL`, exit_code→1
+- `scripts/contracts/validate/validate_contracts.py` — unauthorized SKIP detection com filtro `Pulado no estágio/perfil`
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — `ADVERSARIAL_ANALYSIS_GATE`: `blocking: true` (B9-002)
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — `API_NORMATIVE_DUPLICATION_GATE`: `blocking: true`, `severity: HIGH` (B9-002)
+- `docs/_canon/CI_CONTRACT_GATES.md` — gates 2B e 15C atualizados como bloqueantes
+- `docs/_canon/gates/README.md` — tabela de gates atualizada
+- `.github/workflows/contract-gates.yml` — step renomeado `warnings=failure B9-002`, echo de confirmação
+- `.github/workflows/ci.yml` — step renomeado `warnings=failure B9-002`, echo de confirmação
+- `tests/pipeline_gates/test_warning_free_acceptance.py` — 10 testes de aceitação em 4 classes (todos PASS)
+- `./.venv-contract/bin/python scripts/validate_contracts.py --profile precommit` em `PASS`
+- `./.venv-contract/bin/python scripts/validate_contracts.py --profile ci` em `PASS`
+- `./.venv-contract/bin/python -m pytest tests/pipeline_gates/test_warning_free_acceptance.py -v` — 10/10 PASS
+- pre-commit hook v4 passou todas as 7 fases + governance suite (94 testes)
+- commit `f8f656c6` em `main`
+
 ## B10. Rollout full-fleet para todo o sistema
 
 ### B10-001 - Migrar source graph para todos os modulos
@@ -2310,6 +2328,26 @@ python3 scripts/compile/compile_source_graph.py --all
 python3 scripts/compile/compile_context_bundle.py --all
 python3 scripts/validate_contracts.py --profile ci
 ```
+
+Evidencia implementada e validada no sistema atual:
+
+- `reports`, `analytics`, `exercises`, `notifications` e `wellness` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
+- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py` e `test_wellness_source_graph_integrity.py` em `PASS`
+- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py` e `test_source_graph_compiler_wellness.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py` e `test_context_bundle_wellness.py` em `PASS`
+- `python3 scripts/compile/compile_source_graph.py --module notifications` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module notifications` em `PASS`
+- `python3 scripts/compile/compile_source_graph.py --module wellness` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module wellness` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --all` em `PASS` apos a entrada de `wellness`
+- `python3 scripts/contracts/validate/api/compile_api_policy.py --all` em `PASS` apos as entradas de `notifications` e `wellness`
+- `python3 scripts/repair_manifests.py` executado para recompor `generated/manifests/*.sync.traceability.yaml`
+- `python3 scripts/generate/docs/gen_runtime_current_state.py --write` executado para recompor `docs/_canon/RUNTIME_CURRENT_STATE.md`
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_notifications_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_notifications.py tests/pipeline_gates/test_context_bundle_notifications.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_wellness_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_wellness.py tests/pipeline_gates/test_context_bundle_wellness.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` em `PASS` (`15 passed`)
+- `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` em `PASS` apos a entrada de `wellness`
+- proximo modulo obrigatorio da fila: `medical`
 
 Criterio de saida:
 
@@ -2663,8 +2701,8 @@ Ordem remanescente obrigatoria a partir do estado atual:
 32. ~~B8-002~~ — DONE (2026-04-01, runtime live estabilizado + broker path ativo)
 33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
-35. B9-002
-36. B10-001
+35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
+36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications` e `wellness` concluidos; proximo `medical`)
 37. B10-002
 38. B10-003
 39. B11-001
@@ -2699,6 +2737,7 @@ Regras de interpretacao desta ordem:
 - `B9-001` entra como baseline permanente: toda suite adversarial obrigatoria existe e roda em CI (DONE 2026-04-01)
 - `B9-001A` entra como baseline permanente: consumer pact de `hbtrack-app` publicado no broker, provider verificado em staging, `PACT_PROVIDER_GATE` ativo em CI (DONE 2026-04-02)
 - B9-002 passa a ser a proxima acao correta no sistema atual: implementar politica `warnings = failure` para satisfazer a parte "sem warnings" do `CA`
+- `B9-002` entra como baseline permanente: `PASS_WITH_WARNINGS` eliminado, gates 2B/15C bloqueantes, 10 testes de aceitação, CI atualizado (DONE 2026-04-03)
 - qualquer mudanca na ordem acima exige nova validacao completa do pipeline e atualizacao desta secao
 
 ## 6. Definition of Done do backlog

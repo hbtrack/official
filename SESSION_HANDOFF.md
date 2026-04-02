@@ -2,59 +2,51 @@
 data_ultima_sessao: "2026-04-02"
 branch_ativo: main
 modo_operacao: CDD
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: reports
 fase_roadmap: 5
 task_type: generate_code
 boot_profile_id: contract_execution
-task_id: B9-002-warnings-failure
-resultado: DONE
-proxima_acao_permitida: "Iniciar B10-001: migrar source graph para todos os modulos."
+task_id: B10-001-source-graph-rollout
+resultado: PENDENTE
+proxima_acao_permitida: "Continuar B10-001 com o modulo medical."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "tests/pipeline_gates/test_warning_free_acceptance.py"
-  - "scripts/contracts/validate/validate_contracts.py"
-  - "docs/_canon/gates/GATES_REGISTRY.yaml"
+  - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+  - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+  - "compiled_context/notifications/FT-042.json"
+  - "compiled_context/wellness/FT-032.json"
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`.
 
 ## Estado Geral
-**Data:** 2026-04-02 | **Branch:** main | **CI:** UNKNOWN
+**Data:** 2026-04-02 | **Branch:** main | **CI:** PASS
 **Modo:** CDD | **task_type:** generate_code | **boot_profile:** contract_execution
-**Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B9-002-warnings-failure | **Resultado:** DONE
+**Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B10-001-source-graph-rollout | **Resultado:** PENDENTE
 
-## O que foi feito (sessão atual — B9-002)
-- Implementada política `warnings = failure` no validate_contracts.py
-- `PASS_WITH_WARNINGS` eliminado: non-blocking FAIL agora retorna exit_code=1
-- `ADVERSARIAL_ANALYSIS_GATE` promovido a blocking no GATES_REGISTRY
-- `API_NORMATIVE_DUPLICATION_GATE` promovido a blocking no GATES_REGISTRY
-- Constante `ALLOWED_SKIP_GATES` adicionada: whitelist de gates que podem SKIP
-- Gates SKIP não-autorizados agora causam FAIL bloqueante
-- Workflows CI e contract-gates atualizados com `warnings=failure`
-- 10 testes criados em `tests/pipeline_gates/test_warning_free_acceptance.py`
+## O que foi feito (sessão atual — B10-001)
+- `notifications` entrou no source graph soberano com `graph/*.yaml`, derivados em `generated/source_graph/notifications/` e bundle em `compiled_context/notifications/FT-042.json`
+- `wellness` entrou no source graph soberano com `graph/*.yaml`, derivados em `generated/source_graph/wellness/` e bundle em `compiled_context/wellness/FT-032.json`
+- `DOC_USAGE_MANIFEST.yaml` e `SYNC_MANIFEST.yaml` foram expandidos para `notifications` e `wellness`
+- projeções OpenAPI de `notifications` e `wellness` foram alinhadas ao modelo soberano; `wellness_entry.yaml` foi promovido para ref direto ao schema soberano
+- testes de integridade/compilação/context bundle de `notifications` e `wellness` foram criados e estão verdes
+- `validate_contracts.py --profile ci` fechou em `PASS` após a sincronização completa dos derivados globais
 
-### Sessão anterior (B9-001A)
-- client HTTP do frontend extraído para forma testável em `frontend/src/api/client.ts`
-- requests compartilhados de auth e teams criados em `frontend/src/api/requests/`
-- primeira suíte Pact bootstrap do consumer `hbtrack-app` criada em `frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts`
-- scripts de publish e verify criados em `scripts/contracts/pact/`
-- `ci.yml` atualizado para rodar Pact no frontend e publicar pacts em push para `main`
-- `deploy.yml` atualizado para verificar `hbtrack-api` contra o broker antes do `PACT_PROVIDER_GATE`
-- primeiro consumer pact de `hbtrack-app` foi publicado no broker real
-- o provider `hbtrack-api` foi verificado com sucesso contra esse pact no staging
-- o `PACT_PROVIDER_GATE` e o `HTTP_RUNTIME_CONTRACT_GATE` passaram no último full pipeline
-- o relatório canônico `_reports/contract_gates/latest.json` fechou em `PASS`
+### Estado acumulado de B10-001
+- módulos já migrados para source graph: `reports`, `analytics`, `exercises`, `notifications`, `wellness`
+- próximo módulo obrigatório da fila: `medical`
 
 ## Evidências
 - `_reports/contract_gates/latest.json` — gate report
-- `tests/pipeline_gates/test_warning_free_acceptance.py` — 10 testes B9-002
-- `scripts/contracts/validate/validate_contracts.py` — ALLOWED_SKIP_GATES + warnings=failure
-- `docs/_canon/gates/GATES_REGISTRY.yaml` — adversarial + normative blocking
+- `tests/pipeline_gates/test_notifications_source_graph_integrity.py` — integridade do source graph `notifications`
+- `tests/pipeline_gates/test_wellness_source_graph_integrity.py` — integridade do source graph `wellness`
+- `compiled_context/notifications/FT-042.json` — bundle de contexto `notifications`
+- `compiled_context/wellness/FT-032.json` — bundle de contexto `wellness`
 
 ## Próxima ação permitida
-Iniciar `B10-001`: migrar source graph para todos os módulos.
+Continuar `B10-001` com o módulo `medical`.
 
 ## Bloqueios ativos
 - Nenhum.

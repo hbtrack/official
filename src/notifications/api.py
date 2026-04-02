@@ -27,6 +27,8 @@ from notifications.schemas import (
     ErrorOut,
 )
 
+# Source graph authority: docs/hbtrack/modulos/notifications/graph/endpoints.yaml
+# Preferences routes remain runtime-first until a sovereign preferences schema exists.
 router = Router(tags=["notifications"])
 
 

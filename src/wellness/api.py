@@ -23,6 +23,8 @@ from wellness.schemas import (
     WellnessEntryOut, WellnessSummaryOut,
 )
 
+# Source graph authority: docs/hbtrack/modulos/wellness/graph/endpoints.yaml
+# WellnessSummary remains an aggregate runtime surface until a sovereign schema exists.
 router = Router(tags=["wellness"])
 _repo = WellnessEntryRepository()
 

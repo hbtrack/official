@@ -1,15 +1,3 @@
-type: object
-title: Notification Delivery
-description: Delivery status of notification
-properties:
-  deliveryId:
-    type: string
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-  notificationId:
-    type: string
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-  status:
-    type: string
-required:
-- deliveryId
-additionalProperties: false
+# HTTP projection is semantically identical to the sovereign domain shape.
+# Source graph authority: docs/hbtrack/modulos/notifications/graph/entities.yaml
+$ref: "../../../../schemas/notifications/notification_delivery.schema.json"

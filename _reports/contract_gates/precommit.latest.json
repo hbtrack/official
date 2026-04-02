@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-02T07:25:40Z",
+  "timestamp_utc": "2026-04-02T08:09:06Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "53a229e3",
+    "git_commit": "f8f656c6",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.3",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T072540_136d22"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T080906_add898"
   },
   "status_detail": {
     "active_gates_passed": 36,
@@ -289,7 +289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 119
+        "duration_ms": 34
       }
     },
     {
@@ -314,7 +314,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2330
+        "duration_ms": 323
       }
     },
     {
@@ -425,7 +425,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 14
       }
     },
     {
@@ -590,7 +590,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 0
       }
     },
     {
@@ -702,7 +702,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -711,7 +711,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Cobertura de documentação válida para 217 documento(s).",
+      "summary": "Cobertura de documentação válida para 227 documento(s).",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml"
       ],
@@ -751,18 +751,24 @@
         "contracts/asyncapi/",
         "contracts/openapi/components/schemas/analytics/",
         "contracts/openapi/components/schemas/exercises/",
+        "contracts/openapi/components/schemas/notifications/",
         "contracts/openapi/components/schemas/reports/report_job.yaml",
+        "contracts/openapi/components/schemas/wellness/",
         "contracts/openapi/openapi.yaml",
         "contracts/openapi/paths/analytics.yaml",
         "contracts/openapi/paths/exercises.yaml",
+        "contracts/openapi/paths/notifications.yaml",
         "contracts/openapi/paths/reports.yaml",
+        "contracts/openapi/paths/wellness.yaml",
         "contracts/schemas/analytics/",
         "contracts/schemas/exercises/",
+        "contracts/schemas/notifications/",
         "contracts/schemas/reports/",
         "contracts/schemas/shared/",
         "contracts/schemas/shared/module_source_authority_matrix.schema.json",
         "contracts/schemas/shared/owasp_api_control_matrix.schema.json",
         "contracts/schemas/shared/session_handoff.schema.json",
+        "contracts/schemas/wellness/",
         "docs/_canon/",
         "docs/_canon/ADR_INDEX.md",
         "docs/_canon/AGENT_INSTRUCTIONS.md",
@@ -921,6 +927,11 @@
         "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
         "docs/hbtrack/modulos/notifications/README.md",
         "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+        "docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+        "docs/hbtrack/modulos/notifications/graph/entities.yaml",
+        "docs/hbtrack/modulos/notifications/graph/errors.yaml",
+        "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
         "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
         "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
         "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
@@ -984,9 +995,16 @@
         "docs/hbtrack/modulos/wellness/README.md",
         "docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
         "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+        "docs/hbtrack/modulos/wellness/graph/entities.yaml",
+        "docs/hbtrack/modulos/wellness/graph/errors.yaml",
+        "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "docs/hbtrack/modulos/wellness/graph/test_obligations.yaml",
         "generated/source_graph/analytics/impact_report.json",
         "generated/source_graph/exercises/impact_report.json",
+        "generated/source_graph/notifications/impact_report.json",
         "generated/source_graph/reports/impact_report.json",
+        "generated/source_graph/wellness/impact_report.json",
         "infra/",
         "infra/docker-compose.prod.yml",
         "infra/env/",
@@ -1000,13 +1018,17 @@
         "src/",
         "src/analytics/",
         "src/exercises/",
+        "src/notifications/",
         "src/reports/",
+        "src/wellness/",
         "tests/pipeline_gates/test_analytics_source_graph_integrity.py",
         "tests/pipeline_gates/test_exercises_source_graph_integrity.py",
         "tests/pipeline_gates/test_gate_registry_parity.py",
+        "tests/pipeline_gates/test_notifications_source_graph_integrity.py",
         "tests/pipeline_gates/test_ops_source_graph_integrity.py",
         "tests/pipeline_gates/test_reports_source_graph_integrity.py",
-        "tests/pipeline_gates/test_sync_manifest_integrity.py"
+        "tests/pipeline_gates/test_sync_manifest_integrity.py",
+        "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1014,7 +1036,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 53
       }
     },
     {
@@ -1042,7 +1064,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
+        "duration_ms": 49
       }
     },
     {
@@ -1085,7 +1107,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 35
       }
     },
     {
@@ -1094,15 +1116,14 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "4 regra(s) de sincronismo impactada(s); 41 consumer(s) bloqueante(s) rastreados.",
+      "summary": "2 regra(s) de sincronismo impactada(s); 32 consumer(s) bloqueante(s) rastreados.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
-        "env:HB_CHANGED_PATHS_JSON",
-        "/home/davis/HB-TRACK/.github/workflows/ci.yml",
-        "/home/davis/HB-TRACK/.github/workflows/contract-gates.yml",
+        "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
@@ -1116,90 +1137,99 @@
         "/home/davis/HB-TRACK/_reports/session_start.json",
         "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
         "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
-        "/home/davis/HB-TRACK/contracts/consumers/hbtrack-app/README.md",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_version.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-        "/home/davis/HB-TRACK/docs/_canon/CI_CONTRACT_GATES.md",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml",
         "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/impact_report.json",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/impact_report.json",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/src/analytics/api.py",
-        "/home/davis/HB-TRACK/src/analytics/schemas.py",
-        "/home/davis/HB-TRACK/src/exercises/api.py",
-        "/home/davis/HB-TRACK/src/exercises/schemas.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_analytics_source_graph_integrity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_analytics.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_exercises.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_exercises_source_graph_integrity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_analytics.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_exercises.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_warning_free_acceptance.py"
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/wellness.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/src/notifications/api.py",
+        "/home/davis/HB-TRACK/src/notifications/schemas.py",
+        "/home/davis/HB-TRACK/src/wellness/api.py",
+        "/home/davis/HB-TRACK/src/wellness/schemas.py",
+        "/home/davis/HB-TRACK/tests/adversarial/test_suite_inventory.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_notifications.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_wellness.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_notifications.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_wellness.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_wellness_source_graph_integrity.py"
       ],
       "evidence_files": [],
       "violations": [
         {
           "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
-          "artifact": "docs/_canon/gates/GATES_REGISTRY.yaml",
-          "message": "Regra `GATES_REGISTRY_SYNC` impactada por 1 source change(s); 3 consumer(s) bloqueante(s) declarados.",
+          "artifact": "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+          "message": "Regra `NOTIFICATIONS_SOURCE_GRAPH_SYNC` impactada por 5 source change(s); 16 consumer(s) bloqueante(s) declarados.",
           "severity": "warn"
         },
         {
           "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
-          "artifact": "scripts/contracts/validate/validate_contracts.py",
-          "message": "Regra `VALIDATOR_REPORTING_SYNC` impactada por 1 source change(s); 4 consumer(s) bloqueante(s) declarados.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
-          "artifact": "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
-          "message": "Regra `ANALYTICS_SOURCE_GRAPH_SYNC` impactada por 5 source change(s); 17 consumer(s) bloqueante(s) declarados.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
-          "artifact": "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
-          "message": "Regra `EXERCISES_SOURCE_GRAPH_SYNC` impactada por 5 source change(s); 17 consumer(s) bloqueante(s) declarados.",
+          "artifact": "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+          "message": "Regra `WELLNESS_SOURCE_GRAPH_SYNC` impactada por 5 source change(s); 16 consumer(s) bloqueante(s) declarados.",
           "severity": "warn"
         }
       ],
       "metrics": {
         "errors": 0,
-        "warnings": 4,
-        "violations": 4,
-        "duration_ms": 26
+        "warnings": 2,
+        "violations": 2,
+        "duration_ms": 44
       }
     },
     {
@@ -1208,15 +1238,14 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "4 regra(s) impactada(s) com propagação bloqueante completa.",
+      "summary": "2 regra(s) impactada(s) com propagação bloqueante completa.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
-        "env:HB_CHANGED_PATHS_JSON",
-        "/home/davis/HB-TRACK/.github/workflows/ci.yml",
-        "/home/davis/HB-TRACK/.github/workflows/contract-gates.yml",
+        "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
@@ -1230,57 +1259,78 @@
         "/home/davis/HB-TRACK/_reports/session_start.json",
         "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
         "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
-        "/home/davis/HB-TRACK/contracts/consumers/hbtrack-app/README.md",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_version.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-        "/home/davis/HB-TRACK/docs/_canon/CI_CONTRACT_GATES.md",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml",
         "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/README.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/analytics.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/analytics/impact_report.json",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/exercises.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/exercises/impact_report.json",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/src/analytics/api.py",
-        "/home/davis/HB-TRACK/src/analytics/schemas.py",
-        "/home/davis/HB-TRACK/src/exercises/api.py",
-        "/home/davis/HB-TRACK/src/exercises/schemas.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_analytics_source_graph_integrity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_analytics.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_exercises.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_exercises_source_graph_integrity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_analytics.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_exercises.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_warning_free_acceptance.py"
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/wellness.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/src/notifications/api.py",
+        "/home/davis/HB-TRACK/src/notifications/schemas.py",
+        "/home/davis/HB-TRACK/src/wellness/api.py",
+        "/home/davis/HB-TRACK/src/wellness/schemas.py",
+        "/home/davis/HB-TRACK/tests/adversarial/test_suite_inventory.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_notifications.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_wellness.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_notifications.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_wellness.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_wellness_source_graph_integrity.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1288,7 +1338,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 40
       }
     },
     {
@@ -1333,7 +1383,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 96
+        "duration_ms": 97
       }
     },
     {
@@ -1362,7 +1412,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 124
+        "duration_ms": 125
       }
     },
     {
@@ -1407,7 +1457,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 94
+        "duration_ms": 96
       }
     },
     {
@@ -1452,7 +1502,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 103
       }
     },
     {
@@ -1497,7 +1547,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 102
+        "duration_ms": 100
       }
     },
     {
@@ -1867,7 +1917,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 72
+        "duration_ms": 30
       }
     },
     {
@@ -1953,7 +2003,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 693
+        "duration_ms": 721
       }
     },
     {
@@ -1976,7 +2026,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2139
+        "duration_ms": 1253
       }
     },
     {
@@ -1998,7 +2048,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2146
+        "duration_ms": 1631
       }
     },
     {
@@ -2037,7 +2087,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 547
+        "duration_ms": 665
       }
     },
     {
@@ -2077,7 +2127,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1837
+        "duration_ms": 1741
       }
     },
     {
@@ -2576,6 +2626,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
@@ -2647,7 +2703,13 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/test_obligations.yaml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2655,7 +2717,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1688
+        "duration_ms": 1797
       }
     },
     {
@@ -2664,7 +2726,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Equivalência OpenAPI × schema soberano: 3 módulo(s) validado(s).",
+      "summary": "Equivalência OpenAPI × schema soberano: 5 módulo(s) validado(s).",
       "inputs": [],
       "artifacts_checked": [
         "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
@@ -2677,11 +2739,21 @@
         "contracts/openapi/components/schemas/exercises/exercise.yaml",
         "contracts/schemas/exercises/exercise.schema.json",
         "contracts/openapi/paths/exercises.yaml",
+        "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+        "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "contracts/schemas/notifications/notification_delivery.schema.json",
+        "contracts/openapi/paths/notifications.yaml",
         "generated/source_graph/reports/reports.schema_contract_view.yaml",
         "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
         "contracts/openapi/components/schemas/reports/report_job.yaml",
         "contracts/schemas/reports/report_job.schema.json",
-        "contracts/openapi/paths/reports.yaml"
+        "contracts/openapi/paths/reports.yaml",
+        "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+        "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "contracts/schemas/wellness/wellness_entry.schema.json",
+        "contracts/openapi/paths/wellness.yaml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2689,7 +2761,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 114
+        "duration_ms": 172
       }
     },
     {
@@ -2765,7 +2837,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4475
+        "duration_ms": 2090
       }
     },
     {
@@ -2808,7 +2880,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 55
+        "duration_ms": 60
       }
     },
     {
@@ -2830,7 +2902,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1310
+        "duration_ms": 1153
       }
     },
     {
@@ -2886,7 +2958,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 59
       }
     },
     {
@@ -2906,7 +2978,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 2
       }
     },
     {
@@ -3082,17 +3154,19 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_warning_free_acceptance.py",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_wellness_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_warning_free_acceptance.py",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_wellness_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -3100,7 +3174,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 4
       }
     },
     {
@@ -3122,7 +3196,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 179
+        "duration_ms": 163
       }
     },
     {
@@ -3204,7 +3278,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 4
       }
     },
     {
@@ -3226,7 +3300,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 17
       }
     },
     {
@@ -3244,7 +3318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 6
       }
     },
     {
@@ -3289,7 +3363,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "5 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
+      "summary": "7 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
       "inputs": [],
       "artifacts_checked": [
         "compiled_context/analytics/FT-038.json",
@@ -3310,6 +3384,15 @@
         "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
         "generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
         "generated/source_graph/exercises/impact_report.json",
+        "compiled_context/notifications/FT-042.json",
+        "docs/_canon/FEATURE_REGISTRY.yaml",
+        "docs/_canon/MODULE_REGISTRY.yaml",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+        "docs/_canon/SYNC_MANIFEST.yaml",
+        "generated/source_graph/notifications/notifications.bundle.yaml",
+        "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+        "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+        "generated/source_graph/notifications/impact_report.json",
         "compiled_context/ops/deploy.json",
         "docs/_canon/graph/ops/deploy_contract.yaml",
         "docs/_canon/graph/ops/environment_catalog.yaml",
@@ -3331,7 +3414,16 @@
         "generated/source_graph/reports/reports.bundle.yaml",
         "generated/source_graph/reports/reports.schema_contract_view.yaml",
         "generated/source_graph/reports/reports.openapi_contract_view.yaml",
-        "generated/source_graph/reports/impact_report.json"
+        "generated/source_graph/reports/impact_report.json",
+        "compiled_context/wellness/FT-032.json",
+        "docs/_canon/FEATURE_REGISTRY.yaml",
+        "docs/_canon/MODULE_REGISTRY.yaml",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+        "docs/_canon/SYNC_MANIFEST.yaml",
+        "generated/source_graph/wellness/wellness.bundle.yaml",
+        "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+        "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+        "generated/source_graph/wellness/impact_report.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -3339,7 +3431,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 4
       }
     },
     {

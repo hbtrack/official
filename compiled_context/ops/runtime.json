@@ -1,6 +1,6 @@
 {
   "artifact_id": "HBTRACK_OPS_RUNTIME_CONTEXT_BUNDLE",
-  "compiled_at": "2026-04-02T04:59:55Z",
+  "compiled_at": "2026-04-02T08:00:51Z",
   "compiler": "hbtrack_ops_context_bundle_compiler",
   "compiler_version": "0.1.0",
   "description": "Bundle operacional compilado para tasks de VPS, topologia de serviços e endpoints de runtime. Consumir este bundle antes de qualquer tarefa de roadmap que altere infra ou serviços.",
@@ -46,7 +46,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "33e921172e9bacbe2853221dd55b3f3f9c5400b106895e89a2421f326110e308"
+      "sha256": "c90eaa98af30c5e092c5085122af5d4a6d333d839c7f885548848584642fbc6c"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -144,7 +144,7 @@
       ]
     }
   },
-  "source_fingerprint": "db267d34450ad73277034153ee91872a2f69d6b66ac4d96abf7e7fdcd2b4b706",
+  "source_fingerprint": "c26c43720c0c84ac36995b8508c5142de617701514c97689384e38a64b91bb33",
   "validation": {
     "freshness_gate": "CONTEXT_BUNDLE_FRESHNESS_GATE",
     "required_commands": [

@@ -1,0 +1,156 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: notifications
+openapi_paths_ref: contracts/openapi/paths/notifications.yaml
+operations:
+- operation_id: createNotificationIntent
+  method: POST
+  path: /notifications/intents
+  openapi_ref: ../../../../../contracts/openapi/paths/notifications.yaml#/notifications/intents/post
+  runtime_handler_ref: ../../../../../src/notifications/api.py#create_notification_intent
+  use_case_ref: ../../../../../src/notifications/application/use_cases.py#CreateNotificationIntent
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  response_codes:
+  - 202
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: listDeliveries
+  method: GET
+  path: /notifications/deliveries
+  openapi_ref: ../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/get
+  runtime_handler_ref: ../../../../../src/notifications/api.py#list_deliveries
+  use_case_ref: ../../../../../src/notifications/application/use_cases.py#ListDeliveries
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: getDelivery
+  method: GET
+  path: /notifications/deliveries/{deliveryId}
+  openapi_ref: ../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/{deliveryId}/get
+  runtime_handler_ref: ../../../../../src/notifications/api.py#get_delivery
+  use_case_ref: ../../../../../src/notifications/application/use_cases.py#GetDelivery
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: getUserNotificationPreferences
+  method: GET
+  path: /notifications/users/{userId}/preferences
+  openapi_ref: ../../../../../contracts/openapi/paths/notifications.yaml#/notifications/users/{userId}/preferences/get
+  runtime_handler_ref: ../../../../../src/notifications/api.py#get_user_notification_preferences
+  use_case_ref: ../../../../../src/notifications/application/use_cases.py#GetUserNotificationPreferences
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: updateUserNotificationPreferences
+  method: PATCH
+  path: /notifications/users/{userId}/preferences
+  openapi_ref: ../../../../../contracts/openapi/paths/notifications.yaml#/notifications/users/{userId}/preferences/patch
+  runtime_handler_ref: ../../../../../src/notifications/api.py#update_user_notification_preferences
+  use_case_ref: ../../../../../src/notifications/application/use_cases.py#UpdateUserNotificationPreferences
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coordinator
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-NTF-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/notifications/api.py#_get_role
+  operations:
+  - createNotificationIntent
+  - listDeliveries
+  - getDelivery
+  - getUserNotificationPreferences
+  - updateUserNotificationPreferences
+- id: ERR-NTF-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/notifications/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createNotificationIntent
+  - listDeliveries
+  - getDelivery
+  - getUserNotificationPreferences
+  - updateUserNotificationPreferences
+- id: ERR-NTF-404-DELIVERY-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/notifications/domain/rules.py#NotificationDeliveryNotFound
+  operations:
+  - getDelivery
+- id: ERR-NTF-400-DELIVERY-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/notifications/domain/entities.py#validate_invariants
+  operations:
+  - createNotificationIntent
+- id: ERR-NTF-400-PREFERENCES-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/notifications/api.py#update_user_notification_preferences
+  operations:
+  - updateUserNotificationPreferences

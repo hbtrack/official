@@ -4,6 +4,8 @@ from uuid import UUID
 from datetime import datetime
 from ninja import Schema
 
+# Source graph authority: docs/hbtrack/modulos/notifications/graph/entities.yaml
+# Preferences DTOs remain transport-only until a sovereign schema is promoted.
 
 class NotificationDeliveryOut(Schema):
     id: UUID

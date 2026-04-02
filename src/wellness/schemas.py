@@ -5,6 +5,8 @@ from decimal import Decimal
 from typing import List, Optional
 from ninja import Schema
 
+# Source graph authority: docs/hbtrack/modulos/wellness/graph/entities.yaml
+# WellnessSummaryOut remains transport/runtime-first until a sovereign summary schema exists.
 
 class WellnessEntryOut(Schema):
     entryId: uuid.UUID

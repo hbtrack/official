@@ -298,6 +298,44 @@ entries:
       - "src/exercises/"
       - "tests/pipeline_gates/test_exercises_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_NOTIFICATIONS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/notifications/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/notifications/README.md"
+      - "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md"
+      - "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+      - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/notifications/*.md"
+      - "contracts/schemas/notifications/"
+      - "contracts/openapi/paths/notifications.yaml"
+      - "contracts/openapi/components/schemas/notifications/"
+      - "src/notifications/"
+      - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_WELLNESS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/wellness/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/wellness/README.md"
+      - "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md"
+      - "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+      - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/wellness/*.md"
+      - "contracts/schemas/wellness/"
+      - "contracts/openapi/paths/wellness.yaml"
+      - "contracts/openapi/components/schemas/wellness/"
+      - "src/wellness/"
+      - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

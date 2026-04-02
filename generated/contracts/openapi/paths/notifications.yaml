@@ -1,6 +1,7 @@
 # ============================================================
 # Module: notifications — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
+# Source graph authority: docs/hbtrack/modulos/notifications/graph/module_manifest.yaml
 # Docs: docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md
 # Domain rules: DR-NTF-001..005
 # Invariants: INV-NTF-001..005

@@ -289,10 +289,142 @@
       "created_at": "2026-04-02T07:04:38.682542+00:00",
       "gate_exit_code": 0,
       "validated_at": "2026-04-02T07:08:17.128898+00:00"
+    },
+    {
+      "path": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "sha256": "b043c31a009ef2dd664cb815730ed454d03959db8bbc922adb971a79cf0af648",
+      "created_at": "2026-04-02T08:04:36.984488+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+      "sha256": "4ddf9a68461a58e4c83bc4428707cda1a59d5665a51b35ef37a021a52568843e",
+      "created_at": "2026-04-02T08:04:41.448977+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "sha256": "0b699e5fef75703962d564be3006303ca18b90e36d67c1cec029b53b0d9b117d",
+      "created_at": "2026-04-02T08:04:46.367671+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+      "sha256": "6a24809e523efe9027cfd0315895c1e1a163f96b88a60c6aaff98485cfa89450",
+      "created_at": "2026-04-02T08:04:50.168357+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/notifications.yaml",
+      "sha256": "00c1361f75c1c87a6d9d2d9c3e432b5470433062fb8556e7e5bcf400d7354fd7",
+      "created_at": "2026-04-02T08:04:53.820960+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/wellness.yaml",
+      "sha256": "d2bf5badc1c8f144c17d39dfdfcd80046630f2e3ece63ac9049e44b4de2ebaca",
+      "created_at": "2026-04-02T08:04:57.342791+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+      "sha256": "af189736fd5ff92fb6e3db59bf82c61144386fdbaa8702303b368382cb2b625c",
+      "created_at": "2026-04-02T08:05:00.421430+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/README.md",
+      "sha256": "3196ea7b6dc714b5604ae56d042fc615a72babff1923bc9830d124476ea43403",
+      "created_at": "2026-04-02T08:05:03.570487+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+      "sha256": "5e0768b4c6b357a0d4dfb4bb13c849a8d00b1d6123f6c31597c332ede375ee0a",
+      "created_at": "2026-04-02T08:05:06.520967+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+      "sha256": "9c185018f43f79c6741a34ed8aeff434af501b9ff7b7ad9eaa98aa326f753e63",
+      "created_at": "2026-04-02T08:05:09.458398+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/graph/entities.yaml",
+      "sha256": "9a17252d846c0714bdf2a1cde21328da8a8585ca9f60cf9d94a59d5a7923cf21",
+      "created_at": "2026-04-02T08:05:12.474614+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/graph/errors.yaml",
+      "sha256": "53a65a173890294631ad913bbe881c201272a7bb9215981e2d5e108195d53887",
+      "created_at": "2026-04-02T08:05:15.412883+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+      "sha256": "e7d3fccbe37e2c990285171721d9a3c0a9e9f22e14d3ae4a81ece19a1c78894f",
+      "created_at": "2026-04-02T08:05:18.602822+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
+      "sha256": "fedf1a1c68fe7f3bdb7664649935110ef7134263ddc1ade183da0b072e811230",
+      "created_at": "2026-04-02T08:05:21.575586+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+      "sha256": "c5559e5b24a1982ae46f4e66e92211a477569b96e942a6b3d0f211a73c7df4c6",
+      "created_at": "2026-04-02T08:05:24.735916+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/README.md",
+      "sha256": "ac9007452db6fc92b3639d1d37040af7a075e91f4d79dfca28407676c4865558",
+      "created_at": "2026-04-02T08:05:28.103914+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+      "sha256": "94fa820a49931b143845800f42f584cab6938b883d2889d5a74f301b0cbacb69",
+      "created_at": "2026-04-02T08:05:31.777572+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+      "sha256": "c5b7c4530aea634639411326a2f2e109c443e1bc5270f5d1e76f92dbce88ddd5",
+      "created_at": "2026-04-02T08:05:38.968760+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/graph/entities.yaml",
+      "sha256": "e0117e3c01f206843a43876fa7a0f62fa27b5e331db4fc1dffd1713fb333a84f",
+      "created_at": "2026-04-02T08:05:42.501391+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/graph/errors.yaml",
+      "sha256": "fc7d74f7e83400752c9b9af146a8d2ec3dee5da323bd23ee2dd7914defbf385b",
+      "created_at": "2026-04-02T08:05:45.528821+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+      "sha256": "6a7822c4a0660c07cefd3adb0dbf9a013d41328aadd17423da67832a73c460cf",
+      "created_at": "2026-04-02T08:05:48.626179+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/graph/test_obligations.yaml",
+      "sha256": "0f5fcdbcf49b58f9cb7b2a67b662e383826b408b5da1934a37a79a91a5b4d4f4",
+      "created_at": "2026-04-02T08:05:51.601632+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-02T06:37:52.269794+00:00",
+  "hook_validated_at": "2026-04-02T07:31:57.297214+00:00",
   "stage3_exit_code": 2
 }

@@ -1,0 +1,808 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/notifications/notifications.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/notifications/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "NOTIFICATIONS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/notifications.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+    "primary_schema": "contracts/schemas/notifications/notification_delivery.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/notifications"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/notifications.yaml"
+    ],
+    "description": "Sistema registra intenções de notificação (push, email, in-app) e rastreia entregas. Usuário consulta o histórico de entregas recebidas.",
+    "endpoints": [
+      "POST /notifications/intents",
+      "GET /notifications/deliveries",
+      "GET /notifications/deliveries/{deliveryId}"
+    ],
+    "id": "FT-042",
+    "name": "Gerenciar Intenções e Entregas de Notificação",
+    "slug": "gerenciar-intenções-e-entregas-de-notificação",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/notifications/api.py",
+      "src/notifications/application/use_cases.py",
+      "src/notifications/domain/entities.py",
+      "src/notifications/domain/rules.py",
+      "src/notifications/schemas.py",
+      "src/notifications/tests/unit/test_notifications.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+      "contracts/openapi/paths/notifications.yaml",
+      "contracts/schemas/notifications/notification_delivery.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/notifications/FT-042.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+      "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
+      "docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md",
+      "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+      "docs/hbtrack/modulos/notifications/README.md",
+      "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_notifications.py",
+      "tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_notifications.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "c90eaa98af30c5e092c5085122af5d4a6d333d839c7f885548848584642fbc6c"
+    },
+    {
+      "relpath": "generated/source_graph/notifications/notifications.bundle.yaml",
+      "sha256": "e6d5110a2e560d3cb6b0234adb5935b29ce5b15505107bd0d8d1f32ad0a59bfa"
+    },
+    {
+      "relpath": "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+      "sha256": "f7156811f760584819286bfcc7d3a0388e7e4ca8aa649c2f734ffb210dc8c1d1"
+    },
+    {
+      "relpath": "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+      "sha256": "ea8c6945d3e7461ef50142e67a57b0162899bc5bb0dfe5f30089725245ded226"
+    },
+    {
+      "relpath": "generated/source_graph/notifications/impact_report.json",
+      "sha256": "4b9fdd7f9e66ca7ecbe905b2ca4e1f20850bd6feaee91d7fe17387e1de32a128"
+    }
+  ],
+  "module": "notifications",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+    "invariants": "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
+    "permissions": "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+    "readme": "docs/hbtrack/modulos/notifications/README.md",
+    "scope": "docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md",
+    "test_matrix": "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "platform-core",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/notifications/api.py",
+    "domain_entity": "src/notifications/domain/entities.py",
+    "domain_rules": "src/notifications/domain/rules.py",
+    "unit_tests": "src/notifications/tests/unit/test_notifications.py",
+    "use_cases": "src/notifications/application/use_cases.py"
+  },
+  "source_fingerprint": "5168dcd844414c45dea6729eb96293c8a09e83eb04001fdac4f7f6a2c0d99352",
+  "source_graph": {
+    "entities": {
+      "NotificationDelivery": {
+        "docs_refs": [
+          "../DOMAIN_RULES_NOTIFICATIONS.md",
+          "../INVARIANTS_NOTIFICATIONS.md",
+          "../PERMISSIONS_NOTIFICATIONS.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/notifications/domain/entities.py#NotificationDelivery",
+        "schema_ref": "../../../../../contracts/schemas/notifications/notification_delivery.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "recipientUserId",
+            "required": true,
+            "runtime_name": "recipient_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "notificationTemplateRef",
+            "required": false,
+            "runtime_name": "notification_template_ref",
+            "type": "string"
+          },
+          {
+            "name": "eventEnvelopeRef",
+            "required": false,
+            "runtime_name": "event_envelope_ref",
+            "type": "string"
+          },
+          {
+            "name": "channelLabel",
+            "required": true,
+            "runtime_name": "channel_label",
+            "type": "string"
+          },
+          {
+            "name": "preferenceLabel",
+            "required": false,
+            "runtime_name": "preference_label",
+            "type": "string"
+          },
+          {
+            "name": "deliveryStatusLabel",
+            "required": false,
+            "runtime_name": "delivery_status_label",
+            "type": "string"
+          },
+          {
+            "name": "retryCount",
+            "required": false,
+            "runtime_name": "retry_count",
+            "type": "integer"
+          },
+          {
+            "name": "requestedAt",
+            "required": true,
+            "runtime_name": "requested_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "deliveredAt",
+            "required": false,
+            "runtime_name": "delivered_at",
+            "type": "timestamp_utc|null"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-NTF-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "createNotificationIntent",
+          "listDeliveries",
+          "getDelivery",
+          "getUserNotificationPreferences",
+          "updateUserNotificationPreferences"
+        ],
+        "source_ref": "../../../../../src/notifications/api.py#_get_role"
+      },
+      {
+        "exception_ref": "../../../../../src/notifications/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-NTF-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "createNotificationIntent",
+          "listDeliveries",
+          "getDelivery",
+          "getUserNotificationPreferences",
+          "updateUserNotificationPreferences"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/notifications/domain/rules.py#NotificationDeliveryNotFound",
+        "http_status": 404,
+        "id": "ERR-NTF-404-DELIVERY-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getDelivery"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-NTF-400-DELIVERY-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "createNotificationIntent"
+        ],
+        "source_ref": "../../../../../src/notifications/domain/entities.py#validate_invariants"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/notifications.yaml",
+        "contracts/schemas/notifications/notification_delivery.schema.json",
+        "contracts/openapi/components/schemas/notifications/notification_delivery.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/notifications/README.md",
+        "docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md",
+        "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+        "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
+        "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+        "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+      ],
+      "impacted_runtime": [
+        "src/notifications/api.py",
+        "src/notifications/domain/entities.py",
+        "src/notifications/domain/rules.py",
+        "src/notifications/application/use_cases.py",
+        "src/notifications/tests/unit/test_notifications.py"
+      ],
+      "known_gaps": [
+        "UserNotificationPreferences ainda nao possui schema soberano em contracts/schemas/notifications/ e permanece como surface de transporte/runtime.",
+        "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
+        "As rotas de preferences documentam 404 para usuario inexistente, mas o runtime atual materializa defaults via repository."
+      ],
+      "source_fingerprint": "cf27f17e81cd39cde80658494493e535557774e652142ca9deeb5b346b7754bb"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-NTF-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "createNotificationIntent",
+            "listDeliveries",
+            "getDelivery",
+            "getUserNotificationPreferences",
+            "updateUserNotificationPreferences"
+          ],
+          "source_ref": "../../../../../src/notifications/api.py#_get_role"
+        },
+        {
+          "exception_ref": "../../../../../src/notifications/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-NTF-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "createNotificationIntent",
+            "listDeliveries",
+            "getDelivery",
+            "getUserNotificationPreferences",
+            "updateUserNotificationPreferences"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/notifications/domain/rules.py#NotificationDeliveryNotFound",
+          "http_status": 404,
+          "id": "ERR-NTF-404-DELIVERY-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getDelivery"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-NTF-400-DELIVERY-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "createNotificationIntent"
+          ],
+          "source_ref": "../../../../../src/notifications/domain/entities.py#validate_invariants"
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-NTF-400-PREFERENCES-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "updateUserNotificationPreferences"
+          ],
+          "source_ref": "../../../../../src/notifications/api.py#update_user_notification_preferences"
+        }
+      ],
+      "module": "notifications",
+      "openapi_paths_ref": "contracts/openapi/paths/notifications.yaml",
+      "operations": [
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/intents/post",
+          "operation_id": "createNotificationIntent",
+          "path": "/notifications/intents",
+          "response_codes": [
+            202,
+            400,
+            401,
+            403,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/notifications/api.py#create_notification_intent",
+          "use_case_ref": "../../../../../src/notifications/application/use_cases.py#CreateNotificationIntent"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/get",
+          "operation_id": "listDeliveries",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/notifications/deliveries",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/notifications/api.py#list_deliveries",
+          "use_case_ref": "../../../../../src/notifications/application/use_cases.py#ListDeliveries"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/{deliveryId}/get",
+          "operation_id": "getDelivery",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/notifications/deliveries/{deliveryId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/notifications/api.py#get_delivery",
+          "use_case_ref": "../../../../../src/notifications/application/use_cases.py#GetDelivery"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/users/{userId}/preferences/get",
+          "operation_id": "getUserNotificationPreferences",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/notifications/users/{userId}/preferences",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/notifications/api.py#get_user_notification_preferences",
+          "use_case_ref": "../../../../../src/notifications/application/use_cases.py#GetUserNotificationPreferences"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/users/{userId}/preferences/patch",
+          "operation_id": "updateUserNotificationPreferences",
+          "owner_scoped_roles": [
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "path": "/notifications/users/{userId}/preferences",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/notifications/api.py#update_user_notification_preferences",
+          "use_case_ref": "../../../../../src/notifications/application/use_cases.py#UpdateUserNotificationPreferences"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/intents/post",
+        "operation_id": "createNotificationIntent",
+        "path": "/notifications/intents",
+        "response_codes": [
+          202,
+          400,
+          401,
+          403,
+          409,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/notifications/api.py#create_notification_intent",
+        "use_case_ref": "../../../../../src/notifications/application/use_cases.py#CreateNotificationIntent"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/get",
+        "operation_id": "listDeliveries",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/notifications/deliveries",
+        "response_codes": [
+          200,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/notifications/api.py#list_deliveries",
+        "use_case_ref": "../../../../../src/notifications/application/use_cases.py#ListDeliveries"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/notifications.yaml#/notifications/deliveries/{deliveryId}/get",
+        "operation_id": "getDelivery",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/notifications/deliveries/{deliveryId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/notifications/api.py#get_delivery",
+        "use_case_ref": "../../../../../src/notifications/application/use_cases.py#GetDelivery"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "NotificationDelivery": {
+          "required": [
+            "id",
+            "recipientUserId",
+            "channelLabel",
+            "requestedAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/notifications/notification_delivery.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "recipientUserId",
+              "required": true,
+              "runtime_name": "recipient_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "notificationTemplateRef",
+              "required": false,
+              "runtime_name": "notification_template_ref",
+              "type": "string"
+            },
+            {
+              "name": "eventEnvelopeRef",
+              "required": false,
+              "runtime_name": "event_envelope_ref",
+              "type": "string"
+            },
+            {
+              "name": "channelLabel",
+              "required": true,
+              "runtime_name": "channel_label",
+              "type": "string"
+            },
+            {
+              "name": "preferenceLabel",
+              "required": false,
+              "runtime_name": "preference_label",
+              "type": "string"
+            },
+            {
+              "name": "deliveryStatusLabel",
+              "required": false,
+              "runtime_name": "delivery_status_label",
+              "type": "string"
+            },
+            {
+              "name": "retryCount",
+              "required": false,
+              "runtime_name": "retry_count",
+              "type": "integer"
+            },
+            {
+              "name": "requestedAt",
+              "required": true,
+              "runtime_name": "requested_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "deliveredAt",
+              "required": false,
+              "runtime_name": "delivered_at",
+              "type": "timestamp_utc|null"
+            }
+          ]
+        }
+      },
+      "entity": "NotificationDelivery",
+      "module": "notifications",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "primary_entity": "NotificationDelivery",
+      "primary_schema_ref": "contracts/schemas/notifications/notification_delivery.schema.json",
+      "required": [
+        "id",
+        "recipientUserId",
+        "channelLabel",
+        "requestedAt"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "recipientUserId",
+          "required": true,
+          "runtime_name": "recipient_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "notificationTemplateRef",
+          "required": false,
+          "runtime_name": "notification_template_ref",
+          "type": "string"
+        },
+        {
+          "name": "eventEnvelopeRef",
+          "required": false,
+          "runtime_name": "event_envelope_ref",
+          "type": "string"
+        },
+        {
+          "name": "channelLabel",
+          "required": true,
+          "runtime_name": "channel_label",
+          "type": "string"
+        },
+        {
+          "name": "preferenceLabel",
+          "required": false,
+          "runtime_name": "preference_label",
+          "type": "string"
+        },
+        {
+          "name": "deliveryStatusLabel",
+          "required": false,
+          "runtime_name": "delivery_status_label",
+          "type": "string"
+        },
+        {
+          "name": "retryCount",
+          "required": false,
+          "runtime_name": "retry_count",
+          "type": "integer"
+        },
+        {
+          "name": "requestedAt",
+          "required": true,
+          "runtime_name": "requested_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "deliveredAt",
+          "required": false,
+          "runtime_name": "delivered_at",
+          "type": "timestamp_utc|null"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/notifications/notification_delivery.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "NTF-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/notifications.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "NTF-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/notifications/tests/unit/test_notifications.py",
+        "covers": [
+          "INV-NTF-001",
+          "INV-NTF-002",
+          "INV-NTF-003",
+          "INV-NTF-004",
+          "DR-NTF-004",
+          "PERM-NOT-001",
+          "PERM-NOT-002",
+          "PERM-NOT-003"
+        ],
+        "evidence_refs": [
+          "../../../../../src/notifications/tests/unit/test_notifications.py"
+        ],
+        "id": "NTF-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for invariants, BOLA and notification preference boundaries"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+        ],
+        "id": "NTF-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/notifications/README.md",
+      "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+      "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+      "contracts/openapi/paths/notifications.yaml",
+      "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+      "generated/source_graph/notifications/notifications.bundle.yaml",
+      "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+      "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+      "generated/source_graph/notifications/impact_report.json",
+      "compiled_context/notifications/FT-042.json",
+      "src/notifications/api.py",
+      "src/notifications/schemas.py",
+      "tests/pipeline_gates/test_notifications_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_notifications.py",
+      "tests/pipeline_gates/test_context_bundle_notifications.py"
+    ],
+    "expected_output": "compiled_context/notifications/FT-042.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module notifications --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module notifications --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module notifications --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module notifications --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_notifications_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_notifications.py tests/pipeline_gates/test_context_bundle_notifications.py -q"
+    ]
+  }
+}

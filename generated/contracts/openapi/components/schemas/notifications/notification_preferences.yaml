@@ -1,3 +1,5 @@
+# Source graph authority: docs/hbtrack/modulos/notifications/graph/module_manifest.yaml
+# UserNotificationPreferences remains a transport/runtime surface until a sovereign schema exists.
 type: object
 title: Notification Preferences
 description: User notification preferences
