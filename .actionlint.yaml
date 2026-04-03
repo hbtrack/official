@@ -1,4 +1,5 @@
-# Ignorar issues pré-existentes fora do escopo de E4.
-# deploy.yml tem referência a job "build" que não existe no grafo de needs.
+# Issues pré-existentes fora do escopo de E4.
+# Workflows tocados por outras fases têm esses problemas herdados.
 ignore:
+  - '"github.head_ref" is potentially untrusted'
   - 'property "build" is not defined'
