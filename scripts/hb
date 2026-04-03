@@ -898,11 +898,16 @@ class HBCLIv2:
           full — pytest -v --tb=short                (cobertura completa)
         """
         print(f"\n══ CI LOCAL — perfil: {profile} ══")
+        subprocess.run(
+            ["git", "config", "core.hooksPath", "scripts/git-hooks"],
+            cwd=self.root, capture_output=True,
+        )
         env = {**os.environ, **self._ci_test_env}
 
         if profile == "pr":
             cmd = [sys.executable, "-m", "pytest", "-q", "-m", "not slow", "--tb=short"]
         elif profile == "full":
+            env["HB_RUN_SCHEMATHESIS"] = "1"
             cmd = [sys.executable, "-m", "pytest", "-v", "--tb=short"]
         else:
             print(f"❌ Perfil desconhecido: {profile!r}. Use 'pr' ou 'full'.", file=sys.stderr)
