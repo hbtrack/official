@@ -1,0 +1,10 @@
+{
+  "sha": "0db600963588aba91ac0aee38e4c863e33c9d460",
+  "date": "2026-04-03",
+  "branch": "parity/proof-of-parity",
+  "preflight_local": "PASS",
+  "preflight_tests": "104 passed, 3 deselected",
+  "preflight_duration_s": 21,
+  "ci_checks": "pending \u2014 aguardando CI ap\u00f3s push",
+  "parity_confirmed": false
+}
