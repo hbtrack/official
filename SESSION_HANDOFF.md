@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-03"
-branch_ativo: main
+branch_ativo: docs/parity-case-closure
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: parity
@@ -19,7 +19,7 @@ evidence_paths:
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-04-03 | **Branch:** main | **CI:** PR-38 ✅ 13/13
+**Data:** 2026-04-03 | **Branch:** docs/parity-case-closure | **CI:** PR-38 ✅ 13/13
 **Modo:** ROADMAP | **Fase:** Paridade E6 | **Resultado:** DONE
 
 ## O que foi feito nesta sessão (E5 + Fix + E6 início)

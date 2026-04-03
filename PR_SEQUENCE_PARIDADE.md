@@ -1,5 +1,7 @@
 # Sequência de Execução por PR — Paridade Local × CI
 
+> **NON-SOVEREIGN** — Documento operacional de acompanhamento. Não é artefato canônico soberano. Não substitui `ROADMAP.md`, `SESSION_HANDOFF.md` nem os contratos em `contracts/`.
+
 Baseline: `PLAN_EXEC_PARIDADE.md` (congelado 2026-04-03)
 Regra: 1 PR por entregável. Nunca misturar. Caso encerrado apenas após PR-6 merged e verde.
 
