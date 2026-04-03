@@ -1,0 +1,217 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# HB Track — Reusable CI workflow (E5: canonical executor)
+# Lê versões de toolchain.json via jq — single source of truth
+# Chamado por ci.yml via workflow_call
+# NOTA: services.image não aceita expressões dinâmicas — versões hardcoded
+#   espelham toolchain.json (postgres:16, redis:7-alpine). Atualizar em conjunto.
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_call:
+
+env:
+  IMAGE_NAME: ${{ github.repository_owner }}/hbtrack-backend
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 1 — Validar contratos e schemas
+  # ────────────────────────────────────────────────────────────────────────────
+  validate:
+    name: Validate Contracts
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sincronizar branch_ativo no SESSION_HANDOFF
+        env:
+          CURRENT_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          if [ -n "$CURRENT_REF" ] && [ -f SESSION_HANDOFF.md ]; then
+            sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT_REF}|" SESSION_HANDOFF.md
+          fi
+
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: |
+          echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "oasdiff=$(jq -r .tools.oasdiff toolchain.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.versions.outputs.node }}
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ steps.versions.outputs.python }}
+          cache: pip
+
+      - name: Install Node.js tooling (redocly, spectral, asyncapi)
+        run: npm ci --ignore-scripts
+
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt -r scripts/_policy/requirements.txt
+
+      - name: Install oasdiff
+        run: |
+          VER="${{ steps.versions.outputs.oasdiff }}"
+          curl -fsSL "https://github.com/Tufin/oasdiff/releases/download/v${VER}/oasdiff_${VER}_linux_amd64.tar.gz" \
+            -o /tmp/oasdiff.tar.gz
+          tar -xzf /tmp/oasdiff.tar.gz -C /tmp oasdiff
+          sudo mv /tmp/oasdiff /usr/local/bin/oasdiff
+          oasdiff --version
+
+      - name: Run contract validation (todos os gates de tooling habilitados)
+        run: python3 scripts/contracts/validate/validate_contracts.py --profile precommit
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 2 — Testes unitários e de integração
+  # ────────────────────────────────────────────────────────────────────────────
+  test:
+    name: Tests
+    runs-on: ubuntu-22.04
+    needs: validate
+
+    services:
+      # Imagens espelham toolchain.json → atualizar em conjunto
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: hbtrack_test
+          POSTGRES_USER: hbtrack
+          POSTGRES_PASSWORD: testpassword
+        options: >-
+          --health-cmd "pg_isready -U hbtrack"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    env:
+      SECRET_KEY: ci-secret-key-for-testing-only-not-real
+      DEBUG: "false"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      HB_RUN_SCHEMATHESIS: "1"
+      HB_SCHEMATHESIS_MAX_EXAMPLES: "10"
+      DATABASE_URL: postgres://hbtrack:testpassword@localhost:5432/hbtrack_test
+      DB_NAME: hbtrack_test
+      DB_USER: hbtrack
+      DB_PASSWORD: testpassword
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      REDIS_URL: redis://localhost:6379/0
+      CELERY_BROKER_URL: redis://localhost:6379/1
+      CELERY_RESULT_BACKEND: redis://localhost:6379/2
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
+      LOG_LEVEL: WARNING
+      JWT_ALGORITHM: HS256
+      JWT_SECRET: ci-jwt-secret-for-testing-only
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar git hooks path (requerido por TestHookIntegrity)
+        run: git config core.hooksPath scripts/git-hooks
+
+      - name: Ler versão Python de toolchain.json
+        id: versions
+        run: echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ steps.versions.outputs.python }}
+          cache: pip
+
+      - name: Install dependencies (inclui schemathesis)
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run migrations
+        run: python manage.py migrate --noinput
+
+      - name: Run tests (inclui schemathesis e pipeline_gates; exclui slow)
+        run: pytest -q -m "not slow" --tb=short
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 3 — Build da imagem Docker frontend
+  # ────────────────────────────────────────────────────────────────────────────
+  build-frontend:
+    name: Frontend Build + Tests
+    runs-on: ubuntu-22.04
+    needs: validate
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versão Node de toolchain.json
+        id: versions
+        run: echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.versions.outputs.node }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci --legacy-peer-deps
+        working-directory: frontend
+
+      - name: Run unit tests (Vitest)
+        run: npx vitest run --reporter=verbose
+        working-directory: frontend
+
+      - name: Build production bundle
+        run: npm run build
+        working-directory: frontend
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build frontend Docker image (sem push — validação)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.frontend
+          push: false
+          tags: hbtrack-frontend:ci-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # JOB 4 — Build da imagem Docker backend (verifica que o Dockerfile funciona)
+  # ────────────────────────────────────────────────────────────────────────────
+  build:
+    name: Docker Build Check
+    runs-on: ubuntu-22.04
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (sem push — apenas validação)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ env.IMAGE_NAME }}:ci-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

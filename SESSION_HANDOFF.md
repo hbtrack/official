@@ -1,57 +1,63 @@
 ---
-data_ultima_sessao: "2026-03-31"
-branch_ativo: parity/toolchain-manifest
+data_ultima_sessao: "2026-04-03"
+branch_ativo: parity/canonical-executor
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: parity
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: roadmap-fase5-frontend-ciclo1
-resultado: DONE
-proxima_acao_permitida: "Iniciar FASE 5 Frontend Ciclo 1 (React + openapi-typescript)."
+task_id: parity-canonical-executor
+resultado: PENDENTE
+proxima_acao_permitida: "Push parity/canonical-executor → abrir PR-5 → aguardar CI → verificar nomes check-runs → atualizar ruleset + merge-readiness.json → mergear."
 bloqueios_ativos: []
 evidence_paths:
-  - ROADMAP.md
+  - .github/workflows/_reusable-ci.yml
   - .github/workflows/ci.yml
+  - conftest.py
+  - requirements-dev.txt
   - scripts/hb
-  - _reports/contract_gates/precommit.latest.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-31 | **Branch:** main | **CI:** 🟢 GREEN (12/12 ✓)
-**Modo:** ROADMAP | **Fase:** 5 | **Resultado:** FASE 4 CONCLUÍDA
+**Data:** 2026-04-03 | **Branch:** parity/canonical-executor | **CI:** UNKNOWN
+**Modo:** ROADMAP | **Fase:** Paridade E5 | **Resultado:** PENDENTE
 
-## O que foi feito nesta sessão (FASE 4 closure)
+## O que foi feito nesta sessão (E5 — canonical-executor)
 
-### PR #28 mergeado — commit squash `13e4725`
-Todos os GAPs de conformance e CI resolvidos:
+### Base: PR-4 merged (#35) — main em 9739935b
+- E1 (#31), E2 (#32), E3 (#34), E4 (#35) todos merged e verdes
 
-- **GAP-01**: RFC 9457 handlers + Schemathesis habilitado no CI
-- **GAP-02**: oasdiff v1.12.3 instalado no job `validate` do CI
-- **GAP-03**: `pipeline_gates` habilitado no CI; `TestStage23ExitCodes` marcado `@pytest.mark.slow`
-- **GAP-04**: `SESSION_HANDOFF.md` campo `task_id` alinhado com `session_start.json`
-- **GAP-05**: Schema handoff v5 + `HANDOFF_COHERENCE_GATE` passando
-- **GAP-A**: 24 arquivos de teste especializados para domínio training
-- **CI fixes**: `git config core.hooksPath` no job test; `_get_git_branch()` com fallback detached HEAD
+### E5 — implementado nesta sessão
 
-### CI final — todos 12 checks ✓
-`Validate Contracts` ✓ | `Validate Contract Gates` ✓ | `Tests` ✓ | `Frontend Build + Tests` ✓ | `Docker Build Check` ✓ | todos governance checks ✓
-
-## Evidências
-- `.github/workflows/ci.yml` — oasdiff install, git hooks path, CI 12/12 ✓
-- `scripts/hb` — `_get_git_branch()` fallback detached HEAD
-- `_reports/contract_gates/precommit.latest.json` — todos gates PASS
-- `ROADMAP.md` — critério de done FASE 4 atingido
+- **`_reusable-ci.yml`** criado: lê versões de `toolchain.json` via `jq` (node, python, oasdiff)
+- **`ci.yml`** transformado em caller fino (19 linhas): delega para `_reusable-ci.yml`
+- **`contract-gates.yml`**: actionlint expandido para incluir `_reusable-ci.yml`
+- **`conftest.py`**: Testcontainers híbrido — socket → containers → skip; DB_PORT default 5433 → 5432
+- **`requirements-dev.txt`**: `testcontainers[postgres,redis]==4.10.0` adicionado
+- **`scripts/hb`**: `_ci_test_env` (lê toolchain.json), `cmd_ci()`, subcomando `ci --profile pr/full`
+- **`tests/invariants/test_toolchain_parity.py`**: testes atualizados para verificar delegação ao reusable
 
 ## Próxima ação permitida
-Iniciar **FASE 5** — Frontend Ciclo 1:
-- `frontend/src/api/schema.d.ts` via `npm run api:generate`
-- Componentes React para módulos core (training, player, team)
-- Nunca editar `schema.d.ts` manualmente
+
+Push `parity/canonical-executor` → abrir PR-5 → aguardar CI → verificar nomes exatos dos check-runs → atualizar ruleset + `merge-readiness.json` → mergear.
+
+**⚠️ Ação obrigatória pós-abertura do PR:**
+1. Abrir PR-5 (push deste branch)
+2. Observar os nomes reais dos check-runs no GitHub
+3. Atualizar ruleset via API com os novos nomes
+4. Atualizar `merge-readiness.json` com os novos contexts
+5. Mergear PR-5
+
+## Evidências
+- `.github/workflows/_reusable-ci.yml` — reusable workflow criado
+- `.github/workflows/ci.yml` — caller fino (19 linhas)
+- `conftest.py` — Testcontainers híbrido + DB_PORT 5432
+- `requirements-dev.txt` — testcontainers adicionado
+- `scripts/hb` — `ci --profile pr/full` + `_ci_test_env`
+- `tests/invariants/test_toolchain_parity.py` — testes de delegação atualizados
 
 ## Bloqueios ativos
-Nenhum.
-
+Nenhum. Branch limpo, pronto para push e PR.

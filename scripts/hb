@@ -21,6 +21,7 @@ Referência: .dev/planejamento/execut.md (Fase 2 — PR2)
 
 import argparse
 import json
+import os
 import pathlib
 import subprocess
 import sys
@@ -849,14 +850,70 @@ class HBCLIv2:
     def cmd_reset(self) -> int:
         """Limpar sessão (novo boot)."""
         print("\n══ RESET: Limpando sessão ══")
-        
+
         if self.session_file.exists():
             self.session_file.unlink()
             print("✅ session_start.json removido")
-        
+
         self.session = {}
         print("✅ Sessão limpa. Execute 'hb verify' para nova sessão.\n")
         return 0
+
+    @property
+    def _ci_test_env(self) -> dict:
+        """Ambiente de teste derivado de toolchain.json (single source of truth)."""
+        toolchain = self._load_json(self.root / "toolchain.json")
+        pg = toolchain["services"]["postgres"]
+        redis = toolchain["services"]["redis"]
+        db_host = "localhost"
+        db_port = str(pg["port"])
+        return {
+            "SECRET_KEY": "ci-secret-key-for-testing-only-not-real",
+            "DEBUG": "false",
+            "ALLOWED_HOSTS": "localhost,127.0.0.1",
+            "HB_RUN_SCHEMATHESIS": "0",
+            "DATABASE_URL": (
+                f"postgres://{pg['test_user']}:{pg['test_password']}"
+                f"@{db_host}:{db_port}/{pg['test_db']}"
+            ),
+            "DB_NAME": pg["test_db"],
+            "DB_USER": pg["test_user"],
+            "DB_PASSWORD": pg["test_password"],
+            "DB_HOST": db_host,
+            "DB_PORT": db_port,
+            "REDIS_URL": f"redis://{db_host}:{redis['port']}/0",
+            "CELERY_BROKER_URL": f"redis://{db_host}:{redis['port']}/1",
+            "CELERY_RESULT_BACKEND": f"redis://{db_host}:{redis['port']}/2",
+            "CORS_ALLOWED_ORIGINS": "http://localhost:3000,http://localhost:5173",
+            "LOG_LEVEL": "WARNING",
+            "JWT_ALGORITHM": "HS256",
+            "JWT_SECRET": "ci-jwt-secret-for-testing-only",
+        }
+
+    def cmd_ci(self, profile: str = "pr") -> int:
+        """Rodar suíte CI local com ambiente derivado de toolchain.json.
+
+        Perfis:
+          pr   — pytest -q -m "not slow" --tb=short  (padrão, rápido)
+          full — pytest -v --tb=short                (cobertura completa)
+        """
+        print(f"\n══ CI LOCAL — perfil: {profile} ══")
+        env = {**os.environ, **self._ci_test_env}
+
+        if profile == "pr":
+            cmd = [sys.executable, "-m", "pytest", "-q", "-m", "not slow", "--tb=short"]
+        elif profile == "full":
+            cmd = [sys.executable, "-m", "pytest", "-v", "--tb=short"]
+        else:
+            print(f"❌ Perfil desconhecido: {profile!r}. Use 'pr' ou 'full'.", file=sys.stderr)
+            return 2
+
+        result = subprocess.run(cmd, env=env, cwd=self.root)
+        if result.returncode == 0:
+            print(f"\n✅ CI local ({profile}): PASS")
+        else:
+            print(f"\n❌ CI local ({profile}): FAIL")
+        return result.returncode
     
     @staticmethod
     def _calculate_file_hash(path: pathlib.Path) -> str:
@@ -946,6 +1003,13 @@ class HBCLIv2:
             help="FASE 3: rodar validate_contracts.py completo e registrar stage3_exit_code",
         )
 
+        # ci -- rodar suíte CI local com ambiente derivado de toolchain.json
+        ci_p = subparsers.add_parser("ci", help="Rodar suíte CI local (pr|full)")
+        ci_p.add_argument(
+            "--profile", default="pr", choices=["pr", "full"],
+            help="Perfil de CI: pr (rápido, sem slow) ou full (completo)",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -977,6 +1041,8 @@ class HBCLIv2:
                 return self.cmd_survival_suite()
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()
+            elif parsed_args.command == "ci":
+                return self.cmd_ci(parsed_args.profile)
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2
