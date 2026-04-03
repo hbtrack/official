@@ -16,6 +16,18 @@ on:
 # ---------------------------------------------------------------------------
 
 jobs:
+
+  lint-workflows:
+    name: Lint Workflows (actionlint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install actionlint
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+      - name: Run actionlint
+        run: ./actionlint -shellcheck '' -color .github/workflows/contract-gates.yml .github/workflows/ci.yml
+
   # ── Detectar se há mudança em paths de governança (usado pelos jobs abaixo) ──
   detect-governance-change:
     name: Detectar mudança em governança
@@ -46,10 +58,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Sincronizar branch_ativo no SESSION_HANDOFF
+        env:
+          CURRENT_REF: ${{ github.head_ref || github.ref_name }}
         run: |
-          CURRENT="${{ github.head_ref || github.ref_name }}"
-          if [ -n "$CURRENT" ] && [ -f SESSION_HANDOFF.md ]; then
-            sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT}|" SESSION_HANDOFF.md
+          if [ -n "$CURRENT_REF" ] && [ -f SESSION_HANDOFF.md ]; then
+            sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT_REF}|" SESSION_HANDOFF.md
           fi
 
       - name: Set up Node.js
@@ -80,7 +93,7 @@ jobs:
         run: npm ci
 
       - name: Validate contracts
-        run: python3 scripts/validate_contracts.py
+        run: python3 scripts/contracts/validate/validate_contracts.py
         env:
           CI: "true"
 
