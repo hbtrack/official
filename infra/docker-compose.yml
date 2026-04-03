@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:12
+    image: postgres:16
     container_name: hbtrack-postgres-dev
     restart: unless-stopped
     environment:
@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: hbtrack_dev
       POSTGRES_PASSWORD: hbtrack_dev_pwd
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - hbtrack_pgdata:/var/lib/postgresql/data
     networks:
