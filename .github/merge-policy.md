@@ -6,7 +6,7 @@
 
 ## Required checks (bloqueiam merge via ruleset `contract-gates`)
 
-Estes 7 checks devem passar para que qualquer PR possa ser merged em `main`.
+Estes 6 checks devem passar para que qualquer PR possa ser merged em `main`.
 Configurados no ruleset GitHub ID 13901517 com `strict_required_status_checks_policy: true`.
 
 | # | Job name (conforme GitHub Actions) | Workflow |
@@ -14,10 +14,11 @@ Configurados no ruleset GitHub ID 13901517 com `strict_required_status_checks_po
 | 1 | `Validate Contract Gates` | `contract-gates.yml` |
 | 2 | `Governance Tests` | `contract-gates.yml` |
 | 3 | `Architecture Drift Check` | `contract-gates.yml` |
-| 4 | `Adversarial Suite` | `contract-gates.yml` |
-| 5 | `CI / Validate Contracts` | `ci.yml` |
-| 6 | `CI / Tests` | `ci.yml` |
-| 7 | `CI / Frontend Build + Tests` | `ci.yml` |
+| 4 | `CI / Validate Contracts` | `ci.yml` |
+| 5 | `CI / Tests` | `ci.yml` |
+| 6 | `CI / Frontend Build + Tests` | `ci.yml` |
+
+> **Nota:** `Adversarial Suite` foi removido do ruleset em 2026-04-03 porque o job correspondente não existe em nenhum workflow — adicioná-lo causaria bloqueio permanente de PRs. Será re-adicionado no PR-4 após criação do job em `contract-gates.yml`.
 
 ## Informational checks (não bloqueiam merge)
 
@@ -53,5 +54,6 @@ Nenhum. O ruleset não tem bypass configurado — `bypass_actors: []`.
 | Data | Mudança | PR |
 |---|---|---|
 | 2026-04-03 | Criação inicial — migração branch protection → ruleset | parity/enforcement-unification |
-| 2026-04-03 | Adição de `Adversarial Suite` e `CI / Frontend Build + Tests` (5 → 7 checks) | parity/enforcement-unification |
+| 2026-04-03 | Adição de `CI / Frontend Build + Tests` (5 → 6 checks via PUT) | parity/enforcement-unification |
 | 2026-04-03 | Remoção de branch protection legada (branch protection + ruleset em paralelo era duplicidade) | parity/enforcement-unification |
+| 2026-04-03 | Remoção de `Adversarial Suite` do ruleset — job não existe nos workflows (seria bloqueio permanente) | parity/enforcement-unification |
