@@ -33,10 +33,10 @@ jobs:
             sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT}|" SESSION_HANDOFF.md
           fi
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
 
       - name: Install Node.js tooling (redocly, spectral, asyncapi)
@@ -148,10 +148,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 

@@ -375,6 +375,7 @@ contract_sources:
 - contracts/schemas/shared/readiness_confirmation.schema.json
 - contracts/schemas/shared/session_handoff.schema.json
 - contracts/schemas/shared/session_start.schema.json
+- contracts/schemas/shared/toolchain.schema.json
 - contracts/schemas/shared/waiver.schema.json
 - contracts/schemas/teams/.gitkeep
 - contracts/schemas/teams/team.schema.json

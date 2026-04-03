@@ -1,0 +1,25 @@
+{
+    "$schema": "./contracts/schemas/shared/toolchain.schema.json",
+    "version": "1.0.0",
+    "updated": "2026-04-03",
+    "runtimes": {
+        "node": "24",
+        "python": "3.12"
+    },
+    "services": {
+        "postgres": {
+            "image": "postgres:16",
+            "port": 5432,
+            "test_db": "hbtrack_test",
+            "test_user": "hbtrack",
+            "test_password": "testpassword"
+        },
+        "redis": {
+            "image": "redis:7-alpine",
+            "port": 6379
+        }
+    },
+    "tools": {
+        "oasdiff": "1.12.3"
+    }
+}

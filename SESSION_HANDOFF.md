@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-31"
-branch_ativo: main
+branch_ativo: parity/toolchain-manifest
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
