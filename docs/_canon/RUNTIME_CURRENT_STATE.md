@@ -40,10 +40,10 @@ Fonte de verdade: `src/`, `config/`, `infra/`, `tests/`, `contracts/`, `migratio
 | Item | Estado | Evidência |
 |------|--------|-----------|
 | PostgreSQL via Django ORM | **materializado** | `config/settings.py` (conexão via env `DATABASE_URL` / `DATABASES`) |
-| PostgreSQL local em container | **materializado** | `infra/docker-compose.yml` — serviço `postgres:12` |
+| PostgreSQL local em container | **materializado** | `infra/docker-compose.yml` — serviço `postgres:16` |
 | Migrations para todos os 17 módulos | **materializado** | `src/<module>/migrations/` presentes em todos os módulos |
 
-**Nota:** o target-state aprovado é PostgreSQL 16. O compose local ainda usa `postgres:12`.
+**Nota:** o target-state aprovado é PostgreSQL 16. O compose local usa `postgres:16` (alinhado ao target — PR-2/parity/toolchain-manifest).
 
 ### 1.3 Redis
 
@@ -147,7 +147,6 @@ Os itens abaixo têm aprovação arquitetural formal mas **não existem ainda no
 
 | Item | Aprovação | Bloqueio atual |
 |------|-----------|----------------|
-| PostgreSQL 16 | ADR-031 | compose local em `postgres:12` |
 | Worker Celery + Redis broker | ADR-031 | sem `config/celery.py` e sem `tasks.py` |
 | WebSocket / Channels | ADR-031 | sem `CHANNEL_LAYERS` no settings |
 | Frontend React + Vite | ADR-030 | `frontend/` inexiste |

@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack/schemas/shared/toolchain.schema.json",
+  "title": "Toolchain Manifest",
+  "description": "SSOT de versões de runtime, serviços e ferramentas consumido por .nvmrc, workflows, docker-compose, conftest e scripts/hb.",
+  "type": "object",
+  "required": ["version", "updated", "runtimes", "services", "tools"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "runtimes": {
+      "type": "object",
+      "required": ["node", "python"],
+      "additionalProperties": false,
+      "properties": {
+        "node": {
+          "type": "string",
+          "description": "Major version do Node.js (ex: '24')"
+        },
+        "python": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+$",
+          "description": "Versão major.minor do Python (ex: '3.12')"
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "required": ["postgres", "redis"],
+      "additionalProperties": false,
+      "properties": {
+        "postgres": {
+          "type": "object",
+          "required": ["image", "port", "test_db", "test_user", "test_password"],
+          "additionalProperties": false,
+          "properties": {
+            "image": {
+              "type": "string",
+              "pattern": "^postgres:\\d+"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "test_db": { "type": "string" },
+            "test_user": { "type": "string" },
+            "test_password": { "type": "string" }
+          }
+        },
+        "redis": {
+          "type": "object",
+          "required": ["image", "port"],
+          "additionalProperties": false,
+          "properties": {
+            "image": {
+              "type": "string",
+              "pattern": "^redis:"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            }
+          }
+        }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "required": ["oasdiff"],
+      "properties": {
+        "oasdiff": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      }
+    }
+  }
+}
