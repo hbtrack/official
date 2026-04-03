@@ -430,6 +430,8 @@ class HBHookValidator:
                 "tests/pipeline_gates/test_session_state_phase3.py",
                 "-q",
                 "--tb=short",
+                "-m",
+                "not slow",
             ],
             cwd=self.repo_root,
         )

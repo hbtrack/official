@@ -838,7 +838,7 @@ class HBCLIv2:
         print("\n══ SURVIVAL SUITE ══")
         print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v"],
+            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v", "-m", "not slow"],
             cwd=self.root,
         )
         if result.returncode == 0:

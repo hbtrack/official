@@ -1,0 +1,67 @@
+[
+  {
+    "name": "ci / Docker Build Check",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "ci / Tests",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "ci / Frontend Build + Tests",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Paridade Schema × Template × Skills",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Paridade Registry × Executor",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Governance Enforcement (survival-suite)",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "ci / Validate Contracts",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Architecture Drift Check",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Validate Contract Gates",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Detectar mudança em governança",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Lint Workflows (actionlint)",
+    "conclusion": "success",
+    "status": "completed"
+  },
+  {
+    "name": "Governance Tests",
+    "conclusion": "success",
+    "status": "completed"
+  }
+]
