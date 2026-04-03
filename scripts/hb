@@ -830,6 +830,9 @@ class HBCLIv2:
             "tests/pipeline_gates/test_session_state_phase3.py",
             # FASE 4 — paridade schema/template/skills/prompts
             "tests/pipeline_gates/test_schema_template_parity_phase4.py",
+            # E4 — invariantes de drift de toolchain e merge-readiness
+            "tests/invariants/test_toolchain_parity.py",
+            "tests/invariants/test_merge_readiness_parity.py",
         ]
         print("\n══ SURVIVAL SUITE ══")
         print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
@@ -931,6 +934,12 @@ class HBCLIv2:
             help="Rodar suíte de sobrevivência (obrigatório antes de mudança em gates/profiles/schemas)",
         )
 
+        # preflight — alias de survival-suite com invariantes (autoridade de merge local)
+        subparsers.add_parser(
+            "preflight",
+            help="Rodar preflight completo: survival-suite + invariantes de drift",
+        )
+
         # stage3 — validar contratos (full run) e registrar stage3_exit_code
         subparsers.add_parser(
             "stage3",
@@ -963,6 +972,8 @@ class HBCLIv2:
             elif parsed_args.command == "reset":
                 return self.cmd_reset()
             elif parsed_args.command == "survival-suite":
+                return self.cmd_survival_suite()
+            elif parsed_args.command == "preflight":
                 return self.cmd_survival_suite()
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()

@@ -16,6 +16,15 @@ on:
 # ---------------------------------------------------------------------------
 
 jobs:
+
+  lint-workflows:
+    name: Lint Workflows (actionlint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run actionlint
+        uses: rhysd/actionlint@v1
+
   # ── Detectar se há mudança em paths de governança (usado pelos jobs abaixo) ──
   detect-governance-change:
     name: Detectar mudança em governança
@@ -80,7 +89,7 @@ jobs:
         run: npm ci
 
       - name: Validate contracts
-        run: python3 scripts/validate_contracts.py
+        run: python3 scripts/contracts/validate/validate_contracts.py
         env:
           CI: "true"
 

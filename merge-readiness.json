@@ -11,7 +11,7 @@
             "workflow": "contract-gates.yml",
             "job": "validate-contracts",
             "category": "required",
-            "local_equivalent": "python3 scripts/hb preflight (STEP 3)"
+            "local_equivalent": "python3 scripts/hb preflight"
         },
         {
             "context": "Governance Tests",
@@ -32,7 +32,7 @@
             "workflow": "ci.yml",
             "job": "validate",
             "category": "required",
-            "local_equivalent": "python3 scripts/contracts/validate/validate_contracts.py"
+            "local_equivalent": "python3 scripts/contracts/validate/validate_contracts.py --profile precommit"
         },
         {
             "context": "Tests",
