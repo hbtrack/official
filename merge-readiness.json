@@ -28,29 +28,29 @@
             "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py"
         },
         {
-            "context": "Validate Contracts",
-            "workflow": "ci.yml",
+            "context": "ci / Validate Contracts",
+            "workflow": "_reusable-ci.yml",
             "job": "validate",
             "category": "required",
             "local_equivalent": "python3 scripts/contracts/validate/validate_contracts.py --profile precommit"
         },
         {
-            "context": "Tests",
-            "workflow": "ci.yml",
+            "context": "ci / Tests",
+            "workflow": "_reusable-ci.yml",
             "job": "test",
             "category": "required",
             "local_equivalent": "pytest -q"
         },
         {
-            "context": "Frontend Build + Tests",
-            "workflow": "ci.yml",
+            "context": "ci / Frontend Build + Tests",
+            "workflow": "_reusable-ci.yml",
             "job": "build-frontend",
             "category": "required",
             "local_equivalent": "npm --prefix frontend ci && npm --prefix frontend run build && npm --prefix frontend test"
         },
         {
-            "context": "Docker Build Check",
-            "workflow": "ci.yml",
+            "context": "ci / Docker Build Check",
+            "workflow": "_reusable-ci.yml",
             "job": "build",
             "category": "informational",
             "reason": "Valida Dockerfile mas não bloqueia merge — falha de build de imagem não impede integração de código"
