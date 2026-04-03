@@ -1,28 +1,29 @@
 ---
-data_ultima_sessao: "2026-03-31"
-branch_ativo: parity/toolchain-manifest
+data_ultima_sessao: "2026-04-03"
+branch_ativo: main
 modo_operacao: ROADMAP
-ci_status: UNKNOWN
-modulo_foco: training
+ci_status: GREEN
+modulo_foco: parity
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: roadmap-fase5-frontend-ciclo1
-resultado: DONE
-proxima_acao_permitida: "Iniciar FASE 5 Frontend Ciclo 1 (React + openapi-typescript)."
+task_id: parity-enforcement-toolchain
+resultado: IN_PROGRESS
+proxima_acao_permitida: "Iniciar PR-3 (merge-readiness manifest) do PLAN_EXEC_PARIDADE.md."
 bloqueios_ativos: []
 evidence_paths:
-  - ROADMAP.md
-  - .github/workflows/ci.yml
-  - scripts/hb
-  - _reports/contract_gates/precommit.latest.json
+  - PLAN_EXEC_PARIDADE.md
+  - PLAN_PARIEDADE.md
+  - toolchain.json
+  - contracts/schemas/shared/toolchain.schema.json
+  - docs/_canon/RUNTIME_CURRENT_STATE.md
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-31 | **Branch:** main | **CI:** 🟢 GREEN (12/12 ✓)
-**Modo:** ROADMAP | **Fase:** 5 | **Resultado:** FASE 4 CONCLUÍDA
+**Data:** 2026-04-03 | **Branch:** main | **CI:** 🟢 GREEN (12/12 ✓)
+**Modo:** ROADMAP | **Fase:** Paridade | **Resultado:** PR-1 + PR-2 MERGEADOS
 
 ## O que foi feito nesta sessão (FASE 4 closure)
 
