@@ -15,10 +15,14 @@ sys.path.insert(0, str(_ROOT / "scripts"))
 # tools/diagnostics não existe ainda (módulo pendente, fora do escopo atual)
 collect_ignore = ["tests/tools/diagnostics/test_diagnose_connectivity.py"]
 
+# Containers Testcontainers levantados nesta sessão (escopo session)
+_tc_postgres = None
+_tc_redis = None
+
 
 def _postgres_available() -> bool:
     host = os.environ.get("DB_HOST", "localhost")
-    port = int(os.environ.get("DB_PORT", "5433"))
+    port = int(os.environ.get("DB_PORT", "5432"))
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(1)
@@ -26,6 +30,46 @@ def _postgres_available() -> bool:
         s.close()
         return True
     except OSError:
+        return False
+
+
+def _try_start_testcontainers() -> bool:
+    """Tenta subir Postgres + Redis via Testcontainers. Retorna True se OK."""
+    global _tc_postgres, _tc_redis
+    try:
+        from testcontainers.postgres import PostgresContainer
+        from testcontainers.redis import RedisContainer
+    except ImportError:
+        return False
+
+    try:
+        pg = PostgresContainer("postgres:16")
+        pg = pg.with_env("POSTGRES_DB", "hbtrack_test")
+        pg = pg.with_env("POSTGRES_USER", "hbtrack")
+        pg = pg.with_env("POSTGRES_PASSWORD", "testpassword")
+        pg.start()
+        _tc_postgres = pg
+
+        rd = RedisContainer("redis:7-alpine")
+        rd.start()
+        _tc_redis = rd
+
+        # Expor vars para Django / pytest-django
+        os.environ.setdefault("DB_NAME", "hbtrack_test")
+        os.environ.setdefault("DB_USER", "hbtrack")
+        os.environ.setdefault("DB_PASSWORD", "testpassword")
+        os.environ["DB_HOST"] = pg.get_container_host_ip()
+        os.environ["DB_PORT"] = str(pg.get_exposed_port(5432))
+        os.environ["DATABASE_URL"] = (
+            f"postgres://hbtrack:testpassword@"
+            f"{os.environ['DB_HOST']}:{os.environ['DB_PORT']}/hbtrack_test"
+        )
+        redis_port = rd.get_exposed_port(6379)
+        os.environ["REDIS_URL"] = f"redis://localhost:{redis_port}/0"
+        os.environ["CELERY_BROKER_URL"] = f"redis://localhost:{redis_port}/1"
+        os.environ["CELERY_RESULT_BACKEND"] = f"redis://localhost:{redis_port}/2"
+        return True
+    except Exception:
         return False
 
 
@@ -58,12 +102,32 @@ def _patch_flush_allow_cascade():
 def django_db_setup():
     """Override pytest-django database setup.
 
-    Most tests in this repo are contract/governance tests that don't need DB.
-    Tests requiring DB (schemathesis, integration) should skip gracefully
-    or be run with explicit infrastructure: docker compose up postgres.
+    Ordem de preferência:
+    1. Postgres disponível via socket (docker compose up ou CI service)
+    2. Testcontainers — sobe Postgres + Redis automaticamente
+    3. Skip — nenhuma infra disponível
     """
-    if not _postgres_available():
-        pytest.skip(
-            "PostgreSQL não disponível. "
-            "Inicie com: docker compose -f infra/docker-compose.yml up -d postgres"
-        )
+    if _postgres_available():
+        return
+
+    if _try_start_testcontainers():
+        return
+
+    pytest.skip(
+        "PostgreSQL não disponível e Testcontainers falhou. "
+        "Inicie com: docker compose -f infra/docker-compose.yml up -d postgres"
+    )
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """Parar containers Testcontainers ao final da sessão."""
+    if _tc_redis is not None:
+        try:
+            _tc_redis.stop()
+        except Exception:
+            pass
+    if _tc_postgres is not None:
+        try:
+            _tc_postgres.stop()
+        except Exception:
+            pass

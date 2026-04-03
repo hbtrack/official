@@ -18,11 +18,17 @@ class TestNodeVersion:
             f".nvmrc={nvmrc!r} != toolchain node={tc['runtimes']['node']!r}"
         )
 
-    def test_ci_workflow_matches_toolchain(self):
-        tc = _tc()
+    def test_ci_workflow_delegates_to_reusable(self):
+        """ci.yml deve ser caller fino que delega para _reusable-ci.yml."""
         ci = (ROOT / ".github/workflows/ci.yml").read_text()
-        expected = f'node-version: "{tc["runtimes"]["node"]}"'
-        assert expected in ci, f"ci.yml missing {expected!r}"
+        assert "_reusable-ci.yml" in ci, "ci.yml não referencia _reusable-ci.yml"
+
+    def test_reusable_reads_node_version_from_toolchain(self):
+        """_reusable-ci.yml deve ler node version de toolchain.json via jq."""
+        reusable = (ROOT / ".github/workflows/_reusable-ci.yml").read_text()
+        assert "jq -r .runtimes.node toolchain.json" in reusable, (
+            "_reusable-ci.yml não lê node version de toolchain.json via jq"
+        )
 
 
 class TestPythonVersion:
@@ -32,11 +38,12 @@ class TestPythonVersion:
         expected = f'python-version: "{tc["runtimes"]["python"]}"'
         assert expected in wf, f"contract-gates.yml missing {expected!r}"
 
-    def test_ci_workflow_matches_toolchain(self):
-        tc = _tc()
-        ci = (ROOT / ".github/workflows/ci.yml").read_text()
-        expected = f'python-version: "{tc["runtimes"]["python"]}"'
-        assert expected in ci, f"ci.yml missing {expected!r}"
+    def test_reusable_reads_python_version_from_toolchain(self):
+        """_reusable-ci.yml deve ler python version de toolchain.json via jq."""
+        reusable = (ROOT / ".github/workflows/_reusable-ci.yml").read_text()
+        assert "jq -r .runtimes.python toolchain.json" in reusable, (
+            "_reusable-ci.yml não lê python version de toolchain.json via jq"
+        )
 
 
 class TestPostgresVersion:
