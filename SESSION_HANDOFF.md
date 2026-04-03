@@ -1,14 +1,14 @@
 ---
 data_ultima_sessao: "2026-04-03"
-branch_ativo: main
+branch_ativo: parity/merge-readiness
 modo_operacao: ROADMAP
-ci_status: GREEN
+ci_status: UNKNOWN
 modulo_foco: parity
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: parity-enforcement-toolchain
-resultado: IN_PROGRESS
+resultado: PENDENTE
 proxima_acao_permitida: "Iniciar PR-3 (merge-readiness manifest) do PLAN_EXEC_PARIDADE.md."
 bloqueios_ativos: []
 evidence_paths:

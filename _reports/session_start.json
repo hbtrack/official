@@ -5,7 +5,7 @@
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -23,9 +23,9 @@
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
   "hook_validated_at": "2026-03-27T23:10:14.973783+00:00",
-  "module_focus": "training",
+  "module_focus": "parity",
   "stage3_exit_code": 2,
-  "roadmap_task_id": "roadmap-fase5-frontend-ciclo1",
+  "roadmap_task_id": "parity-enforcement-toolchain",
   "module": "training",
   "stage2_artifacts": [
     {
@@ -56,6 +56,18 @@
       "path": "contracts/openapi/spectral_lint.log",
       "sha256": "20dacc396fb2ab9ddaf802b5703aa67218b93ac39fae1fd982294d0798f65328",
       "created_at": "2026-03-26T11:08:38.343345+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "merge-readiness.json",
+      "sha256": "e6adde23030098ba81d0f5517bd21f5e9c769bdcc9097e0865c558eb81b8ccd3",
+      "created_at": "2026-04-03T05:33:17.730019+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/merge-readiness.schema.json",
+      "sha256": "5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38",
+      "created_at": "2026-04-03T05:33:29.345119+00:00",
       "gate_exit_code": 0
     }
   ],

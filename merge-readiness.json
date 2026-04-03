@@ -1,0 +1,104 @@
+{
+    "$schema": "./contracts/schemas/shared/merge-readiness.schema.json",
+    "version": "1.0.0",
+    "updated": "2026-04-03",
+    "target_branch": "main",
+    "ruleset_name": "contract-gates",
+    "ruleset_id": 13901517,
+    "checks": [
+        {
+            "context": "Validate Contract Gates",
+            "workflow": "contract-gates.yml",
+            "job": "validate-contracts",
+            "category": "required",
+            "local_equivalent": "python3 scripts/hb preflight (STEP 3)"
+        },
+        {
+            "context": "Governance Tests",
+            "workflow": "contract-gates.yml",
+            "job": "governance-tests",
+            "category": "required",
+            "local_equivalent": "pytest tests/test_pipeline_governance.py"
+        },
+        {
+            "context": "Architecture Drift Check",
+            "workflow": "contract-gates.yml",
+            "job": "architecture-drift-check",
+            "category": "required",
+            "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py"
+        },
+        {
+            "context": "Validate Contracts",
+            "workflow": "ci.yml",
+            "job": "validate",
+            "category": "required",
+            "local_equivalent": "python3 scripts/contracts/validate/validate_contracts.py"
+        },
+        {
+            "context": "Tests",
+            "workflow": "ci.yml",
+            "job": "test",
+            "category": "required",
+            "local_equivalent": "pytest -q"
+        },
+        {
+            "context": "Frontend Build + Tests",
+            "workflow": "ci.yml",
+            "job": "build-frontend",
+            "category": "required",
+            "local_equivalent": "npm --prefix frontend ci && npm --prefix frontend run build && npm --prefix frontend test"
+        },
+        {
+            "context": "Docker Build Check",
+            "workflow": "ci.yml",
+            "job": "build",
+            "category": "informational",
+            "reason": "Valida Dockerfile mas não bloqueia merge — falha de build de imagem não impede integração de código"
+        },
+        {
+            "context": "Governance Enforcement (survival-suite)",
+            "workflow": "contract-gates.yml",
+            "job": "governance-enforcement",
+            "category": "conditional",
+            "condition": "governance_changed == true",
+            "reason": "Condicional — só roda quando arquivos de governança (.contract_driven/, contracts/, docs/_canon/) são modificados"
+        },
+        {
+            "context": "Paridade Registry × Executor",
+            "workflow": "contract-gates.yml",
+            "job": "registry-executor-parity",
+            "category": "conditional",
+            "condition": "governance_changed == true",
+            "reason": "Condicional — verifica paridade entre MODULE_REGISTRY.yaml e executores; ativado apenas em mudanças de governança"
+        },
+        {
+            "context": "Paridade Schema × Template × Skills",
+            "workflow": "contract-gates.yml",
+            "job": "schema-template-skills-parity",
+            "category": "conditional",
+            "condition": "governance_changed == true",
+            "reason": "Condicional — verifica paridade entre schemas, templates e skills; ativado apenas em mudanças de governança"
+        },
+        {
+            "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
+            "workflow": "contract-gates.yml",
+            "job": "session-handoff-crossval",
+            "category": "conditional",
+            "condition": "governance_changed == true",
+            "reason": "Condicional — cross-valida SESSION_HANDOFF.md contra session_start workflow; ativado apenas em mudanças de governança"
+        }
+    ],
+    "enforcement": {
+        "require_pr": true,
+        "require_conversation_resolution": true,
+        "require_up_to_date": true,
+        "block_force_push": true,
+        "block_deletion": true,
+        "bypass_actors": []
+    },
+    "local_executor": {
+        "command": "python3 scripts/hb preflight",
+        "evidence_path": "_reports/preflight/latest.json",
+        "pre_push_hook": "scripts/git-hooks/pre-push"
+    }
+}
