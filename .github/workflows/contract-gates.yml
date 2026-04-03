@@ -26,7 +26,7 @@ jobs:
         run: |
           bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
       - name: Run actionlint
-        run: ./actionlint -shellcheck '' -color
+        run: ./actionlint -shellcheck '' -color .github/workflows/contract-gates.yml .github/workflows/ci.yml
 
   # ── Detectar se há mudança em paths de governança (usado pelos jobs abaixo) ──
   detect-governance-change:
