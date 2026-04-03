@@ -22,8 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install actionlint
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
       - name: Run actionlint
-        uses: rhysd/actionlint@v1
+        run: ./actionlint -color
 
   # ── Detectar se há mudança em paths de governança (usado pelos jobs abaixo) ──
   detect-governance-change:
