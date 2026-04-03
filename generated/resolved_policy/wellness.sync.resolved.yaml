@@ -251,6 +251,7 @@ contract_sources:
 - contracts/schemas/shared/.gitkeep
 - contracts/schemas/shared/domain_axioms.schema.json
 - contracts/schemas/shared/domain_axioms_module.schema.json
+- contracts/schemas/shared/merge-readiness.schema.json
 - contracts/schemas/shared/module_registry.schema.json
 - contracts/schemas/shared/module_source_authority_matrix.schema.json
 - contracts/schemas/shared/owasp_api_control_matrix.schema.json

@@ -255,6 +255,8 @@ traceability_manifest:
     sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
   - path: generated/contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: generated/contracts/schemas/shared/merge-readiness.schema.json
+    sha256: 5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38
   - path: generated/contracts/schemas/shared/module_registry.schema.json
     sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: generated/contracts/schemas/shared/module_source_authority_matrix.schema.json
@@ -321,9 +323,9 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: f3bdc98dc1720b492b50806d25c4fd904a919c61b94bc1e968f30592f5b9873e
+  generated_tree_sha256: e8543accc3d0881f916f42dad7e04efc916d1d4108ec4122531aa1cb98e6bc4f
   policy_path: generated/resolved_policy/teams.sync.resolved.yaml
-  policy_sha256: 6a659319ac6364ac21794e05e752f29670cd463c9dd907484a1cd916d235d108
+  policy_sha256: 64d646925b2dbb2cc96a4a81aa26a13df78f0feaea8de59e35d7f9ab0b8b40a1
   source_contracts:
   - path: contracts/openapi/README.md
     sha256: ac7fe69b8b5fc9c580de4bfee6f0fa8f64822048ab6622e078f5db64e54e396f
@@ -577,6 +579,8 @@ traceability_manifest:
     sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
   - path: contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: contracts/schemas/shared/merge-readiness.schema.json
+    sha256: 5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38
   - path: contracts/schemas/shared/module_registry.schema.json
     sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: contracts/schemas/shared/module_source_authority_matrix.schema.json
@@ -654,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 3dae598550ac0284d658d1c52807e4ba9076095ec334986f20a6fd628324bcaa
+  source_tree_sha256: 7cc031998067e4ba4fb32b8c6a437d7e74ced232dbf71a53142faa6628a24704

@@ -1,0 +1,194 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://hbtrack.dev/schemas/merge-readiness",
+    "title": "HB Track Merge-Readiness Manifest",
+    "description": "Declaração formal dos checks que bloqueiam merge em main, checks informativos e condicionais, e o executor local equivalente para cada um.",
+    "type": "object",
+    "required": [
+        "version",
+        "target_branch",
+        "ruleset_name",
+        "checks",
+        "enforcement",
+        "local_executor"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "updated": {
+            "type": "string",
+            "format": "date"
+        },
+        "target_branch": {
+            "type": "string"
+        },
+        "ruleset_name": {
+            "type": "string"
+        },
+        "ruleset_id": {
+            "type": "integer"
+        },
+        "checks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "context",
+                    "workflow",
+                    "job",
+                    "category"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "context": {
+                        "type": "string",
+                        "description": "Nome exato do check context como registrado no ruleset do GitHub."
+                    },
+                    "workflow": {
+                        "type": "string",
+                        "description": "Arquivo de workflow (.yml) que contém o job."
+                    },
+                    "job": {
+                        "type": "string",
+                        "description": "ID do job dentro do workflow."
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "required",
+                            "informational",
+                            "conditional"
+                        ],
+                        "description": "required = bloqueia merge no ruleset. informational = roda mas não bloqueia. conditional = roda apenas quando condição de path-filter é verdadeira."
+                    },
+                    "local_equivalent": {
+                        "type": "string",
+                        "description": "Comando local que reproduz este check. Obrigatório para category=required."
+                    },
+                    "condition": {
+                        "type": "string",
+                        "description": "Expressão que ativa o check. Obrigatório para category=conditional."
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "Justificativa de não ser required. Obrigatório para category=informational e category=conditional."
+                    }
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "category": {
+                                    "const": "required"
+                                }
+                            },
+                            "required": [
+                                "category"
+                            ]
+                        },
+                        "then": {
+                            "required": [
+                                "local_equivalent"
+                            ]
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "category": {
+                                    "const": "conditional"
+                                }
+                            },
+                            "required": [
+                                "category"
+                            ]
+                        },
+                        "then": {
+                            "required": [
+                                "condition",
+                                "reason"
+                            ]
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "category": {
+                                    "const": "informational"
+                                }
+                            },
+                            "required": [
+                                "category"
+                            ]
+                        },
+                        "then": {
+                            "required": [
+                                "reason"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "enforcement": {
+            "type": "object",
+            "required": [
+                "require_pr",
+                "require_conversation_resolution",
+                "require_up_to_date",
+                "block_force_push",
+                "bypass_actors"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "require_pr": {
+                    "type": "boolean"
+                },
+                "require_conversation_resolution": {
+                    "type": "boolean"
+                },
+                "require_up_to_date": {
+                    "type": "boolean"
+                },
+                "block_force_push": {
+                    "type": "boolean"
+                },
+                "block_deletion": {
+                    "type": "boolean"
+                },
+                "bypass_actors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "local_executor": {
+            "type": "object",
+            "required": [
+                "command",
+                "evidence_path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "command": {
+                    "type": "string"
+                },
+                "evidence_path": {
+                    "type": "string"
+                },
+                "pre_push_hook": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
