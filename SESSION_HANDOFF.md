@@ -13,10 +13,11 @@ proxima_acao_permitida: "Iniciar PR-3 (merge-readiness manifest) do PLAN_EXEC_PA
 bloqueios_ativos: []
 evidence_paths:
   - PLAN_EXEC_PARIDADE.md
-  - PLAN_PARIEDADE.md
   - toolchain.json
   - contracts/schemas/shared/toolchain.schema.json
   - docs/_canon/RUNTIME_CURRENT_STATE.md
+  - merge-readiness.json
+  - contracts/schemas/shared/merge-readiness.schema.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
