@@ -1,0 +1,157 @@
+version: "1.0.0"
+status: active
+module: matches
+
+entities:
+  Match:
+    schema_ref: "../../../../../contracts/schemas/matches/match.schema.json"
+    runtime_entity_ref: "../../../../../src/matches/domain/entities.py#Match"
+    docs_refs:
+      - "../DOMAIN_RULES_MATCHES.md"
+      - "../INVARIANTS_MATCHES.md"
+      - "../PERMISSIONS_MATCHES.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: competitionId
+        runtime_name: competition_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "DR-MATCH-001: matches é soberano do registro oficial; competitionId é obrigatório"
+          - "INV-MATCH-001: campo obrigatório"
+          - "boundary: reference to competitions module"
+      - name: homeTeamId
+        runtime_name: home_team_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "DR-MATCH-002: equipe mandante"
+          - "INV-MATCH-001: campo obrigatório"
+          - "INV-MATCH-002: homeTeamId != awayTeamId"
+          - "boundary: reference to teams module"
+      - name: awayTeamId
+        runtime_name: away_team_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "DR-MATCH-002: equipe visitante"
+          - "INV-MATCH-001: campo obrigatório"
+          - "INV-MATCH-002: homeTeamId != awayTeamId"
+          - "boundary: reference to teams module"
+      - name: venueLabel
+        runtime_name: venue_label
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+          - "maxLength: 200"
+      - name: statusLabel
+        runtime_name: status_label
+        required: true
+        type: enum
+        values:
+          - SCHEDULED
+          - PRE_MATCH
+          - FIRST_HALF
+          - HALF_TIME
+          - SECOND_HALF
+          - OVERTIME_1
+          - OVERTIME_2
+          - PENALTIES
+          - COMPLETED
+          - CANCELLED
+        constraints:
+          - "DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013"
+          - "default: SCHEDULED na criação"
+      - name: scheduledAt
+        runtime_name: scheduled_at
+        required: true
+        type: datetime
+        constraints:
+          - "INV-MATCH-001: campo obrigatório"
+      - name: startedAt
+        runtime_name: started_at
+        required: false
+        type: datetime
+        constraints:
+          - "nullable: true"
+          - "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+      - name: endedAt
+        runtime_name: ended_at
+        required: false
+        type: datetime
+        constraints:
+          - "nullable: true"
+          - "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+      - name: homeScore
+        runtime_name: home_score
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true"
+          - "minimum: 0"
+          - "INV-MATCH-003: homeScore >= 0 quando presente"
+      - name: awayScore
+        runtime_name: away_score
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true"
+          - "minimum: 0"
+          - "INV-MATCH-003: awayScore >= 0 quando presente"
+      - name: lineupUserIds
+        runtime_name: lineup_user_ids
+        required: true
+        type: array_of_uuid
+        constraints:
+          - "uniqueItems: true"
+          - "INV-MATCH-005: sem duplicatas"
+          - "HBR-008: max 16 por equipe"
+          - "boundary: reference to users module"
+      - name: officialIncidentIds
+        runtime_name: official_incident_ids
+        required: true
+        type: array_of_uuid
+        constraints:
+          - "uniqueItems: true"
+          - "INV-MATCH-005: sem duplicatas"
+          - "DEC-MATCHES-001: CRUD simples; súmula alimentada pelo operador pós-jogo"
+      - name: refereeNames
+        runtime_name: referee_names
+        required: true
+        type: array_of_string
+        constraints:
+          - "uniqueItems: true"
+          - "INV-MATCH-005: sem duplicatas"
+          - "DR-MATCH-003: árbitros são nomes simples, não entidades do domínio"
+      - name: createdAt
+        runtime_name: created_at
+        required: true
+        type: datetime
+      - name: updatedAt
+        runtime_name: updated_at
+        required: true
+        type: datetime
+
+    domain_enums:
+      - name: RoleLabel
+        values: [admin, coordinator, coach, athlete, member]
+        source: "ADR-008 / SYSTEM_SCOPE.md"
+      - name: MatchStatus
+        values: [SCHEDULED, PRE_MATCH, FIRST_HALF, HALF_TIME, SECOND_HALF, OVERTIME_1, OVERTIME_2, PENALTIES, COMPLETED, CANCELLED]
+        source: "DEC-MATCHES-002 / HBR-013"
+
+    invariants:
+      - id: INV-MATCH-001
+        rule: "id, competition_id, home_team_id, away_team_id, scheduled_at são obrigatórios."
+      - id: INV-MATCH-002
+        rule: "home_team_id deve ser diferente de away_team_id."
+      - id: INV-MATCH-003
+        rule: "home_score e away_score devem ser >= 0 quando presentes."
+      - id: INV-MATCH-004
+        rule: "started_at deve ser <= ended_at quando ambos presentes."
+      - id: INV-MATCH-005
+        rule: "lineup_user_ids, official_incident_ids e referee_names não podem ter duplicatas."

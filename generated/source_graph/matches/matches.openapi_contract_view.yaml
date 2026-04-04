@@ -1,0 +1,189 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: matches
+openapi_paths_ref: contracts/openapi/paths/matches.yaml
+operations:
+- operation_id: listMatches
+  method: GET
+  path: /matches
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/get
+  runtime_handler_ref: ../../../../../src/matches/api.py#list_matches
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#ListMatches
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createMatch
+  method: POST
+  path: /matches
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/post
+  runtime_handler_ref: ../../../../../src/matches/api.py#create_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#CreateMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 500
+- operation_id: getMatch
+  method: GET
+  path: /matches/{matchId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/get
+  runtime_handler_ref: ../../../../../src/matches/api.py#get_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#GetMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchMatch
+  method: PATCH
+  path: /matches/{matchId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/patch
+  runtime_handler_ref: ../../../../../src/matches/api.py#patch_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#PatchMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: addPlayerToLineup
+  method: PUT
+  path: /matches/{matchId}/lineup/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/put
+  runtime_handler_ref: ../../../../../src/matches/api.py#add_player_to_lineup
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#AddPlayerToLineup
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removePlayerFromLineup
+  method: DELETE
+  path: /matches/{matchId}/lineup/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/delete
+  runtime_handler_ref: ../../../../../src/matches/api.py#remove_player_from_lineup
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#RemovePlayerFromLineup
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-MATCH-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/matches/api.py#_role
+  operations:
+  - listMatches
+  - createMatch
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/matches/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/matches/domain/rules.py#MatchNotFound
+  operations:
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/matches/domain/entities.py#validate_invariants
+  operations:
+  - createMatch
+  - patchMatch
+- id: ERR-MATCH-409-STATE-ERROR
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/matches/domain/rules.py#MatchStateError
+  operations:
+  - createMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/matches/api.py#list_matches
+  operations:
+  - listMatches
+  - createMatch
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup

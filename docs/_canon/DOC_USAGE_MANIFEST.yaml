@@ -450,6 +450,25 @@ entries:
       - "src/users/"
       - "tests/pipeline_gates/test_users_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_MATCHES_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/matches/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/matches/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/matches/README.md"
+      - "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+      - "tests/pipeline_gates/test_matches_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/matches/*.md"
+      - "contracts/schemas/matches/"
+      - "contracts/openapi/paths/matches.yaml"
+      - "contracts/openapi/components/schemas/matches/"
+      - "src/matches/"
+      - "tests/pipeline_gates/test_matches_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

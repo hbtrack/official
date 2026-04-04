@@ -77,7 +77,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "19492a7e089ac97bb5c81ee9249914560d25edd2b7125b1497d7d8c8f612cfee"
+      "sha256": "c5446e63ede4771183942aed2fa78b8b009653272456511d402ada2083a78d9c"
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "5b107d147e7d6c6621c77a8407c4420a2297ce9b4ed2d6b8752448da889f3ee6",
+  "source_fingerprint": "dce61d8de80bbd41e9f23e0c5f761e58545c1c7fac15d91b2474541a0a2baccd",
   "source_graph": {
     "entities": {
       "UserProfile": {

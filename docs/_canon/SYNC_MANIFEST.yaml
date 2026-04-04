@@ -1066,3 +1066,50 @@ rules:
       - "python3 scripts/compile/compile_context_bundle.py --module users --check --format json"
       - "python3 scripts/validate_contracts.py --profile ci"
       - "python3 -m pytest tests/pipeline_gates/test_users_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_users.py tests/pipeline_gates/test_context_bundle_users.py -q"
+
+  - rule_id: MATCHES_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/matches/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/matches/graph/entities.yaml"
+      - "docs/hbtrack/modulos/matches/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/matches/graph/errors.yaml"
+      - "docs/hbtrack/modulos/matches/graph/test_obligations.yaml"
+    source_kind: module_source_graph
+    change_types:
+      - domain_contract_change
+      - runtime_projection_change
+      - codegen_shape_change
+    required_consumers:
+      - "docs/hbtrack/modulos/matches/README.md"
+      - "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+      - "contracts/openapi/paths/matches.yaml"
+      - "contracts/openapi/components/schemas/matches/match.yaml"
+      - "contracts/schemas/matches/match.schema.json"
+      - "generated/source_graph/matches/matches.bundle.yaml"
+      - "generated/source_graph/matches/matches.schema_contract_view.yaml"
+      - "generated/source_graph/matches/matches.openapi_contract_view.yaml"
+      - "generated/source_graph/matches/impact_report.json"
+      - "compiled_context/matches/FT-035.json"
+      - "src/matches/api.py"
+      - "src/matches/schemas.py"
+      - "src/matches/domain/entities.py"
+      - "src/matches/domain/rules.py"
+      - "src/matches/application/use_cases.py"
+      - "tests/pipeline_gates/test_matches_source_graph_integrity.py"
+      - "tests/pipeline_gates/test_source_graph_compiler_matches.py"
+      - "tests/pipeline_gates/test_context_bundle_matches.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/matches/README.md"
+      - "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md"
+      - "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+      - "contracts/openapi/paths/matches.yaml"
+      - "contracts/openapi/components/schemas/matches/match.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module matches --check --format json"
+      - "python3 scripts/compile/compile_context_bundle.py --module matches --check --format json"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_matches_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_matches.py tests/pipeline_gates/test_context_bundle_matches.py -q"

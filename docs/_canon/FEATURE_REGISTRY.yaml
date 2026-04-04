@@ -542,7 +542,9 @@ features:
       - GET /matches
       - POST /matches
       - GET /matches/{matchId}
-      - POST /matches/{matchId}/lineup/{userId}
+      - PATCH /matches/{matchId}
+      - PUT /matches/{matchId}/lineup/{userId}
+      - DELETE /matches/{matchId}/lineup/{userId}
     status: implemented
     contracts:
       - contracts/openapi/paths/matches.yaml

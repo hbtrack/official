@@ -1,0 +1,66 @@
+version: "1.0.0"
+status: active
+module: matches
+
+errors:
+  - id: ERR-MATCH-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/matches/api.py#_role"
+    operations:
+      - listMatches
+      - createMatch
+      - getMatch
+      - patchMatch
+      - addPlayerToLineup
+      - removePlayerFromLineup
+
+  - id: ERR-MATCH-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/matches/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createMatch
+      - patchMatch
+      - addPlayerToLineup
+      - removePlayerFromLineup
+
+  - id: ERR-MATCH-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/matches/domain/rules.py#MatchNotFound"
+    operations:
+      - getMatch
+      - patchMatch
+      - addPlayerToLineup
+      - removePlayerFromLineup
+
+  - id: ERR-MATCH-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/matches/domain/entities.py#validate_invariants"
+    operations:
+      - createMatch
+      - patchMatch
+
+  - id: ERR-MATCH-409-STATE-ERROR
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/matches/domain/rules.py#MatchStateError"
+    operations:
+      - createMatch
+      - patchMatch
+      - addPlayerToLineup
+      - removePlayerFromLineup
+
+  - id: ERR-MATCH-500-INTERNAL
+    kind: transport
+    http_status: 500
+    source_ref: "../../../../../src/matches/api.py#list_matches"
+    operations:
+      - listMatches
+      - createMatch
+      - getMatch
+      - patchMatch
+      - addPlayerToLineup
+      - removePlayerFromLineup

@@ -77,7 +77,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "19492a7e089ac97bb5c81ee9249914560d25edd2b7125b1497d7d8c8f612cfee"
+      "sha256": "c5446e63ede4771183942aed2fa78b8b009653272456511d402ada2083a78d9c"
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.bundle.yaml",
@@ -135,7 +135,7 @@
     "domain_rules": "src/competitions/domain/rules.py",
     "use_cases": "src/competitions/application/use_cases.py"
   },
-  "source_fingerprint": "881f1f60e9e06bb3f87df4eb4420bb6151b036549ea8ccac6577ada69eaea010",
+  "source_fingerprint": "caf1e2f2686e416214229bd733841d883202d4202c15d7ceafdea846dfd22277",
   "source_graph": {
     "entities": {
       "Competition": {
