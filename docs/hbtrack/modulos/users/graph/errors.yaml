@@ -1,0 +1,74 @@
+version: "1.0.0"
+status: active
+module: users
+
+errors:
+  - id: ERR-USR-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/users/api.py#_get_actor_id"
+    operations:
+      - listUsers
+      - createUser
+      - getUser
+      - patchUser
+
+  - id: ERR-USR-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/users/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listUsers
+      - createUser
+      - getUser
+      - patchUser
+
+  - id: ERR-USR-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/users/domain/rules.py#UserNotFound"
+    operations:
+      - getUser
+      - patchUser
+
+  - id: ERR-USR-400-INVALID-ROLE-LABEL
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/users/domain/rules.py#InvalidRoleLabel"
+    operations:
+      - listUsers
+      - createUser
+      - patchUser
+
+  - id: ERR-USR-400-AUTHN-FIELD-FORBIDDEN
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/users/domain/rules.py#AuthnFieldForbidden"
+    operations:
+      - createUser
+      - patchUser
+
+  - id: ERR-USR-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/users/domain/entities.py#validate_invariants"
+    operations:
+      - createUser
+      - patchUser
+
+  - id: ERR-USR-409-CONFLICT
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/users/domain/rules.py#UserConflict"
+    operations:
+      - createUser
+
+  - id: ERR-USR-500-INTERNAL
+    kind: transport
+    http_status: 500
+    source_ref: "../../../../../src/users/api.py#_get_actor_id"
+    operations:
+      - listUsers
+      - createUser
+      - getUser
+      - patchUser

@@ -1,0 +1,76 @@
+{
+  "report_type": "mcp_module_readiness_ranking",
+  "generated_at": "2026-04-04",
+  "pipeline_status": "PASS",
+  "gate_health_all_modules": 1.0,
+  "surface_coverage_all_modules": 1.0,
+  "note": "Todos os 17 módulos têm surface_coverage=1.00 e gate_health=1.00. O diferenciador para rollout MCP é profundidade contratual (schemas, arazzo) e riqueza de eventos (asyncapi).",
+  "ranking_dimensions": {
+    "tier_d_events": "Número de canais AsyncAPI por módulo — determina candidatos para Camada D (event tools)",
+    "tier_c_read": "Score composto: schemas + arazzo + decision_ir_bonus — determina candidatos para Camada C read-only",
+    "decision_ir_present": "Decision IR em .contract_driven/decisions/ — indica módulo com melhor entendimento de autorização"
+  },
+  "tier_d_ranking": [
+    {"rank": 1, "module": "training",        "asyncapi_channels": 29, "notes": "Intervenção, recomendações, sessão, atenção, feedback — loop DSS completo já modelado"},
+    {"rank": 2, "module": "video",           "asyncapi_channels": 8,  "notes": "Captura, transcode, publicação — pipeline assíncrono rico"},
+    {"rank": 3, "module": "ai_ingestion",    "asyncapi_channels": 3,  "notes": "Job lifecycle: queued/completed/failed"},
+    {"rank": 4, "module": "notifications",   "asyncapi_channels": 3,  "notes": "Delivery lifecycle: queued/sent/failed"},
+    {"rank": 5, "module": "users",           "asyncapi_channels": 2,  "notes": "user_created, user_role_changed"},
+    {"rank": 5, "module": "seasons",         "asyncapi_channels": 2,  "notes": "season_created, season_status_updated"},
+    {"rank": 5, "module": "teams",           "asyncapi_channels": 2,  "notes": "team_created, team_roster_updated"},
+    {"rank": 5, "module": "audit",           "asyncapi_channels": 2,  "notes": "audit_entry_created, audit_entry_security_flagged"},
+    {"rank": 5, "module": "matches",         "asyncapi_channels": 2,  "notes": "match_scheduled, match_status_updated"},
+    {"rank": 5, "module": "competitions",    "asyncapi_channels": 2,  "notes": "competition_created, competition_phase_changed"},
+    {"rank": 5, "module": "scout",           "asyncapi_channels": 2,  "notes": "scout_event_created, scout_session_completed"},
+    {"rank": 5, "module": "identity_access", "asyncapi_channels": 2,  "notes": "role_assigned, role_revoked"},
+    {"rank": 6, "module": "wellness",        "asyncapi_channels": 1,  "notes": "wellness_entry_created"},
+    {"rank": 7, "module": "medical",         "asyncapi_channels": 0,  "notes": "Sem eventos AsyncAPI — não entra em Tier D v1.0"},
+    {"rank": 7, "module": "exercises",       "asyncapi_channels": 0,  "notes": "Sem eventos AsyncAPI — não entra em Tier D v1.0"},
+    {"rank": 7, "module": "analytics",       "asyncapi_channels": 0,  "notes": "Sem eventos AsyncAPI — não entra em Tier D v1.0"},
+    {"rank": 7, "module": "reports",         "asyncapi_channels": 0,  "notes": "Sem eventos AsyncAPI — não entra em Tier D v1.0"}
+  ],
+  "tier_c_read_ranking": [
+    {"rank": 1, "module": "training",        "contract_score": 20, "schemas": 13, "arazzo": 5, "decision_ir": true,  "notes": "Mais profundo do repo — primeira escolha para C-read"},
+    {"rank": 2, "module": "video",           "contract_score": 11, "schemas": 4,  "arazzo": 5, "decision_ir": true,  "notes": "Pipeline complexo bem definido"},
+    {"rank": 3, "module": "exercises",       "contract_score": 6,  "schemas": 4,  "arazzo": 2, "decision_ir": false, "notes": "Boa profundidade sem Decision IR canônico"},
+    {"rank": 4, "module": "users",           "contract_score": 4,  "schemas": 1,  "arazzo": 1, "decision_ir": true,  "notes": "Platform-core — decisões de autorização bem definidas"},
+    {"rank": 4, "module": "audit",           "contract_score": 4,  "schemas": 1,  "arazzo": 1, "decision_ir": true,  "notes": "Cross-cutting — essencial para rastreabilidade MCP"},
+    {"rank": 4, "module": "matches",         "contract_score": 4,  "schemas": 1,  "arazzo": 1, "decision_ir": true,  "notes": "Domínio core com Decision IR"},
+    {"rank": 4, "module": "scout",           "contract_score": 4,  "schemas": 1,  "arazzo": 1, "decision_ir": true,  "notes": "Domínio core com Decision IR"},
+    {"rank": 4, "module": "identity_access", "contract_score": 4,  "schemas": 1,  "arazzo": 1, "decision_ir": true,  "notes": "Auth context — obrigatório para validar claims de agente"},
+    {"rank": 4, "module": "analytics",       "contract_score": 4,  "schemas": 4,  "arazzo": 0, "decision_ir": false, "notes": "Boa schema depth, sem arazzo — ler antes de recomendar"},
+    {"rank": 5, "module": "seasons",         "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Contexto bounded simples — boa entrada para C-read"},
+    {"rank": 5, "module": "teams",           "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Contexto bounded simples"},
+    {"rank": 5, "module": "wellness",        "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Dados sensíveis — requer atenção especial em autorização"},
+    {"rank": 5, "module": "ai_ingestion",    "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Ingestão — útil para C-read de status de jobs"},
+    {"rank": 5, "module": "notifications",   "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Delivery tracking"},
+    {"rank": 5, "module": "competitions",    "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Contexto de temporada"},
+    {"rank": 5, "module": "reports",         "contract_score": 2,  "schemas": 1,  "arazzo": 1, "decision_ir": false, "notes": "Geração de relatórios — read-only natural"},
+    {"rank": 6, "module": "medical",         "contract_score": 1,  "schemas": 1,  "arazzo": 0, "decision_ir": false, "notes": "Dados extremamente sensíveis — último a expor via MCP"}
+  ],
+  "recommended_rollout_sequence": {
+    "phase_1_camada_a": {
+      "status": "ready_when_adr016_reopens",
+      "tools": ["hb_verify", "hb_check", "hb_artifact", "run_gate_pipeline", "check_scope_boundary"],
+      "notes": "Interfaces CLI já frozen. Controles A1-A3 são os mais simples de implementar."
+    },
+    "phase_2_camada_d_priority": {
+      "status": "blocked_by_adr016",
+      "first_modules": ["training", "video"],
+      "rationale": "training tem DSS loop completo (recommendation/accepted/dismissed). video tem pipeline assíncrono rico."
+    },
+    "phase_3_camada_c_read_priority": {
+      "status": "blocked_by_adr016",
+      "first_modules": ["training", "users", "identity_access"],
+      "rationale": "training tem contract_score máximo. users e identity_access têm Decision IR + são platform-core essenciais para validar claims de agente."
+    },
+    "phase_4_camada_b_last": {
+      "status": "blocked_by_adr016_and_controls",
+      "notes": "audit_module_readiness pode ser o primeiro tool de Camada B exposto — é read-only e não produz artefato canônico."
+    },
+    "never_before_medical_c_write": {
+      "modules": ["medical"],
+      "notes": "Dados médicos de atletas — última prioridade. Requer análise de privacidade dedicada além da ADR-036."
+    }
+  }
+}

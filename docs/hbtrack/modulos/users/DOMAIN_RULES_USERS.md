@@ -33,3 +33,9 @@ Registrar as regras de negócio do módulo `users`.
 - Não inferir `password_policy`, `session`, `mfa`, `jwt`, `oauth` ou qualquer regra de autenticação neste módulo.
 - Não deduzir vínculo esportivo a partir de UI, login recente ou histórico operacional sem campo contratual.
 - Não usar `roleLabel` como atalho para autorização técnica fora de `identity_access`.
+
+## Source Graph
+- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

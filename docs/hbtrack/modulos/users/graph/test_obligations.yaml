@@ -1,0 +1,42 @@
+version: "1.0.0"
+status: active
+module: users
+
+obligations:
+  - id: USR-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/users/user_profile.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: USR-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/users.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: USR-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/users/tests/unit/test_users_domain.py"
+    covers:
+      - INV-USR-001
+      - INV-USR-002
+      - INV-USR-003
+      - INV-USR-004
+      - DR-USR-001
+      - DR-USR-002
+      - DR-USR-003
+      - DR-USR-004
+      - DR-USR-005
+    verification: "Domain unit tests enforcing invariants, boundary rules and permission checks"
+    evidence_refs:
+      - "../../../../../src/users/tests/unit/test_users_domain.py"
+
+  - id: USR-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py"
