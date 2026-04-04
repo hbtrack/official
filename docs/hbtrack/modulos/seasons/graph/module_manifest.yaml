@@ -1,0 +1,43 @@
+version: "1.0.0"
+status: active
+module: seasons
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_SEASONS.md"
+  domain_rules: "../DOMAIN_RULES_SEASONS.md"
+  invariants: "../INVARIANTS_SEASONS.md"
+  permissions: "../PERMISSIONS_SEASONS.md"
+  test_matrix: "../TEST_MATRIX_SEASONS.md"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/seasons.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/seasons/"
+  primary_schema: "../../../../../contracts/schemas/seasons/season.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/seasons/season.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/seasons/api.py"
+  domain_entity: "../../../../../src/seasons/domain/entities.py"
+  domain_rules: "../../../../../src/seasons/domain/rules.py"
+  use_cases: "../../../../../src/seasons/application/use_cases.py"
+
+structured_ir:
+  entities: "./entities.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph."
+  - "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004."
+  - "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."

@@ -1,27 +1,36 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: main
+branch_ativo: feat/b10-001-seasons
 modo_operacao: ROADMAP
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: seasons
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: B10-001-audit
+task_id: B10-001-seasons
 resultado: DONE
-proxima_acao_permitida: "B10-001/audit concluído. Source graph + context bundle + 16 testes PASS. Próximo módulo em B10-001: verificar lista para continuar ou encerrar B10-001."
+proxima_acao_permitida: "B10-001/seasons: corrigidos response_codes (PR #43). Próximo: merge PR #43 e iniciar próximo módulo em B10-001."
 bloqueios_ativos: []
 evidence_paths:
-  - generated/source_graph/audit/audit.bundle.yaml
-  - generated/source_graph/audit/audit.openapi_contract_view.yaml
-  - generated/source_graph/audit/audit.schema_contract_view.yaml
-  - generated/source_graph/audit/impact_report.json
-  - compiled_context/audit/FT-041.json
+  - _reports/contract_gates/latest.json
+  - generated/source_graph/seasons/seasons.bundle.yaml
+  - generated/source_graph/seasons/seasons.openapi_contract_view.yaml
+  - generated/source_graph/seasons/seasons.schema_contract_view.yaml
+  - generated/source_graph/seasons/impact_report.json
+  - compiled_context/seasons/FT-018.json
+  - compiled_context/seasons/FT-019.json
+  - compiled_context/seasons/FT-020.json
+  - compiled_context/seasons/FT-021.json
+  - compiled_context/seasons/FT-022.json
+  - compiled_context/seasons/FT-023.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
+**Data:** 2026-04-04 | **Branch:** feat/b10-001-seasons | **CI:** validate_contracts PASS (todos os gates)
+**Modo:** ROADMAP | **Fase:** B10-001 | **Resultado:** DONE — módulo `seasons`
+
 **Data:** 2026-04-04 | **Branch:** main | **CI:** validate_contracts PASS (51 gates)
 **Modo:** ROADMAP | **Fase:** B10-001 | **Resultado:** DONE — módulo `audit`
 

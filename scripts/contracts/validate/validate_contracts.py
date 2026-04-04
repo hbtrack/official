@@ -5019,6 +5019,9 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "SOURCE_AUTHORITY_GRAPH.yaml",
         # Pre-work autorizado por ADR-016 (MCP Surface)
         "MCP_PREWORK.md",
+        # Artefatos MCP canônicos (ADR-035/ADR-036)
+        "MCP_SERVER_ARCHITECTURE.md",
+        "MCP_TOOL_MANIFEST.yaml",
     })
 
     # Subdiretórios autorizados

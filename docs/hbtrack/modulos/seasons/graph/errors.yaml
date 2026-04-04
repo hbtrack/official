@@ -1,0 +1,66 @@
+version: "1.0.0"
+status: active
+module: seasons
+
+errors:
+  - id: ERR-SEA-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/seasons/api.py#_get_actor_role"
+    operations:
+      - listSeasons
+      - createSeason
+      - getSeason
+      - patchSeason
+      - addTeamToSeason
+      - removeTeamFromSeason
+
+  - id: ERR-SEA-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/seasons/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createSeason
+      - patchSeason
+      - addTeamToSeason
+      - removeTeamFromSeason
+
+  - id: ERR-SEA-404-SEASON-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/seasons/domain/rules.py#SeasonNotFound"
+    operations:
+      - getSeason
+      - patchSeason
+      - addTeamToSeason
+      - removeTeamFromSeason
+
+  - id: ERR-SEA-400-INVALID-DATE-RANGE
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/seasons/domain/rules.py#InvalidDateRange"
+    operations:
+      - createSeason
+      - patchSeason
+
+  - id: ERR-SEA-400-INVALID-STATUS-TRANSITION
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/seasons/domain/rules.py#InvalidStatusTransition"
+    operations:
+      - patchSeason
+
+  - id: ERR-SEA-409-DUPLICATE-TEAM
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/seasons/domain/rules.py#DuplicateTeamAssociation"
+    operations:
+      - addTeamToSeason
+
+  - id: ERR-SEA-422-VALIDATION
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/seasons/domain/entities.py#validate_invariants"
+    operations:
+      - createSeason
+      - patchSeason

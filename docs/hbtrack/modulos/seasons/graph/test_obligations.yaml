@@ -1,0 +1,43 @@
+version: "1.0.0"
+status: active
+module: seasons
+
+obligations:
+  - id: SEA-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/seasons/season.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: SEA-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/seasons.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: SEA-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/seasons/tests/unit/test_seasons_domain.py"
+    covers:
+      - INV-SEAS-001
+      - INV-SEAS-002
+      - INV-SEAS-003
+      - INV-SEAS-004
+      - DR-SEAS-001
+      - DR-SEAS-002
+      - DR-SEAS-003
+      - PERM-SEA
+      - PERM-SEA-001
+      - PERM-SEA-002
+    verification: "Unit tests for domain invariants, RBAC rules and boundary enforcement"
+    evidence_refs:
+      - "../../../../../src/seasons/tests/unit/test_seasons_domain.py"
+
+  - id: SEA-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_seasons_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_seasons_source_graph_integrity.py"

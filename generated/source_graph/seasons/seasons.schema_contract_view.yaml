@@ -1,0 +1,91 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: seasons
+entity: Season
+primary_entity: Season
+primary_schema_ref: contracts/schemas/seasons/season.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/seasons/season.yaml
+required: &id001
+- id
+- name
+- startDate
+- endDate
+- statusLabel
+- phaseLabels
+- teamIds
+- competitionIds
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: organizationId
+  runtime_name: organization_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'boundary: reference to identity_access module'
+- name: name
+  runtime_name: name
+  required: true
+  type: string
+  constraints:
+  - 'maxLength: 120'
+  - 'minLength: 1'
+- name: sportCycleLabel
+  runtime_name: sport_cycle_label
+  required: false
+  type: string
+- name: statusLabel
+  runtime_name: status_label
+  required: true
+  type: enum
+  values:
+  - DRAFT
+  - ACTIVE
+  - ARCHIVED
+- name: startDate
+  runtime_name: start_date
+  required: true
+  type: date
+- name: endDate
+  runtime_name: end_date
+  required: true
+  type: date
+  constraints:
+  - 'INV-SEAS-002: startDate <= endDate'
+- name: phaseLabels
+  runtime_name: phase_labels
+  required: true
+  type: array_of_string
+  constraints:
+  - 'INV-SEAS-003: uniqueItems'
+- name: competitionIds
+  runtime_name: competition_ids
+  required: true
+  type: array_of_uuid
+  constraints:
+  - 'INV-SEAS-003: uniqueItems'
+  - 'boundary: reference to competitions module'
+- name: teamIds
+  runtime_name: team_ids
+  required: true
+  type: array_of_uuid
+  constraints:
+  - 'INV-SEAS-003: uniqueItems'
+- name: createdAt
+  runtime_name: created_at
+  required: false
+  type: datetime_iso8601
+- name: updatedAt
+  runtime_name: updated_at
+  required: false
+  type: datetime_iso8601
+runtime_extension_fields: []
+entities:
+  Season:
+    schema_ref: contracts/schemas/seasons/season.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []
