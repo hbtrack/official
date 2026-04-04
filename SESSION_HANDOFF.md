@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: main
+branch_ativo: chore/normalize-handoff-seasons
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: seasons
