@@ -1,0 +1,80 @@
+version: "1.0.0"
+status: active
+module: competitions
+
+errors:
+  - id: ERR-COMP-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/competitions/api.py#_role"
+    operations:
+      - listCompetitions
+      - createCompetition
+      - getCompetition
+      - patchCompetition
+      - registerTeamInCompetition
+      - unregisterTeamFromCompetition
+
+  - id: ERR-COMP-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/competitions/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listCompetitions
+      - createCompetition
+      - getCompetition
+      - patchCompetition
+      - registerTeamInCompetition
+      - unregisterTeamFromCompetition
+
+  - id: ERR-COMP-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/competitions/domain/rules.py#CompetitionNotFound"
+    operations:
+      - getCompetition
+      - patchCompetition
+      - registerTeamInCompetition
+      - unregisterTeamFromCompetition
+
+  - id: ERR-COMP-404-TEAM-NOT-REGISTERED
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/competitions/domain/rules.py#TeamNotRegistered"
+    operations:
+      - unregisterTeamFromCompetition
+
+  - id: ERR-COMP-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/competitions/domain/entities.py#validate_invariants"
+    operations:
+      - createCompetition
+      - patchCompetition
+
+  - id: ERR-COMP-400-INVALID-STATUS-TRANSITION
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/competitions/domain/rules.py#InvalidStatusTransition"
+    notes:
+      - "InvalidStatusTransition é capturado junto com ValueError e emite HTTP 400 (não 422) — verificado em api.py#patch_competition: except (ValueError, InvalidStatusTransition)"
+    operations:
+      - patchCompetition
+
+  - id: ERR-COMP-409-TEAM-ALREADY-REGISTERED
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/competitions/domain/rules.py#TeamAlreadyRegistered"
+    operations:
+      - registerTeamInCompetition
+
+  - id: ERR-COMP-500-INTERNAL
+    kind: infrastructure
+    http_status: 500
+    operations:
+      - listCompetitions
+      - createCompetition
+      - getCompetition
+      - patchCompetition
+      - registerTeamInCompetition
+      - unregisterTeamFromCompetition

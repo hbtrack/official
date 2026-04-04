@@ -1,0 +1,201 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: competitions
+openapi_paths_ref: contracts/openapi/paths/competitions.yaml
+operations:
+- operation_id: listCompetitions
+  method: GET
+  path: /competitions
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/get
+  runtime_handler_ref: ../../../../../src/competitions/api.py#list_competitions
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#ListCompetitions
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createCompetition
+  method: POST
+  path: /competitions
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/post
+  runtime_handler_ref: ../../../../../src/competitions/api.py#create_competition
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#CreateCompetition
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: getCompetition
+  method: GET
+  path: /competitions/{competitionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/get
+  runtime_handler_ref: ../../../../../src/competitions/api.py#get_competition
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#GetCompetition
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchCompetition
+  method: PATCH
+  path: /competitions/{competitionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/patch
+  runtime_handler_ref: ../../../../../src/competitions/api.py#patch_competition
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#PatchCompetition
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  notes:
+  - "PERM-COMP-002: patch em competi\xE7\xE3o ACTIVE exige role admin (n\xE3o apenas\
+    \ coordinator)"
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: registerTeamInCompetition
+  method: POST
+  path: /competitions/{competitionId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/post
+  runtime_handler_ref: ../../../../../src/competitions/api.py#register_team
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#RegisterTeamInCompetition
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: unregisterTeamFromCompetition
+  method: DELETE
+  path: /competitions/{competitionId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/delete
+  runtime_handler_ref: ../../../../../src/competitions/api.py#unregister_team
+  use_case_ref: ../../../../../src/competitions/application/use_cases.py#UnregisterTeamFromCompetition
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+errors:
+- id: ERR-COMP-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/competitions/api.py#_role
+  operations:
+  - listCompetitions
+  - createCompetition
+  - getCompetition
+  - patchCompetition
+  - registerTeamInCompetition
+  - unregisterTeamFromCompetition
+- id: ERR-COMP-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/competitions/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listCompetitions
+  - createCompetition
+  - getCompetition
+  - patchCompetition
+  - registerTeamInCompetition
+  - unregisterTeamFromCompetition
+- id: ERR-COMP-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/competitions/domain/rules.py#CompetitionNotFound
+  operations:
+  - getCompetition
+  - patchCompetition
+  - registerTeamInCompetition
+  - unregisterTeamFromCompetition
+- id: ERR-COMP-404-TEAM-NOT-REGISTERED
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/competitions/domain/rules.py#TeamNotRegistered
+  operations:
+  - unregisterTeamFromCompetition
+- id: ERR-COMP-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/competitions/domain/entities.py#validate_invariants
+  operations:
+  - createCompetition
+  - patchCompetition
+- id: ERR-COMP-400-INVALID-STATUS-TRANSITION
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/competitions/domain/rules.py#InvalidStatusTransition
+  notes:
+  - "InvalidStatusTransition \xE9 capturado junto com ValueError e emite HTTP 400\
+    \ (n\xE3o 422) \u2014 verificado em api.py#patch_competition: except (ValueError,\
+    \ InvalidStatusTransition)"
+  operations:
+  - patchCompetition
+- id: ERR-COMP-409-TEAM-ALREADY-REGISTERED
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/competitions/domain/rules.py#TeamAlreadyRegistered
+  operations:
+  - registerTeamInCompetition
+- id: ERR-COMP-500-INTERNAL
+  kind: infrastructure
+  http_status: 500
+  operations:
+  - listCompetitions
+  - createCompetition
+  - getCompetition
+  - patchCompetition
+  - registerTeamInCompetition
+  - unregisterTeamFromCompetition

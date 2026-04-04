@@ -41,6 +41,7 @@ class Competition:
     format_label: Optional[str] = None
     status_label: CompetitionStatus = CompetitionStatus.DRAFT
     stage_labels: List[str] = field(default_factory=list)
+    calendar_entry_ids: List[uuid.UUID] = field(default_factory=list)
     registration_team_ids: List[uuid.UUID] = field(default_factory=list)
     standings_summary: Optional[str] = None
 

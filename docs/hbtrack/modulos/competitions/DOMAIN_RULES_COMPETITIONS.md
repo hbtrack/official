@@ -33,3 +33,9 @@ Registrar as regras de negócio do módulo `competitions`.
 - Não inferir taxonomia detalhada de scout neste módulo.
 - Não derivar regra oficial de competição a partir de benchmark ou UI.
 - Não mover scorekeeping oficial ou semântica médica para `competitions`.
+
+## Source Graph
+- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

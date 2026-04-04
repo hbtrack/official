@@ -81,11 +81,14 @@ class CreateCompetitionInput:
     end_date: Optional[date] = None
     format_label: Optional[str] = None
     stage_labels: List[str] = None
+    calendar_entry_ids: List[uuid.UUID] = None
     registration_team_ids: List[uuid.UUID] = None
 
     def __post_init__(self):
         if self.stage_labels is None:
             self.stage_labels = []
+        if self.calendar_entry_ids is None:
+            self.calendar_entry_ids = []
         if self.registration_team_ids is None:
             self.registration_team_ids = []
 
@@ -106,6 +109,7 @@ class CreateCompetition:
             format_label=inp.format_label,
             status_label=CompetitionStatus.DRAFT,
             stage_labels=list(inp.stage_labels),
+            calendar_entry_ids=list(inp.calendar_entry_ids),
             registration_team_ids=list(inp.registration_team_ids),
         )
         competition.validate_invariants()
