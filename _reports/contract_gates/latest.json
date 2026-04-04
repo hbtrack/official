@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-04T10:55:22Z",
+  "timestamp_utc": "2026-04-04T15:54:45Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "863da5ba",
+    "git_commit": "9e9814c1",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260404T105522_c0b1b3"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260404T155445_f37802"
   },
   "status_detail": {
     "active_gates_passed": 50,
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 55
+        "duration_ms": 432
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9806
+        "duration_ms": 9006
       }
     },
     {
@@ -459,7 +459,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 30
       }
     },
     {
@@ -589,7 +589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 194
+        "duration_ms": 378
       }
     },
     {
@@ -621,6 +621,7 @@
         "/home/davis/HB-TRACK/docs/_canon/HANDBALL_RULES_DOMAIN.md",
         "/home/davis/HB-TRACK/docs/_canon/INTEGRATION_FLOWS.md",
         "/home/davis/HB-TRACK/docs/_canon/MCP_PREWORK.md",
+        "/home/davis/HB-TRACK/docs/_canon/MCP_SERVER_ARCHITECTURE.md",
         "/home/davis/HB-TRACK/docs/_canon/MODULE_MAP.md",
         "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md",
         "/home/davis/HB-TRACK/docs/_canon/README.md",
@@ -643,7 +644,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 20
       }
     },
     {
@@ -664,7 +665,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 100
       }
     },
     {
@@ -685,7 +686,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 106
       }
     },
     {
@@ -706,7 +707,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 38
       }
     },
     {
@@ -727,7 +728,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 91
+        "duration_ms": 238
       }
     },
     {
@@ -748,7 +749,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 154
       }
     },
     {
@@ -769,7 +770,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 122
       }
     },
     {
@@ -790,7 +791,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 417
+        "duration_ms": 999
       }
     },
     {
@@ -811,7 +812,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 101
       }
     },
     {
@@ -870,7 +871,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 28
       }
     },
     {
@@ -929,7 +930,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 67
+        "duration_ms": 70
       }
     },
     {
@@ -956,7 +957,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 132
+        "duration_ms": 311
       }
     },
     {
@@ -993,6 +994,8 @@
         "docs/_canon/INTEGRATION_FLOWS.md",
         "docs/_canon/IR_TO_SURFACE_MAPPING.yaml",
         "docs/_canon/MCP_PREWORK.md",
+        "docs/_canon/MCP_SERVER_ARCHITECTURE.md",
+        "docs/_canon/MCP_TOOL_MANIFEST.yaml",
         "docs/_canon/MODULE_MAP.md",
         "docs/_canon/MODULE_REGISTRY.yaml",
         "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -1052,6 +1055,7 @@
         "docs/_canon/decisions/ADR-034-scope-boundary-validation.md",
         "docs/_canon/decisions/ADR-035-agent-identity.md",
         "docs/_canon/decisions/ADR-036-mcp-security-analysis.md",
+        "docs/_canon/decisions/ADR-037-mcp-runtime-governance.md",
         "docs/_canon/decisions/README.md"
       ],
       "evidence_files": [],
@@ -1060,7 +1064,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 6
       }
     },
     {
@@ -1432,7 +1436,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 117
+        "duration_ms": 107
       }
     },
     {
@@ -1518,7 +1522,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 798
+        "duration_ms": 1880
       }
     },
     {
@@ -1541,7 +1545,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8535
+        "duration_ms": 6300
       }
     },
     {
@@ -1563,7 +1567,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2847
+        "duration_ms": 4815
       }
     },
     {
@@ -1602,7 +1606,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 601
+        "duration_ms": 1539
       }
     },
     {
@@ -1642,7 +1646,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 2080
+        "duration_ms": 3743
       }
     },
     {
@@ -1710,7 +1714,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 18
       }
     },
     {
@@ -2218,7 +2222,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2043
+        "duration_ms": 4613
       }
     },
     {
@@ -2242,7 +2246,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2163
+        "duration_ms": 4945
       }
     },
     {
@@ -2262,7 +2266,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40
+        "duration_ms": 57
       }
     },
     {
@@ -2302,7 +2306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5757
+        "duration_ms": 7779
       }
     },
     {
@@ -2345,7 +2349,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 208
       }
     },
     {
@@ -2367,7 +2371,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1209
+        "duration_ms": 3385
       }
     },
     {
@@ -2423,7 +2427,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 71
+        "duration_ms": 162
       }
     },
     {
@@ -2443,7 +2447,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 51
       }
     },
     {
@@ -2463,7 +2467,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47775
+        "duration_ms": 105964
       }
     },
     {
@@ -2499,7 +2503,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 58
       }
     },
     {
@@ -2519,7 +2523,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 72
       }
     },
     {
@@ -2541,7 +2545,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 6
       }
     },
     {
@@ -2597,7 +2601,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 30
       }
     },
     {
@@ -2619,7 +2623,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 2
       }
     },
     {
@@ -2641,7 +2645,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     },
     {
@@ -2675,20 +2679,32 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/audit/FT-041.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-018.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-019.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-020.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-021.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-022.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-023.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/audit/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/audit/FT-041.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/seasons.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/seasons/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-018.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-019.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-020.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-021.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-022.json",
+        "/home/davis/HB-TRACK/compiled_context/seasons/FT-023.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2696,7 +2712,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 94
       }
     },
     {
@@ -2718,7 +2734,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 210
+        "duration_ms": 536
       }
     },
     {
@@ -2740,7 +2756,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 19
       }
     },
     {
@@ -2762,7 +2778,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 51
       }
     },
     {
@@ -3126,7 +3142,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1052
+        "duration_ms": 2365
       }
     },
     {
@@ -3150,7 +3166,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 25
       }
     },
     {
@@ -3172,7 +3188,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 33
       }
     },
     {
@@ -3190,7 +3206,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 11
       }
     },
     {
@@ -3211,7 +3227,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 54
       }
     },
     {
@@ -3234,7 +3250,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 39
       }
     },
     {

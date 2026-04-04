@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
-      "sha256": "287b175a951e43bfa6ebd1c9eac9bac7170afc55209f786824fc442958a4cdf8"
+      "sha256": "79539544c41029d5005d26018ce6d08f7c96e9aa12f34d531e61fb15815859d1"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/graph/entities.yaml",
@@ -140,5 +140,5 @@
     "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
     "generated/source_graph/seasons/impact_report.json"
   ],
-  "source_fingerprint": "769271c9277c58e2fb8a49d31768f09a9f088af96d7a66174cd2b614fe01fd65"
+  "source_fingerprint": "69d1be97df3b9147bf4aef05c8b389aa9036d053dc6df4a01ca6a508926e29f1"
 }

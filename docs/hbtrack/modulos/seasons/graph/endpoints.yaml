@@ -20,7 +20,8 @@ endpoints:
     response_codes:
       - 200
       - 401
-      - 422
+      - 403
+      - 500
 
   - operation_id: createSeason
     method: POST
@@ -41,7 +42,8 @@ endpoints:
       - 400
       - 401
       - 403
-      - 422
+      - 409
+      - 500
 
   - operation_id: getSeason
     method: GET
@@ -60,7 +62,9 @@ endpoints:
     response_codes:
       - 200
       - 401
+      - 403
       - 404
+      - 500
 
   - operation_id: patchSeason
     method: PATCH
@@ -83,7 +87,8 @@ endpoints:
       - 401
       - 403
       - 404
-      - 422
+      - 409
+      - 500
 
   - operation_id: addTeamToSeason
     method: POST
@@ -101,10 +106,12 @@ endpoints:
     owner_scoped_roles: []
     response_codes:
       - 204
+      - 400
       - 401
       - 403
       - 404
       - 409
+      - 500
 
   - operation_id: removeTeamFromSeason
     method: DELETE
@@ -126,3 +133,5 @@ endpoints:
       - 401
       - 403
       - 404
+      - 409
+      - 500

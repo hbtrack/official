@@ -21,7 +21,8 @@ operations:
   response_codes:
   - 200
   - 401
-  - 422
+  - 403
+  - 500
 - operation_id: createSeason
   method: POST
   path: /seasons
@@ -41,7 +42,8 @@ operations:
   - 400
   - 401
   - 403
-  - 422
+  - 409
+  - 500
 - operation_id: getSeason
   method: GET
   path: /seasons/{seasonId}
@@ -59,7 +61,9 @@ operations:
   response_codes:
   - 200
   - 401
+  - 403
   - 404
+  - 500
 - operation_id: patchSeason
   method: PATCH
   path: /seasons/{seasonId}
@@ -81,7 +85,8 @@ operations:
   - 401
   - 403
   - 404
-  - 422
+  - 409
+  - 500
 - operation_id: addTeamToSeason
   method: POST
   path: /seasons/{seasonId}/teams/{teamId}
@@ -98,10 +103,12 @@ operations:
   owner_scoped_roles: []
   response_codes:
   - 204
+  - 400
   - 401
   - 403
   - 404
   - 409
+  - 500
 - operation_id: removeTeamFromSeason
   method: DELETE
   path: /seasons/{seasonId}/teams/{teamId}
@@ -122,6 +129,8 @@ operations:
   - 401
   - 403
   - 404
+  - 409
+  - 500
 errors:
 - id: ERR-SEA-401-UNAUTHENTICATED
   kind: transport

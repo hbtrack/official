@@ -95,7 +95,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
-      "sha256": "6f55f0d63055f9647c0e33d114c93e51921727a30018ee99e4bb23073d39640a"
+      "sha256": "905a2a35ea99d1a6314969a1f40e5c970ac582456def0ac32e6d884bb3476fc4"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
@@ -103,11 +103,11 @@
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
-      "sha256": "7ae9f6b679cfebbd318f1db35da49660b902a6b2b6b8b501b69d9a326ea50e51"
+      "sha256": "50d36093c1aa6ef3a3e5a78f14ef52bc178a008f5423add2e5988d1d51bad75b"
     },
     {
       "relpath": "generated/source_graph/seasons/impact_report.json",
-      "sha256": "b68cdd946fb4f6f07ef8c37db35d51c32d44af8d9756ecedbc7c611d74fff42c"
+      "sha256": "79b9a3a0a1a826cb46690092abb42628427a3549412fe9d760ec8a0f755f4444"
     }
   ],
   "module": "seasons",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "e5cb04fd2908f1e19a6531e7682e39250ca544fdc048cfb5bc93346a58af3f7d",
+  "source_fingerprint": "0120d57f0a1b05e4ca6a7c459f1ef54b9edd66d7b71c23a3c61093d020d7ee17",
   "source_graph": {
     "entities": {
       "Season": {
@@ -344,7 +344,7 @@
         "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
         "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
       ],
-      "source_fingerprint": "769271c9277c58e2fb8a49d31768f09a9f088af96d7a66174cd2b614fe01fd65"
+      "source_fingerprint": "69d1be97df3b9147bf4aef05c8b389aa9036d053dc6df4a01ca6a508926e29f1"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -440,7 +440,8 @@
           "response_codes": [
             200,
             401,
-            422
+            403,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -464,7 +465,8 @@
             400,
             401,
             403,
-            422
+            409,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -487,7 +489,9 @@
           "response_codes": [
             200,
             401,
-            404
+            403,
+            404,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -514,7 +518,8 @@
             401,
             403,
             404,
-            422
+            409,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -536,10 +541,12 @@
           "path": "/seasons/{seasonId}/teams/{teamId}",
           "response_codes": [
             204,
+            400,
             401,
             403,
             404,
-            409
+            409,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -565,7 +572,9 @@
             204,
             401,
             403,
-            404
+            404,
+            409,
+            500
           ],
           "roles_allowed": [
             "admin",
@@ -596,7 +605,8 @@
           401,
           403,
           404,
-          422
+          409,
+          500
         ],
         "roles_allowed": [
           "admin",

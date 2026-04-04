@@ -37,7 +37,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md
   sha256: 7f499b8c33acafec2f68629123040459407e4ee955b6b1853d4ce79f3d0f5b45
 - relpath: docs/hbtrack/modulos/seasons/graph/endpoints.yaml
-  sha256: 287b175a951e43bfa6ebd1c9eac9bac7170afc55209f786824fc442958a4cdf8
+  sha256: 79539544c41029d5005d26018ce6d08f7c96e9aa12f34d531e61fb15815859d1
 - relpath: docs/hbtrack/modulos/seasons/graph/entities.yaml
   sha256: e67c00d6ac7c524390568ecb70cf0da02d8f40fdf724c22a707cd818b5985713
 - relpath: docs/hbtrack/modulos/seasons/graph/errors.yaml
@@ -188,7 +188,8 @@ endpoints:
   response_codes:
   - 200
   - 401
-  - 422
+  - 403
+  - 500
 - operation_id: createSeason
   method: POST
   path: /seasons
@@ -208,7 +209,8 @@ endpoints:
   - 400
   - 401
   - 403
-  - 422
+  - 409
+  - 500
 - operation_id: getSeason
   method: GET
   path: /seasons/{seasonId}
@@ -226,7 +228,9 @@ endpoints:
   response_codes:
   - 200
   - 401
+  - 403
   - 404
+  - 500
 - operation_id: patchSeason
   method: PATCH
   path: /seasons/{seasonId}
@@ -248,7 +252,8 @@ endpoints:
   - 401
   - 403
   - 404
-  - 422
+  - 409
+  - 500
 - operation_id: addTeamToSeason
   method: POST
   path: /seasons/{seasonId}/teams/{teamId}
@@ -265,10 +270,12 @@ endpoints:
   owner_scoped_roles: []
   response_codes:
   - 204
+  - 400
   - 401
   - 403
   - 404
   - 409
+  - 500
 - operation_id: removeTeamFromSeason
   method: DELETE
   path: /seasons/{seasonId}/teams/{teamId}
@@ -289,6 +296,8 @@ endpoints:
   - 401
   - 403
   - 404
+  - 409
+  - 500
 errors:
 - id: ERR-SEA-401-UNAUTHENTICATED
   kind: transport

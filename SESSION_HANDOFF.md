@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-seasons
 resultado: DONE
-proxima_acao_permitida: "B10-001/seasons concluído. Source graph + context bundle + 16 testes PASS. Próximo: abrir PR feat/b10-001-seasons → main, depois iniciar próximo módulo em B10-001."
+proxima_acao_permitida: "B10-001/seasons: corrigidos response_codes (PR #43). Próximo: merge PR #43 e iniciar próximo módulo em B10-001."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
