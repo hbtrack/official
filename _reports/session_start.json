@@ -1,6 +1,6 @@
 {
   "session_id": "885cbc3f-4ae8-46b7-a10f-8e90e63b0648",
-  "session_timestamp": "2026-04-04T03:38:15.567600+00:00",
+  "session_timestamp": "2026-04-04T07:56:34.612043+00:00",
   "branch": "main",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
@@ -23,7 +23,7 @@
   "roadmap_task_id": "B10-001-audit",
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-04T02:24:42.809962+00:00",
+  "hook_validated_at": "2026-04-04T08:09:16.256013+00:00",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
@@ -89,6 +89,7 @@
     }
   ],
   "stage2_exit_code": 0,
-  "module": "audit",
-  "module_focus": "audit"
+  "module": "seasons",
+  "module_focus": "seasons",
+  "stage3_exit_code": 2
 }
