@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "c33323a8f9c53bee32c9c3edbad5ac45e9e5ecbf1888de68db3ac3ad6a06477f"
+      "sha256": "ad14505a56fed895371e26b51d51b9c385907d8bed1f14d7096405e4d4dd5e2f"
     },
     {
       "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -105,11 +105,11 @@
     },
     {
       "relpath": "generated/source_graph/teams/teams.openapi_contract_view.yaml",
-      "sha256": "288b1c5605814167e02c556b3fbd4e6bd71bdffeb99b90d862fb5e7db7416bfe"
+      "sha256": "38add1a9b0a16f4c3aae486ba4daf64f2da2af229eef7191915b03755c89416b"
     },
     {
       "relpath": "generated/source_graph/teams/impact_report.json",
-      "sha256": "1d2afd42a8f624281bbe3503cc93630deaaeed9037c271233dafb83495564a67"
+      "sha256": "548a95531eaaee67eeb3926ede704d53a368c80b45e1ec8636736304b8ec1731"
     }
   ],
   "module": "teams",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "ae4a12078c01977d0205394687edf5b7d7819bf862ef4d82494568829220ad83",
+  "source_fingerprint": "fb7362c24d124ecfeddf25bda5ab6aed193166927b9dfd78c8b5f7b4c7927b87",
   "source_graph": {
     "entities": {
       "Team": {
@@ -276,7 +276,9 @@
         "id": "ERR-TEAM-403-INSUFFICIENT-PRIVILEGE",
         "kind": "domain",
         "operations": [
+          "listTeams",
           "createTeam",
+          "getTeam",
           "patchTeam",
           "addAthleteToTeam",
           "removeAthleteFromTeam",
@@ -355,7 +357,7 @@
         "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
         "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
       ],
-      "source_fingerprint": "8c1f52897d34e4d402639304012cc00470d18141614868397f52345330f5d8c4"
+      "source_fingerprint": "baaae3e77c018dc2d13f1a7fb3ee36762af7ad22bc82a8c99be47585c51786da"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -384,7 +386,9 @@
           "id": "ERR-TEAM-403-INSUFFICIENT-PRIVILEGE",
           "kind": "domain",
           "operations": [
+            "listTeams",
             "createTeam",
+            "getTeam",
             "patchTeam",
             "addAthleteToTeam",
             "removeAthleteFromTeam",
@@ -418,8 +422,8 @@
         },
         {
           "exception_ref": "../../../../../src/teams/domain/rules.py#InvalidStatusTransition",
-          "http_status": 400,
-          "id": "ERR-TEAM-400-INVALID-STATUS-TRANSITION",
+          "http_status": 422,
+          "id": "ERR-TEAM-422-INVALID-STATUS-TRANSITION",
           "kind": "domain",
           "operations": [
             "patchTeam"
@@ -550,7 +554,9 @@
           "method": "PATCH",
           "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/patch",
           "operation_id": "patchTeam",
-          "owner_scoped_roles": [],
+          "owner_scoped_roles": [
+            "coach"
+          ],
           "path": "/teams/{teamId}",
           "response_codes": [
             200,
@@ -564,10 +570,10 @@
           ],
           "roles_allowed": [
             "admin",
-            "coordinator"
+            "coordinator",
+            "coach"
           ],
           "roles_denied": [
-            "coach",
             "athlete",
             "member"
           ],

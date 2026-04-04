@@ -76,11 +76,12 @@ operations:
   roles_allowed:
   - admin
   - coordinator
-  roles_denied:
   - coach
+  roles_denied:
   - athlete
   - member
-  owner_scoped_roles: []
+  owner_scoped_roles:
+  - coach
   response_codes:
   - 200
   - 400
@@ -193,7 +194,9 @@ errors:
   http_status: 403
   exception_ref: ../../../../../src/teams/domain/rules.py#InsufficientPrivilege
   operations:
+  - listTeams
   - createTeam
+  - getTeam
   - patchTeam
   - addAthleteToTeam
   - removeAthleteFromTeam
@@ -217,9 +220,9 @@ errors:
   operations:
   - createTeam
   - patchTeam
-- id: ERR-TEAM-400-INVALID-STATUS-TRANSITION
+- id: ERR-TEAM-422-INVALID-STATUS-TRANSITION
   kind: domain
-  http_status: 400
+  http_status: 422
   exception_ref: ../../../../../src/teams/domain/rules.py#InvalidStatusTransition
   operations:
   - patchTeam

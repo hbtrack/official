@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-teams
 resultado: DONE
-proxima_acao_permitida: "B10-001/teams CONCLUÍDO (source graph + 16 testes PASS + validate_contracts ci). Próximo: merge PR + iniciar B10-001/competitions."
+proxima_acao_permitida: "B10-001/teams CONCLUÍDO (source graph + 16 testes PASS + validate_contracts ci). 3 bugs corrigidos (ERR-403 listTeams+getTeam, ERR-422 InvalidStatusTransition, patchTeam coach owner-scoped). Próximo: merge PR #44 + iniciar B10-001/competitions."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
@@ -56,6 +56,12 @@ evidence_paths:
 7. **3 testes criados**: `test_teams_source_graph_integrity.py`, `test_source_graph_compiler_teams.py`, `test_context_bundle_teams.py` — **16 testes PASS**
 8. **compile_source_graph.py --all + compile_context_bundle.py --all** → audit/seasons/teams todos PASS (artefatos stale de DOC_USAGE_MANIFEST regenerados)
 9. **validate_contracts.py --profile ci** → PASS (exitcode 0)
+
+9. **3 bugs corrigidos após review Codex no PR #44** (confirmados no api.py + rules.py):
+   - ERR-TEAM-403: adicionados `listTeams` e `getTeam` (ambos capturam InsufficientPrivilege → 403)
+   - `ERR-TEAM-400-INVALID-STATUS-TRANSITION` → `ERR-TEAM-422-INVALID-STATUS-TRANSITION` (patch_team retorna 422)
+   - `patchTeam`: coach movido de `roles_denied` para `roles_allowed` + `owner_scoped_roles` (PERM-TEAM-001)
+   - Recompilados: teams.bundle.yaml, impact_report.json, FT-024..031
 
 ## Próxima ação permitida
 

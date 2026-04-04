@@ -22,7 +22,9 @@ errors:
     http_status: 403
     exception_ref: "../../../../../src/teams/domain/rules.py#InsufficientPrivilege"
     operations:
+      - listTeams
       - createTeam
+      - getTeam
       - patchTeam
       - addAthleteToTeam
       - removeAthleteFromTeam
@@ -49,9 +51,9 @@ errors:
       - createTeam
       - patchTeam
 
-  - id: ERR-TEAM-400-INVALID-STATUS-TRANSITION
+  - id: ERR-TEAM-422-INVALID-STATUS-TRANSITION
     kind: domain
-    http_status: 400
+    http_status: 422
     exception_ref: "../../../../../src/teams/domain/rules.py#InvalidStatusTransition"
     operations:
       - patchTeam

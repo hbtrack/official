@@ -37,11 +37,11 @@ inputs:
 - relpath: docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md
   sha256: c18557e9722ab3cbc1dc735a9741e51a40d2c1dbbcac9f29f62cd39108449b57
 - relpath: docs/hbtrack/modulos/teams/graph/endpoints.yaml
-  sha256: b707622be5a17d92c9368c4e1b75aeaa10653326f00f14d585c3428866506620
+  sha256: 1efdae94451bd616f89e876ccd2b0bda7fa5186c9111c24856d0b31dc826a8e6
 - relpath: docs/hbtrack/modulos/teams/graph/entities.yaml
   sha256: f1c09bfd264a21b151a95ebce223345a145578118fcdab543356820e6c4407c2
 - relpath: docs/hbtrack/modulos/teams/graph/errors.yaml
-  sha256: 851f68661e514a389fa99ebe0ca149d95730f72b8e49851f771c947e8945048d
+  sha256: cabde190ed3f72761088064aa03111ec4093511c34b8a69c88245b1a5ae66d48
 - relpath: docs/hbtrack/modulos/teams/graph/module_manifest.yaml
   sha256: 3561f7291ff6f85965b61c9c2fa07c3c2458e2dc1d8942d611719a46ffb4b980
 - relpath: docs/hbtrack/modulos/teams/graph/test_obligations.yaml
@@ -246,11 +246,12 @@ endpoints:
   roles_allowed:
   - admin
   - coordinator
-  roles_denied:
   - coach
+  roles_denied:
   - athlete
   - member
-  owner_scoped_roles: []
+  owner_scoped_roles:
+  - coach
   response_codes:
   - 200
   - 400
@@ -363,7 +364,9 @@ errors:
   http_status: 403
   exception_ref: ../../../../../src/teams/domain/rules.py#InsufficientPrivilege
   operations:
+  - listTeams
   - createTeam
+  - getTeam
   - patchTeam
   - addAthleteToTeam
   - removeAthleteFromTeam
@@ -387,9 +390,9 @@ errors:
   operations:
   - createTeam
   - patchTeam
-- id: ERR-TEAM-400-INVALID-STATUS-TRANSITION
+- id: ERR-TEAM-422-INVALID-STATUS-TRANSITION
   kind: domain
-  http_status: 400
+  http_status: 422
   exception_ref: ../../../../../src/teams/domain/rules.py#InvalidStatusTransition
   operations:
   - patchTeam

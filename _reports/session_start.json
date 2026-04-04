@@ -51,15 +51,17 @@
     },
     {
       "path": "docs/hbtrack/modulos/teams/graph/endpoints.yaml",
-      "sha256": "b707622be5a17d92c9368c4e1b75aeaa10653326f00f14d585c3428866506620",
+      "sha256": "1efdae94451bd616f89e876ccd2b0bda7fa5186c9111c24856d0b31dc826a8e6",
       "created_at": "2026-04-04T16:56:44.150246+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-04T17:31:21.665805+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/teams/graph/errors.yaml",
-      "sha256": "851f68661e514a389fa99ebe0ca149d95730f72b8e49851f771c947e8945048d",
+      "sha256": "cabde190ed3f72761088064aa03111ec4093511c34b8a69c88245b1a5ae66d48",
       "created_at": "2026-04-04T16:56:47.524127+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-04T17:31:06.091627+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/teams/graph/test_obligations.yaml",
@@ -69,9 +71,10 @@
     },
     {
       "path": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "c33323a8f9c53bee32c9c3edbad5ac45e9e5ecbf1888de68db3ac3ad6a06477f",
+      "sha256": "ad14505a56fed895371e26b51d51b9c385907d8bed1f14d7096405e4d4dd5e2f",
       "created_at": "2026-04-04T16:56:56.673017+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-04T17:31:36.705866+00:00"
     },
     {
       "path": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -81,15 +84,17 @@
     },
     {
       "path": "generated/source_graph/teams/teams.openapi_contract_view.yaml",
-      "sha256": "288b1c5605814167e02c556b3fbd4e6bd71bdffeb99b90d862fb5e7db7416bfe",
+      "sha256": "38add1a9b0a16f4c3aae486ba4daf64f2da2af229eef7191915b03755c89416b",
       "created_at": "2026-04-04T16:57:03.776469+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-04T17:31:43.514674+00:00"
     },
     {
       "path": "generated/source_graph/teams/impact_report.json",
-      "sha256": "1d2afd42a8f624281bbe3503cc93630deaaeed9037c271233dafb83495564a67",
+      "sha256": "548a95531eaaee67eeb3926ede704d53a368c80b45e1ec8636736304b8ec1731",
       "created_at": "2026-04-04T16:57:07.314483+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-04T17:31:47.338623+00:00"
     },
     {
       "path": "docs/_canon/SYNC_MANIFEST.yaml",
@@ -122,5 +127,7 @@
       "gate_exit_code": 0
     }
   ],
-  "stage2_exit_code": 0
+  "stage2_exit_code": 0,
+  "hook_exit_code": 0,
+  "hook_validated_at": "2026-04-04T16:59:41.371572+00:00"
 }

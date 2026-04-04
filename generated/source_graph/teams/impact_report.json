@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/graph/endpoints.yaml",
-      "sha256": "b707622be5a17d92c9368c4e1b75aeaa10653326f00f14d585c3428866506620"
+      "sha256": "1efdae94451bd616f89e876ccd2b0bda7fa5186c9111c24856d0b31dc826a8e6"
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/graph/entities.yaml",
@@ -97,7 +97,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/graph/errors.yaml",
-      "sha256": "851f68661e514a389fa99ebe0ca149d95730f72b8e49851f771c947e8945048d"
+      "sha256": "cabde190ed3f72761088064aa03111ec4093511c34b8a69c88245b1a5ae66d48"
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
@@ -141,5 +141,5 @@
     "generated/source_graph/teams/teams.openapi_contract_view.yaml",
     "generated/source_graph/teams/impact_report.json"
   ],
-  "source_fingerprint": "8c1f52897d34e4d402639304012cc00470d18141614868397f52345330f5d8c4"
+  "source_fingerprint": "baaae3e77c018dc2d13f1a7fb3ee36762af7ad22bc82a8c99be47585c51786da"
 }

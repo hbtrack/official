@@ -78,11 +78,12 @@ endpoints:
     roles_allowed:
       - admin
       - coordinator
-    roles_denied:
       - coach
+    roles_denied:
       - athlete
       - member
-    owner_scoped_roles: []
+    owner_scoped_roles:
+      - coach
     response_codes:
       - 200
       - 400
