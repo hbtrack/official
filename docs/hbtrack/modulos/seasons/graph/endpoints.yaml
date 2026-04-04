@@ -1,0 +1,128 @@
+version: "1.0.0"
+status: active
+module: seasons
+
+endpoints:
+  - operation_id: listSeasons
+    method: GET
+    path: /seasons
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/get"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#list_seasons"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#ListSeasonsUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 422
+
+  - operation_id: createSeason
+    method: POST
+    path: /seasons
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/post"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#create_season"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#CreateSeasonUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 422
+
+  - operation_id: getSeason
+    method: GET
+    path: /seasons/{seasonId}
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/get"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#get_season"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#GetSeasonUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 404
+
+  - operation_id: patchSeason
+    method: PATCH
+    path: /seasons/{seasonId}
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/patch"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#patch_season"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#PatchSeasonUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coordinator
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 422
+
+  - operation_id: addTeamToSeason
+    method: POST
+    path: /seasons/{seasonId}/teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/post"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#add_team_to_season"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#AddTeamToSeasonUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 409
+
+  - operation_id: removeTeamFromSeason
+    method: DELETE
+    path: /seasons/{seasonId}/teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/delete"
+    runtime_handler_ref: "../../../../../src/seasons/api.py#remove_team_from_season"
+    use_case_ref: "../../../../../src/seasons/application/use_cases.py#RemoveTeamFromSeasonUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coordinator
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404

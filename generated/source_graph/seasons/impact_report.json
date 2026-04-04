@@ -1,0 +1,144 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/seasons.yaml",
+    "contracts/schemas/seasons/season.schema.json",
+    "contracts/openapi/components/schemas/seasons/season.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/seasons/README.md",
+    "docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md",
+    "docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
+    "docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md",
+    "docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md",
+    "docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md"
+  ],
+  "impacted_runtime": [
+    "src/seasons/api.py",
+    "src/seasons/domain/entities.py",
+    "src/seasons/domain/rules.py",
+    "src/seasons/application/use_cases.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/seasons/season.yaml",
+      "sha256": "f38143a47b97aadfb92da4a2800c987f11c3bddcd7d6ff8997bf2cbca2cfd73e"
+    },
+    {
+      "relpath": "contracts/openapi/paths/seasons.yaml",
+      "sha256": "9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad"
+    },
+    {
+      "relpath": "contracts/schemas/seasons/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/seasons/season.schema.json",
+      "sha256": "f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
+      "sha256": "2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md",
+      "sha256": "cc79728478fbaebcc2fc0bed1d406b022b3c8493bfe6309345a83d5beada6349"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md",
+      "sha256": "4d9045dca5aa01beed390d8ca9d629f4bfe48145c06de87210cbc6dc5c9fd512"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md",
+      "sha256": "6cab919bf5cab4579a7a10a90a8c68963fcaf007fb690cb4d4b66bb3ded0258e"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/README.md",
+      "sha256": "9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md",
+      "sha256": "7f499b8c33acafec2f68629123040459407e4ee955b6b1853d4ce79f3d0f5b45"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
+      "sha256": "287b175a951e43bfa6ebd1c9eac9bac7170afc55209f786824fc442958a4cdf8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/graph/entities.yaml",
+      "sha256": "e67c00d6ac7c524390568ecb70cf0da02d8f40fdf724c22a707cd818b5985713"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/graph/errors.yaml",
+      "sha256": "1f76042b4142f081002bbb08082ed57c0532b07cc30ed6d04f39488bbb549117"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
+      "sha256": "6bd83f8063b4df68fbb064a7f67964d2ebc363b440816bb3559860eed383c26e"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/seasons/graph/test_obligations.yaml",
+      "sha256": "37f2636d94f5f82980d9ea0d491c370c1db9593d582f46fbcf149fd2c3539e2d"
+    },
+    {
+      "relpath": "src/seasons/api.py",
+      "sha256": "1ef6bfda01facfdbe749157b2f785a0dd7f6fde9caecf06daf47d9b3c8949236"
+    },
+    {
+      "relpath": "src/seasons/application/use_cases.py",
+      "sha256": "5ebbec45ed92e98102f30cd8315ce6aae5cadb54c7de740919fdc94d3ea7f992"
+    },
+    {
+      "relpath": "src/seasons/domain/entities.py",
+      "sha256": "ad53a5dddc23ecbcd360b3d3ee07d9c317021220044ef11cf3822648fd12b2f5"
+    },
+    {
+      "relpath": "src/seasons/domain/rules.py",
+      "sha256": "f9841e7a37857381520f510a5e88394fe3df5a752f6d0241f3443ed4bab939e6"
+    }
+  ],
+  "known_gaps": [
+    "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+    "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
+    "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
+  ],
+  "module": "seasons",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/seasons/seasons.bundle.yaml",
+    "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
+    "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
+    "generated/source_graph/seasons/impact_report.json"
+  ],
+  "source_fingerprint": "769271c9277c58e2fb8a49d31768f09a9f088af96d7a66174cd2b614fe01fd65"
+}

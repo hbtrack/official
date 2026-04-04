@@ -1,0 +1,384 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: seasons
+graph_root: docs/hbtrack/modulos/seasons/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/seasons/season.yaml
+  sha256: f38143a47b97aadfb92da4a2800c987f11c3bddcd7d6ff8997bf2cbca2cfd73e
+- relpath: contracts/openapi/paths/seasons.yaml
+  sha256: 9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad
+- relpath: contracts/schemas/seasons/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/seasons/season.schema.json
+  sha256: f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md
+  sha256: 2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62
+- relpath: docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md
+  sha256: cc79728478fbaebcc2fc0bed1d406b022b3c8493bfe6309345a83d5beada6349
+- relpath: docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md
+  sha256: 4d9045dca5aa01beed390d8ca9d629f4bfe48145c06de87210cbc6dc5c9fd512
+- relpath: docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md
+  sha256: 6cab919bf5cab4579a7a10a90a8c68963fcaf007fb690cb4d4b66bb3ded0258e
+- relpath: docs/hbtrack/modulos/seasons/README.md
+  sha256: 9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec
+- relpath: docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md
+  sha256: 7f499b8c33acafec2f68629123040459407e4ee955b6b1853d4ce79f3d0f5b45
+- relpath: docs/hbtrack/modulos/seasons/graph/endpoints.yaml
+  sha256: 287b175a951e43bfa6ebd1c9eac9bac7170afc55209f786824fc442958a4cdf8
+- relpath: docs/hbtrack/modulos/seasons/graph/entities.yaml
+  sha256: e67c00d6ac7c524390568ecb70cf0da02d8f40fdf724c22a707cd818b5985713
+- relpath: docs/hbtrack/modulos/seasons/graph/errors.yaml
+  sha256: 1f76042b4142f081002bbb08082ed57c0532b07cc30ed6d04f39488bbb549117
+- relpath: docs/hbtrack/modulos/seasons/graph/module_manifest.yaml
+  sha256: 6bd83f8063b4df68fbb064a7f67964d2ebc363b440816bb3559860eed383c26e
+- relpath: docs/hbtrack/modulos/seasons/graph/test_obligations.yaml
+  sha256: 37f2636d94f5f82980d9ea0d491c370c1db9593d582f46fbcf149fd2c3539e2d
+- relpath: src/seasons/api.py
+  sha256: 1ef6bfda01facfdbe749157b2f785a0dd7f6fde9caecf06daf47d9b3c8949236
+- relpath: src/seasons/application/use_cases.py
+  sha256: 5ebbec45ed92e98102f30cd8315ce6aae5cadb54c7de740919fdc94d3ea7f992
+- relpath: src/seasons/domain/entities.py
+  sha256: ad53a5dddc23ecbcd360b3d3ee07d9c317021220044ef11cf3822648fd12b2f5
+- relpath: src/seasons/domain/rules.py
+  sha256: f9841e7a37857381520f510a5e88394fe3df5a752f6d0241f3443ed4bab939e6
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: seasons
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_SEASONS.md
+    domain_rules: ../DOMAIN_RULES_SEASONS.md
+    invariants: ../INVARIANTS_SEASONS.md
+    permissions: ../PERMISSIONS_SEASONS.md
+    test_matrix: ../TEST_MATRIX_SEASONS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/seasons.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/seasons/
+    primary_schema: ../../../../../contracts/schemas/seasons/season.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/seasons/season.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/seasons/api.py
+    domain_entity: ../../../../../src/seasons/domain/entities.py
+    domain_rules: ../../../../../src/seasons/domain/rules.py
+    use_cases: ../../../../../src/seasons/application/use_cases.py
+  structured_ir:
+    entities: ./entities.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "competition_ids \xE9 refer\xEAncia cruzada para m\xF3dulo competitions \u2014\
+    \ boundary explicitado em INV-SEAS-004."
+  - "organization_id \xE9 refer\xEAncia opcional; governan\xE7a de organiza\xE7\xE3\
+    o pertence ao m\xF3dulo identity_access."
+entities:
+  Season:
+    schema_ref: ../../../../../contracts/schemas/seasons/season.schema.json
+    runtime_entity_ref: ../../../../../src/seasons/domain/entities.py#Season
+    docs_refs:
+    - ../DOMAIN_RULES_SEASONS.md
+    - ../INVARIANTS_SEASONS.md
+    - ../PERMISSIONS_SEASONS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: organizationId
+      runtime_name: organization_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'boundary: reference to identity_access module'
+    - name: name
+      runtime_name: name
+      required: true
+      type: string
+      constraints:
+      - 'maxLength: 120'
+      - 'minLength: 1'
+    - name: sportCycleLabel
+      runtime_name: sport_cycle_label
+      required: false
+      type: string
+    - name: statusLabel
+      runtime_name: status_label
+      required: true
+      type: enum
+      values:
+      - DRAFT
+      - ACTIVE
+      - ARCHIVED
+    - name: startDate
+      runtime_name: start_date
+      required: true
+      type: date
+    - name: endDate
+      runtime_name: end_date
+      required: true
+      type: date
+      constraints:
+      - 'INV-SEAS-002: startDate <= endDate'
+    - name: phaseLabels
+      runtime_name: phase_labels
+      required: true
+      type: array_of_string
+      constraints:
+      - 'INV-SEAS-003: uniqueItems'
+    - name: competitionIds
+      runtime_name: competition_ids
+      required: true
+      type: array_of_uuid
+      constraints:
+      - 'INV-SEAS-003: uniqueItems'
+      - 'boundary: reference to competitions module'
+    - name: teamIds
+      runtime_name: team_ids
+      required: true
+      type: array_of_uuid
+      constraints:
+      - 'INV-SEAS-003: uniqueItems'
+    - name: createdAt
+      runtime_name: created_at
+      required: false
+      type: datetime_iso8601
+    - name: updatedAt
+      runtime_name: updated_at
+      required: false
+      type: datetime_iso8601
+endpoints:
+- operation_id: listSeasons
+  method: GET
+  path: /seasons
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/get
+  runtime_handler_ref: ../../../../../src/seasons/api.py#list_seasons
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#ListSeasonsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 422
+- operation_id: createSeason
+  method: POST
+  path: /seasons
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/post
+  runtime_handler_ref: ../../../../../src/seasons/api.py#create_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#CreateSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+- operation_id: getSeason
+  method: GET
+  path: /seasons/{seasonId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/get
+  runtime_handler_ref: ../../../../../src/seasons/api.py#get_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#GetSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 404
+- operation_id: patchSeason
+  method: PATCH
+  path: /seasons/{seasonId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/patch
+  runtime_handler_ref: ../../../../../src/seasons/api.py#patch_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#PatchSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 422
+- operation_id: addTeamToSeason
+  method: POST
+  path: /seasons/{seasonId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/post
+  runtime_handler_ref: ../../../../../src/seasons/api.py#add_team_to_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#AddTeamToSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 409
+- operation_id: removeTeamFromSeason
+  method: DELETE
+  path: /seasons/{seasonId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/delete
+  runtime_handler_ref: ../../../../../src/seasons/api.py#remove_team_from_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#RemoveTeamFromSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+errors:
+- id: ERR-SEA-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/seasons/api.py#_get_actor_role
+  operations:
+  - listSeasons
+  - createSeason
+  - getSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-404-SEASON-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/seasons/domain/rules.py#SeasonNotFound
+  operations:
+  - getSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-400-INVALID-DATE-RANGE
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InvalidDateRange
+  operations:
+  - createSeason
+  - patchSeason
+- id: ERR-SEA-400-INVALID-STATUS-TRANSITION
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InvalidStatusTransition
+  operations:
+  - patchSeason
+- id: ERR-SEA-409-DUPLICATE-TEAM
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/seasons/domain/rules.py#DuplicateTeamAssociation
+  operations:
+  - addTeamToSeason
+- id: ERR-SEA-422-VALIDATION
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/seasons/domain/entities.py#validate_invariants
+  operations:
+  - createSeason
+  - patchSeason
+test_obligations:
+- id: SEA-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/seasons/season.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: SEA-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/seasons.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: SEA-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/seasons/tests/unit/test_seasons_domain.py
+  covers:
+  - INV-SEAS-001
+  - INV-SEAS-002
+  - INV-SEAS-003
+  - INV-SEAS-004
+  - DR-SEAS-001
+  - DR-SEAS-002
+  - DR-SEAS-003
+  - PERM-SEA
+  - PERM-SEA-001
+  - PERM-SEA-002
+  verification: Unit tests for domain invariants, RBAC rules and boundary enforcement
+  evidence_refs:
+  - ../../../../../src/seasons/tests/unit/test_seasons_domain.py
+- id: SEA-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_seasons_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_seasons_source_graph_integrity.py

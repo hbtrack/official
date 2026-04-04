@@ -1,0 +1,180 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: seasons
+openapi_paths_ref: contracts/openapi/paths/seasons.yaml
+operations:
+- operation_id: listSeasons
+  method: GET
+  path: /seasons
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/get
+  runtime_handler_ref: ../../../../../src/seasons/api.py#list_seasons
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#ListSeasonsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 422
+- operation_id: createSeason
+  method: POST
+  path: /seasons
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/post
+  runtime_handler_ref: ../../../../../src/seasons/api.py#create_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#CreateSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+- operation_id: getSeason
+  method: GET
+  path: /seasons/{seasonId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/get
+  runtime_handler_ref: ../../../../../src/seasons/api.py#get_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#GetSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 404
+- operation_id: patchSeason
+  method: PATCH
+  path: /seasons/{seasonId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/patch
+  runtime_handler_ref: ../../../../../src/seasons/api.py#patch_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#PatchSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 422
+- operation_id: addTeamToSeason
+  method: POST
+  path: /seasons/{seasonId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/post
+  runtime_handler_ref: ../../../../../src/seasons/api.py#add_team_to_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#AddTeamToSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 409
+- operation_id: removeTeamFromSeason
+  method: DELETE
+  path: /seasons/{seasonId}/teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/seasons.yaml#/seasons/{seasonId}/teams/{teamId}/delete
+  runtime_handler_ref: ../../../../../src/seasons/api.py#remove_team_from_season
+  use_case_ref: ../../../../../src/seasons/application/use_cases.py#RemoveTeamFromSeasonUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+errors:
+- id: ERR-SEA-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/seasons/api.py#_get_actor_role
+  operations:
+  - listSeasons
+  - createSeason
+  - getSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-404-SEASON-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/seasons/domain/rules.py#SeasonNotFound
+  operations:
+  - getSeason
+  - patchSeason
+  - addTeamToSeason
+  - removeTeamFromSeason
+- id: ERR-SEA-400-INVALID-DATE-RANGE
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InvalidDateRange
+  operations:
+  - createSeason
+  - patchSeason
+- id: ERR-SEA-400-INVALID-STATUS-TRANSITION
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/seasons/domain/rules.py#InvalidStatusTransition
+  operations:
+  - patchSeason
+- id: ERR-SEA-409-DUPLICATE-TEAM
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/seasons/domain/rules.py#DuplicateTeamAssociation
+  operations:
+  - addTeamToSeason
+- id: ERR-SEA-422-VALIDATION
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/seasons/domain/entities.py#validate_invariants
+  operations:
+  - createSeason
+  - patchSeason

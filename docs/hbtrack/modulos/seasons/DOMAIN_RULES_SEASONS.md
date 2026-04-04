@@ -33,3 +33,9 @@ Registrar as regras de negócio do módulo `seasons`.
 - Não inferir detalhes de súmula, placar ou arbitragem neste módulo.
 - Não inferir restrição clínica, readiness ou autorização de acesso a partir da temporada.
 - Não promover fase derivada de UI ou dashboard a regra de domínio.
+
+## Source Graph
+- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

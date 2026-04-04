@@ -374,6 +374,25 @@ entries:
       - "src/audit/"
       - "tests/pipeline_gates/test_audit_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_SEASONS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/seasons/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/seasons/README.md"
+      - "docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md"
+      - "docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md"
+      - "tests/pipeline_gates/test_seasons_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/seasons/*.md"
+      - "contracts/schemas/seasons/"
+      - "contracts/openapi/paths/seasons.yaml"
+      - "contracts/openapi/components/schemas/seasons/"
+      - "src/seasons/"
+      - "tests/pipeline_gates/test_seasons_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:
