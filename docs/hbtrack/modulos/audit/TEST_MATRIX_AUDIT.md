@@ -19,3 +19,7 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-002 | `contracts/schemas/audit/` | Validação JSON Schema | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | `DOMAIN_RULES_AUDIT.md` | Revisão normativa + testes de regra (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-004 | `INVARIANTS_AUDIT.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
+| TM-005 | `graph/test_obligations.yaml` | Source graph — obrigações de teste AUD-TO-001..004 | Sim | `tests/pipeline_gates/test_audit_source_graph_integrity.py` |
+
+## Source Graph
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

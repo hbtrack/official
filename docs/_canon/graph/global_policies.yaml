@@ -1,0 +1,65 @@
+version: "1.0.0"
+artifact: "GLOBAL_POLICIES_IR"
+status: active
+scope: global
+
+policies:
+  precedence:
+    precedence_order:
+      - "enforcement_executable"
+      - "active_schemas"
+      - "source_authority_graph"
+      - "concept_owner_source"
+      - "bridge_docs"
+      - "derived_artifacts"
+      - "legacy_or_study"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+
+  partial_update:
+    mode: "blocked"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+
+  prompt_override:
+    mode: "forbidden"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+
+  generate_code_minimum_status:
+    minimum_module_status: "implementation_ready"
+    owner_source: ".contract_driven/TASK_CATALOG.yaml"
+    source_refs:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+
+  runtime_current_state:
+    generator: "scripts/generate/docs/gen_runtime_current_state.py"
+    manual_edits: "forbidden"
+    owner_source: "scripts/generate/docs/gen_runtime_current_state.py"
+    source_refs:
+      - "scripts/generate/docs/gen_runtime_current_state.py"
+      - "scripts/audit/check_architecture_docs.py"
+
+  operational_contracts:
+    source_of_truth: "docs/_canon/graph/ops/"
+    manual_markdown_override: "forbidden"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - "docs/_canon/graph/source_map.yaml"
+
+  canonical_boot:
+    mandatory_boot_inputs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".contract_driven/TASK_CATALOG.yaml"
+    owner_source: "docs/_canon/AGENT_INSTRUCTIONS.md"
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/BOOT_PROFILES.yaml"

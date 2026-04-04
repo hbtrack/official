@@ -1,0 +1,62 @@
+PARTE 1 -- O que foi confirmado nesta fase
+
+- O branch `main` exige hoje 5 status checks required: `Validate Contract Gates`, `Governance Tests`, `Architecture Drift Check`, `CI / Validate Contracts` e `CI / Tests`.
+- No PR `#30`, as falhas com evidencia mais forte continuam concentradas em `Validate Contract Gates` e `CI / Tests`.
+- `Validate Contract Gates` falha por drift real do arquivo `compiled_ops/deploy/impact_report.json`. Em checkout limpo do commit `0d1066c3ddad79887ff22f3f06a84c4078172af5`, `python3 scripts/compile/compile_ops_contracts.py --check` reprova; no workspace atual o mesmo comando passa porque o artefato local ja esta regenerado e nao commitado.
+- A cadeia causal do drift foi confirmada: `docs/_canon/SYNC_MANIFEST.yaml` nao trata mais `.github/workflows/deploy.yml` como `source_input` de `OPS_SOURCE_GRAPH_SYNC`, mas o `compiled_ops/deploy/impact_report.json` publicado no PR ainda carrega esse arquivo como input upstream.
+- O fluxo local declarado no proprio PR nao cobre a mesma superficie dos required checks do GitHub. A validacao reportada no PR cita `python3 scripts/hb survival-suite`, `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci`, suites direcionadas e hook local; nao cita `pytest -q -m "not slow" --tb=short`, frontend tests/build nem `compile_ops_contracts.py --check`.
+- `scripts/hb preflight` nao reproduz todos os jobs do GitHub apesar de afirmar isso no texto do comando. Ele cobre `validate_contracts --profile ci`, 3 compilers e 7 suites de governanca/paridade, mas nao executa o job `CI / Tests` completo, nem frontend tests, Pact ou Docker builds.
+- `tests/pipeline_gates/test_backend_codegen_reports.py` depende explicitamente de `REPO_ROOT/.venv-contract/bin/python`. Em checkout limpo sem `.venv-contract` local ao repo, esse teste falha; ao inserir manualmente esse path via symlink, ele passa. Isso confirma divergencia estrutural de ambiente/path entre repo local e runner limpo.
+- `src/identity_access/tests/unit/test_jwt_auth_failure_handling.py` falha tanto no workspace atual quanto em checkout limpo. A causa reproduzida e `AuthenticationError(message=...)` em `src/identity_access/middleware.py`, enquanto a classe instalada nao aceita esse keyword argument. Portanto, essa falha nao e "misterio do GitHub"; e regressao real do codigo que o GitHub esta executando.
+- A hipotese de mutacao espontanea de `_reports/contract_gates/latest.json` perdeu forca nesta fase. Em experimento controlado no checkout limpo, a sequencia `test_runtime_promotions.py -> test_warning_free_acceptance.py -> test_video_module.py::TestVideoModuleIntegration::test_contract_gates_pass` preservou o hash de `latest.json` e todos os 17 testes passaram.
+
+PARTE 2 -- Hipoteses refinadas
+
+| ID | Hipotese refinada | Status | Evidencia principal | Impacto no problema |
+|----|-------------------|--------|---------------------|---------------------|
+| H1 | O PR publicou `compiled_ops/deploy/impact_report.json` stale, enquanto o workspace local ja tinha a versao regenerada | confirmada | `compile_ops_contracts.py --check` falha no checkout limpo do SHA do PR e passa no workspace atual; copiar o artefato local regenerado para o checkout limpo faz `test_ops_contract_compiler.py` voltar a passar | Explica diretamente a falha de `Validate Contract Gates` e o falso PASS local |
+| H2 | O ritual local de validacao e mais fraco que os required checks do GitHub | confirmada | O corpo do PR lista apenas `survival-suite`, validator, suites direcionadas e hook; os workflows required rodam tambem `pytest -q -m "not slow"`, compilers `--check`, e ha jobs separados por gate | Explica por que o local aprova sem cobrir as mesmas superficies que o GitHub reprova |
+| H3 | Parte do `CI / Tests` depende indevidamente de `.venv-contract` dentro do repo | confirmada | `tests/pipeline_gates/test_backend_codegen_reports.py` usa `REPO_ROOT/.venv-contract/bin/python`; falha em checkout limpo sem esse path e passa imediatamente quando o path e injetado | Explica falha remota que o repo local pode mascarar por estado preexistente |
+| H4 | Ha regressao real no middleware JWT/autenticacao, independente de ambiente | confirmada | `src/identity_access/tests/unit/test_jwt_auth_failure_handling.py` falha localmente e em checkout limpo com `TypeError: AuthenticationError() takes no keyword arguments` | Explica parte substantiva de `CI / Tests`, inclusive cascata de 500s em testes HTTP/Schemathesis |
+| H5 | Diferencas de `.env`, services e vars entre local e GitHub alteram comportamento do backend | fortalecida | `config/settings.py` carrega `.env` local automaticamente; o GitHub injeta vars explicitas, roda Postgres/Redis limpos e fixa portas/URLs; o checkout limpo nao tem `.env` | Pode esconder ou criar diferencas adicionais, embora nao seja necessario para explicar os dois sintomas ja reproduzidos |
+| H6 | `hb preflight` cria falsa sensacao de paridade total com CI | confirmada | O proprio comando diz "Reproduzir todos os CI jobs localmente", mas `_CI_TEST_SUITES` cobre apenas 7 suites de governanca/paridade e nao inclui `CI / Tests` completo, frontend, Pact ou Docker | Mantem o gap entre PASS local e PASS exigido pelo GitHub |
+| H7 | Algum teste reescreve `latest.json` e contamina testes posteriores no suite completo | enfraquecida | A suspeita veio de uma reproducao ampla em worktree previamente contaminado; no experimento controlado desta fase o hash de `latest.json` nao mudou | Hoje nao e uma causa-raiz forte; so volta a subir se reaparecer em reproducao limpa |
+| H8 | OS/runner/versao de ferramenta e a causa primaria da divergencia atual | enfraquecida | As duas falhas principais foram reproduzidas localmente em Linux/checkout limpo, sem depender do runner do GitHub | Nao explica o problema principal neste momento |
+| H9 | Cache ou artefato interno do GitHub esta sozinho causando a falha | descartada | As falhas principais foram reproduzidas localmente a partir do commit publicado, sem depender de cache do GitHub | Baixo valor investigativo para a proxima fase |
+
+PARTE 3 -- Divergencias reais local vs GitHub
+
+| Categoria | Local | GitHub | Diferenca encontrada | Pode explicar a falha? |
+|-----------|-------|--------|----------------------|------------------------|
+| comando | Validacao declarada no PR: `hb survival-suite`, validator `--profile ci`, suites direcionadas e hook local | `contract-gates.yml` roda compilers `--check` + validator; `ci.yml` roda `pytest -q -m "not slow"`, frontend tests, Pact e builds | O ritual local nao executa todos os comandos que o GitHub considera obrigatorios | Sim, diretamente |
+| workflow | Fluxo manual/hook-driven, dependente do estado atual do workspace | Jobs separados, checkout limpo por job, branch rules com status checks required | O GitHub avalia o commit publicado; o local pode estar com artefatos regenerados e nao commitados | Sim, diretamente |
+| ambiente | `.env` local presente; defaults de `settings.py` usam DB `5433`; `CI` so existe se setado manualmente | Vars explicitas no workflow; `CI=true` no gate remoto; Postgres/Redis provisionados limpos em `CI / Tests` | Diferenca de variaveis, portas, services e flags de execucao | Sim, parcialmente |
+| paths/cwd | Workspace atual contem `.venv`, `.venv-contract`, `node_modules`, `frontend/node_modules` | Checkout limpo do runner nao contem esses caminhos ate os jobs instalarem o que cada job instala | Parte dos testes assume path repo-local (`.venv-contract`) que nao faz parte do contrato do runner | Sim, diretamente |
+| dependencias | Ambiente local ja montado, com ferramentas e libs acumuladas | Cada job instala dependencias do zero; `CI / Tests` instala via `pip`, mas nao cria `.venv-contract` no root do repo | Diferenca de provisionamento e de forma de resolucao das dependencias | Sim, diretamente para alguns testes |
+| arquivos lidos | Pode ler `.env`, `_reports/*` existentes e artefatos ja regenerados no disco | Le apenas o que esta commitado no checkout fresco e o que o job gera no proprio run | O local pode ler evidencias/artefatos mais novos que o commit ainda nao carrega | Sim, diretamente |
+| arquivos gerados | Workspace atual ja tinha `compiled_ops/deploy/impact_report.json` modificado e varios `_reports/*` alterados | O GitHub parte do estado commitado e detecta drift se o artefato publicado estiver stale | O local estava "corrigido no disco", o GitHub nao | Sim, diretamente |
+| escopo | Suites direcionadas e survival-suite; sem evidencia de execucao local do `pytest -q -m "not slow"` completo | `CI / Tests` cobre a suite ampla `not slow`; `Validate Contract Gates` cobre compilers e validator remoto | O escopo local e menor que o escopo required remoto | Sim, diretamente |
+| gate | Local pode cair em profile `local` por default se `CI` nao estiver setado; survival-suite e pre-commit focam governanca | `CI / Validate Contracts` usa `validate_contracts.py --profile precommit`; `Validate Contract Gates` usa `CI=true` e dispara o profile `ci`, alem dos compilers | O GitHub nao roda apenas "o validator"; ele roda gates com definicoes e escopos diferentes entre workflows | Sim, criticamente |
+| versao | Python `3.12.3`, Node `24.14.1`, npm `11.11.0` | Python `3.12.x`; Node `22` em `ci.yml` e `24` em `contract-gates.yml`; ferramentas instaladas de forma pinada no workflow | Existe diferenca de versao, mas ela nao foi necessaria para reproduzir as falhas principais | Nao como causa primaria |
+| shell/runner | WSL2 Linux + `bash`, filesystem persistente | GitHub-hosted `ubuntu-22.04` / `ubuntu-latest` + `bash`, filesystem efemero por job | A diferenca mais relevante nao e o shell em si, e o isolamento/ephemeral state do runner | Sim, mas de forma indireta |
+| cache/artefatos | Estado local acumulado entre execucoes pode mascarar drift | Cache GHA existe para npm/docker, mas as falhas principais reproduzem sem depender dele | O problema observado nao precisa de cache do GitHub; precisa apenas de checkout limpo | Sim para o lado local; nao para culpar cache do GitHub |
+
+PARTE 4 -- Causas-raiz mais provaveis
+
+1. O commit publicado no PR carrega um artefato derivado stale (`compiled_ops/deploy/impact_report.json`), enquanto o workspace local ja tinha a versao regenerada e nao commitada. Isso quebra `Validate Contract Gates` no GitHub e explica o PASS local enganoso.
+2. O processo local de validacao nao replica os required checks de fato. Ele valida menos superficie que o GitHub, especialmente ao nao executar o `CI / Tests` completo e ao nao provar a mesma cadeia de gates/compilers requerida pelos workflows.
+3. Parte da suite remota depende de um detalhe de ambiente que so existe localmente: `.venv-contract` dentro do repo. Isso torna o PASS local estruturalmente mais permissivo que o GitHub runner limpo.
+4. Ha uma regressao real na camada JWT/autenticacao. O GitHub a encontra porque roda `CI / Tests`; o fluxo local usado para validar o PR nao a cobriu suficientemente.
+5. Como causa secundaria, o ambiente local (`.env`, services, portas e variaveis`) nao e equivalente ao do runner, o que pode estar escondendo falhas adicionais mesmo apos resolver os sintomas principais.
+
+PARTE 5 -- O que ainda precisa ser testado na Fase 3
+
+- Obter os logs brutos autenticados do GitHub para os jobs falhos do PR `#30`, especialmente `Validate Contract Gates` e `CI / Tests`, para alinhar exatamente a ordem e os nomes dos testes que falham no runner.
+- Reproduzir `CI / Tests` em checkout realmente pristino, em tres cenarios separados:
+  1. sem `.venv-contract` repo-local;
+  2. com `.venv-contract` repo-local;
+  3. com exclusao temporaria dos testes ja explicados por `.venv-contract`, para revelar o proximo bloco real de falhas.
+- Quebrar `CI / Tests` por familias de falha com `-x` e depois por subconjuntos: primeiro JWT/auth, depois testes HTTP/Schemathesis, para medir quanto da suite ampla falha por cascata do mesmo erro.
+- Verificar se a presenca de `.env` local altera o resultado de subsets relevantes do backend, repetindo os testes prioritarios com e sem `.env` e com as mesmas vars do workflow.
+- Revalidar a hipotese de contaminacao de `_reports/contract_gates/latest.json` apenas se uma reproducao limpa da suite ampla voltar a mudar o hash do arquivo. Sem isso, essa linha deve sair do foco principal.
+- So se ainda restarem falhas nao explicadas apos os passos acima, comparar patch versions exatas do runner (`python 3.12.x`, Node `22.x`/`24.x`) e resolucao efetiva de dependencias no GitHub.

@@ -71,6 +71,9 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 35 | `RUNTIME_CURRENT_STATE.md` | Inventário factual do runtime atual: o que existe, o que é só contrato, o que é target-state (current-state) |
 | 36 | `INTEGRATION_FLOWS.md` | Flows críticos de integração cross-módulo: auth, training→wellness→analytics, notifications, video/scout, ai_ingestion (governance) |
 | 37 | `ADR_INDEX.md` | Índice unificado de todas as ADRs com status, supersession e tema — referência rápida sem ambiguidade |
+| 38 | `SOURCE_AUTHORITY_GRAPH.yaml` | Grafo de autoridade de fontes — define hierarquia entre SSOT canônicas e derivadas |
+| 39 | `SYNC_MANIFEST.yaml` | Manifesto de sincronização determinístico entre source graphs e artefatos derivados por módulo |
+| 40 | `DOC_USAGE_MANIFEST.yaml` | Manifesto de uso de documentos — rastreia ownership e freshness das doc-rules por módulo |
 
 ### Subdiretórios Autorizados
 
@@ -78,6 +81,7 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 - **`gates/`** — GATES_REGISTRY.yaml (registry de gates) e README.md
 - **`security/`** — OWASP_API_CONTROL_MATRIX.yaml (matriz de controles)
 - **`templates/`** — SESSION_HANDOFF.template.md (template de handoff)
+- **`graph/`** — Regras globais do source graph: global_rules.yaml, global_policies.yaml, lifecycle.yaml, source_map.yaml
 
 > **Nota**: `BOOT_PROFILES.yaml` e `TASK_CATALOG.yaml` foram movidos para `.contract_driven/` — veja [docs/_canon/AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md) §7 para referência atualizada.
 

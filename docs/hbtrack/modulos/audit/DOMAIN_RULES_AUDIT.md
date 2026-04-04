@@ -33,3 +33,8 @@ Registrar as regras de negócio do módulo `audit`.
 - Não copiar PII/PHI desnecessariamente para o trilho de auditoria.
 - Não usar `audit` como storage de estado corrente do domínio.
 - Não inferir payload completo a partir de rótulos ou summaries.
+
+## Source Graph
+- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)

@@ -1,0 +1,91 @@
+version: "1.0.0"
+status: active
+module: audit
+
+endpoints:
+  - operation_id: listAuditEntries
+    method: GET
+    path: /audit/entries
+    openapi_ref: "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/get"
+    runtime_handler_ref: "../../../../../src/audit/api.py#list_audit_entries"
+    use_case_ref: "../../../../../src/audit/application/use_cases.py#ListAuditEntries"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coordinator
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 422
+      - 500
+
+  - operation_id: createAuditEntry
+    method: POST
+    path: /audit/entries
+    openapi_ref: "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/post"
+    runtime_handler_ref: "../../../../../src/audit/api.py#create_audit_entry"
+    use_case_ref: "../../../../../src/audit/application/use_cases.py#CreateAuditEntry"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 422
+      - 500
+
+  - operation_id: getAuditEntry
+    method: GET
+    path: /audit/entries/{entryId}
+    openapi_ref: "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/{entryId}/get"
+    runtime_handler_ref: "../../../../../src/audit/api.py#get_audit_entry"
+    use_case_ref: "../../../../../src/audit/application/use_cases.py#GetAuditEntry"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coordinator
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: exportAuditEntries
+    method: GET
+    path: /audit/entries/export
+    openapi_ref: "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/export/get"
+    runtime_handler_ref: "../../../../../src/audit/api.py#export_audit_entries"
+    use_case_ref: "../../../../../src/audit/application/use_cases.py#ExportAuditEntries"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 422
+      - 500

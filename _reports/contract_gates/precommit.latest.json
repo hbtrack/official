@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-30T11:00:11Z",
+  "timestamp_utc": "2026-04-04T03:37:16Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "999c6a1",
+    "git_commit": "2b33fccf",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -17,12 +17,12 @@
       "oasdiff": "oasdiff version 1.12.3",
       "schemathesis": "schemathesis, version 4.12.1",
       "json_schema_validator": null,
-      "asyncapi_validator": "@asyncapi/cli/6.0.0 wsl-x64 node-v24.14.0",
+      "asyncapi_validator": "@asyncapi/cli/6.0.0 wsl-x64 node-v24.14.1",
       "arazzo_validator": null,
       "storybook": null
     }
   },
-  "overall_status": "PASS",
+  "overall_status": "FAIL",
   "execution_context": {
     "profile": "precommit",
     "stage": null,
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260330T110011_8646e2"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260404T033716_af32f6"
   },
   "status_detail": {
-    "active_gates_passed": 13,
-    "skip_count": 40,
+    "active_gates_passed": 21,
+    "skip_count": 30,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -107,27 +107,27 @@
       },
       {
         "gate_id": "REF_HERMETICITY_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "TOOLING_CONFIG_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "OPENAPI_POLICY_RULESET_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
@@ -147,19 +147,19 @@
       },
       {
         "gate_id": "ASYNCAPI_VALIDATION_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "ARAZZO_VALIDATION_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "SPECTRAL_LINTING_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "ARAZZO_COMPLETENESS_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "UI_DOC_VALIDATION_GATE",
@@ -171,7 +171,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "PASS"
+        "status": "FAIL"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -207,7 +207,7 @@
       }
     ]
   },
-  "exit_code": 0,
+  "exit_code": 2,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 71
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1201
+        "duration_ms": 2445
       }
     },
     {
@@ -537,6 +537,7 @@
         "docs/_canon/DATA_MIGRATION_POLICY.md",
         "docs/_canon/DECISION_POLICY.md",
         "docs/_canon/DEPLOY_PIPELINE.md",
+        "docs/_canon/DOC_USAGE_MANIFEST.yaml",
         "docs/_canon/DOMAIN_GLOSSARY.md",
         "docs/_canon/FEATURE_REGISTRY.yaml",
         "docs/_canon/FRONTEND_CONTRACT.md",
@@ -553,7 +554,9 @@
         "docs/_canon/RUNTIME_CURRENT_STATE.md",
         "docs/_canon/SCOPE_BOUNDARY_POLICY.md",
         "docs/_canon/SECURITY_RULES.md",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
         "docs/_canon/SURVIVAL_SUITE_POLICY.md",
+        "docs/_canon/SYNC_MANIFEST.yaml",
         "docs/_canon/SYSTEM_SCOPE.md",
         "docs/_canon/TEST_STRATEGY.md",
         "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
@@ -561,6 +564,7 @@
         "docs/_canon/VPS_SETUP.md",
         "docs/_canon/decisions",
         "docs/_canon/gates",
+        "docs/_canon/graph",
         "docs/_canon/security",
         "docs/_canon/templates",
         "docs/_canon/gates/GATES_REGISTRY.yaml",
@@ -606,7 +610,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 5
       }
     },
     {
@@ -615,7 +619,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 351 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 353 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
@@ -917,12 +921,14 @@
         "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/toolchain.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
@@ -981,110 +987,280 @@
     },
     {
       "gate_id": "REF_HERMETICITY_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "Todos os $refs herméticos (67 arquivo(s)).",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/openapi/components/parameters/page.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageSize.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageToken.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/audit/audit_entry.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/common/error.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/competitions/competition.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/identity_access/auth_session.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/matches/match.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/medical/medical_record.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/reports/report_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/scout/scout_event.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/seasons/season.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/shared/problem.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/teams/team.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/athlete_chat_message.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/execution_record.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/feedback_thread.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/load_chart.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/mesocycle.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/microcycle.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/recommendation.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_block.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_objective.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_session.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_suggestion.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_post.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_pre.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/users/user_profile.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/clip_definition.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/distribution_profile.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/match_media_session.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/media_segment.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/intents/ai_ingestion.intent.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/intents/examples/ai_ingestion.invalid.intent.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/reports.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/teams.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/users.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 743
       }
     },
     {
       "gate_id": "TOOLING_CONFIG_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "Toolchain/config compatíveis com o pipeline oficial.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/package.json",
+        "/home/davis/HB-TRACK/redocly.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1074
       }
     },
     {
       "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
-      "inputs": [],
-      "artifacts_checked": [],
+      "summary": "redocly lint: nenhum erro.",
+      "inputs": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1223
       }
     },
     {
       "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "Root OpenAPI alinhado aos path items reais dos módulos.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/reports.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/teams.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/users.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 583
       }
     },
     {
       "gate_id": "OPENAPI_POLICY_RULESET_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
-      "inputs": [],
-      "artifacts_checked": [],
+      "summary": "spectral: PASS (1 aviso(s)).",
+      "inputs": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[hbtrack-security-global-explicit] security global deve ser declarado explicitamente (mesmo que [])",
+          "severity": "warn",
+          "path": [],
+          "range": {
+            "start": {
+              "line": 0,
+              "character": 0
+            },
+            "end": {
+              "line": 315,
+              "character": 69
+            }
+          }
+        }
+      ],
       "metrics": {
         "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 0
+        "warnings": 1,
+        "violations": 1,
+        "duration_ms": 1583
       }
     },
     {
       "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "JSON Schema: 49 arquivo(s) válido(s), 0 aviso(s).",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_metric_key.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_request.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_response.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_acl.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_relation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_version.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/identity_access/auth_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/matches/match.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/medical/medical_record.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/notifications/notification_delivery.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/reports/report_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/scout/scout_event.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/toolchain.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_message.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_ineligibility_declaration.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/attention_queue_item.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/execution_record.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/feedback_thread.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/load_chart.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/recommendation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_block.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_objective.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion_approval.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/users/user_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/clip_definition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/distribution_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/match_media_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/media_segment.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/wellness/wellness_entry.schema.json"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 2
       }
     },
     {
@@ -1387,12 +1563,14 @@
         "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/toolchain.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
@@ -1461,6 +1639,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md",
@@ -1578,7 +1762,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1740
+        "duration_ms": 1738
       }
     },
     {
@@ -1637,74 +1821,145 @@
     },
     {
       "gate_id": "ASYNCAPI_VALIDATION_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
-      "inputs": [],
-      "artifacts_checked": [],
+      "summary": "asyncapi validate: PASS.",
+      "inputs": [
+        "/home/davis/HB-TRACK/contracts/asyncapi/asyncapi.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/asyncapi/asyncapi.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1836
       }
     },
     {
       "gate_id": "ARAZZO_VALIDATION_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "Arazzo: 24 arquivo(s) válido(s).",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/audit/cross_module_audit_registration.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/competitions/competition_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/exercises/copy_and_customize_exercise.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/exercises/create_exercise_with_acl.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/identity_access/assign_role_to_user.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/matches/match_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/notifications/event_to_notification_delivery.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/reports/generate_and_export_report.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/scout/scout_observation_and_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/seasons/season_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/teams/team_roster_management.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/cancel_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/complete_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/create_training_session_and_mark_attendance.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/publish_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/start_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/users/user_invitation.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/capture_and_sync.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/create_semantic_clip.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/semantic_clipping.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/start_live_capture.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/transcode_and_publish.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/wellness/athlete_wellness_tracking.arazzo.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 61
       }
     },
     {
       "gate_id": "SPECTRAL_LINTING_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
-      "inputs": [],
-      "artifacts_checked": [],
+      "summary": "spectral lint: nenhum erro encontrado.",
+      "inputs": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1067
       }
     },
     {
       "gate_id": "ARAZZO_COMPLETENESS_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'precommit'.",
+      "summary": "Completude Arazzo verificada para 13 módulo(s).",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "/home/davis/HB-TRACK/contracts/workflows",
+        "/home/davis/HB-TRACK/contracts/workflows/ai_ingestion",
+        "/home/davis/HB-TRACK/contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/audit",
+        "/home/davis/HB-TRACK/contracts/workflows/audit/cross_module_audit_registration.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/competitions",
+        "/home/davis/HB-TRACK/contracts/workflows/competitions/competition_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/identity_access",
+        "/home/davis/HB-TRACK/contracts/workflows/identity_access/assign_role_to_user.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/matches",
+        "/home/davis/HB-TRACK/contracts/workflows/matches/match_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/notifications",
+        "/home/davis/HB-TRACK/contracts/workflows/notifications/event_to_notification_delivery.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/scout",
+        "/home/davis/HB-TRACK/contracts/workflows/scout/scout_observation_and_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/seasons",
+        "/home/davis/HB-TRACK/contracts/workflows/seasons/season_lifecycle.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/teams",
+        "/home/davis/HB-TRACK/contracts/workflows/teams/team_roster_management.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training",
+        "/home/davis/HB-TRACK/contracts/workflows/training/cancel_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/complete_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/create_training_session_and_mark_attendance.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/publish_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/training/start_training_session.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/users",
+        "/home/davis/HB-TRACK/contracts/workflows/users/user_invitation.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video",
+        "/home/davis/HB-TRACK/contracts/workflows/video/capture_and_sync.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/create_semantic_clip.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/semantic_clipping.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/start_live_capture.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/video/transcode_and_publish.arazzo.yaml",
+        "/home/davis/HB-TRACK/contracts/workflows/wellness",
+        "/home/davis/HB-TRACK/contracts/workflows/wellness/athlete_wellness_tracking.arazzo.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 59
       }
     },
     {
@@ -1891,32 +2146,45 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/audit/FT-041.json",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/audit.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/audit/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/audit/FT-041.json",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de task_id: session_start.roadmap_task_id='parity-proof-of-parity' != SESSION_HANDOFF.task_id='B10-001-audit'.",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 1,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 3
+        "violations": 1,
+        "duration_ms": 16
       }
     },
     {
@@ -1938,7 +2206,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 160
+        "duration_ms": 211
       }
     },
     {
@@ -1960,7 +2228,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -2020,7 +2288,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 6
       }
     },
     {
@@ -2042,7 +2310,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 17
       }
     },
     {
@@ -2101,11 +2369,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": false,
-      "exit_code": 0,
+      "exit_code": 2,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 12 PASS, 40 SKIP.",
+      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

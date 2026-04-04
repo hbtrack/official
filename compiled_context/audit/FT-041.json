@@ -1,0 +1,768 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/audit/audit.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/audit/audit.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/audit/audit.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/audit/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "AUDIT_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/audit.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+    "primary_schema": "contracts/schemas/audit/audit_entry.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/audit"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/audit.yaml"
+    ],
+    "description": "Admin consulta entradas da trilha de auditoria com filtros (ator, ação, módulo, intervalo de datas) e exporta para análise forense.",
+    "endpoints": [
+      "GET /audit/entries",
+      "GET /audit/entries/export",
+      "GET /audit/entries/{entryId}"
+    ],
+    "id": "FT-041",
+    "name": "Consultar e Exportar Trilha de Auditoria",
+    "slug": "consultar-e-exportar-trilha-de-auditoria",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/audit/api.py",
+      "src/audit/application/use_cases.py",
+      "src/audit/domain/entities.py",
+      "src/audit/domain/rules.py",
+      "src/audit/schemas.py",
+      "src/audit/tests/unit/test_audit.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "contracts/openapi/paths/audit.yaml",
+      "contracts/schemas/audit/audit_entry.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/audit/FT-041.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+      "docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
+      "docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md",
+      "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+      "docs/hbtrack/modulos/audit/README.md",
+      "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_audit_source_graph_integrity.py",
+      "tests/pipeline_gates/test_context_bundle_audit.py",
+      "tests/pipeline_gates/test_source_graph_compiler_audit.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "d97ee5ddfce75bacffb63b9d7bb616b9a19f82c46a71f3c8484bf42394eae6ed"
+    },
+    {
+      "relpath": "generated/source_graph/audit/audit.bundle.yaml",
+      "sha256": "374877d781889b9450d92ffd19a693a35eba1e46aa87084797c6adf75d8351a0"
+    },
+    {
+      "relpath": "generated/source_graph/audit/audit.schema_contract_view.yaml",
+      "sha256": "d444c83931625ccb4eadcd64c8dbd6182977b8b4d65d9801c0b8e2d7aae3fe28"
+    },
+    {
+      "relpath": "generated/source_graph/audit/audit.openapi_contract_view.yaml",
+      "sha256": "250b40af95e6eb94c3c817c28d65f8786312e08f6a9862c51370e94718aa65ab"
+    },
+    {
+      "relpath": "generated/source_graph/audit/impact_report.json",
+      "sha256": "654e35675502351dc384a5a2715005a27eb57d875385fca960371f23e6ecd37f"
+    }
+  ],
+  "module": "audit",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+    "invariants": "docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
+    "permissions": "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+    "readme": "docs/hbtrack/modulos/audit/README.md",
+    "scope": "docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md",
+    "test_matrix": "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo",
+      "permissions",
+      "decision_ir"
+    ],
+    "owner": "platform-core",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/audit/api.py",
+    "domain_entity": "src/audit/domain/entities.py",
+    "domain_rules": "src/audit/domain/rules.py",
+    "use_cases": "src/audit/application/use_cases.py"
+  },
+  "source_fingerprint": "3f64e00f1202674e40f7e8ce568ec8442d19ced5ec7d331f57b42929ca4e6a48",
+  "source_graph": {
+    "entities": {
+      "AuditEntry": {
+        "docs_refs": [
+          "../DOMAIN_RULES_AUDIT.md",
+          "../INVARIANTS_AUDIT.md",
+          "../PERMISSIONS_AUDIT.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/audit/domain/entities.py#AuditEntry",
+        "runtime_extension_fields": [],
+        "schema_ref": "../../../../../contracts/schemas/audit/audit_entry.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "actorUserId",
+            "required": true,
+            "runtime_name": "actor_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "targetResourceId",
+            "required": false,
+            "runtime_name": "target_resource_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "targetResourceType",
+            "required": false,
+            "runtime_name": "target_resource_type",
+            "type": "string"
+          },
+          {
+            "name": "action",
+            "required": true,
+            "runtime_name": "action",
+            "type": "string"
+          },
+          {
+            "name": "outcomeLabel",
+            "required": false,
+            "runtime_name": "outcome_label",
+            "type": "string"
+          },
+          {
+            "name": "originLabel",
+            "required": false,
+            "runtime_name": "origin_label",
+            "type": "string"
+          },
+          {
+            "name": "correlationId",
+            "required": false,
+            "runtime_name": "correlation_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "occurredAt",
+            "required": true,
+            "runtime_name": "occurred_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "beforeSummary",
+            "required": false,
+            "runtime_name": "before_summary",
+            "type": "string"
+          },
+          {
+            "name": "afterSummary",
+            "required": false,
+            "runtime_name": "after_summary",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-AUD-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listAuditEntries",
+          "createAuditEntry",
+          "getAuditEntry",
+          "exportAuditEntries"
+        ],
+        "source_ref": "../../../../../src/audit/api.py#_get_role"
+      },
+      {
+        "exception_ref": "../../../../../src/audit/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-AUD-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listAuditEntries",
+          "createAuditEntry",
+          "getAuditEntry",
+          "exportAuditEntries"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/audit/domain/rules.py#AuditEntryNotFound",
+        "http_status": 404,
+        "id": "ERR-AUD-404-ENTRY-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getAuditEntry"
+        ]
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/audit.yaml",
+        "contracts/schemas/audit/audit_entry.schema.json",
+        "contracts/openapi/components/schemas/audit/audit_entry.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/audit/README.md",
+        "docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md",
+        "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+        "docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
+        "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+        "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md"
+      ],
+      "impacted_runtime": [
+        "src/audit/api.py",
+        "src/audit/domain/entities.py",
+        "src/audit/domain/rules.py",
+        "src/audit/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "POST /audit/entries (createAuditEntry) é ingestão cross-module e não exposta ao cliente final — está no source graph mas não é feature pública.",
+        "Export (GET /audit/entries/export) é LGPD/compliance endpoint; payload e formato de saída seguem ADR separados pendentes.",
+        "AsyncAPI/Arazzo do módulo continuam fora do source graph local nesta fase e seguem governança separada."
+      ],
+      "source_fingerprint": "a9890539d21862511a33d9eedac35091f3c4522e1935c78895a2aa6e0d64304c"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-AUD-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listAuditEntries",
+            "createAuditEntry",
+            "getAuditEntry",
+            "exportAuditEntries"
+          ],
+          "source_ref": "../../../../../src/audit/api.py#_get_role"
+        },
+        {
+          "exception_ref": "../../../../../src/audit/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-AUD-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listAuditEntries",
+            "createAuditEntry",
+            "getAuditEntry",
+            "exportAuditEntries"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/audit/domain/rules.py#AuditEntryNotFound",
+          "http_status": 404,
+          "id": "ERR-AUD-404-ENTRY-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getAuditEntry"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-AUD-400-ENTRY-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "createAuditEntry"
+          ],
+          "source_ref": "../../../../../src/audit/domain/entities.py#validate_invariants"
+        }
+      ],
+      "module": "audit",
+      "openapi_paths_ref": "contracts/openapi/paths/audit.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/get",
+          "operation_id": "listAuditEntries",
+          "owner_scoped_roles": [
+            "coordinator"
+          ],
+          "path": "/audit/entries",
+          "response_codes": [
+            200,
+            401,
+            403,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/audit/api.py#list_audit_entries",
+          "use_case_ref": "../../../../../src/audit/application/use_cases.py#ListAuditEntries"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/post",
+          "operation_id": "createAuditEntry",
+          "owner_scoped_roles": [],
+          "path": "/audit/entries",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin"
+          ],
+          "roles_denied": [
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/audit/api.py#create_audit_entry",
+          "use_case_ref": "../../../../../src/audit/application/use_cases.py#CreateAuditEntry"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/{entryId}/get",
+          "operation_id": "getAuditEntry",
+          "owner_scoped_roles": [
+            "coordinator"
+          ],
+          "path": "/audit/entries/{entryId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/audit/api.py#get_audit_entry",
+          "use_case_ref": "../../../../../src/audit/application/use_cases.py#GetAuditEntry"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/export/get",
+          "operation_id": "exportAuditEntries",
+          "owner_scoped_roles": [],
+          "path": "/audit/entries/export",
+          "response_codes": [
+            200,
+            401,
+            403,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin"
+          ],
+          "roles_denied": [
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/audit/api.py#export_audit_entries",
+          "use_case_ref": "../../../../../src/audit/application/use_cases.py#ExportAuditEntries"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/get",
+        "operation_id": "listAuditEntries",
+        "owner_scoped_roles": [
+          "coordinator"
+        ],
+        "path": "/audit/entries",
+        "response_codes": [
+          200,
+          401,
+          403,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/audit/api.py#list_audit_entries",
+        "use_case_ref": "../../../../../src/audit/application/use_cases.py#ListAuditEntries"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/export/get",
+        "operation_id": "exportAuditEntries",
+        "owner_scoped_roles": [],
+        "path": "/audit/entries/export",
+        "response_codes": [
+          200,
+          401,
+          403,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin"
+        ],
+        "roles_denied": [
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/audit/api.py#export_audit_entries",
+        "use_case_ref": "../../../../../src/audit/application/use_cases.py#ExportAuditEntries"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/{entryId}/get",
+        "operation_id": "getAuditEntry",
+        "owner_scoped_roles": [
+          "coordinator"
+        ],
+        "path": "/audit/entries/{entryId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/audit/api.py#get_audit_entry",
+        "use_case_ref": "../../../../../src/audit/application/use_cases.py#GetAuditEntry"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "AuditEntry": {
+          "required": [
+            "id",
+            "actorUserId",
+            "action",
+            "occurredAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/audit/audit_entry.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "actorUserId",
+              "required": true,
+              "runtime_name": "actor_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "targetResourceId",
+              "required": false,
+              "runtime_name": "target_resource_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "targetResourceType",
+              "required": false,
+              "runtime_name": "target_resource_type",
+              "type": "string"
+            },
+            {
+              "name": "action",
+              "required": true,
+              "runtime_name": "action",
+              "type": "string"
+            },
+            {
+              "name": "outcomeLabel",
+              "required": false,
+              "runtime_name": "outcome_label",
+              "type": "string"
+            },
+            {
+              "name": "originLabel",
+              "required": false,
+              "runtime_name": "origin_label",
+              "type": "string"
+            },
+            {
+              "name": "correlationId",
+              "required": false,
+              "runtime_name": "correlation_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "occurredAt",
+              "required": true,
+              "runtime_name": "occurred_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "beforeSummary",
+              "required": false,
+              "runtime_name": "before_summary",
+              "type": "string"
+            },
+            {
+              "name": "afterSummary",
+              "required": false,
+              "runtime_name": "after_summary",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "entity": "AuditEntry",
+      "module": "audit",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "primary_entity": "AuditEntry",
+      "primary_schema_ref": "contracts/schemas/audit/audit_entry.schema.json",
+      "required": [
+        "id",
+        "actorUserId",
+        "action",
+        "occurredAt"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "actorUserId",
+          "required": true,
+          "runtime_name": "actor_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "targetResourceId",
+          "required": false,
+          "runtime_name": "target_resource_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "targetResourceType",
+          "required": false,
+          "runtime_name": "target_resource_type",
+          "type": "string"
+        },
+        {
+          "name": "action",
+          "required": true,
+          "runtime_name": "action",
+          "type": "string"
+        },
+        {
+          "name": "outcomeLabel",
+          "required": false,
+          "runtime_name": "outcome_label",
+          "type": "string"
+        },
+        {
+          "name": "originLabel",
+          "required": false,
+          "runtime_name": "origin_label",
+          "type": "string"
+        },
+        {
+          "name": "correlationId",
+          "required": false,
+          "runtime_name": "correlation_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "occurredAt",
+          "required": true,
+          "runtime_name": "occurred_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "beforeSummary",
+          "required": false,
+          "runtime_name": "before_summary",
+          "type": "string"
+        },
+        {
+          "name": "afterSummary",
+          "required": false,
+          "runtime_name": "after_summary",
+          "type": "string"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/audit/audit_entry.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "AUD-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/audit.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "AUD-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/audit/tests/unit/test_audit.py",
+        "covers": [
+          "INV-AUD-001",
+          "INV-AUD-002",
+          "INV-AUD-003",
+          "INV-AUD-004",
+          "INV-AUD-005",
+          "DR-AUD-001",
+          "DR-AUD-002",
+          "DR-AUD-003",
+          "DR-AUD-004",
+          "DR-AUD-005"
+        ],
+        "evidence_refs": [
+          "../../../../../src/audit/tests/unit/test_audit.py"
+        ],
+        "id": "AUD-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for invariants, append-only constraint, BOLA/BFLA audit boundaries and LGPD data minimization"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_audit_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_audit_source_graph_integrity.py"
+        ],
+        "id": "AUD-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/audit/README.md",
+      "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+      "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md",
+      "contracts/openapi/paths/audit.yaml",
+      "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "generated/source_graph/audit/audit.bundle.yaml",
+      "generated/source_graph/audit/audit.schema_contract_view.yaml",
+      "generated/source_graph/audit/audit.openapi_contract_view.yaml",
+      "generated/source_graph/audit/impact_report.json",
+      "compiled_context/audit/FT-041.json",
+      "src/audit/api.py",
+      "src/audit/schemas.py",
+      "tests/pipeline_gates/test_audit_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_audit.py",
+      "tests/pipeline_gates/test_context_bundle_audit.py"
+    ],
+    "expected_output": "compiled_context/audit/FT-041.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module audit --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module audit --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module audit --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module audit --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_audit_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_audit.py tests/pipeline_gates/test_context_bundle_audit.py -q"
+    ]
+  }
+}
