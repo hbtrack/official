@@ -1,9 +1,9 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: chore/backlog-audit-done
+branch_ativo: main
 modo_operacao: ROADMAP
-ci_status: PASS
-modulo_foco: audit
+ci_status: UNKNOWN
+modulo_foco: seasons
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
@@ -17,7 +17,6 @@ evidence_paths:
   - generated/source_graph/audit/audit.schema_contract_view.yaml
   - generated/source_graph/audit/impact_report.json
   - compiled_context/audit/FT-041.json
-  - _reports/contract_gates/latest.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`

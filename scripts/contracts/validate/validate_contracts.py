@@ -5017,6 +5017,8 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "DOC_USAGE_MANIFEST.yaml",
         "SYNC_MANIFEST.yaml",
         "SOURCE_AUTHORITY_GRAPH.yaml",
+        # Pre-work autorizado por ADR-016 (MCP Surface)
+        "MCP_PREWORK.md",
     })
 
     # Subdiretórios autorizados
