@@ -1,5 +1,7 @@
 # BACKLOG_EXECUTAVEL_DETERMINISTICO
 
+> ⚠️ **ARTEFATO DERIVADO — NON-SOVEREIGN**: Este arquivo é um backlog operacional derivado. Não possui autoridade normativa. Não deve ser usado para redefinir schemas, gates, contratos ou políticas canônicas. Em caso de conflito, prevalecem: `scripts/hb` + `validate_contracts.py` > `contracts/schemas/` > `docs/_canon/` > `.contract_driven/CONTRACT_SYSTEM_RULES.md` > este arquivo.
+
 ## 0. Objetivo
 
 Este backlog transforma o plano de [PIPELINEFINAL.md](/home/davis/HB-TRACK/.CEPRAEA/PIPELINEFINAL.md) em execucao deterministica, validada contra o sistema atual do HB Track.
