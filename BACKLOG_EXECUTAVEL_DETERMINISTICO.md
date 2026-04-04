@@ -2331,10 +2331,10 @@ python3 scripts/validate_contracts.py --profile ci
 
 Evidencia implementada e validada no sistema atual:
 
-- `reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical` e `ai_ingestion` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
-- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py`, `test_wellness_source_graph_integrity.py`, `test_medical_source_graph_integrity.py` e `test_ai_ingestion_source_graph_integrity.py` em `PASS`
-- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py`, `test_source_graph_compiler_wellness.py`, `test_source_graph_compiler_medical.py` e `test_source_graph_compiler_ai_ingestion.py` em `PASS`
-- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py`, `test_context_bundle_wellness.py`, `test_context_bundle_medical.py` e `test_context_bundle_ai_ingestion.py` em `PASS`
+- `reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical`, `ai_ingestion` e `audit` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
+- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py`, `test_wellness_source_graph_integrity.py`, `test_medical_source_graph_integrity.py`, `test_ai_ingestion_source_graph_integrity.py` e `test_audit_source_graph_integrity.py` em `PASS`
+- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py`, `test_source_graph_compiler_wellness.py`, `test_source_graph_compiler_medical.py`, `test_source_graph_compiler_ai_ingestion.py` e `test_source_graph_compiler_audit.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py`, `test_context_bundle_wellness.py`, `test_context_bundle_medical.py`, `test_context_bundle_ai_ingestion.py` e `test_context_bundle_audit.py` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module wellness` em `PASS`
@@ -2356,7 +2356,23 @@ Evidencia implementada e validada no sistema atual:
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py tests/pipeline_gates/test_context_bundle_ai_ingestion.py tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` em `PASS` (`33 passed`)
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py tests/pipeline_gates/test_runtime_current_state_generator.py` em `PASS` (`20 passed`)
 - `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` voltou a `PASS` em todos os gates estruturais apos a entrada de `ai_ingestion`; o unico bloqueio residual observado durante a sessao foi `HANDOFF_COHERENCE_GATE` antes da sincronizacao do `SESSION_HANDOFF.md`
-- proximo modulo obrigatorio da fila: `audit`
+- `python3 scripts/compile/compile_source_graph.py --module audit` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module audit` em `PASS`
+- `python3 scripts/compile/compile_source_graph.py --all --check --format json` em `PASS` apos a entrada de `audit`
+- `python3 scripts/compile/compile_context_bundle.py --all --check --format json` em `PASS` apos a entrada de `audit`
+- `docs/hbtrack/modulos/audit/graph/*.yaml` criados, validados e cobertos por manifesto
+- `generated/source_graph/audit/*` gerado deterministicamente
+- `compiled_context/audit/FT-041.json` gerado deterministicamente
+- `tests/pipeline_gates/test_audit_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `tests/pipeline_gates/test_source_graph_compiler_audit.py` em `PASS` (`4 passed`)
+- `tests/pipeline_gates/test_context_bundle_audit.py` em `PASS` (`5 passed`)
+- compile scripts restaurados do commit `ebb37ce6`: `compile_source_graph.py`, `compile_context_bundle.py`, `compile_ops_contracts.py`
+- dependencias canon restauradas: `SOURCE_AUTHORITY_GRAPH.yaml`, `SYNC_MANIFEST.yaml`, `DOC_USAGE_MANIFEST.yaml`, `docs/_canon/graph/*.yaml` (IRs globais)
+- `CANON_ALLOWLIST_GATE`: `DOC_USAGE_MANIFEST.yaml`, `SYNC_MANIFEST.yaml`, `SOURCE_AUTHORITY_GRAPH.yaml` e `graph/` autorizados
+- `toolchain.json` restaurado (deletado em commit anterior — 5 survival-suite tests corrigidos)
+- `python3 scripts/validate_contracts.py --profile ci` em `PASS` com 51 gates apos a entrada de `audit`
+- survival-suite: `104 passed`
+- proximo modulo obrigatorio da fila: `seasons`
 
 Criterio de saida:
 
@@ -2626,7 +2642,7 @@ Atualizacao incremental apos o corte original:
 38. B9-001
 39. B9-001A
 40. B9-002
-41. B10-001 (fila avancada ate `ai_ingestion`)
+41. B10-001 (fila avancada ate `audit`)
 
 Evidencia minima ja confirmada para os itens acima:
 
@@ -2672,7 +2688,7 @@ Evidencia minima ja confirmada para os itens acima:
 - `tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py` em `PASS`
 - `tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py` em `PASS`
 - `tests/pipeline_gates/test_context_bundle_ai_ingestion.py` em `PASS`
-- fila obrigatoria de `B10-001` avancada: proximo modulo da sequencia agora e `audit`
+- fila obrigatoria de `B10-001` avancada: proximo modulo da sequencia agora e `seasons`
 - `tests/pipeline_gates/test_reports_openapi_schema_equivalence.py` em `PASS`
 - `tests/pipeline_gates/test_openapi_schema_equivalence_gate.py` em `PASS`
 - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` em `PASS`
@@ -2742,7 +2758,7 @@ Ordem remanescente obrigatoria a partir do estado atual:
 33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
 35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
-36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness` e `medical` concluidos; proximo `ai_ingestion`)
+36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical`, `ai_ingestion` e `audit` concluidos; proximo `seasons`)
 37. B10-002
 38. B10-003
 39. B11-001
