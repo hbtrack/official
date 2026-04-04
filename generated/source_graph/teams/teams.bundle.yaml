@@ -1,0 +1,464 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: teams
+graph_root: docs/hbtrack/modulos/teams/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/teams/team.yaml
+  sha256: b146f482738667d6b28c9d0e758ba2770ec167363ad52fa39d607453da1263fa
+- relpath: contracts/openapi/paths/teams.yaml
+  sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+- relpath: contracts/schemas/teams/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/teams/team.schema.json
+  sha256: 81ae5bd4f1892e0e7307a27894a0c70fed91943fd530adcfe34eac12a4e326d1
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md
+  sha256: c0d0d4e15434d709cff94f6f4c7b39e3a267ab730bbbbdf9aa8d338f94e39a37
+- relpath: docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md
+  sha256: d45d4fa772eae783d3a8e6998aa809a682852b46edb76271c606fd5004bc2861
+- relpath: docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md
+  sha256: 3986bf2de3b2f20922f33ef7a78358de505c68d907433d41ede822d9f04e52ed
+- relpath: docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md
+  sha256: fe502bf1ccafdc2e6de0d1fd3a0bac07f4334a03f93fcccaf63eb96611cd3758
+- relpath: docs/hbtrack/modulos/teams/README.md
+  sha256: 4386c254121d17c138f11ed1d70d9cd332f412580ab5fadff883dc07e1da9b72
+- relpath: docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md
+  sha256: c18557e9722ab3cbc1dc735a9741e51a40d2c1dbbcac9f29f62cd39108449b57
+- relpath: docs/hbtrack/modulos/teams/graph/endpoints.yaml
+  sha256: 1efdae94451bd616f89e876ccd2b0bda7fa5186c9111c24856d0b31dc826a8e6
+- relpath: docs/hbtrack/modulos/teams/graph/entities.yaml
+  sha256: f1c09bfd264a21b151a95ebce223345a145578118fcdab543356820e6c4407c2
+- relpath: docs/hbtrack/modulos/teams/graph/errors.yaml
+  sha256: cabde190ed3f72761088064aa03111ec4093511c34b8a69c88245b1a5ae66d48
+- relpath: docs/hbtrack/modulos/teams/graph/module_manifest.yaml
+  sha256: 3561f7291ff6f85965b61c9c2fa07c3c2458e2dc1d8942d611719a46ffb4b980
+- relpath: docs/hbtrack/modulos/teams/graph/test_obligations.yaml
+  sha256: 63a540bcb332dfffa0b17f89fc14a95c182564d53247c8e2f24f60f6aa6bd247
+- relpath: src/teams/api.py
+  sha256: 531afdbf153ef8efbed137b209637eb1e83ffb18a406f0e0d6e51ce0a71a4912
+- relpath: src/teams/application/use_cases.py
+  sha256: 1750c2e3e5ad10b74188e243b02903d2583c07dac71e81eda78a5dab4fc01af1
+- relpath: src/teams/domain/entities.py
+  sha256: 9200599d07f2210df85b73c5a0e31d0a1b7e440f899db6e5d3069e6b165d8c3b
+- relpath: src/teams/domain/rules.py
+  sha256: 75a727cffbd361f5e390b46139f1d510c64090c9782eadf31429db15f5f5c1de
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: teams
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_TEAMS.md
+    domain_rules: ../DOMAIN_RULES_TEAMS.md
+    invariants: ../INVARIANTS_TEAMS.md
+    permissions: ../PERMISSIONS_TEAMS.md
+    test_matrix: ../TEST_MATRIX_TEAMS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/teams.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/teams/
+    primary_schema: ../../../../../contracts/schemas/teams/team.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/teams/team.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/teams/api.py
+    domain_entity: ../../../../../src/teams/domain/entities.py
+    domain_rules: ../../../../../src/teams/domain/rules.py
+    use_cases: ../../../../../src/teams/application/use_cases.py
+  structured_ir:
+    entities: ./entities.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "seasonId \xE9 refer\xEAncia cruzada para m\xF3dulo seasons \u2014 boundary explicitado\
+    \ em DR-TEAM-004."
+  - "organizationId \xE9 refer\xEAncia para m\xF3dulo identity_access \u2014 boundary\
+    \ explicitado em module docs."
+  - "athleteIds e staffUserIds referenciam m\xF3dulo users \u2014 boundary explicitado\
+    \ em INV-TEAM-002."
+entities:
+  Team:
+    schema_ref: ../../../../../contracts/schemas/teams/team.schema.json
+    runtime_entity_ref: ../../../../../src/teams/domain/entities.py#Team
+    docs_refs:
+    - ../DOMAIN_RULES_TEAMS.md
+    - ../INVARIANTS_TEAMS.md
+    - ../PERMISSIONS_TEAMS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: organizationId
+      runtime_name: organization_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - 'boundary: reference to identity_access module'
+    - name: seasonId
+      runtime_name: season_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'boundary: reference to seasons module (DR-TEAM-004)'
+    - name: name
+      runtime_name: name
+      required: true
+      type: string
+      constraints:
+      - 'minLength: 1'
+      - 'maxLength: 120'
+    - name: shortName
+      runtime_name: short_name
+      required: false
+      type: string
+    - name: categoryLabel
+      runtime_name: category_label
+      required: true
+      type: string
+      constraints:
+      - 'minLength: 1'
+      - 'maxLength: 80'
+      - 'DR-TEAM-003: identifies competitive level'
+    - name: athleteIds
+      runtime_name: athlete_ids
+      required: false
+      type: array_of_uuid
+      constraints:
+      - 'INV-TEAM-002: uniqueItems'
+      - 'boundary: reference to users module'
+    - name: staffUserIds
+      runtime_name: staff_user_ids
+      required: false
+      type: array_of_uuid
+      constraints:
+      - 'INV-TEAM-002: uniqueItems'
+      - 'boundary: reference to users module'
+    - name: rosterNotes
+      runtime_name: roster_notes
+      required: false
+      type: string
+    runtime_extension_fields:
+    - name: statusLabel
+      runtime_name: status_label
+      type: enum
+      values:
+      - DRAFT
+      - ACTIVE
+      - ARCHIVED
+    - name: createdAt
+      runtime_name: created_at
+      type: datetime_iso8601
+    - name: updatedAt
+      runtime_name: updated_at
+      type: datetime_iso8601
+endpoints:
+- operation_id: listTeams
+  method: GET
+  path: /teams
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/get
+  runtime_handler_ref: ../../../../../src/teams/api.py#list_teams
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#ListTeamsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied: []
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createTeam
+  method: POST
+  path: /teams
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#create_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#CreateTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: getTeam
+  method: GET
+  path: /teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/get
+  runtime_handler_ref: ../../../../../src/teams/api.py#get_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#GetTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied: []
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchTeam
+  method: PATCH
+  path: /teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/patch
+  runtime_handler_ref: ../../../../../src/teams/api.py#patch_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#PatchTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+  - 500
+- operation_id: addAthleteToTeam
+  method: POST
+  path: /teams/{teamId}/athletes/{athleteUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#add_athlete_to_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#AddAthleteToTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removeAthleteFromTeam
+  method: DELETE
+  path: /teams/{teamId}/athletes/{athleteUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/delete
+  runtime_handler_ref: ../../../../../src/teams/api.py#remove_athlete_from_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#RemoveAthleteFromTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: addStaffToTeam
+  method: POST
+  path: /teams/{teamId}/staff/{staffUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#add_staff_to_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#AddStaffToTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removeStaffFromTeam
+  method: DELETE
+  path: /teams/{teamId}/staff/{staffUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/delete
+  runtime_handler_ref: ../../../../../src/teams/api.py#remove_staff_from_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#RemoveStaffFromTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-TEAM-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/teams/api.py#_get_actor_role
+  operations:
+  - listTeams
+  - createTeam
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/teams/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listTeams
+  - createTeam
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/teams/domain/rules.py#TeamNotFound
+  operations:
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/teams/domain/entities.py#validate_invariants
+  operations:
+  - createTeam
+  - patchTeam
+- id: ERR-TEAM-422-INVALID-STATUS-TRANSITION
+  kind: domain
+  http_status: 422
+  exception_ref: ../../../../../src/teams/domain/rules.py#InvalidStatusTransition
+  operations:
+  - patchTeam
+- id: ERR-TEAM-409-DUPLICATE-MEMBER
+  kind: domain
+  http_status: 409
+  source_ref: ../../../../../src/teams/domain/rules.py#TeamRuleError
+  operations:
+  - createTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-422-UNPROCESSABLE
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/teams/domain/entities.py#validate_invariants
+  operations:
+  - createTeam
+  - patchTeam
+- id: ERR-TEAM-500-INTERNAL
+  kind: infrastructure
+  http_status: 500
+  operations:
+  - listTeams
+  - createTeam
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+test_obligations:
+- id: TEAM-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/teams/team.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: TEAM-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/teams.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: TEAM-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/teams/tests/unit/test_teams_domain.py
+  covers:
+  - INV-TEAM-001
+  - INV-TEAM-002
+  - INV-TEAM-003
+  - INV-TEAM-004
+  - DR-TEAM-001
+  - DR-TEAM-002
+  - DR-TEAM-003
+  - DR-TEAM-004
+  - DR-TEAM-005
+  verification: Unit tests for domain invariants, RBAC rules and boundary enforcement
+  evidence_refs:
+  - ../../../../../src/teams/tests/unit/test_teams_domain.py
+- id: TEAM-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py

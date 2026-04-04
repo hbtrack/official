@@ -1,68 +1,70 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: feat/b10-001-seasons
+branch_ativo: feat/b10-001-teams
 modo_operacao: ROADMAP
 ci_status: PASS
-modulo_foco: seasons
+modulo_foco: teams
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: B10-001-seasons
+task_id: B10-001-teams
 resultado: DONE
-proxima_acao_permitida: "B10-001/seasons: corrigidos response_codes (PR #43). Próximo: merge PR #43 e iniciar próximo módulo em B10-001."
+proxima_acao_permitida: "B10-001/teams CONCLUÍDO (source graph + 16 testes PASS + validate_contracts ci). 3 bugs corrigidos (ERR-403 listTeams+getTeam, ERR-422 InvalidStatusTransition, patchTeam coach owner-scoped). Próximo: merge PR #44 + iniciar B10-001/competitions."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
-  - generated/source_graph/seasons/seasons.bundle.yaml
-  - generated/source_graph/seasons/seasons.openapi_contract_view.yaml
-  - generated/source_graph/seasons/seasons.schema_contract_view.yaml
-  - generated/source_graph/seasons/impact_report.json
-  - compiled_context/seasons/FT-018.json
-  - compiled_context/seasons/FT-019.json
-  - compiled_context/seasons/FT-020.json
-  - compiled_context/seasons/FT-021.json
-  - compiled_context/seasons/FT-022.json
-  - compiled_context/seasons/FT-023.json
+  - docs/hbtrack/modulos/teams/graph/module_manifest.yaml
+  - docs/hbtrack/modulos/teams/graph/entities.yaml
+  - docs/hbtrack/modulos/teams/graph/endpoints.yaml
+  - docs/hbtrack/modulos/teams/graph/errors.yaml
+  - docs/hbtrack/modulos/teams/graph/test_obligations.yaml
+  - generated/source_graph/teams/teams.bundle.yaml
+  - generated/source_graph/teams/teams.openapi_contract_view.yaml
+  - generated/source_graph/teams/teams.schema_contract_view.yaml
+  - generated/source_graph/teams/impact_report.json
+  - compiled_context/teams/FT-024.json
+  - compiled_context/teams/FT-025.json
+  - compiled_context/teams/FT-026.json
+  - compiled_context/teams/FT-027.json
+  - compiled_context/teams/FT-028.json
+  - compiled_context/teams/FT-029.json
+  - compiled_context/teams/FT-030.json
+  - compiled_context/teams/FT-031.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-04-04 | **Branch:** feat/b10-001-seasons | **CI:** validate_contracts PASS (todos os gates)
-**Modo:** ROADMAP | **Fase:** B10-001 | **Resultado:** DONE — módulo `seasons`
+**Data:** 2026-04-05 | **Branch:** feat/b10-001-teams | **CI:** validate_contracts PASS (ci)
+**Modo:** ROADMAP | **Fase:** B10-001 | **Resultado:** DONE — módulo `teams`
 
-**Data:** 2026-04-04 | **Branch:** main | **CI:** validate_contracts PASS (51 gates)
-**Modo:** ROADMAP | **Fase:** B10-001 | **Resultado:** DONE — módulo `audit`
+## O que foi feito nesta sessão (B10-001 / teams)
 
-## O que foi feito nesta sessão (B10-001 / audit)
+Base: main após merge PR #43 (feat/b10-001-seasons)
 
-### Base: main após commit 2b33fccf
-- `BACKLOG_EXECUTAVEL_DETERMINISTICO.md` analisado: 41/47 items done, B10-001 in progress (7 módulos done)
-- Próximo módulo B10-001: `audit`
-
-### Ações executadas — B10-001/audit
-
-1. **SHADOW_AUTHORITY_GATE fix**: adicionado "BACKLOG" e "PLAN_" ao `_ROOT_OPERATIONAL_SKIP_PREFIXES` em validate_contracts.py → pipeline voltou a PASS
-2. **Compile scripts restaurados** do commit `ebb37ce6`: `compile_source_graph.py`, `compile_context_bundle.py`, `compile_ops_contracts.py`, `__init__.py`
-3. **Dependências canon restauradas**: `SOURCE_AUTHORITY_GRAPH.yaml`, `SYNC_MANIFEST.yaml`, `DOC_USAGE_MANIFEST.yaml`, `docs/_canon/graph/` (4 IRs globais)
-4. **Source graph audit criado** (`docs/hbtrack/modulos/audit/graph/`): 5 YAMLs — module_manifest, entities, endpoints, errors, test_obligations
-5. **compile_source_graph.py --module audit** → PASS → 4 artefatos em `generated/source_graph/audit/`
-6. **AUDIT_SOURCE_GRAPH_SYNC** adicionado ao `docs/_canon/SYNC_MANIFEST.yaml`
-7. **compile_context_bundle.py --module audit** → PASS → `compiled_context/audit/FT-041.json`
-8. **HBTRACK_AUDIT_GRAPH** adicionado ao `docs/_canon/DOC_USAGE_MANIFEST.yaml`
-9. **Docs do audit atualizados**: README.md, DOMAIN_RULES_AUDIT.md, TEST_MATRIX_AUDIT.md (referências ao source graph adicionadas)
-10. **3 testes criados**: `test_audit_source_graph_integrity.py`, `test_source_graph_compiler_audit.py`, `test_context_bundle_audit.py` — **16 testes PASS**
-11. **CANON_ALLOWLIST_GATE fix**: adicionados DOC_USAGE_MANIFEST, SYNC_MANIFEST, SOURCE_AUTHORITY_GRAPH ao TOPLEVEL_ALLOWLIST e `graph/` ao SUBDIRS_ALLOWLIST
-12. **docs/_canon/README.md** atualizado com artefatos 38-40 e subdirectório `graph/`
-13. **validate_contracts.py --profile ci** → PASS (51 gates)
+1. **Source graph** (`docs/hbtrack/modulos/teams/graph/`): 5 YAMLs — module_manifest, entities, endpoints, errors, test_obligations
+2. `compile_source_graph.py --module teams` → PASS (4 artefatos)
+3. `TEAMS_SOURCE_GRAPH_SYNC` adicionado ao SYNC_MANIFEST
+4. `compile_context_bundle.py --module teams` → PASS (FT-024..FT-031)
+5. `HBTRACK_TEAMS_GRAPH` adicionado ao DOC_USAGE_MANIFEST
+6. Docs atualizados: README, DOMAIN_RULES, TEST_MATRIX do módulo teams
+7. 3 arquivos de teste criados — **16 testes PASS**
+8. `--all` em compile/bundle → audit/seasons/teams PASS
+9. `validate_contracts --profile ci` → PASS
+10. **3 bugs corrigidos (PR #44 Codex review)**:
+    - ERR-403: adicionados `listTeams` e `getTeam`
+    - `ERR-422-INVALID-STATUS-TRANSITION` (era 400, api retorna 422)
+    - `patchTeam`: coach → `owner_scoped_roles` (PERM-TEAM-001)
 
 ## Próxima ação permitida
 
-B10-001/audit **CONCLUÍDO**. Verificar `BACKLOG_EXECUTAVEL_DETERMINISTICO.md` para próximo módulo em B10-001 ou encerrar B10-001.
+B10-001/teams **CONCLUÍDO**. Merge PR feat/b10-001-teams → main. Próximo módulo: `competitions` (posição 10 na fila B10-001).
 
 ## Evidências geradas
-- `_reports/parity/proof_20260403.json` — `parity_confirmed: true`, `verdict: PARIDADE_CONFIRMADA`
-- `_reports/parity/ci_checks_20260403.json` — 13/13 check-runs `success` no SHA `db340d74`
+- `docs/hbtrack/modulos/teams/graph/` — 5 YAMLs (source graph)
+- `generated/source_graph/teams/` — 4 artefatos compilados
+- `compiled_context/teams/FT-024.json` a `FT-031.json` — 8 context bundles
+- `tests/pipeline_gates/test_teams_*.py` — 16 testes PASS
 
 ## Bloqueios ativos
 Nenhum.

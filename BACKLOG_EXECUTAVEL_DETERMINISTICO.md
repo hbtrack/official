@@ -2760,7 +2760,7 @@ Ordem remanescente obrigatoria a partir do estado atual:
 33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
 35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
-36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical`, `ai_ingestion` e `audit` concluidos; proximo `seasons`)
+36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical`, `ai_ingestion`, `audit`, `seasons` e `teams` concluidos; proximo `competitions`)
 37. B10-002
 38. B10-003
 39. B11-001

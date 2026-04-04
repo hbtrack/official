@@ -1,7 +1,7 @@
 {
-  "session_id": "70c98a5c-c91b-4f5e-b912-8794ec9f63f0",
-  "session_timestamp": "2026-04-04T15:58:02.206733+00:00",
-  "branch": "feat/b10-001-seasons",
+  "session_id": "0f001481-9122-4db9-bb2f-8f2dc24783e9",
+  "session_timestamp": "2026-04-04T17:53:22.802984+00:00",
+  "branch": "feat/b10-001-teams",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -19,22 +19,22 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "seasons",
-  "module_focus": "seasons",
+  "module": "teams",
+  "module_focus": "teams",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
-  "roadmap_task_id": "B10-001-seasons",
+  "roadmap_task_id": "B10-001-teams",
   "stage2_artifacts": [
     {
-      "path": "docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
-      "sha256": "79539544c41029d5005d26018ce6d08f7c96e9aa12f34d531e61fb15815859d1",
-      "created_at": "2026-04-04T15:59:19.475816+00:00",
+      "path": "SESSION_HANDOFF.md",
+      "sha256": "094cdb8a89ce41851b8ff1d92cc8bb7f8c023fd29d511ff440b916addf92a3a1",
+      "created_at": "2026-04-04T17:53:44.717742+00:00",
       "gate_exit_code": 0
     },
     {
-      "path": "scripts/contracts/validate/validate_contracts.py",
-      "sha256": "d941d3542dffa213a9cdf35ff49b3f6a15ef21f5432d700464e752d857d013de",
-      "created_at": "2026-04-04T15:59:43.650910+00:00",
+      "path": "_reports/session_start.json",
+      "sha256": "b0a3388f22e356847bc94b260e96a8f775c15cb1be69b52cecedae7e9339989b",
+      "created_at": "2026-04-04T17:54:03.392279+00:00",
       "gate_exit_code": 0
     }
   ],

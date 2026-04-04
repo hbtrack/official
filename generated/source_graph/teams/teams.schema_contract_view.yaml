@@ -1,0 +1,87 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: teams
+entity: Team
+primary_entity: Team
+primary_schema_ref: contracts/schemas/teams/team.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/teams/team.yaml
+required: &id001
+- id
+- organizationId
+- name
+- categoryLabel
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: organizationId
+  runtime_name: organization_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - 'boundary: reference to identity_access module'
+- name: seasonId
+  runtime_name: season_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'boundary: reference to seasons module (DR-TEAM-004)'
+- name: name
+  runtime_name: name
+  required: true
+  type: string
+  constraints:
+  - 'minLength: 1'
+  - 'maxLength: 120'
+- name: shortName
+  runtime_name: short_name
+  required: false
+  type: string
+- name: categoryLabel
+  runtime_name: category_label
+  required: true
+  type: string
+  constraints:
+  - 'minLength: 1'
+  - 'maxLength: 80'
+  - 'DR-TEAM-003: identifies competitive level'
+- name: athleteIds
+  runtime_name: athlete_ids
+  required: false
+  type: array_of_uuid
+  constraints:
+  - 'INV-TEAM-002: uniqueItems'
+  - 'boundary: reference to users module'
+- name: staffUserIds
+  runtime_name: staff_user_ids
+  required: false
+  type: array_of_uuid
+  constraints:
+  - 'INV-TEAM-002: uniqueItems'
+  - 'boundary: reference to users module'
+- name: rosterNotes
+  runtime_name: roster_notes
+  required: false
+  type: string
+runtime_extension_fields: &id003
+- name: statusLabel
+  runtime_name: status_label
+  type: enum
+  values:
+  - DRAFT
+  - ACTIVE
+  - ARCHIVED
+- name: createdAt
+  runtime_name: created_at
+  type: datetime_iso8601
+- name: updatedAt
+  runtime_name: updated_at
+  type: datetime_iso8601
+entities:
+  Team:
+    schema_ref: contracts/schemas/teams/team.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: *id003

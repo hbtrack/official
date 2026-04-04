@@ -19,3 +19,7 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-002 | `contracts/schemas/teams/` | Validação JSON Schema | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | `DOMAIN_RULES_TEAMS.md` | Revisão normativa + testes de regra (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-004 | `INVARIANTS_TEAMS.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
+| TM-005 | `graph/test_obligations.yaml` | Source graph — obrigações de teste TEAM-TO-001..004 | Sim | `tests/pipeline_gates/test_teams_source_graph_integrity.py` |
+
+## Obrigações
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)
