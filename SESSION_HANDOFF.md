@@ -40,28 +40,21 @@ evidence_paths:
 
 ## O que foi feito nesta sessão (B10-001 / teams)
 
-### Base: main após merge PR #43 (feat/b10-001-seasons)
+Base: main após merge PR #43 (feat/b10-001-seasons)
 
-### Ações executadas — B10-001/teams
-
-1. **Source graph criado** (`docs/hbtrack/modulos/teams/graph/`): 5 YAMLs — module_manifest, entities, endpoints, errors, test_obligations
-   - `entities.yaml`: sovereign_fields alinhados com schema JSON (id, organizationId, seasonId, name, shortName, categoryLabel, athleteIds, staffUserIds, rosterNotes); runtime_extension_fields: statusLabel, createdAt, updatedAt
-   - `endpoints.yaml`: 8 operationIds (listTeams, createTeam, getTeam, patchTeam, addAthleteToTeam, removeAthleteFromTeam, addStaffToTeam, removeStaffFromTeam)
-   - `errors.yaml`: ERR-TEAM-401 a 500 usando exception classes existentes (TeamRuleError, InsufficientPrivilege, TeamNotFound, InvalidStatusTransition)
-2. **compile_source_graph.py --module teams** → PASS → 4 artefatos em `generated/source_graph/teams/`
-3. **TEAMS_SOURCE_GRAPH_SYNC** adicionado ao `docs/_canon/SYNC_MANIFEST.yaml`
-4. **compile_context_bundle.py --module teams** → PASS → `compiled_context/teams/FT-024.json`..`FT-031.json` (8 bundles)
-5. **HBTRACK_TEAMS_GRAPH** adicionado ao `docs/_canon/DOC_USAGE_MANIFEST.yaml`
-6. **Docs do teams atualizados**: README.md, DOMAIN_RULES_TEAMS.md, TEST_MATRIX_TEAMS.md (TM-005 + Obrigações + Source Graph sections)
-7. **3 testes criados**: `test_teams_source_graph_integrity.py`, `test_source_graph_compiler_teams.py`, `test_context_bundle_teams.py` — **16 testes PASS**
-8. **compile_source_graph.py --all + compile_context_bundle.py --all** → audit/seasons/teams todos PASS (artefatos stale de DOC_USAGE_MANIFEST regenerados)
-9. **validate_contracts.py --profile ci** → PASS (exitcode 0)
-
-9. **3 bugs corrigidos após review Codex no PR #44** (confirmados no api.py + rules.py):
-   - ERR-TEAM-403: adicionados `listTeams` e `getTeam` (ambos capturam InsufficientPrivilege → 403)
-   - `ERR-TEAM-400-INVALID-STATUS-TRANSITION` → `ERR-TEAM-422-INVALID-STATUS-TRANSITION` (patch_team retorna 422)
-   - `patchTeam`: coach movido de `roles_denied` para `roles_allowed` + `owner_scoped_roles` (PERM-TEAM-001)
-   - Recompilados: teams.bundle.yaml, impact_report.json, FT-024..031
+1. **Source graph** (`docs/hbtrack/modulos/teams/graph/`): 5 YAMLs — module_manifest, entities, endpoints, errors, test_obligations
+2. `compile_source_graph.py --module teams` → PASS (4 artefatos)
+3. `TEAMS_SOURCE_GRAPH_SYNC` adicionado ao SYNC_MANIFEST
+4. `compile_context_bundle.py --module teams` → PASS (FT-024..FT-031)
+5. `HBTRACK_TEAMS_GRAPH` adicionado ao DOC_USAGE_MANIFEST
+6. Docs atualizados: README, DOMAIN_RULES, TEST_MATRIX do módulo teams
+7. 3 arquivos de teste criados — **16 testes PASS**
+8. `--all` em compile/bundle → audit/seasons/teams PASS
+9. `validate_contracts --profile ci` → PASS
+10. **3 bugs corrigidos (PR #44 Codex review)**:
+    - ERR-403: adicionados `listTeams` e `getTeam`
+    - `ERR-422-INVALID-STATUS-TRANSITION` (era 400, api retorna 422)
+    - `patchTeam`: coach → `owner_scoped_roles` (PERM-TEAM-001)
 
 ## Próxima ação permitida
 
