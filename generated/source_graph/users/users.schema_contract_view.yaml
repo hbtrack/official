@@ -1,0 +1,116 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: users
+entity: UserProfile
+primary_entity: UserProfile
+primary_schema_ref: contracts/schemas/users/user_profile.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/users/user_profile.yaml
+required: &id001
+- id
+- displayName
+- roleLabel
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: organizationId
+  runtime_name: organization_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'boundary: reference to identity_access module (DR-USR-001)'
+  - 'nullable: true'
+- name: firstName
+  runtime_name: first_name
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: lastName
+  runtime_name: last_name
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: displayName
+  runtime_name: display_name
+  required: true
+  type: string
+  constraints:
+  - 'minLength: 1'
+  - "INV-USR-001: obrigat\xF3rio no perfil est\xE1vel"
+- name: roleLabel
+  runtime_name: role_label
+  required: true
+  type: enum
+  values:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  constraints:
+  - "ADR-008: 5 atores can\xF4nicos do sistema"
+  - "DR-USR-002: papel funcional/esportivo, n\xE3o autoriza acesso t\xE9cnico"
+  - "INV-USR-001: obrigat\xF3rio no perfil est\xE1vel"
+- name: statusLabel
+  runtime_name: status_label
+  required: false
+  type: enum
+  values:
+  - ACTIVE
+  - PENDING_ACTIVATION
+  - SUSPENDED
+  constraints:
+  - 'DEC-USERS-002: lifecycle status'
+  - "default: PENDING_ACTIVATION na cria\xE7\xE3o"
+- name: positionLabel
+  runtime_name: position_label
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - "DR-USR-004: contexto esportivo, n\xE3o autoriza\xE7\xE3o"
+- name: preferredLanguage
+  runtime_name: preferred_language
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - "DR-USR-005: prefer\xEAncia operacional, n\xE3o estado de seguran\xE7a"
+- name: preferenceTags
+  runtime_name: preference_tags
+  required: false
+  type: array_of_string
+  constraints:
+  - 'uniqueItems: true'
+  - 'items.maxLength: 40'
+  - 'INV-USR-002: sem duplicatas'
+  - "DR-USR-005: prefer\xEAncia operacional, n\xE3o credencial"
+- name: teamIds
+  runtime_name: team_ids
+  required: false
+  type: array_of_uuid
+  constraints:
+  - 'uniqueItems: true'
+  - 'INV-USR-002: sem duplicatas'
+  - "DR-USR-003: v\xEDnculo contratual, n\xE3o inferido"
+  - 'boundary: reference to teams module'
+- name: seasonIds
+  runtime_name: season_ids
+  required: false
+  type: array_of_uuid
+  constraints:
+  - 'uniqueItems: true'
+  - 'INV-USR-002: sem duplicatas'
+  - "DR-USR-003: v\xEDnculo contratual, n\xE3o inferido"
+  - 'boundary: reference to seasons module'
+runtime_extension_fields: []
+entities:
+  UserProfile:
+    schema_ref: contracts/schemas/users/user_profile.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []

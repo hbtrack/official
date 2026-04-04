@@ -431,6 +431,25 @@ entries:
       - "src/competitions/"
       - "tests/pipeline_gates/test_competitions_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_USERS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/users/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/users/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/users/README.md"
+      - "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md"
+      - "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md"
+      - "tests/pipeline_gates/test_users_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/users/*.md"
+      - "contracts/schemas/users/"
+      - "contracts/openapi/paths/users.yaml"
+      - "contracts/openapi/components/schemas/users/"
+      - "src/users/"
+      - "tests/pipeline_gates/test_users_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

@@ -1,0 +1,416 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: users
+graph_root: docs/hbtrack/modulos/users/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/users/user_profile.yaml
+  sha256: 52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884
+- relpath: contracts/openapi/paths/users.yaml
+  sha256: 0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0
+- relpath: contracts/schemas/users/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/users/user_profile.schema.json
+  sha256: e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md
+  sha256: 5f1fae315a6b9a004d98aa45dd7c56b4d2d0897bc8d252a4a2e5125679f7a102
+- relpath: docs/hbtrack/modulos/users/INVARIANTS_USERS.md
+  sha256: 4da036dbf5d372a4d63a494c4985e3ca962268404487e856dd6b34ca27881956
+- relpath: docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md
+  sha256: 8c3cb9e9fb8a35c635cd4dac28ff35a4cdd803e03f70946d324e8eb46c0d6dd0
+- relpath: docs/hbtrack/modulos/users/PERMISSIONS_USERS.md
+  sha256: 7109f9bceb1fd8c1acde19d3074fbbd6e3cab0e3efc086043b1a94639f4b2597
+- relpath: docs/hbtrack/modulos/users/README.md
+  sha256: 140e4973a97b8f54b9d2021d2aa657b17dc03eef8bcf440e5209ca73f63d44a6
+- relpath: docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md
+  sha256: db580d0269d4fea2881151c300be0d20ffde820597b0996fff5afe62d6b570b9
+- relpath: docs/hbtrack/modulos/users/graph/endpoints.yaml
+  sha256: 890942f2100892cdd7a6854af610914660de03b2ea5dc534cf574200000380e0
+- relpath: docs/hbtrack/modulos/users/graph/entities.yaml
+  sha256: 113d89c0234fef894bec0c7871c72115ab275771ed3b745535b0e36c0473be72
+- relpath: docs/hbtrack/modulos/users/graph/errors.yaml
+  sha256: 5d76873b757bc3e164e961d0dedad196100f90b5076087f513f6416177972c02
+- relpath: docs/hbtrack/modulos/users/graph/module_manifest.yaml
+  sha256: 6a36d9eb4bd2dc7d6c1aead00ca630bd2dbcb31de0b82eb539736abb46a8f517
+- relpath: docs/hbtrack/modulos/users/graph/test_obligations.yaml
+  sha256: db37ec5e524f7b6c1cfcbdd5f18f3fed860742a0cee7c2e9966c6ae913f0999a
+- relpath: src/users/api.py
+  sha256: dfe6824fd9d1d3722c8a8da8faecabeca2428f4f9bd5d538752358cb649322be
+- relpath: src/users/application/use_cases.py
+  sha256: a2187cfa853eba3cb16adfc87103e12743a1a0bb44ec345a2d81b1171bd29909
+- relpath: src/users/domain/entities.py
+  sha256: 2b47da53aa7e616a6f89ee0e027ba95620bc6da35c921ca068b48eb6549c7cd2
+- relpath: src/users/domain/rules.py
+  sha256: 5169dd8dc4b353df7bb707df0d094228ce9f9b83650f93bf438eefe209be08e9
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: users
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_USERS.md
+    domain_rules: ../DOMAIN_RULES_USERS.md
+    invariants: ../INVARIANTS_USERS.md
+    permissions: ../PERMISSIONS_USERS.md
+    test_matrix: ../TEST_MATRIX_USERS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/users.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/users/
+    primary_schema: ../../../../../contracts/schemas/users/user_profile.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/users/user_profile.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/users/api.py
+    domain_entity: ../../../../../src/users/domain/entities.py
+    domain_rules: ../../../../../src/users/domain/rules.py
+    use_cases: ../../../../../src/users/application/use_cases.py
+  structured_ir:
+    entities: ./entities.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "organizationId \xE9 refer\xEAncia cruzada para m\xF3dulo identity_access \u2014\
+    \ boundary explicitado em DR-USR-001 e MODULE_SOURCE_AUTHORITY_MATRIX."
+  - "teamIds referenciam m\xF3dulo teams \u2014 boundary explicitado em DR-USR-003."
+  - "seasonIds referenciam m\xF3dulo seasons \u2014 boundary explicitado em DR-USR-003."
+  - "Credenciais, sess\xE3o, MFA, JWT e refresh token pertencem exclusivamente a identity_access\
+    \ (INV-USR-003, INV-USR-004)."
+entities:
+  UserProfile:
+    schema_ref: ../../../../../contracts/schemas/users/user_profile.schema.json
+    runtime_entity_ref: ../../../../../src/users/domain/entities.py#UserProfile
+    docs_refs:
+    - ../DOMAIN_RULES_USERS.md
+    - ../INVARIANTS_USERS.md
+    - ../PERMISSIONS_USERS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: organizationId
+      runtime_name: organization_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'boundary: reference to identity_access module (DR-USR-001)'
+      - 'nullable: true'
+    - name: firstName
+      runtime_name: first_name
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+    - name: lastName
+      runtime_name: last_name
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+    - name: displayName
+      runtime_name: display_name
+      required: true
+      type: string
+      constraints:
+      - 'minLength: 1'
+      - "INV-USR-001: obrigat\xF3rio no perfil est\xE1vel"
+    - name: roleLabel
+      runtime_name: role_label
+      required: true
+      type: enum
+      values:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+      constraints:
+      - "ADR-008: 5 atores can\xF4nicos do sistema"
+      - "DR-USR-002: papel funcional/esportivo, n\xE3o autoriza acesso t\xE9cnico"
+      - "INV-USR-001: obrigat\xF3rio no perfil est\xE1vel"
+    - name: statusLabel
+      runtime_name: status_label
+      required: false
+      type: enum
+      values:
+      - ACTIVE
+      - PENDING_ACTIVATION
+      - SUSPENDED
+      constraints:
+      - 'DEC-USERS-002: lifecycle status'
+      - "default: PENDING_ACTIVATION na cria\xE7\xE3o"
+    - name: positionLabel
+      runtime_name: position_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+      - "DR-USR-004: contexto esportivo, n\xE3o autoriza\xE7\xE3o"
+    - name: preferredLanguage
+      runtime_name: preferred_language
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+      - "DR-USR-005: prefer\xEAncia operacional, n\xE3o estado de seguran\xE7a"
+    - name: preferenceTags
+      runtime_name: preference_tags
+      required: false
+      type: array_of_string
+      constraints:
+      - 'uniqueItems: true'
+      - 'items.maxLength: 40'
+      - 'INV-USR-002: sem duplicatas'
+      - "DR-USR-005: prefer\xEAncia operacional, n\xE3o credencial"
+    - name: teamIds
+      runtime_name: team_ids
+      required: false
+      type: array_of_uuid
+      constraints:
+      - 'uniqueItems: true'
+      - 'INV-USR-002: sem duplicatas'
+      - "DR-USR-003: v\xEDnculo contratual, n\xE3o inferido"
+      - 'boundary: reference to teams module'
+    - name: seasonIds
+      runtime_name: season_ids
+      required: false
+      type: array_of_uuid
+      constraints:
+      - 'uniqueItems: true'
+      - 'INV-USR-002: sem duplicatas'
+      - "DR-USR-003: v\xEDnculo contratual, n\xE3o inferido"
+      - 'boundary: reference to seasons module'
+    domain_enums:
+    - name: RoleLabel
+      values:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+      source: ADR-008 / SYSTEM_SCOPE.md
+    - name: UserStatus
+      values:
+      - ACTIVE
+      - PENDING_ACTIVATION
+      - SUSPENDED
+      source: DEC-USERS-002
+    invariants:
+    - id: INV-USR-001
+      rule: "id, displayName e roleLabel s\xE3o obrigat\xF3rios no perfil est\xE1\
+        vel."
+    - id: INV-USR-002
+      rule: teamIds, seasonIds e preferenceTags devem ter uniqueItems.
+    - id: INV-USR-003
+      rule: Campos de authn/authz (password_hash, jwt, mfa, etc.) nunca pertencem
+        a UserProfile.
+    - id: INV-USR-004
+      rule: "Boundary: credenciais e sess\xE3o pertencem exclusivamente a identity_access."
+endpoints:
+- operation_id: listUsers
+  method: GET
+  path: /users
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/get
+  runtime_handler_ref: ../../../../../src/users/api.py#list_users
+  use_case_ref: ../../../../../src/users/application/use_cases.py#ListUsersUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: createUser
+  method: POST
+  path: /users
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/post
+  runtime_handler_ref: ../../../../../src/users/api.py#create_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#CreateUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 500
+- operation_id: getUser
+  method: GET
+  path: /users/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/get
+  runtime_handler_ref: ../../../../../src/users/api.py#get_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#GetUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchUser
+  method: PATCH
+  path: /users/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/patch
+  runtime_handler_ref: ../../../../../src/users/api.py#patch_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#PatchUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 500
+errors:
+- id: ERR-USR-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/users/api.py#_get_actor_id
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser
+- id: ERR-USR-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/users/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser
+- id: ERR-USR-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/users/domain/rules.py#UserNotFound
+  operations:
+  - getUser
+  - patchUser
+- id: ERR-USR-400-INVALID-ROLE-LABEL
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/users/domain/rules.py#InvalidRoleLabel
+  operations:
+  - listUsers
+  - createUser
+  - patchUser
+- id: ERR-USR-400-AUTHN-FIELD-FORBIDDEN
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/users/domain/rules.py#AuthnFieldForbidden
+  operations:
+  - createUser
+  - patchUser
+- id: ERR-USR-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/users/domain/entities.py#validate_invariants
+  operations:
+  - createUser
+  - patchUser
+- id: ERR-USR-409-CONFLICT
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/users/domain/rules.py#UserConflict
+  operations:
+  - createUser
+- id: ERR-USR-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/users/api.py#_get_actor_id
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser
+test_obligations:
+- id: USR-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/users/user_profile.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: USR-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/users.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: USR-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/users/tests/unit/test_users_domain.py
+  covers:
+  - INV-USR-001
+  - INV-USR-002
+  - INV-USR-003
+  - INV-USR-004
+  - DR-USR-001
+  - DR-USR-002
+  - DR-USR-003
+  - DR-USR-004
+  - DR-USR-005
+  verification: Domain unit tests enforcing invariants, boundary rules and permission
+    checks
+  evidence_refs:
+  - ../../../../../src/users/tests/unit/test_users_domain.py
+- id: USR-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py
