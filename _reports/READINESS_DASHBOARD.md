@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-03-30T10:54:16Z | run_id: `20260330T105416_4ae4f5` | health: **96/100** | overall: **FAIL**
+> Gerado em 2026-04-03T15:10:02Z | run_id: `20260403T151002_dde72d` | health: **94/100** | overall: **FAIL**
 
 ## Modulos
 
@@ -41,7 +41,7 @@
 | ASYNC_REQUIRED_MODULE_GATE | PASS | sim |
 | EXTERNAL_SOURCE_AUTHORITY_GATE | PASS | sim |
 | PRE_CONTRACT_EVIDENCE_GATE | PASS | sim |
-| SHADOW_AUTHORITY_GATE | PASS | sim |
+| SHADOW_AUTHORITY_GATE | FAIL | sim |
 | DECISION_IR_CONFORMANCE_GATE | PASS | sim |
 | CANON_ALLOWLIST_GATE | PASS | sim |
 | PLACEHOLDER_RESIDUE_GATE | PASS | sim |

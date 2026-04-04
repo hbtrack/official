@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-03"
-branch_ativo: docs/parity-case-closure
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: parity
