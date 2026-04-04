@@ -8,8 +8,8 @@ fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-competitions
-resultado: PENDENTE
-proxima_acao_permitida: "B10-001/competitions EM PROGRESSO — source graph + 16 testes PASS. Próximo: commit + push + PR + merge."
+resultado: DONE
+proxima_acao_permitida: "B10-001/competitions CONCLUÍDO — PR #45 criado. Aguardar merge. Próximo módulo: users (B10-001 posição 11)."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
