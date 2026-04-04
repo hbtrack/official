@@ -1,0 +1,120 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: audit
+openapi_paths_ref: contracts/openapi/paths/audit.yaml
+operations:
+- operation_id: listAuditEntries
+  method: GET
+  path: /audit/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/get
+  runtime_handler_ref: ../../../../../src/audit/api.py#list_audit_entries
+  use_case_ref: ../../../../../src/audit/application/use_cases.py#ListAuditEntries
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createAuditEntry
+  method: POST
+  path: /audit/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/post
+  runtime_handler_ref: ../../../../../src/audit/api.py#create_audit_entry
+  use_case_ref: ../../../../../src/audit/application/use_cases.py#CreateAuditEntry
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: getAuditEntry
+  method: GET
+  path: /audit/entries/{entryId}
+  openapi_ref: ../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/{entryId}/get
+  runtime_handler_ref: ../../../../../src/audit/api.py#get_audit_entry
+  use_case_ref: ../../../../../src/audit/application/use_cases.py#GetAuditEntry
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coordinator
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: exportAuditEntries
+  method: GET
+  path: /audit/entries/export
+  openapi_ref: ../../../../../contracts/openapi/paths/audit.yaml#/audit/entries/export/get
+  runtime_handler_ref: ../../../../../src/audit/api.py#export_audit_entries
+  use_case_ref: ../../../../../src/audit/application/use_cases.py#ExportAuditEntries
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+errors:
+- id: ERR-AUD-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/audit/api.py#_get_role
+  operations:
+  - listAuditEntries
+  - createAuditEntry
+  - getAuditEntry
+  - exportAuditEntries
+- id: ERR-AUD-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/audit/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listAuditEntries
+  - createAuditEntry
+  - getAuditEntry
+  - exportAuditEntries
+- id: ERR-AUD-404-ENTRY-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/audit/domain/rules.py#AuditEntryNotFound
+  operations:
+  - getAuditEntry
+- id: ERR-AUD-400-ENTRY-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/audit/domain/entities.py#validate_invariants
+  operations:
+  - createAuditEntry

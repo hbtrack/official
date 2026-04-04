@@ -1,0 +1,696 @@
+version: "1.0.0"
+last_reviewed: "2026-04-01"
+
+scope:
+  include:
+    - "docs/_canon/**/*.md"
+    - "docs/_canon/**/*.yaml"
+    - "docs/hbtrack/modulos/**/*.md"
+    - "docs/hbtrack/modulos/**/*.yaml"
+  exclude: []
+
+entries:
+  - rule_id: CANON_TEMPLATE_GLOBALS
+    class: canon_global
+    paths:
+      - "docs/_canon/README.md"
+      - "docs/_canon/SYSTEM_SCOPE.md"
+      - "docs/_canon/ARCHITECTURE.md"
+      - "docs/_canon/C4_CONTEXT.md"
+      - "docs/_canon/C4_CONTAINERS.md"
+      - "docs/_canon/MODULE_MAP.md"
+      - "docs/_canon/GLOBAL_INVARIANTS.md"
+      - "docs/_canon/SECURITY_RULES.md"
+      - "docs/_canon/DATA_CONVENTIONS.md"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+      - "docs/_canon/TEST_STRATEGY.md"
+      - "docs/_canon/CHANGE_POLICY.md"
+      - "docs/_canon/DOMAIN_GLOSSARY.md"
+      - "docs/_canon/HANDBALL_RULES_DOMAIN.md"
+    owner_source: ".contract_driven/templates/globais/"
+    consumers:
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/globais/"
+      - ".contract_driven/GLOBAL_TEMPLATES.md"
+
+  - rule_id: CANON_CONTRACT_DRIVEN_GOVERNANCE
+    class: canon_governance
+    paths:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "docs/_canon/DECISION_POLICY.md"
+      - "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+      - "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md"
+      - "docs/_canon/OPERATIONS.md"
+      - "docs/_canon/SCOPE_BOUNDARY_POLICY.md"
+      - "docs/_canon/SURVIVAL_SUITE_POLICY.md"
+    owner_source: ".contract_driven/"
+    consumers:
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "scripts/hb"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: contract_driven_parity
+    update_triggers:
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "scripts/hb"
+      - "docs/_canon/graph/ops/"
+
+  - rule_id: CANON_RUNTIME_AUDITED_DOCS
+    class: canon_runtime
+    paths:
+      - "docs/_canon/C4_COMPONENTS_BACKEND.md"
+      - "docs/_canon/INTEGRATION_FLOWS.md"
+      - "docs/_canon/RUNTIME_CURRENT_STATE.md"
+    owner_source: "scripts/audit/"
+    consumers:
+      - "scripts/audit/check_architecture_docs.py"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "docs/_canon/ARCHITECTURE.md"
+    freshness_mode: runtime_audited
+    update_triggers:
+      - "scripts/audit/"
+      - "config/"
+      - "infra/"
+      - "src/"
+
+  - rule_id: CANON_ADR_BACKED_POLICIES
+    class: canon_policy
+    paths:
+      - "docs/_canon/CODE_ARCHITECTURE.md"
+      - "docs/_canon/DATA_MIGRATION_POLICY.md"
+      - "docs/_canon/FRONTEND_CONTRACT.md"
+      - "docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md"
+    owner_source: "docs/_canon/decisions/"
+    consumers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "docs/_canon/ADR_INDEX.md"
+      - "docs/_canon/ARCHITECTURE.md"
+    freshness_mode: adr_bound
+    update_triggers:
+      - "docs/_canon/decisions/ADR-026-*.md"
+      - "docs/_canon/decisions/ADR-027-*.md"
+      - "docs/_canon/decisions/ADR-028-*.md"
+      - "docs/_canon/decisions/ADR-029-*.md"
+      - "docs/_canon/decisions/ADR-030-*.md"
+
+  - rule_id: CANON_OPERATIONS_POLICY_DOCS
+    class: canon_policy
+    paths:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/VPS_SETUP.md"
+    owner_source: "docs/_canon/graph/ops/"
+    consumers:
+      - "docs/_canon/README.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_ops_source_graph_integrity.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/graph/ops/"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/"
+      - "infra/docker-compose.prod.yml"
+      - "infra/nginx/"
+      - "infra/scripts/rollback.sh"
+      - "config/settings.py"
+      - "config/urls.py"
+      - "docs/_canon/decisions/ADR-012-*.md"
+      - "docs/_canon/decisions/ADR-025-*.md"
+      - "docs/_canon/decisions/ADR-027-*.md"
+
+  - rule_id: CANON_UI_GUIDE
+    class: canon_ui
+    paths:
+      - "docs/_canon/UI_CONTRACT_GUIDE.md"
+    owner_source: ".contract_driven/templates/modulos/UI_CONTRACT_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+      - ".contract_driven/agent_prompts/generate_frontend.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/UI_CONTRACT_{{MODULE_NAME_UPPER}}.md"
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+      - ".contract_driven/agent_prompts/generate_frontend.prompt.md"
+
+  - rule_id: CANON_REGISTRIES_AND_MAPPINGS
+    class: canon_registry
+    paths:
+      - "docs/_canon/FEATURE_REGISTRY.yaml"
+      - "docs/_canon/IR_TO_SURFACE_MAPPING.yaml"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+    owner_source: "contracts/schemas/shared/"
+    consumers:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "contracts/schemas/shared/"
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "docs/hbtrack/modulos/"
+
+  - rule_id: CANON_SOURCE_AUTHORITY_MATRIX
+    class: canon_registry
+    paths:
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    owner_source: "contracts/schemas/shared/module_source_authority_matrix.schema.json"
+    consumers:
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "docs/hbtrack/modulos/"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "contracts/schemas/shared/module_source_authority_matrix.schema.json"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "docs/hbtrack/modulos/"
+
+  - rule_id: CANON_SOURCE_AUTHORITY_GRAPH
+    class: canon_governance
+    paths:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    owner_source: "self"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+
+  - rule_id: CANON_SYNC_MANIFEST
+    class: canon_governance
+    paths:
+      - "docs/_canon/SYNC_MANIFEST.yaml"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    consumers:
+      - "docs/_canon/README.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_sync_manifest_integrity.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - "docs/hbtrack/modulos/*/graph/*.yaml"
+      - "generated/source_graph/*/impact_report.json"
+
+  - rule_id: CANON_GLOBAL_GRAPH_IR
+    class: canon_governance
+    paths:
+      - "docs/_canon/graph/global_rules.yaml"
+      - "docs/_canon/graph/global_policies.yaml"
+      - "docs/_canon/graph/lifecycle.yaml"
+      - "docs/_canon/graph/source_map.yaml"
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+
+  - rule_id: CANON_OPS_GRAPH_IR
+    class: canon_operations_graph
+    path_globs:
+      - "docs/_canon/graph/ops/*.yaml"
+    owner_source: "docs/_canon/graph/ops/"
+    consumers:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/VPS_SETUP.md"
+      - "docs/_canon/OPERATIONS.md"
+      - "docs/_canon/decisions/ADR-012-secrets-policy.md"
+      - "tests/pipeline_gates/test_ops_source_graph_integrity.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/"
+      - "infra/docker-compose.prod.yml"
+      - "infra/nginx/"
+      - "infra/scripts/rollback.sh"
+      - "config/settings.py"
+      - "config/urls.py"
+
+  - rule_id: HBTRACK_REPORTS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/reports/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/reports/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/reports/README.md"
+      - "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md"
+      - "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md"
+      - "tests/pipeline_gates/test_reports_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/reports/*.md"
+      - "contracts/schemas/reports/"
+      - "contracts/openapi/paths/reports.yaml"
+      - "contracts/openapi/components/schemas/reports/report_job.yaml"
+      - "src/reports/"
+      - "tests/pipeline_gates/test_reports_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_ANALYTICS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/analytics/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/analytics/README.md"
+      - "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md"
+      - "docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md"
+      - "tests/pipeline_gates/test_analytics_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/analytics/*.md"
+      - "contracts/schemas/analytics/"
+      - "contracts/openapi/paths/analytics.yaml"
+      - "contracts/openapi/components/schemas/analytics/"
+      - "src/analytics/"
+      - "tests/pipeline_gates/test_analytics_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_EXERCISES_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/exercises/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/exercises/README.md"
+      - "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md"
+      - "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md"
+      - "tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/exercises/*.md"
+      - "contracts/schemas/exercises/"
+      - "contracts/openapi/paths/exercises.yaml"
+      - "contracts/openapi/components/schemas/exercises/"
+      - "src/exercises/"
+      - "tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_NOTIFICATIONS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/notifications/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/notifications/README.md"
+      - "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md"
+      - "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+      - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/notifications/*.md"
+      - "contracts/schemas/notifications/"
+      - "contracts/openapi/paths/notifications.yaml"
+      - "contracts/openapi/components/schemas/notifications/"
+      - "src/notifications/"
+      - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_WELLNESS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/wellness/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/wellness/README.md"
+      - "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md"
+      - "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+      - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/wellness/*.md"
+      - "contracts/schemas/wellness/"
+      - "contracts/openapi/paths/wellness.yaml"
+      - "contracts/openapi/components/schemas/wellness/"
+      - "src/wellness/"
+      - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_MEDICAL_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/medical/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/medical/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/medical/README.md"
+      - "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md"
+      - "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md"
+      - "tests/pipeline_gates/test_medical_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/medical/*.md"
+      - "contracts/schemas/medical/"
+      - "contracts/openapi/paths/medical.yaml"
+      - "contracts/openapi/components/schemas/medical/"
+      - "src/medical/"
+      - "tests/pipeline_gates/test_medical_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_AUDIT_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/audit/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/audit/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/audit/README.md"
+      - "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md"
+      - "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md"
+      - "tests/pipeline_gates/test_audit_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/audit/*.md"
+      - "contracts/schemas/audit/"
+      - "contracts/openapi/paths/audit.yaml"
+      - "contracts/openapi/components/schemas/audit/"
+      - "src/audit/"
+      - "tests/pipeline_gates/test_audit_source_graph_integrity.py"
+
+  - rule_id: CANON_ADR_INDEX
+    class: canon_decision_index
+    paths:
+      - "docs/_canon/ADR_INDEX.md"
+    owner_source: "docs/_canon/decisions/"
+    consumers:
+      - "docs/_canon/DECISION_POLICY.md"
+      - "docs/_canon/ARCHITECTURE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/decisions/"
+      - "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+
+  - rule_id: CANON_DECISION_RECORDS
+    class: canon_decision
+    path_globs:
+      - "docs/_canon/decisions/ADR-*.md"
+    owner_source: "docs/_canon/decisions/"
+    consumers:
+      - "docs/_canon/ADR_INDEX.md"
+      - "docs/_canon/DECISION_POLICY.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: decision_trace
+    update_triggers:
+      - "docs/_canon/ADR_INDEX.md"
+      - "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+      - ".contract_driven/agent_prompts/decision_discovery.prompt.md"
+
+  - rule_id: CANON_DECISIONS_README
+    class: canon_decision
+    paths:
+      - "docs/_canon/decisions/README.md"
+    owner_source: "docs/_canon/decisions/"
+    consumers:
+      - "docs/_canon/README.md"
+      - "docs/_canon/ADR_INDEX.md"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/decisions/"
+      - "docs/_canon/ADR_INDEX.md"
+
+  - rule_id: CANON_GATES_REGISTRY
+    class: canon_gate
+    paths:
+      - "docs/_canon/gates/GATES_REGISTRY.yaml"
+    owner_source: "scripts/contracts/validate/validate_contracts.py"
+    consumers:
+      - "tests/pipeline_gates/test_gate_registry_parity.py"
+      - "docs/_canon/gates/README.md"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_gate_registry_parity.py"
+
+  - rule_id: CANON_GATES_README
+    class: canon_gate
+    paths:
+      - "docs/_canon/gates/README.md"
+    owner_source: "docs/_canon/gates/GATES_REGISTRY.yaml"
+    consumers:
+      - "docs/_canon/README.md"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/gates/GATES_REGISTRY.yaml"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+
+  - rule_id: CANON_SECURITY_MATRIX
+    class: canon_security
+    paths:
+      - "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml"
+    owner_source: "contracts/schemas/shared/owasp_api_control_matrix.schema.json"
+    consumers:
+      - "docs/_canon/SECURITY_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: schema_guarded
+    update_triggers:
+      - "contracts/schemas/shared/owasp_api_control_matrix.schema.json"
+      - "docs/_canon/SECURITY_RULES.md"
+
+  - rule_id: CANON_SESSION_HANDOFF_TEMPLATE
+    class: canon_template
+    paths:
+      - "docs/_canon/templates/SESSION_HANDOFF.template.md"
+    owner_source: "contracts/schemas/shared/session_handoff.schema.json"
+    consumers:
+      - ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "SESSION_HANDOFF.md"
+    freshness_mode: schema_guarded
+    update_triggers:
+      - "contracts/schemas/shared/session_handoff.schema.json"
+      - ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+
+  - rule_id: CANON_DOC_USAGE_MANIFEST
+    class: canon_governance
+    paths:
+      - "docs/_canon/DOC_USAGE_MANIFEST.yaml"
+    owner_source: "self"
+    consumers:
+      - "scripts/contracts/validate/doc_usage_gate.py"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "docs/_canon/gates/GATES_REGISTRY.yaml"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - "docs/_canon/"
+      - "docs/hbtrack/modulos/"
+
+  - rule_id: HBTRACK_MODULES_ROOT_README
+    class: module_readme
+    paths:
+      - "docs/hbtrack/modulos/README.md"
+    owner_source: ".contract_driven/templates/modulos/README.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/README.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+
+  - rule_id: HBTRACK_MODULE_READMES
+    class: module_readme
+    path_globs:
+      - "docs/hbtrack/modulos/*/README.md"
+    owner_source: ".contract_driven/templates/modulos/README.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/README.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+
+  - rule_id: HBTRACK_MODULE_SCOPE_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/MODULE_SCOPE_*.md"
+    owner_source: ".contract_driven/templates/modulos/MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+  - rule_id: HBTRACK_DOMAIN_RULE_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/DOMAIN_RULES_*.md"
+    owner_source: ".contract_driven/templates/modulos/DOMAIN_RULES_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/DOMAIN_RULES_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+  - rule_id: HBTRACK_INVARIANTS_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/INVARIANTS_*.md"
+    owner_source: ".contract_driven/templates/modulos/INVARIANTS_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/GLOBAL_INVARIANTS.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/INVARIANTS_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/GLOBAL_INVARIANTS.md"
+
+  - rule_id: HBTRACK_PERMISSIONS_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/PERMISSIONS_*.md"
+    owner_source: ".contract_driven/templates/modulos/PERMISSIONS_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/SECURITY_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/PERMISSIONS_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/SECURITY_RULES.md"
+
+  - rule_id: HBTRACK_TEST_MATRIX_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/TEST_MATRIX_*.md"
+    owner_source: ".contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/TEST_STRATEGY.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/TEST_STRATEGY.md"
+
+  - rule_id: HBTRACK_SPORT_SCIENCE_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/SPORT_SCIENCE_RULES_*.md"
+    owner_source: ".contract_driven/templates/modulos/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "docs/_canon/HANDBALL_RULES_DOMAIN.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/HANDBALL_RULES_DOMAIN.md"
+
+  - rule_id: HBTRACK_STATE_MODEL_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/STATE_MODEL_*.md"
+    owner_source: ".contract_driven/templates/modulos/STATE_MODEL_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_state_model.prompt.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/STATE_MODEL_{{MODULE_NAME_UPPER}}.md"
+      - ".contract_driven/agent_prompts/create_state_model.prompt.md"
+
+  - rule_id: HBTRACK_UI_CONTRACT_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/UI_CONTRACT_*.md"
+    owner_source: ".contract_driven/templates/modulos/UI_CONTRACT_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+      - "docs/_canon/UI_CONTRACT_GUIDE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/UI_CONTRACT_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/UI_CONTRACT_GUIDE.md"
+
+  - rule_id: HBTRACK_SCREEN_MAP_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/SCREEN_MAP_*.md"
+    owner_source: ".contract_driven/templates/modulos/SCREEN_MAP_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+      - "docs/_canon/UI_CONTRACT_GUIDE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/SCREEN_MAP_{{MODULE_NAME_UPPER}}.md"
+      - "docs/_canon/UI_CONTRACT_GUIDE.md"
+
+  - rule_id: HBTRACK_ERRORS_DOCS
+    class: module_doc
+    path_globs:
+      - "docs/hbtrack/modulos/*/ERRORS_*.md"
+    owner_source: ".contract_driven/templates/modulos/ERRORS_{{MODULE_NAME_UPPER}}.md"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - "contracts/openapi/openapi.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: template_parity
+    update_triggers:
+      - ".contract_driven/templates/modulos/ERRORS_{{MODULE_NAME_UPPER}}.md"
+      - "contracts/openapi/openapi.yaml"
+
+  - rule_id: HBTRACK_DECISION_IR_DOCS
+    class: module_ir
+    path_globs:
+      - "docs/hbtrack/modulos/*/DECISION_IR_*.yaml"
+    owner_source: ".contract_driven/decisions/"
+    consumers:
+      - ".contract_driven/agent_prompts/decision_discovery.prompt.md"
+      - ".contract_driven/agent_prompts/execute_roadmap_phase.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: decision_trace
+    update_triggers:
+      - ".contract_driven/decisions/"
+      - "docs/_canon/DECISION_POLICY.md"
+      - "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+
+  - rule_id: HBTRACK_EVENT_TAXONOMY_DOCS
+    class: module_taxonomy
+    path_globs:
+      - "docs/hbtrack/modulos/*/CANONICAL_EVENT_TAXONOMY_*.yaml"
+    owner_source: "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    consumers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "contracts/asyncapi/"
+      - ".contract_driven/agent_prompts/create_asyncapi_contract.prompt.md"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      - "contracts/asyncapi/"
+
+  - rule_id: HBTRACK_COACH_FLOW_DOCS
+    class: module_journey
+    path_globs:
+      - "docs/hbtrack/modulos/*/COACH_INTERACTION_FLOW_*.md"
+    owner_source: "docs/_canon/FRONTEND_CONTRACT.md"
+    consumers:
+      - ".contract_driven/agent_prompts/generate_frontend.prompt.md"
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/_canon/FRONTEND_CONTRACT.md"
+      - ".contract_driven/agent_prompts/generate_frontend.prompt.md"

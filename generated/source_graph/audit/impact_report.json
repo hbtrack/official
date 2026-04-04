@@ -1,0 +1,144 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/audit.yaml",
+    "contracts/schemas/audit/audit_entry.schema.json",
+    "contracts/openapi/components/schemas/audit/audit_entry.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/audit/README.md",
+    "docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md",
+    "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+    "docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
+    "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+    "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md"
+  ],
+  "impacted_runtime": [
+    "src/audit/api.py",
+    "src/audit/domain/entities.py",
+    "src/audit/domain/rules.py",
+    "src/audit/application/use_cases.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "sha256": "9057821093075258c86ad9ecdc5cf4155796e7ed369f6fbc4432d23022bf06b3"
+    },
+    {
+      "relpath": "contracts/openapi/paths/audit.yaml",
+      "sha256": "e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a"
+    },
+    {
+      "relpath": "contracts/schemas/audit/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/audit/audit_entry.schema.json",
+      "sha256": "124e4d382777a6e8000338e0a212d92dc836048d02487f96ace1c9e8e24a775b"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
+      "sha256": "ccd1fbf0a8737006591bf6ae92b30ab7fef8456da0057e5909efc39aa8fe45a6"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
+      "sha256": "b95d327a54e4e8622fe74813fd0a166391617ff19cb4ee8f54d1f82d70a282af"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md",
+      "sha256": "fea9f7872b6564ae0fc2d2c09beea963b64fd17370ad42b9a913cc248e659203"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+      "sha256": "0aa458ef1c60ae122ee3708ab2f0d860f573c7b77a8d62197e241dbff6eedcb2"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/README.md",
+      "sha256": "857d24ff7d93e7f959008763ff33d6266493a4e8a94ba4997e02e807107529e5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md",
+      "sha256": "1da9c6fa49d48dd5d728955301ea32be4e2e97c1cc26045d0bccced87e669fa3"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/graph/endpoints.yaml",
+      "sha256": "a38decac0b86688e1b85e1c3e353d0b846483b681215662a6aa3e7d60ceb1fcd"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/graph/entities.yaml",
+      "sha256": "f511198b7f33a400bd29b478748536a940c47fed417ffe41bd5a62a35dbed9ef"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/graph/errors.yaml",
+      "sha256": "4c2b8418c844b5f2740955c4a5ba722751a6ee7f2008bd612313ba50bee0ea25"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
+      "sha256": "dd57a60913dce6530d4e5caf54c9c243f7376c4dfaa7372dab0374cd20c0cc71"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/audit/graph/test_obligations.yaml",
+      "sha256": "f887696fe27c2b3e344906bbbe8c54713c6f3c4a771a9a1c9a67a7db4bf01bbc"
+    },
+    {
+      "relpath": "src/audit/api.py",
+      "sha256": "9623d12d16339f1dc090b334f16c2f85df588efd98aa728f2f05210a22ba3bb3"
+    },
+    {
+      "relpath": "src/audit/application/use_cases.py",
+      "sha256": "f641a412c7bda0dd56c61ce858c28117a4ca0a36e6ec77d455baff257590a097"
+    },
+    {
+      "relpath": "src/audit/domain/entities.py",
+      "sha256": "6041b0a624a603557db91bdd4bf6d506729d96bdda9537ccce889c7209c4f0b7"
+    },
+    {
+      "relpath": "src/audit/domain/rules.py",
+      "sha256": "bbab3ab1f3bbd04a46e55da3170193fb51d18738571774af634aeefc536f8a29"
+    }
+  ],
+  "known_gaps": [
+    "POST /audit/entries (createAuditEntry) é ingestão cross-module e não exposta ao cliente final — está no source graph mas não é feature pública.",
+    "Export (GET /audit/entries/export) é LGPD/compliance endpoint; payload e formato de saída seguem ADR separados pendentes.",
+    "AsyncAPI/Arazzo do módulo continuam fora do source graph local nesta fase e seguem governança separada."
+  ],
+  "module": "audit",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/audit/audit.bundle.yaml",
+    "generated/source_graph/audit/audit.schema_contract_view.yaml",
+    "generated/source_graph/audit/audit.openapi_contract_view.yaml",
+    "generated/source_graph/audit/impact_report.json"
+  ],
+  "source_fingerprint": "a9890539d21862511a33d9eedac35091f3c4522e1935c78895a2aa6e0d64304c"
+}

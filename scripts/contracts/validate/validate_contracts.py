@@ -4722,6 +4722,8 @@ _ROOT_OPERATIONAL_SKIP_PREFIXES: tuple[str, ...] = (
     "AGENT.",                   # agent.md bridge
     "plano",                    # planejamento
     "design",                   # doc de design
+    "BACKLOG",                  # backlog executável de planejamento (não-soberano por natureza)
+    "PLAN_",                    # planos de execução operacional
 )
 
 
@@ -5011,10 +5013,14 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "ADR_INDEX.md",
         # Adicionado FASE 3 — runbook de provisionamento VPS
         "VPS_SETUP.md",
+        # Adicionados pelo pipeline B10-001 (source graph + context bundle compilers)
+        "DOC_USAGE_MANIFEST.yaml",
+        "SYNC_MANIFEST.yaml",
+        "SOURCE_AUTHORITY_GRAPH.yaml",
     })
 
     # Subdiretórios autorizados
-    SUBDIRS_ALLOWLIST: frozenset[str] = frozenset({"decisions", "gates", "security", "templates"})
+    SUBDIRS_ALLOWLIST: frozenset[str] = frozenset({"decisions", "gates", "security", "templates", "graph"})
 
     # Allowlist gates/ — apenas artefatos do registry de gates
     GATES_ALLOWLIST: frozenset[str] = frozenset({"GATES_REGISTRY.yaml", "README.md"})

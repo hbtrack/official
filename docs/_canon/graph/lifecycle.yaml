@@ -1,0 +1,100 @@
+version: "1.0.0"
+artifact: "GLOBAL_LIFECYCLE_IR"
+status: active
+scope: global
+
+module_status_order:
+  - "scaffold"
+  - "draft_contract"
+  - "validated_contract"
+  - "implementation_ready"
+  - "implemented"
+  - "staging_validated"
+  - "released"
+
+pipeline_stages:
+  - stage_id: "pre_contract"
+    authority_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/BOOT_PROFILES.yaml"
+    evidence_refs:
+      - "_reports/session_start.json"
+      - "SESSION_HANDOFF.md"
+
+  - stage_id: "decision_discovery"
+    authority_refs:
+      - "docs/_canon/DECISION_POLICY.md"
+      - "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+    evidence_refs:
+      - "docs/_canon/decisions/ADR-*.md"
+
+  - stage_id: "authoring"
+    authority_refs:
+      - ".contract_driven/templates/"
+      - "docs/hbtrack/modulos/"
+    evidence_refs:
+      - "contracts/"
+      - "generated/"
+
+  - stage_id: "validation"
+    authority_refs:
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+      - "docs/_canon/gates/GATES_REGISTRY.yaml"
+    evidence_refs:
+      - "_reports/contract_gates/latest.json"
+
+  - stage_id: "readiness"
+    authority_refs:
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+    evidence_refs:
+      - "_reports/evidence/module_readiness_scorecard.json"
+
+  - stage_id: "implementation"
+    authority_refs:
+      - "docs/_canon/CODE_ARCHITECTURE.md"
+      - ".contract_driven/TASK_CATALOG.yaml"
+    evidence_refs:
+      - "src/<module>/"
+      - "_reports/adversarial/"
+
+  - stage_id: "staging_validation"
+    authority_refs:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+      - "docs/_canon/graph/ops/runtime_endpoints.yaml"
+    evidence_refs:
+      - "_reports/contract_gates/latest.json"
+
+  - stage_id: "release"
+    authority_refs:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+      - "docs/_canon/graph/ops/runtime_endpoints.yaml"
+    evidence_refs:
+      - "_reports/contract_gates/latest.json"
+
+transition_rules:
+  - from: "validated_contract"
+    to: "implementation_ready"
+    required_evidence:
+      - "_reports/evidence/module_readiness_scorecard.json"
+      - "_reports/contract_gates/latest.json"
+
+  - from: "implementation_ready"
+    to: "implemented"
+    required_evidence:
+      - "src/<module>/"
+      - "src/<module>/tests/"
+
+  - from: "implemented"
+    to: "staging_validated"
+    required_evidence:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "_reports/contract_gates/latest.json"
+
+  - from: "staging_validated"
+    to: "released"
+    required_evidence:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "_reports/contract_gates/latest.json"

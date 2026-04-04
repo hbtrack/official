@@ -1,0 +1,38 @@
+version: "1.0.0"
+status: active
+module: audit
+
+errors:
+  - id: ERR-AUD-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/audit/api.py#_get_role"
+    operations:
+      - listAuditEntries
+      - createAuditEntry
+      - getAuditEntry
+      - exportAuditEntries
+
+  - id: ERR-AUD-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/audit/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listAuditEntries
+      - createAuditEntry
+      - getAuditEntry
+      - exportAuditEntries
+
+  - id: ERR-AUD-404-ENTRY-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/audit/domain/rules.py#AuditEntryNotFound"
+    operations:
+      - getAuditEntry
+
+  - id: ERR-AUD-400-ENTRY-VALIDATION
+    kind: validation
+    http_status: 400
+    source_ref: "../../../../../src/audit/domain/entities.py#validate_invariants"
+    operations:
+      - createAuditEntry
