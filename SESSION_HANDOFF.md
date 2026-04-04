@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: feat/b10-001-seasons
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: seasons
@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-seasons
 resultado: DONE
-proxima_acao_permitida: "B10-001/seasons: corrigidos response_codes (PR #43). Próximo: merge PR #43 e iniciar próximo módulo em B10-001."
+proxima_acao_permitida: "PR #43 merged. B10-001/seasons CONCLUÍDO. Próximo: identificar próximo módulo pendente em B10-001 no BACKLOG_EXECUTAVEL_DETERMINISTICO.md."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
