@@ -1,0 +1,1143 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/competitions/competitions.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/competitions/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "COMPETITIONS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/competitions.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/competitions/competition.yaml",
+    "primary_schema": "contracts/schemas/competitions/competition.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/competitions"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/competitions.yaml"
+    ],
+    "description": "Admin e coordenador criam e gerenciam competições, registrando equipes participantes e seus dados de inscrição.",
+    "endpoints": [
+      "GET /competitions",
+      "POST /competitions",
+      "GET /competitions/{competitionId}",
+      "POST /competitions/{competitionId}/teams/{teamId}"
+    ],
+    "id": "FT-034",
+    "name": "Gerenciar Competições e Equipes Participantes",
+    "slug": "gerenciar-competições-e-equipes-participantes",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/competitions/api.py",
+      "src/competitions/application/use_cases.py",
+      "src/competitions/domain/entities.py",
+      "src/competitions/domain/rules.py",
+      "src/competitions/schemas.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/competitions/competition.yaml",
+      "contracts/openapi/paths/competitions.yaml",
+      "contracts/schemas/competitions/competition.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/competitions/FT-034.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
+      "docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md",
+      "docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md",
+      "docs/hbtrack/modulos/competitions/PERMISSIONS_COMPETITIONS.md",
+      "docs/hbtrack/modulos/competitions/README.md",
+      "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_competitions_source_graph_integrity.py",
+      "tests/pipeline_gates/test_context_bundle_competitions.py",
+      "tests/pipeline_gates/test_source_graph_compiler_competitions.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "dd2577e2910a4e4ae7fa6b0f72b58272847bc40b19007feef52652278d1937bc"
+    },
+    {
+      "relpath": "generated/source_graph/competitions/competitions.bundle.yaml",
+      "sha256": "dfb40698372e400173a8bbf6f4ac49008cd845ab65b28e709c354295c47f0871"
+    },
+    {
+      "relpath": "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
+      "sha256": "8af49e2ca0f5e9412d44a0b3a6ca9564a3e6af870c619db9ef6f31ee2dee96cd"
+    },
+    {
+      "relpath": "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
+      "sha256": "70350bfc1db0147d6290f3a5d913ef7bada011ba43738bcff3305ee337f6312c"
+    },
+    {
+      "relpath": "generated/source_graph/competitions/impact_report.json",
+      "sha256": "3449699035165efd3d27895b2110a4a62ea5e0cfece4d405753fd8a566c4c725"
+    }
+  ],
+  "module": "competitions",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
+    "invariants": "docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md",
+    "permissions": "docs/hbtrack/modulos/competitions/PERMISSIONS_COMPETITIONS.md",
+    "readme": "docs/hbtrack/modulos/competitions/README.md",
+    "scope": "docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md",
+    "test_matrix": "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "handball-ops",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/competitions/api.py",
+    "domain_entity": "src/competitions/domain/entities.py",
+    "domain_rules": "src/competitions/domain/rules.py",
+    "use_cases": "src/competitions/application/use_cases.py"
+  },
+  "source_fingerprint": "b676db6138ea1890ccb8ad5bed99c5eb7a8ee6b3a8cd96bdaa2fbcbd978a5d40",
+  "source_graph": {
+    "entities": {
+      "Competition": {
+        "docs_refs": [
+          "../DOMAIN_RULES_COMPETITIONS.md",
+          "../INVARIANTS_COMPETITIONS.md",
+          "../PERMISSIONS_COMPETITIONS.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/competitions/domain/entities.py#Competition",
+        "schema_ref": "../../../../../contracts/schemas/competitions/competition.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "boundary: reference to seasons module (DR-COMP-002, INV-COMP-001)"
+            ],
+            "name": "seasonId",
+            "required": true,
+            "runtime_name": "season_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "boundary: reference to identity_access module",
+              "nullable: true"
+            ],
+            "name": "organizationId",
+            "required": false,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "minLength: 1",
+              "maxLength: 140"
+            ],
+            "name": "name",
+            "required": true,
+            "runtime_name": "name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "maxLength: 80",
+              "nullable: true"
+            ],
+            "name": "formatLabel",
+            "required": false,
+            "runtime_name": "format_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "x-domain-enum-ref: entity_lifecycle_status",
+              "FSM: draft → active → archived (VALID_TRANSITIONS in rules.py)"
+            ],
+            "name": "statusLabel",
+            "required": true,
+            "runtime_name": "status_label",
+            "type": "enum",
+            "values": [
+              "DRAFT",
+              "ACTIVE",
+              "ARCHIVED"
+            ]
+          },
+          {
+            "constraints": [
+              "INV-COMP-001: obrigatório",
+              "INV-COMP-002: deve ser <= endDate quando endDate presente"
+            ],
+            "name": "startDate",
+            "required": true,
+            "runtime_name": "start_date",
+            "type": "date_only"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-COMP-002: quando presente, deve ser >= startDate"
+            ],
+            "name": "endDate",
+            "required": false,
+            "runtime_name": "end_date",
+            "type": "date_only"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "items.minLength: 1",
+              "items.maxLength: 80",
+              "DR-COMP-004: fases explícitas, não inferidas de resultados"
+            ],
+            "name": "stageLabels",
+            "required": true,
+            "runtime_name": "stage_labels",
+            "type": "array_of_string"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-COMP-003: entradas de calendário vinculadas",
+              "boundary: reference to scheduling module"
+            ],
+            "name": "calendarEntryIds",
+            "required": true,
+            "runtime_name": "calendar_entry_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "DR-COMP-003: inscrições formais, não inferidas de histórico",
+              "INV-COMP-003: boundary: reference to teams module"
+            ],
+            "name": "registrationTeamIds",
+            "required": true,
+            "runtime_name": "registration_team_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "maxLength: 500",
+              "nullable: true",
+              "DR-COMP-005: projeção resumida, não substitui truth oficial"
+            ],
+            "name": "standingsSummary",
+            "required": false,
+            "runtime_name": "standings_summary",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "runtime_name": "created_at",
+            "type": "datetime_iso8601"
+          },
+          {
+            "name": "updatedAt",
+            "required": false,
+            "runtime_name": "updated_at",
+            "type": "datetime_iso8601"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-COMP-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listCompetitions",
+          "createCompetition",
+          "getCompetition",
+          "patchCompetition",
+          "registerTeamInCompetition",
+          "unregisterTeamFromCompetition"
+        ],
+        "source_ref": "../../../../../src/competitions/api.py#_role"
+      },
+      {
+        "exception_ref": "../../../../../src/competitions/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-COMP-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listCompetitions",
+          "createCompetition",
+          "getCompetition",
+          "patchCompetition",
+          "registerTeamInCompetition",
+          "unregisterTeamFromCompetition"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/competitions/domain/rules.py#CompetitionNotFound",
+        "http_status": 404,
+        "id": "ERR-COMP-404-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getCompetition",
+          "patchCompetition",
+          "registerTeamInCompetition",
+          "unregisterTeamFromCompetition"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-COMP-400-VALIDATION",
+        "kind": "domain",
+        "operations": [
+          "createCompetition",
+          "patchCompetition"
+        ],
+        "source_ref": "../../../../../src/competitions/domain/entities.py#validate_invariants"
+      },
+      {
+        "exception_ref": "../../../../../src/competitions/domain/rules.py#TeamAlreadyRegistered",
+        "http_status": 409,
+        "id": "ERR-COMP-409-TEAM-ALREADY-REGISTERED",
+        "kind": "domain",
+        "operations": [
+          "registerTeamInCompetition"
+        ]
+      },
+      {
+        "http_status": 500,
+        "id": "ERR-COMP-500-INTERNAL",
+        "kind": "infrastructure",
+        "operations": [
+          "listCompetitions",
+          "createCompetition",
+          "getCompetition",
+          "patchCompetition",
+          "registerTeamInCompetition",
+          "unregisterTeamFromCompetition"
+        ]
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/competitions.yaml",
+        "contracts/schemas/competitions/competition.schema.json",
+        "contracts/openapi/components/schemas/competitions/competition.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/competitions/README.md",
+        "docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md",
+        "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
+        "docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md",
+        "docs/hbtrack/modulos/competitions/PERMISSIONS_COMPETITIONS.md",
+        "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md"
+      ],
+      "impacted_runtime": [
+        "src/competitions/api.py",
+        "src/competitions/domain/entities.py",
+        "src/competitions/domain/rules.py",
+        "src/competitions/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "seasonId é referência cruzada para módulo seasons — boundary explicitado em DR-COMP-002 e INV-COMP-001.",
+        "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
+        "registrationTeamIds referenciam módulo teams — boundary explicitado em DR-COMP-003.",
+        "calendarEntryIds referenciam módulo scheduling — boundary explicitado em module docs."
+      ],
+      "source_fingerprint": "91ac0aa9e5dcda93bd9830ad9ac55719728248260dfa8d1fda8abf21b593915a"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-COMP-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listCompetitions",
+            "createCompetition",
+            "getCompetition",
+            "patchCompetition",
+            "registerTeamInCompetition",
+            "unregisterTeamFromCompetition"
+          ],
+          "source_ref": "../../../../../src/competitions/api.py#_role"
+        },
+        {
+          "exception_ref": "../../../../../src/competitions/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-COMP-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listCompetitions",
+            "createCompetition",
+            "getCompetition",
+            "patchCompetition",
+            "registerTeamInCompetition",
+            "unregisterTeamFromCompetition"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/competitions/domain/rules.py#CompetitionNotFound",
+          "http_status": 404,
+          "id": "ERR-COMP-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getCompetition",
+            "patchCompetition",
+            "registerTeamInCompetition",
+            "unregisterTeamFromCompetition"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/competitions/domain/rules.py#TeamNotRegistered",
+          "http_status": 404,
+          "id": "ERR-COMP-404-TEAM-NOT-REGISTERED",
+          "kind": "domain",
+          "operations": [
+            "unregisterTeamFromCompetition"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-COMP-400-VALIDATION",
+          "kind": "domain",
+          "operations": [
+            "createCompetition",
+            "patchCompetition"
+          ],
+          "source_ref": "../../../../../src/competitions/domain/entities.py#validate_invariants"
+        },
+        {
+          "exception_ref": "../../../../../src/competitions/domain/rules.py#InvalidStatusTransition",
+          "http_status": 400,
+          "id": "ERR-COMP-400-INVALID-STATUS-TRANSITION",
+          "kind": "domain",
+          "notes": [
+            "InvalidStatusTransition é capturado junto com ValueError e emite HTTP 400 (não 422) — verificado em api.py#patch_competition: except (ValueError, InvalidStatusTransition)"
+          ],
+          "operations": [
+            "patchCompetition"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/competitions/domain/rules.py#TeamAlreadyRegistered",
+          "http_status": 409,
+          "id": "ERR-COMP-409-TEAM-ALREADY-REGISTERED",
+          "kind": "domain",
+          "operations": [
+            "registerTeamInCompetition"
+          ]
+        },
+        {
+          "http_status": 500,
+          "id": "ERR-COMP-500-INTERNAL",
+          "kind": "infrastructure",
+          "operations": [
+            "listCompetitions",
+            "createCompetition",
+            "getCompetition",
+            "patchCompetition",
+            "registerTeamInCompetition",
+            "unregisterTeamFromCompetition"
+          ]
+        }
+      ],
+      "module": "competitions",
+      "openapi_paths_ref": "contracts/openapi/paths/competitions.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/get",
+          "operation_id": "listCompetitions",
+          "owner_scoped_roles": [],
+          "path": "/competitions",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#list_competitions",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#ListCompetitions"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/post",
+          "operation_id": "createCompetition",
+          "owner_scoped_roles": [],
+          "path": "/competitions",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#create_competition",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#CreateCompetition"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/get",
+          "operation_id": "getCompetition",
+          "owner_scoped_roles": [],
+          "path": "/competitions/{competitionId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#get_competition",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#GetCompetition"
+        },
+        {
+          "method": "PATCH",
+          "notes": [
+            "PERM-COMP-002: patch em competição ACTIVE exige role admin (não apenas coordinator)"
+          ],
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/patch",
+          "operation_id": "patchCompetition",
+          "owner_scoped_roles": [],
+          "path": "/competitions/{competitionId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#patch_competition",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#PatchCompetition"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/post",
+          "operation_id": "registerTeamInCompetition",
+          "owner_scoped_roles": [],
+          "path": "/competitions/{competitionId}/teams/{teamId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#register_team",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#RegisterTeamInCompetition"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/delete",
+          "operation_id": "unregisterTeamFromCompetition",
+          "owner_scoped_roles": [],
+          "path": "/competitions/{competitionId}/teams/{teamId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/competitions/api.py#unregister_team",
+          "use_case_ref": "../../../../../src/competitions/application/use_cases.py#UnregisterTeamFromCompetition"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/get",
+        "operation_id": "listCompetitions",
+        "owner_scoped_roles": [],
+        "path": "/competitions",
+        "response_codes": [
+          200,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/competitions/api.py#list_competitions",
+        "use_case_ref": "../../../../../src/competitions/application/use_cases.py#ListCompetitions"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/post",
+        "operation_id": "createCompetition",
+        "owner_scoped_roles": [],
+        "path": "/competitions",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/competitions/api.py#create_competition",
+        "use_case_ref": "../../../../../src/competitions/application/use_cases.py#CreateCompetition"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/get",
+        "operation_id": "getCompetition",
+        "owner_scoped_roles": [],
+        "path": "/competitions/{competitionId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/competitions/api.py#get_competition",
+        "use_case_ref": "../../../../../src/competitions/application/use_cases.py#GetCompetition"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/post",
+        "operation_id": "registerTeamInCompetition",
+        "owner_scoped_roles": [],
+        "path": "/competitions/{competitionId}/teams/{teamId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/competitions/api.py#register_team",
+        "use_case_ref": "../../../../../src/competitions/application/use_cases.py#RegisterTeamInCompetition"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "Competition": {
+          "required": [
+            "id",
+            "seasonId",
+            "name",
+            "startDate",
+            "statusLabel",
+            "stageLabels",
+            "registrationTeamIds",
+            "calendarEntryIds"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/competitions/competition.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "boundary: reference to seasons module (DR-COMP-002, INV-COMP-001)"
+              ],
+              "name": "seasonId",
+              "required": true,
+              "runtime_name": "season_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "boundary: reference to identity_access module",
+                "nullable: true"
+              ],
+              "name": "organizationId",
+              "required": false,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "minLength: 1",
+                "maxLength: 140"
+              ],
+              "name": "name",
+              "required": true,
+              "runtime_name": "name",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "maxLength: 80",
+                "nullable: true"
+              ],
+              "name": "formatLabel",
+              "required": false,
+              "runtime_name": "format_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "x-domain-enum-ref: entity_lifecycle_status",
+                "FSM: draft → active → archived (VALID_TRANSITIONS in rules.py)"
+              ],
+              "name": "statusLabel",
+              "required": true,
+              "runtime_name": "status_label",
+              "type": "enum",
+              "values": [
+                "DRAFT",
+                "ACTIVE",
+                "ARCHIVED"
+              ]
+            },
+            {
+              "constraints": [
+                "INV-COMP-001: obrigatório",
+                "INV-COMP-002: deve ser <= endDate quando endDate presente"
+              ],
+              "name": "startDate",
+              "required": true,
+              "runtime_name": "start_date",
+              "type": "date_only"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-COMP-002: quando presente, deve ser >= startDate"
+              ],
+              "name": "endDate",
+              "required": false,
+              "runtime_name": "end_date",
+              "type": "date_only"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "items.minLength: 1",
+                "items.maxLength: 80",
+                "DR-COMP-004: fases explícitas, não inferidas de resultados"
+              ],
+              "name": "stageLabels",
+              "required": true,
+              "runtime_name": "stage_labels",
+              "type": "array_of_string"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-COMP-003: entradas de calendário vinculadas",
+                "boundary: reference to scheduling module"
+              ],
+              "name": "calendarEntryIds",
+              "required": true,
+              "runtime_name": "calendar_entry_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "DR-COMP-003: inscrições formais, não inferidas de histórico",
+                "INV-COMP-003: boundary: reference to teams module"
+              ],
+              "name": "registrationTeamIds",
+              "required": true,
+              "runtime_name": "registration_team_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "maxLength: 500",
+                "nullable: true",
+                "DR-COMP-005: projeção resumida, não substitui truth oficial"
+              ],
+              "name": "standingsSummary",
+              "required": false,
+              "runtime_name": "standings_summary",
+              "type": "string"
+            },
+            {
+              "name": "createdAt",
+              "required": false,
+              "runtime_name": "created_at",
+              "type": "datetime_iso8601"
+            },
+            {
+              "name": "updatedAt",
+              "required": false,
+              "runtime_name": "updated_at",
+              "type": "datetime_iso8601"
+            }
+          ]
+        }
+      },
+      "entity": "Competition",
+      "module": "competitions",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/competitions/competition.yaml",
+      "primary_entity": "Competition",
+      "primary_schema_ref": "contracts/schemas/competitions/competition.schema.json",
+      "required": [
+        "id",
+        "seasonId",
+        "name",
+        "startDate",
+        "statusLabel",
+        "stageLabels",
+        "registrationTeamIds",
+        "calendarEntryIds"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "boundary: reference to seasons module (DR-COMP-002, INV-COMP-001)"
+          ],
+          "name": "seasonId",
+          "required": true,
+          "runtime_name": "season_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "boundary: reference to identity_access module",
+            "nullable: true"
+          ],
+          "name": "organizationId",
+          "required": false,
+          "runtime_name": "organization_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "minLength: 1",
+            "maxLength: 140"
+          ],
+          "name": "name",
+          "required": true,
+          "runtime_name": "name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "maxLength: 80",
+            "nullable: true"
+          ],
+          "name": "formatLabel",
+          "required": false,
+          "runtime_name": "format_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "x-domain-enum-ref: entity_lifecycle_status",
+            "FSM: draft → active → archived (VALID_TRANSITIONS in rules.py)"
+          ],
+          "name": "statusLabel",
+          "required": true,
+          "runtime_name": "status_label",
+          "type": "enum",
+          "values": [
+            "DRAFT",
+            "ACTIVE",
+            "ARCHIVED"
+          ]
+        },
+        {
+          "constraints": [
+            "INV-COMP-001: obrigatório",
+            "INV-COMP-002: deve ser <= endDate quando endDate presente"
+          ],
+          "name": "startDate",
+          "required": true,
+          "runtime_name": "start_date",
+          "type": "date_only"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-COMP-002: quando presente, deve ser >= startDate"
+          ],
+          "name": "endDate",
+          "required": false,
+          "runtime_name": "end_date",
+          "type": "date_only"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "items.minLength: 1",
+            "items.maxLength: 80",
+            "DR-COMP-004: fases explícitas, não inferidas de resultados"
+          ],
+          "name": "stageLabels",
+          "required": true,
+          "runtime_name": "stage_labels",
+          "type": "array_of_string"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-COMP-003: entradas de calendário vinculadas",
+            "boundary: reference to scheduling module"
+          ],
+          "name": "calendarEntryIds",
+          "required": true,
+          "runtime_name": "calendar_entry_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "DR-COMP-003: inscrições formais, não inferidas de histórico",
+            "INV-COMP-003: boundary: reference to teams module"
+          ],
+          "name": "registrationTeamIds",
+          "required": true,
+          "runtime_name": "registration_team_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "maxLength: 500",
+            "nullable: true",
+            "DR-COMP-005: projeção resumida, não substitui truth oficial"
+          ],
+          "name": "standingsSummary",
+          "required": false,
+          "runtime_name": "standings_summary",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "required": false,
+          "runtime_name": "created_at",
+          "type": "datetime_iso8601"
+        },
+        {
+          "name": "updatedAt",
+          "required": false,
+          "runtime_name": "updated_at",
+          "type": "datetime_iso8601"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/competitions/competition.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "COMP-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/competitions.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "COMP-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/competitions/tests/unit/test_competitions_domain.py",
+        "covers": [
+          "INV-COMP-001",
+          "INV-COMP-002",
+          "INV-COMP-003",
+          "DR-COMP-001",
+          "DR-COMP-002",
+          "DR-COMP-003",
+          "DR-COMP-004",
+          "DR-COMP-005",
+          "PERM-COMP-002"
+        ],
+        "evidence_refs": [
+          "../../../../../src/competitions/tests/unit/test_competitions_domain.py"
+        ],
+        "id": "COMP-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for domain invariants, FSM transitions, RBAC rules and boundary enforcement"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_competitions_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_competitions_source_graph_integrity.py"
+        ],
+        "id": "COMP-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/competitions/README.md",
+      "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
+      "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md",
+      "contracts/openapi/paths/competitions.yaml",
+      "contracts/openapi/components/schemas/competitions/competition.yaml",
+      "generated/source_graph/competitions/competitions.bundle.yaml",
+      "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
+      "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
+      "generated/source_graph/competitions/impact_report.json",
+      "compiled_context/competitions/FT-034.json",
+      "src/competitions/api.py",
+      "src/competitions/schemas.py",
+      "tests/pipeline_gates/test_competitions_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_competitions.py",
+      "tests/pipeline_gates/test_context_bundle_competitions.py"
+    ],
+    "expected_output": "compiled_context/competitions/FT-034.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module competitions --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module competitions --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module competitions --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module competitions --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_competitions_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_competitions.py tests/pipeline_gates/test_context_bundle_competitions.py -q"
+    ]
+  }
+}

@@ -118,6 +118,7 @@ def create_competition(request, payload: CreateCompetitionIn):
             end_date=payload.endDate,
             format_label=payload.formatLabel,
             stage_labels=list(payload.stageLabels),
+            calendar_entry_ids=list(payload.calendarEntryIds),
             registration_team_ids=list(payload.registrationTeamIds),
         ))
         return 201, CompetitionOut.from_domain(comp)

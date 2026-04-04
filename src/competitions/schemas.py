@@ -21,6 +21,7 @@ class CompetitionOut(Schema):
     formatLabel: Optional[str] = None
     statusLabel: str
     stageLabels: List[str] = []
+    calendarEntryIds: List[uuid.UUID] = []
     registrationTeamIds: List[uuid.UUID] = []
     standingsSummary: Optional[str] = None
     createdAt: datetime
@@ -38,6 +39,7 @@ class CompetitionOut(Schema):
             formatLabel=comp.format_label,
             statusLabel=comp.status_label.value,
             stageLabels=comp.stage_labels,
+            calendarEntryIds=comp.calendar_entry_ids,
             registrationTeamIds=comp.registration_team_ids,
             standingsSummary=comp.standings_summary,
             createdAt=comp.created_at,
@@ -60,6 +62,7 @@ class CreateCompetitionIn(Schema):
     endDate: Optional[date] = None
     formatLabel: Optional[str] = None
     stageLabels: List[str] = []
+    calendarEntryIds: List[uuid.UUID] = []
     registrationTeamIds: List[uuid.UUID] = []
 
 

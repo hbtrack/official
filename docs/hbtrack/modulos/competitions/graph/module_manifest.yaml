@@ -1,0 +1,45 @@
+version: "1.0.0"
+status: active
+module: competitions
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_COMPETITIONS.md"
+  domain_rules: "../DOMAIN_RULES_COMPETITIONS.md"
+  invariants: "../INVARIANTS_COMPETITIONS.md"
+  permissions: "../PERMISSIONS_COMPETITIONS.md"
+  test_matrix: "../TEST_MATRIX_COMPETITIONS.md"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/competitions.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/competitions/"
+  primary_schema: "../../../../../contracts/schemas/competitions/competition.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/competitions/competition.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/competitions/api.py"
+  domain_entity: "../../../../../src/competitions/domain/entities.py"
+  domain_rules: "../../../../../src/competitions/domain/rules.py"
+  use_cases: "../../../../../src/competitions/application/use_cases.py"
+
+structured_ir:
+  entities: "./entities.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph."
+  - "seasonId é referência cruzada para módulo seasons — boundary explicitado em DR-COMP-002 e INV-COMP-001."
+  - "organizationId é referência para módulo identity_access — boundary explicitado em module docs."
+  - "registrationTeamIds referenciam módulo teams — boundary explicitado em DR-COMP-003."
+  - "calendarEntryIds referenciam módulo scheduling — boundary explicitado em module docs."

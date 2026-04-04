@@ -1,7 +1,7 @@
 {
-  "session_id": "0f001481-9122-4db9-bb2f-8f2dc24783e9",
-  "session_timestamp": "2026-04-04T17:53:22.802984+00:00",
-  "branch": "feat/b10-001-teams",
+  "session_id": "6002b3ea-1160-4b93-b4b7-1950a5d628c4",
+  "session_timestamp": "2026-04-04T19:48:14.765426+00:00",
+  "branch": "feat/b10-001-competitions",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -19,22 +19,235 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "teams",
-  "module_focus": "teams",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
-  "roadmap_task_id": "B10-001-teams",
   "stage2_artifacts": [
     {
-      "path": "SESSION_HANDOFF.md",
-      "sha256": "094cdb8a89ce41851b8ff1d92cc8bb7f8c023fd29d511ff440b916addf92a3a1",
-      "created_at": "2026-04-04T17:53:44.717742+00:00",
+      "path": "docs/hbtrack/modulos/competitions/graph/module_manifest.yaml",
+      "sha256": "0a66ed9004becc8791ba3bee831d5752cbef991725df70c29b287fb9ef016f22",
+      "created_at": "2026-04-04T19:48:46.510074+00:00",
       "gate_exit_code": 0
     },
     {
-      "path": "_reports/session_start.json",
-      "sha256": "b0a3388f22e356847bc94b260e96a8f775c15cb1be69b52cecedae7e9339989b",
-      "created_at": "2026-04-04T17:54:03.392279+00:00",
+      "path": "docs/hbtrack/modulos/competitions/graph/entities.yaml",
+      "sha256": "e365805fe3a017e42846fcca6109276f1149f7a53f99cf3a8120fed7f188f4e9",
+      "created_at": "2026-04-04T19:49:25.449892+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/graph/endpoints.yaml",
+      "sha256": "c2e9ac30c08060a79acc7eeba0ff264a9acd95998dbf23d28531a43f6432f78a",
+      "created_at": "2026-04-04T19:49:42.790127+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/graph/errors.yaml",
+      "sha256": "346520e960e5f174b3b4793a4ac83b3c2ed2521f3698cda04d599378432bfe60",
+      "created_at": "2026-04-04T19:49:54.724673+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/graph/test_obligations.yaml",
+      "sha256": "ea0b6fa667344bbd90de3f8a0170f7b08a2a7554fe93d420f1934f1f1f7a039c",
+      "created_at": "2026-04-04T19:50:00.169005+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md",
+      "sha256": "bcae34a1dab18c6ca4300f64d7d29f23734bba774e8489db5c5134069ac36725",
+      "created_at": "2026-04-04T19:50:33.076966+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/README.md",
+      "sha256": "b6dddd96a717332f4f564a375f4924a6029438f9ac516afb9db039c20b051697",
+      "created_at": "2026-04-04T19:50:48.654220+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
+      "sha256": "a7cf79abb3433536410f99058426c7b5f37568335bbd4ad047191ed2b2778e95",
+      "created_at": "2026-04-04T19:50:56.655433+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "dd2577e2910a4e4ae7fa6b0f72b58272847bc40b19007feef52652278d1937bc",
+      "created_at": "2026-04-04T19:51:03.373926+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/DOC_USAGE_MANIFEST.yaml",
+      "sha256": "96e01518c0f8a48add978709748b2e27258769cc73b909ad828b69fb4d259f0b",
+      "created_at": "2026-04-04T19:51:08.415490+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/competitions/domain/entities.py",
+      "sha256": "dc3e6475a2dae2a4f3a4508c0a7285aa9ff74ee46317b0557fefe2e19e62e60d",
+      "created_at": "2026-04-04T19:51:16.258624+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/competitions/schemas.py",
+      "sha256": "82a5bd3c7180a667907e477fcbab53d03508c147bd29a741990682e8df088057",
+      "created_at": "2026-04-04T19:51:24.359033+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/competitions/application/use_cases.py",
+      "sha256": "33ee093c4bec5816868c2f0fef0d1c83f9e8b7378976f7be121d7645667909bc",
+      "created_at": "2026-04-04T19:51:35.724202+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/competitions/api.py",
+      "sha256": "42bfc2a71a9a9095c66acd35c481ad0c402349898ff9a3e5d1803424d0c23ebc",
+      "created_at": "2026-04-04T19:51:40.272316+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_competitions_source_graph_integrity.py",
+      "sha256": "d0bd7c5938860b1a12159cb777ff6eb2434ed64e7962af06d388db7404a64d53",
+      "created_at": "2026-04-04T19:51:44.217441+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_source_graph_compiler_competitions.py",
+      "sha256": "4381c02667716828ed0404dcaa9076a81cd448b3cbe0e6ef7f273f17cc22f14b",
+      "created_at": "2026-04-04T19:51:47.939791+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_context_bundle_competitions.py",
+      "sha256": "b1cbf2670ce48f96118a81798fdbb6ccf44a620579f5505457ba104f3715492f",
+      "created_at": "2026-04-04T19:51:51.688479+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/competitions/competitions.bundle.yaml",
+      "sha256": "dfb40698372e400173a8bbf6f4ac49008cd845ab65b28e709c354295c47f0871",
+      "created_at": "2026-04-04T19:53:54.800968+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
+      "sha256": "8af49e2ca0f5e9412d44a0b3a6ca9564a3e6af870c619db9ef6f31ee2dee96cd",
+      "created_at": "2026-04-04T19:54:08.110929+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
+      "sha256": "70350bfc1db0147d6290f3a5d913ef7bada011ba43738bcff3305ee337f6312c",
+      "created_at": "2026-04-04T19:54:15.563815+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/competitions/impact_report.json",
+      "sha256": "3449699035165efd3d27895b2110a4a62ea5e0cfece4d405753fd8a566c4c725",
+      "created_at": "2026-04-04T19:54:27.201528+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/competitions/FT-034.json",
+      "sha256": "41633fba3bd404ac2f5298e1a6c0989af507ced0a5353ace644660ddbfe00ca8",
+      "created_at": "2026-04-04T19:54:33.660710+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "SESSION_HANDOFF.md",
+      "sha256": "600b951e24df47db83040795c06edb5f7060b5e109c65a29fc836e09d2ed82d8",
+      "created_at": "2026-04-04T19:54:37.229029+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/audit/FT-041.json",
+      "sha256": "31a47aa8e31c5b24e8e6d9394fd0457c2e02d62d11a19377aa3b5a3574d3b791",
+      "created_at": "2026-04-04T19:54:56.273536+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-018.json",
+      "sha256": "05ac162d566983508925f812c95436a44d309af2a62afdde5716a4c22b648a02",
+      "created_at": "2026-04-04T19:55:05.099549+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-019.json",
+      "sha256": "42d2db6647052c446dec2543b9ad5b505ebccf788c4e632b9ece51ed9e77b703",
+      "created_at": "2026-04-04T19:55:08.841081+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-020.json",
+      "sha256": "51852e37051a77796767d0be3b27ff4baf84a252f136f6b012a9cec9476c3b52",
+      "created_at": "2026-04-04T19:55:16.009975+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-021.json",
+      "sha256": "2cecb4492c29dc801fae35f80196232608b50f24c09b24731bcd53efe8f72563",
+      "created_at": "2026-04-04T19:55:24.993499+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-022.json",
+      "sha256": "3cad29376939fb579dc2701b6f774052fd9a8d1819420a50713287d65b3de8b9",
+      "created_at": "2026-04-04T19:55:29.251745+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/seasons/FT-023.json",
+      "sha256": "b83f214adf893ddd9f340198aebb45bfde00fbe3304659a526990c79b08df88d",
+      "created_at": "2026-04-04T19:55:33.012727+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-024.json",
+      "sha256": "76807deeedb842f100797f66505d3e7abd06cc3fbd997a22ac4426c03dc8a73a",
+      "created_at": "2026-04-04T19:55:36.596097+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-025.json",
+      "sha256": "411d73183d827bc50c01b559d7d2e675fe3c9541471f6bd44aa4fe8e0b6fa03d",
+      "created_at": "2026-04-04T19:55:40.143743+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-026.json",
+      "sha256": "d173bb1ce69e9432c7c9679a9533b44248e5951436c8f937c1d47fa59eec4f14",
+      "created_at": "2026-04-04T19:55:43.995262+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-027.json",
+      "sha256": "1bfdc5a394bd7e6515f800ba3b0a16d87e32c4beccd61bcf5e57f895d458d86a",
+      "created_at": "2026-04-04T19:55:48.142441+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-028.json",
+      "sha256": "3df7064a8ac9e8c2a6db931b515e7a8eb99e268031b230c659ea83168424e820",
+      "created_at": "2026-04-04T19:55:52.457543+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-029.json",
+      "sha256": "5ccb3315427e9b228d33bad96697380a6a90848f81ac96b3e9ea07ac89e34145",
+      "created_at": "2026-04-04T19:55:58.360324+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-030.json",
+      "sha256": "73434b71da73ef10dc2e90bcf2a5fe4ab33519cf13bc77202f89c147355ac902",
+      "created_at": "2026-04-04T19:56:06.856065+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "compiled_context/teams/FT-031.json",
+      "sha256": "154d9526ac1c163f71a9a6a768a000686996ef24d3522070c0d99a0afb613e4f",
+      "created_at": "2026-04-04T19:56:15.455021+00:00",
       "gate_exit_code": 0
     }
   ],

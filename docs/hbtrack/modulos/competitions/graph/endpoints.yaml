@@ -1,0 +1,133 @@
+version: "1.0.0"
+status: active
+module: competitions
+
+endpoints:
+  - operation_id: listCompetitions
+    method: GET
+    path: /competitions
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/get"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#list_competitions"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#ListCompetitions"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 500
+
+  - operation_id: createCompetition
+    method: POST
+    path: /competitions
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/post"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#create_competition"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#CreateCompetition"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 500
+
+  - operation_id: getCompetition
+    method: GET
+    path: /competitions/{competitionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/get"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#get_competition"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#GetCompetition"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: patchCompetition
+    method: PATCH
+    path: /competitions/{competitionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/patch"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#patch_competition"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#PatchCompetition"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    notes:
+      - "PERM-COMP-002: patch em competição ACTIVE exige role admin (não apenas coordinator)"
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: registerTeamInCompetition
+    method: POST
+    path: /competitions/{competitionId}/teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/post"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#register_team"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#RegisterTeamInCompetition"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: unregisterTeamFromCompetition
+    method: DELETE
+    path: /competitions/{competitionId}/teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/competitions.yaml#/competitions/{competitionId}/teams/{teamId}/delete"
+    runtime_handler_ref: "../../../../../src/competitions/api.py#unregister_team"
+    use_case_ref: "../../../../../src/competitions/application/use_cases.py#UnregisterTeamFromCompetition"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500

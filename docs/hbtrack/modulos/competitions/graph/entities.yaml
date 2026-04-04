@@ -1,0 +1,110 @@
+version: "1.0.0"
+status: active
+module: competitions
+
+entities:
+  Competition:
+    schema_ref: "../../../../../contracts/schemas/competitions/competition.schema.json"
+    runtime_entity_ref: "../../../../../src/competitions/domain/entities.py#Competition"
+    docs_refs:
+      - "../DOMAIN_RULES_COMPETITIONS.md"
+      - "../INVARIANTS_COMPETITIONS.md"
+      - "../PERMISSIONS_COMPETITIONS.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: seasonId
+        runtime_name: season_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "boundary: reference to seasons module (DR-COMP-002, INV-COMP-001)"
+      - name: organizationId
+        runtime_name: organization_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "boundary: reference to identity_access module"
+          - "nullable: true"
+      - name: name
+        runtime_name: name
+        required: true
+        type: string
+        constraints:
+          - "minLength: 1"
+          - "maxLength: 140"
+      - name: formatLabel
+        runtime_name: format_label
+        required: false
+        type: string
+        constraints:
+          - "maxLength: 80"
+          - "nullable: true"
+      - name: statusLabel
+        runtime_name: status_label
+        required: true
+        type: enum
+        values:
+          - DRAFT
+          - ACTIVE
+          - ARCHIVED
+        constraints:
+          - "x-domain-enum-ref: entity_lifecycle_status"
+          - "FSM: draft → active → archived (VALID_TRANSITIONS in rules.py)"
+      - name: startDate
+        runtime_name: start_date
+        required: true
+        type: date_only
+        constraints:
+          - "INV-COMP-001: obrigatório"
+          - "INV-COMP-002: deve ser <= endDate quando endDate presente"
+      - name: endDate
+        runtime_name: end_date
+        required: false
+        type: date_only
+        constraints:
+          - "nullable: true"
+          - "INV-COMP-002: quando presente, deve ser >= startDate"
+      - name: stageLabels
+        runtime_name: stage_labels
+        required: true
+        type: array_of_string
+        constraints:
+          - "uniqueItems: true"
+          - "items.minLength: 1"
+          - "items.maxLength: 80"
+          - "DR-COMP-004: fases explícitas, não inferidas de resultados"
+      - name: calendarEntryIds
+        runtime_name: calendar_entry_ids
+        required: true
+        type: array_of_uuid
+        constraints:
+          - "uniqueItems: true"
+          - "INV-COMP-003: entradas de calendário vinculadas"
+          - "boundary: reference to scheduling module"
+      - name: registrationTeamIds
+        runtime_name: registration_team_ids
+        required: true
+        type: array_of_uuid
+        constraints:
+          - "uniqueItems: true"
+          - "DR-COMP-003: inscrições formais, não inferidas de histórico"
+          - "INV-COMP-003: boundary: reference to teams module"
+      - name: standingsSummary
+        runtime_name: standings_summary
+        required: false
+        type: string
+        constraints:
+          - "maxLength: 500"
+          - "nullable: true"
+          - "DR-COMP-005: projeção resumida, não substitui truth oficial"
+      - name: createdAt
+        runtime_name: created_at
+        required: false
+        type: datetime_iso8601
+      - name: updatedAt
+        runtime_name: updated_at
+        required: false
+        type: datetime_iso8601
