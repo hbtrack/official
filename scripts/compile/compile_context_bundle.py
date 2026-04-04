@@ -18,6 +18,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.compile.compile_source_graph import (
     check_expected as check_source_graph_expected,
     compile_expected as compile_source_graph_expected,
+    SourceGraphCompilerError,
 )
 
 
@@ -495,7 +496,7 @@ def main(argv: list[str] | None = None) -> int:
                 written = write_expected(root, expected)
                 payload = _format_payload("PASS", mode, module, expected=expected, written=written)
             results.append(payload)
-        except ContextBundleCompilerError as exc:
+        except (ContextBundleCompilerError, SourceGraphCompilerError) as exc:
             results.append(
                 {
                     "artifact_id": "HBTRACK_CONTEXT_BUNDLE_COMPILER_RESULT",
@@ -504,7 +505,7 @@ def main(argv: list[str] | None = None) -> int:
                     "module": module,
                     "status": "FAIL",
                     "mode": mode,
-                    "error": exc.summary,
+                    "error": exc.summary if hasattr(exc, 'summary') else str(exc),
                 }
             )
             overall_exit = max(overall_exit, 2)

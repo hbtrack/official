@@ -294,11 +294,16 @@ def _validate_payloads(
             )
 
         nginx_entry = next(
-            entry["value"]
+            (entry["value"]
             for section in sections
             for entry in section["entries"]
-            if entry["name"] == "NGINX_CONF"
+            if entry["name"] == "NGINX_CONF"),
+            None,
         )
+        if nginx_entry is None:
+            raise OpsContractsCompilerError(
+                f"template_contracts.{env_name} não contém entrada NGINX_CONF em nenhuma seção."
+            )
         expected_nginx_name = Path(env_contract["nginx_conf"]).name
         if nginx_entry != expected_nginx_name:
             raise OpsContractsCompilerError(
