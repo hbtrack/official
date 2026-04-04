@@ -1,0 +1,42 @@
+version: "1.0.0"
+status: active
+module: teams
+
+obligations:
+  - id: TEAM-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/teams/team.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: TEAM-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/teams.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: TEAM-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/teams/tests/unit/test_teams_domain.py"
+    covers:
+      - INV-TEAM-001
+      - INV-TEAM-002
+      - INV-TEAM-003
+      - INV-TEAM-004
+      - DR-TEAM-001
+      - DR-TEAM-002
+      - DR-TEAM-003
+      - DR-TEAM-004
+      - DR-TEAM-005
+    verification: "Unit tests for domain invariants, RBAC rules and boundary enforcement"
+    evidence_refs:
+      - "../../../../../src/teams/tests/unit/test_teams_domain.py"
+
+  - id: TEAM-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py"

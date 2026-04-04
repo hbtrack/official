@@ -1,0 +1,255 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: teams
+openapi_paths_ref: contracts/openapi/paths/teams.yaml
+operations:
+- operation_id: listTeams
+  method: GET
+  path: /teams
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/get
+  runtime_handler_ref: ../../../../../src/teams/api.py#list_teams
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#ListTeamsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied: []
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createTeam
+  method: POST
+  path: /teams
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#create_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#CreateTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: getTeam
+  method: GET
+  path: /teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/get
+  runtime_handler_ref: ../../../../../src/teams/api.py#get_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#GetTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied: []
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchTeam
+  method: PATCH
+  path: /teams/{teamId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/patch
+  runtime_handler_ref: ../../../../../src/teams/api.py#patch_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#PatchTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+  - 500
+- operation_id: addAthleteToTeam
+  method: POST
+  path: /teams/{teamId}/athletes/{athleteUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#add_athlete_to_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#AddAthleteToTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removeAthleteFromTeam
+  method: DELETE
+  path: /teams/{teamId}/athletes/{athleteUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/delete
+  runtime_handler_ref: ../../../../../src/teams/api.py#remove_athlete_from_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#RemoveAthleteFromTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: addStaffToTeam
+  method: POST
+  path: /teams/{teamId}/staff/{staffUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/post
+  runtime_handler_ref: ../../../../../src/teams/api.py#add_staff_to_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#AddStaffToTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removeStaffFromTeam
+  method: DELETE
+  path: /teams/{teamId}/staff/{staffUserId}
+  openapi_ref: ../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/delete
+  runtime_handler_ref: ../../../../../src/teams/api.py#remove_staff_from_team
+  use_case_ref: ../../../../../src/teams/application/use_cases.py#RemoveStaffFromTeamUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-TEAM-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/teams/api.py#_get_actor_role
+  operations:
+  - listTeams
+  - createTeam
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/teams/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/teams/domain/rules.py#TeamNotFound
+  operations:
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/teams/domain/entities.py#validate_invariants
+  operations:
+  - createTeam
+  - patchTeam
+- id: ERR-TEAM-400-INVALID-STATUS-TRANSITION
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/teams/domain/rules.py#InvalidStatusTransition
+  operations:
+  - patchTeam
+- id: ERR-TEAM-409-DUPLICATE-MEMBER
+  kind: domain
+  http_status: 409
+  source_ref: ../../../../../src/teams/domain/rules.py#TeamRuleError
+  operations:
+  - createTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam
+- id: ERR-TEAM-422-UNPROCESSABLE
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/teams/domain/entities.py#validate_invariants
+  operations:
+  - createTeam
+  - patchTeam
+- id: ERR-TEAM-500-INTERNAL
+  kind: infrastructure
+  http_status: 500
+  operations:
+  - listTeams
+  - createTeam
+  - getTeam
+  - patchTeam
+  - addAthleteToTeam
+  - removeAthleteFromTeam
+  - addStaffToTeam
+  - removeStaffFromTeam

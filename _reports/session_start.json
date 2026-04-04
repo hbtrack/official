@@ -1,7 +1,7 @@
 {
   "session_id": "70c98a5c-c91b-4f5e-b912-8794ec9f63f0",
-  "session_timestamp": "2026-04-04T15:58:02.206733+00:00",
-  "branch": "feat/b10-001-seasons",
+  "session_timestamp": "2026-04-04T16:55:58.314427+00:00",
+  "branch": "feat/b10-001-teams",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -19,11 +19,11 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "seasons",
-  "module_focus": "seasons",
+  "module": "teams",
+  "module_focus": "teams",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
-  "roadmap_task_id": "B10-001-seasons",
+  "roadmap_task_id": "B10-001-teams",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
@@ -35,6 +35,90 @@
       "path": "scripts/contracts/validate/validate_contracts.py",
       "sha256": "d941d3542dffa213a9cdf35ff49b3f6a15ef21f5432d700464e752d857d013de",
       "created_at": "2026-04-04T15:59:43.650910+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
+      "sha256": "3561f7291ff6f85965b61c9c2fa07c3c2458e2dc1d8942d611719a46ffb4b980",
+      "created_at": "2026-04-04T16:56:16.880825+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/graph/entities.yaml",
+      "sha256": "f1c09bfd264a21b151a95ebce223345a145578118fcdab543356820e6c4407c2",
+      "created_at": "2026-04-04T16:56:37.298508+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/graph/endpoints.yaml",
+      "sha256": "b707622be5a17d92c9368c4e1b75aeaa10653326f00f14d585c3428866506620",
+      "created_at": "2026-04-04T16:56:44.150246+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/graph/errors.yaml",
+      "sha256": "851f68661e514a389fa99ebe0ca149d95730f72b8e49851f771c947e8945048d",
+      "created_at": "2026-04-04T16:56:47.524127+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/graph/test_obligations.yaml",
+      "sha256": "63a540bcb332dfffa0b17f89fc14a95c182564d53247c8e2f24f60f6aa6bd247",
+      "created_at": "2026-04-04T16:56:50.881178+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/teams/teams.bundle.yaml",
+      "sha256": "c33323a8f9c53bee32c9c3edbad5ac45e9e5ecbf1888de68db3ac3ad6a06477f",
+      "created_at": "2026-04-04T16:56:56.673017+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/teams/teams.schema_contract_view.yaml",
+      "sha256": "eade0a390089eaad79958dae6c8d12511b23f8c24ea636693a403acddd6c1378",
+      "created_at": "2026-04-04T16:57:00.503039+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/teams/teams.openapi_contract_view.yaml",
+      "sha256": "288b1c5605814167e02c556b3fbd4e6bd71bdffeb99b90d862fb5e7db7416bfe",
+      "created_at": "2026-04-04T16:57:03.776469+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "generated/source_graph/teams/impact_report.json",
+      "sha256": "1d2afd42a8f624281bbe3503cc93630deaaeed9037c271233dafb83495564a67",
+      "created_at": "2026-04-04T16:57:07.314483+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "6da1d6af0158e556502c3d275dc56d41a0120bb69728b0ab3c4e32f0b4698fc1",
+      "created_at": "2026-04-04T16:57:11.190336+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/DOC_USAGE_MANIFEST.yaml",
+      "sha256": "4e6f8e42ee879b7ae6daff9c34a2230fc12595f306fde44e772a916e4eca6259",
+      "created_at": "2026-04-04T16:57:14.637369+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
+      "sha256": "c0d0d4e15434d709cff94f6f4c7b39e3a267ab730bbbbdf9aa8d338f94e39a37",
+      "created_at": "2026-04-04T16:58:18.033492+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/README.md",
+      "sha256": "4386c254121d17c138f11ed1d70d9cd332f412580ab5fadff883dc07e1da9b72",
+      "created_at": "2026-04-04T16:58:30.996003+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md",
+      "sha256": "c18557e9722ab3cbc1dc735a9741e51a40d2c1dbbcac9f29f62cd39108449b57",
+      "created_at": "2026-04-04T16:58:35.519977+00:00",
       "gate_exit_code": 0
     }
   ],

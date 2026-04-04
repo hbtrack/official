@@ -33,3 +33,9 @@ Registrar as regras de negócio do módulo `teams`.
 - Não inferir credenciais, sessão ou política de segurança em `teams`.
 - Não transferir para `teams` a soberania de perfil pessoal, prontuário médico ou estado de treino.
 - Não deduzir elenco oficial a partir de attendance, lineups ou eventos históricos sem referência explícita.
+
+## Source Graph
+- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

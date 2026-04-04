@@ -393,6 +393,25 @@ entries:
       - "src/seasons/"
       - "tests/pipeline_gates/test_seasons_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_TEAMS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/teams/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/teams/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/teams/README.md"
+      - "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md"
+      - "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md"
+      - "tests/pipeline_gates/test_teams_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/teams/*.md"
+      - "contracts/schemas/teams/"
+      - "contracts/openapi/paths/teams.yaml"
+      - "contracts/openapi/components/schemas/teams/"
+      - "src/teams/"
+      - "tests/pipeline_gates/test_teams_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

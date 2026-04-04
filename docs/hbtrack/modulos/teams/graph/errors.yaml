@@ -1,0 +1,90 @@
+version: "1.0.0"
+status: active
+module: teams
+
+errors:
+  - id: ERR-TEAM-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/teams/api.py#_get_actor_role"
+    operations:
+      - listTeams
+      - createTeam
+      - getTeam
+      - patchTeam
+      - addAthleteToTeam
+      - removeAthleteFromTeam
+      - addStaffToTeam
+      - removeStaffFromTeam
+
+  - id: ERR-TEAM-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/teams/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createTeam
+      - patchTeam
+      - addAthleteToTeam
+      - removeAthleteFromTeam
+      - addStaffToTeam
+      - removeStaffFromTeam
+
+  - id: ERR-TEAM-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/teams/domain/rules.py#TeamNotFound"
+    operations:
+      - getTeam
+      - patchTeam
+      - addAthleteToTeam
+      - removeAthleteFromTeam
+      - addStaffToTeam
+      - removeStaffFromTeam
+
+  - id: ERR-TEAM-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/teams/domain/entities.py#validate_invariants"
+    operations:
+      - createTeam
+      - patchTeam
+
+  - id: ERR-TEAM-400-INVALID-STATUS-TRANSITION
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/teams/domain/rules.py#InvalidStatusTransition"
+    operations:
+      - patchTeam
+
+  - id: ERR-TEAM-409-DUPLICATE-MEMBER
+    kind: domain
+    http_status: 409
+    source_ref: "../../../../../src/teams/domain/rules.py#TeamRuleError"
+    operations:
+      - createTeam
+      - patchTeam
+      - addAthleteToTeam
+      - removeAthleteFromTeam
+      - addStaffToTeam
+      - removeStaffFromTeam
+
+  - id: ERR-TEAM-422-UNPROCESSABLE
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/teams/domain/entities.py#validate_invariants"
+    operations:
+      - createTeam
+      - patchTeam
+
+  - id: ERR-TEAM-500-INTERNAL
+    kind: infrastructure
+    http_status: 500
+    operations:
+      - listTeams
+      - createTeam
+      - getTeam
+      - patchTeam
+      - addAthleteToTeam
+      - removeAthleteFromTeam
+      - addStaffToTeam
+      - removeStaffFromTeam

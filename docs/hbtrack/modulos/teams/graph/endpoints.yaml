@@ -1,0 +1,182 @@
+version: "1.0.0"
+status: active
+module: teams
+
+endpoints:
+  - operation_id: listTeams
+    method: GET
+    path: /teams
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/get"
+    runtime_handler_ref: "../../../../../src/teams/api.py#list_teams"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#ListTeamsUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied: []
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 500
+
+  - operation_id: createTeam
+    method: POST
+    path: /teams
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/post"
+    runtime_handler_ref: "../../../../../src/teams/api.py#create_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#CreateTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 409
+      - 422
+      - 500
+
+  - operation_id: getTeam
+    method: GET
+    path: /teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/get"
+    runtime_handler_ref: "../../../../../src/teams/api.py#get_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#GetTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied: []
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: patchTeam
+    method: PATCH
+    path: /teams/{teamId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/patch"
+    runtime_handler_ref: "../../../../../src/teams/api.py#patch_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#PatchTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+      - 500
+
+  - operation_id: addAthleteToTeam
+    method: POST
+    path: /teams/{teamId}/athletes/{athleteUserId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/post"
+    runtime_handler_ref: "../../../../../src/teams/api.py#add_athlete_to_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#AddAthleteToTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: removeAthleteFromTeam
+    method: DELETE
+    path: /teams/{teamId}/athletes/{athleteUserId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/delete"
+    runtime_handler_ref: "../../../../../src/teams/api.py#remove_athlete_from_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#RemoveAthleteFromTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: addStaffToTeam
+    method: POST
+    path: /teams/{teamId}/staff/{staffUserId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/post"
+    runtime_handler_ref: "../../../../../src/teams/api.py#add_staff_to_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#AddStaffToTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: removeStaffFromTeam
+    method: DELETE
+    path: /teams/{teamId}/staff/{staffUserId}
+    openapi_ref: "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/delete"
+    runtime_handler_ref: "../../../../../src/teams/api.py#remove_staff_from_team"
+    use_case_ref: "../../../../../src/teams/application/use_cases.py#RemoveStaffFromTeamUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500

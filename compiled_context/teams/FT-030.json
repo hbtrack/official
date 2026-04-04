@@ -1,0 +1,1025 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/teams/teams.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/teams/teams.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/teams/teams.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/teams/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "TEAMS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/teams.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/teams/team.yaml",
+    "primary_schema": "contracts/schemas/teams/team.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/teams"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/teams.yaml"
+    ],
+    "description": "Vincula membro da comissão esportiva à equipe (DR-TEAM-002). Idempotente: sem erro se já estiver vinculado. Restrito a admin e coordinator (BFLA). Retorna 200 com Team body.",
+    "endpoints": [
+      "POST /teams/{teamId}/staff/{staffUserId}"
+    ],
+    "id": "FT-030",
+    "name": "Adicionar Membro da Comissão",
+    "slug": "adicionar-membro-da-comissão",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/teams/api.py",
+      "src/teams/application/use_cases.py",
+      "src/teams/domain/entities.py",
+      "src/teams/domain/rules.py",
+      "src/teams/schemas.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/teams/team.yaml",
+      "contracts/openapi/paths/teams.yaml",
+      "contracts/schemas/teams/team.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/teams/FT-024.json",
+      "compiled_context/teams/FT-025.json",
+      "compiled_context/teams/FT-026.json",
+      "compiled_context/teams/FT-027.json",
+      "compiled_context/teams/FT-028.json",
+      "compiled_context/teams/FT-029.json",
+      "compiled_context/teams/FT-030.json",
+      "compiled_context/teams/FT-031.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
+      "docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md",
+      "docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md",
+      "docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md",
+      "docs/hbtrack/modulos/teams/README.md",
+      "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_teams.py",
+      "tests/pipeline_gates/test_source_graph_compiler_teams.py",
+      "tests/pipeline_gates/test_teams_source_graph_integrity.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "6da1d6af0158e556502c3d275dc56d41a0120bb69728b0ab3c4e32f0b4698fc1"
+    },
+    {
+      "relpath": "generated/source_graph/teams/teams.bundle.yaml",
+      "sha256": "c33323a8f9c53bee32c9c3edbad5ac45e9e5ecbf1888de68db3ac3ad6a06477f"
+    },
+    {
+      "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
+      "sha256": "eade0a390089eaad79958dae6c8d12511b23f8c24ea636693a403acddd6c1378"
+    },
+    {
+      "relpath": "generated/source_graph/teams/teams.openapi_contract_view.yaml",
+      "sha256": "288b1c5605814167e02c556b3fbd4e6bd71bdffeb99b90d862fb5e7db7416bfe"
+    },
+    {
+      "relpath": "generated/source_graph/teams/impact_report.json",
+      "sha256": "1d2afd42a8f624281bbe3503cc93630deaaeed9037c271233dafb83495564a67"
+    }
+  ],
+  "module": "teams",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
+    "invariants": "docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md",
+    "permissions": "docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md",
+    "readme": "docs/hbtrack/modulos/teams/README.md",
+    "scope": "docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md",
+    "test_matrix": "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "handball-ops",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/teams/api.py",
+    "domain_entity": "src/teams/domain/entities.py",
+    "domain_rules": "src/teams/domain/rules.py",
+    "use_cases": "src/teams/application/use_cases.py"
+  },
+  "source_fingerprint": "ae4a12078c01977d0205394687edf5b7d7819bf862ef4d82494568829220ad83",
+  "source_graph": {
+    "entities": {
+      "Team": {
+        "docs_refs": [
+          "../DOMAIN_RULES_TEAMS.md",
+          "../INVARIANTS_TEAMS.md",
+          "../PERMISSIONS_TEAMS.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/teams/domain/entities.py#Team",
+        "runtime_extension_fields": [
+          {
+            "name": "statusLabel",
+            "runtime_name": "status_label",
+            "type": "enum",
+            "values": [
+              "DRAFT",
+              "ACTIVE",
+              "ARCHIVED"
+            ]
+          },
+          {
+            "name": "createdAt",
+            "runtime_name": "created_at",
+            "type": "datetime_iso8601"
+          },
+          {
+            "name": "updatedAt",
+            "runtime_name": "updated_at",
+            "type": "datetime_iso8601"
+          }
+        ],
+        "schema_ref": "../../../../../contracts/schemas/teams/team.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "boundary: reference to identity_access module"
+            ],
+            "name": "organizationId",
+            "required": true,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "boundary: reference to seasons module (DR-TEAM-004)"
+            ],
+            "name": "seasonId",
+            "required": false,
+            "runtime_name": "season_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "minLength: 1",
+              "maxLength: 120"
+            ],
+            "name": "name",
+            "required": true,
+            "runtime_name": "name",
+            "type": "string"
+          },
+          {
+            "name": "shortName",
+            "required": false,
+            "runtime_name": "short_name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "minLength: 1",
+              "maxLength: 80",
+              "DR-TEAM-003: identifies competitive level"
+            ],
+            "name": "categoryLabel",
+            "required": true,
+            "runtime_name": "category_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "INV-TEAM-002: uniqueItems",
+              "boundary: reference to users module"
+            ],
+            "name": "athleteIds",
+            "required": false,
+            "runtime_name": "athlete_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "INV-TEAM-002: uniqueItems",
+              "boundary: reference to users module"
+            ],
+            "name": "staffUserIds",
+            "required": false,
+            "runtime_name": "staff_user_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "name": "rosterNotes",
+            "required": false,
+            "runtime_name": "roster_notes",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-TEAM-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listTeams",
+          "createTeam",
+          "getTeam",
+          "patchTeam",
+          "addAthleteToTeam",
+          "removeAthleteFromTeam",
+          "addStaffToTeam",
+          "removeStaffFromTeam"
+        ],
+        "source_ref": "../../../../../src/teams/api.py#_get_actor_role"
+      },
+      {
+        "exception_ref": "../../../../../src/teams/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-TEAM-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "createTeam",
+          "patchTeam",
+          "addAthleteToTeam",
+          "removeAthleteFromTeam",
+          "addStaffToTeam",
+          "removeStaffFromTeam"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/teams/domain/rules.py#TeamNotFound",
+        "http_status": 404,
+        "id": "ERR-TEAM-404-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getTeam",
+          "patchTeam",
+          "addAthleteToTeam",
+          "removeAthleteFromTeam",
+          "addStaffToTeam",
+          "removeStaffFromTeam"
+        ]
+      },
+      {
+        "http_status": 409,
+        "id": "ERR-TEAM-409-DUPLICATE-MEMBER",
+        "kind": "domain",
+        "operations": [
+          "createTeam",
+          "patchTeam",
+          "addAthleteToTeam",
+          "removeAthleteFromTeam",
+          "addStaffToTeam",
+          "removeStaffFromTeam"
+        ],
+        "source_ref": "../../../../../src/teams/domain/rules.py#TeamRuleError"
+      },
+      {
+        "http_status": 500,
+        "id": "ERR-TEAM-500-INTERNAL",
+        "kind": "infrastructure",
+        "operations": [
+          "listTeams",
+          "createTeam",
+          "getTeam",
+          "patchTeam",
+          "addAthleteToTeam",
+          "removeAthleteFromTeam",
+          "addStaffToTeam",
+          "removeStaffFromTeam"
+        ]
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/teams.yaml",
+        "contracts/schemas/teams/team.schema.json",
+        "contracts/openapi/components/schemas/teams/team.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/teams/README.md",
+        "docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md",
+        "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
+        "docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md",
+        "docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md",
+        "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md"
+      ],
+      "impacted_runtime": [
+        "src/teams/api.py",
+        "src/teams/domain/entities.py",
+        "src/teams/domain/rules.py",
+        "src/teams/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "seasonId é referência cruzada para módulo seasons — boundary explicitado em DR-TEAM-004.",
+        "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
+        "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
+      ],
+      "source_fingerprint": "8c1f52897d34e4d402639304012cc00470d18141614868397f52345330f5d8c4"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-TEAM-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listTeams",
+            "createTeam",
+            "getTeam",
+            "patchTeam",
+            "addAthleteToTeam",
+            "removeAthleteFromTeam",
+            "addStaffToTeam",
+            "removeStaffFromTeam"
+          ],
+          "source_ref": "../../../../../src/teams/api.py#_get_actor_role"
+        },
+        {
+          "exception_ref": "../../../../../src/teams/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-TEAM-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "createTeam",
+            "patchTeam",
+            "addAthleteToTeam",
+            "removeAthleteFromTeam",
+            "addStaffToTeam",
+            "removeStaffFromTeam"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/teams/domain/rules.py#TeamNotFound",
+          "http_status": 404,
+          "id": "ERR-TEAM-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getTeam",
+            "patchTeam",
+            "addAthleteToTeam",
+            "removeAthleteFromTeam",
+            "addStaffToTeam",
+            "removeStaffFromTeam"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-TEAM-400-VALIDATION",
+          "kind": "domain",
+          "operations": [
+            "createTeam",
+            "patchTeam"
+          ],
+          "source_ref": "../../../../../src/teams/domain/entities.py#validate_invariants"
+        },
+        {
+          "exception_ref": "../../../../../src/teams/domain/rules.py#InvalidStatusTransition",
+          "http_status": 400,
+          "id": "ERR-TEAM-400-INVALID-STATUS-TRANSITION",
+          "kind": "domain",
+          "operations": [
+            "patchTeam"
+          ]
+        },
+        {
+          "http_status": 409,
+          "id": "ERR-TEAM-409-DUPLICATE-MEMBER",
+          "kind": "domain",
+          "operations": [
+            "createTeam",
+            "patchTeam",
+            "addAthleteToTeam",
+            "removeAthleteFromTeam",
+            "addStaffToTeam",
+            "removeStaffFromTeam"
+          ],
+          "source_ref": "../../../../../src/teams/domain/rules.py#TeamRuleError"
+        },
+        {
+          "http_status": 422,
+          "id": "ERR-TEAM-422-UNPROCESSABLE",
+          "kind": "validation",
+          "operations": [
+            "createTeam",
+            "patchTeam"
+          ],
+          "source_ref": "../../../../../src/teams/domain/entities.py#validate_invariants"
+        },
+        {
+          "http_status": 500,
+          "id": "ERR-TEAM-500-INTERNAL",
+          "kind": "infrastructure",
+          "operations": [
+            "listTeams",
+            "createTeam",
+            "getTeam",
+            "patchTeam",
+            "addAthleteToTeam",
+            "removeAthleteFromTeam",
+            "addStaffToTeam",
+            "removeStaffFromTeam"
+          ]
+        }
+      ],
+      "module": "teams",
+      "openapi_paths_ref": "contracts/openapi/paths/teams.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/get",
+          "operation_id": "listTeams",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/teams",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#list_teams",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#ListTeamsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/post",
+          "operation_id": "createTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#create_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#CreateTeamUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/get",
+          "operation_id": "getTeam",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/teams/{teamId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#get_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#GetTeamUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/patch",
+          "operation_id": "patchTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams/{teamId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#patch_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#PatchTeamUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/post",
+          "operation_id": "addAthleteToTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams/{teamId}/athletes/{athleteUserId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#add_athlete_to_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#AddAthleteToTeamUseCase"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/athletes/{athleteUserId}/delete",
+          "operation_id": "removeAthleteFromTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams/{teamId}/athletes/{athleteUserId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#remove_athlete_from_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#RemoveAthleteFromTeamUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/post",
+          "operation_id": "addStaffToTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams/{teamId}/staff/{staffUserId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#add_staff_to_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#AddStaffToTeamUseCase"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/delete",
+          "operation_id": "removeStaffFromTeam",
+          "owner_scoped_roles": [],
+          "path": "/teams/{teamId}/staff/{staffUserId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/teams/api.py#remove_staff_from_team",
+          "use_case_ref": "../../../../../src/teams/application/use_cases.py#RemoveStaffFromTeamUseCase"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/teams.yaml#/teams/{teamId}/staff/{staffUserId}/post",
+        "operation_id": "addStaffToTeam",
+        "owner_scoped_roles": [],
+        "path": "/teams/{teamId}/staff/{staffUserId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/teams/api.py#add_staff_to_team",
+        "use_case_ref": "../../../../../src/teams/application/use_cases.py#AddStaffToTeamUseCase"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "Team": {
+          "required": [
+            "id",
+            "organizationId",
+            "name",
+            "categoryLabel"
+          ],
+          "runtime_extension_fields": [
+            {
+              "name": "statusLabel",
+              "runtime_name": "status_label",
+              "type": "enum",
+              "values": [
+                "DRAFT",
+                "ACTIVE",
+                "ARCHIVED"
+              ]
+            },
+            {
+              "name": "createdAt",
+              "runtime_name": "created_at",
+              "type": "datetime_iso8601"
+            },
+            {
+              "name": "updatedAt",
+              "runtime_name": "updated_at",
+              "type": "datetime_iso8601"
+            }
+          ],
+          "schema_ref": "contracts/schemas/teams/team.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "boundary: reference to identity_access module"
+              ],
+              "name": "organizationId",
+              "required": true,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "boundary: reference to seasons module (DR-TEAM-004)"
+              ],
+              "name": "seasonId",
+              "required": false,
+              "runtime_name": "season_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "minLength: 1",
+                "maxLength: 120"
+              ],
+              "name": "name",
+              "required": true,
+              "runtime_name": "name",
+              "type": "string"
+            },
+            {
+              "name": "shortName",
+              "required": false,
+              "runtime_name": "short_name",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "minLength: 1",
+                "maxLength: 80",
+                "DR-TEAM-003: identifies competitive level"
+              ],
+              "name": "categoryLabel",
+              "required": true,
+              "runtime_name": "category_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "INV-TEAM-002: uniqueItems",
+                "boundary: reference to users module"
+              ],
+              "name": "athleteIds",
+              "required": false,
+              "runtime_name": "athlete_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "INV-TEAM-002: uniqueItems",
+                "boundary: reference to users module"
+              ],
+              "name": "staffUserIds",
+              "required": false,
+              "runtime_name": "staff_user_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "name": "rosterNotes",
+              "required": false,
+              "runtime_name": "roster_notes",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "entity": "Team",
+      "module": "teams",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/teams/team.yaml",
+      "primary_entity": "Team",
+      "primary_schema_ref": "contracts/schemas/teams/team.schema.json",
+      "required": [
+        "id",
+        "organizationId",
+        "name",
+        "categoryLabel"
+      ],
+      "runtime_extension_fields": [
+        {
+          "name": "statusLabel",
+          "runtime_name": "status_label",
+          "type": "enum",
+          "values": [
+            "DRAFT",
+            "ACTIVE",
+            "ARCHIVED"
+          ]
+        },
+        {
+          "name": "createdAt",
+          "runtime_name": "created_at",
+          "type": "datetime_iso8601"
+        },
+        {
+          "name": "updatedAt",
+          "runtime_name": "updated_at",
+          "type": "datetime_iso8601"
+        }
+      ],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "boundary: reference to identity_access module"
+          ],
+          "name": "organizationId",
+          "required": true,
+          "runtime_name": "organization_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "boundary: reference to seasons module (DR-TEAM-004)"
+          ],
+          "name": "seasonId",
+          "required": false,
+          "runtime_name": "season_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "minLength: 1",
+            "maxLength: 120"
+          ],
+          "name": "name",
+          "required": true,
+          "runtime_name": "name",
+          "type": "string"
+        },
+        {
+          "name": "shortName",
+          "required": false,
+          "runtime_name": "short_name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "minLength: 1",
+            "maxLength: 80",
+            "DR-TEAM-003: identifies competitive level"
+          ],
+          "name": "categoryLabel",
+          "required": true,
+          "runtime_name": "category_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "INV-TEAM-002: uniqueItems",
+            "boundary: reference to users module"
+          ],
+          "name": "athleteIds",
+          "required": false,
+          "runtime_name": "athlete_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "INV-TEAM-002: uniqueItems",
+            "boundary: reference to users module"
+          ],
+          "name": "staffUserIds",
+          "required": false,
+          "runtime_name": "staff_user_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "name": "rosterNotes",
+          "required": false,
+          "runtime_name": "roster_notes",
+          "type": "string"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/teams/team.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "TEAM-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/teams.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "TEAM-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/teams/tests/unit/test_teams_domain.py",
+        "covers": [
+          "INV-TEAM-001",
+          "INV-TEAM-002",
+          "INV-TEAM-003",
+          "INV-TEAM-004",
+          "DR-TEAM-001",
+          "DR-TEAM-002",
+          "DR-TEAM-003",
+          "DR-TEAM-004",
+          "DR-TEAM-005"
+        ],
+        "evidence_refs": [
+          "../../../../../src/teams/tests/unit/test_teams_domain.py"
+        ],
+        "id": "TEAM-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for domain invariants, RBAC rules and boundary enforcement"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_teams_source_graph_integrity.py"
+        ],
+        "id": "TEAM-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/teams/README.md",
+      "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
+      "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md",
+      "contracts/openapi/paths/teams.yaml",
+      "contracts/openapi/components/schemas/teams/team.yaml",
+      "generated/source_graph/teams/teams.bundle.yaml",
+      "generated/source_graph/teams/teams.schema_contract_view.yaml",
+      "generated/source_graph/teams/teams.openapi_contract_view.yaml",
+      "generated/source_graph/teams/impact_report.json",
+      "compiled_context/teams/FT-024.json",
+      "compiled_context/teams/FT-025.json",
+      "compiled_context/teams/FT-026.json",
+      "compiled_context/teams/FT-027.json",
+      "compiled_context/teams/FT-028.json",
+      "compiled_context/teams/FT-029.json",
+      "compiled_context/teams/FT-030.json",
+      "compiled_context/teams/FT-031.json",
+      "src/teams/api.py",
+      "src/teams/schemas.py",
+      "tests/pipeline_gates/test_teams_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_teams.py",
+      "tests/pipeline_gates/test_context_bundle_teams.py"
+    ],
+    "expected_output": "compiled_context/teams/FT-030.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module teams --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module teams --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module teams --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module teams --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_teams_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_teams.py tests/pipeline_gates/test_context_bundle_teams.py -q"
+    ]
+  }
+}
