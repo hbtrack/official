@@ -65,7 +65,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
-      "sha256": "23f05825e8780440a7a0e5cd1f3447389325f8bc2dec795a8d19aeb50099059f"
+      "sha256": "2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md",
@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/README.md",
-      "sha256": "f10ac2c0987da16a1628c8ad1e5430f8e99dfcba0a8ec0985dec2acb395b338d"
+      "sha256": "9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md",
@@ -140,5 +140,5 @@
     "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
     "generated/source_graph/seasons/impact_report.json"
   ],
-  "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
+  "source_fingerprint": "e5bebc7b17fc928682c01ad6ed8c2e1867cba3d2332d3224173519626ee724ef"
 }

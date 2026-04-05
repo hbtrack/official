@@ -139,6 +139,33 @@ class TrainingSession:
     deleted_at: Optional[datetime] = None
     deleted_reason: Optional[str] = None
 
+    # Encerramento explícito da sessão
+    closed_by_user_id: Optional[uuid.UUID] = None
+
+    # Desvio de planejamento
+    deviation_justification: Optional[str] = None
+    planning_deviation_flag: Optional[bool] = None
+
+    # Execução real
+    duration_actual_minutes: Optional[int] = None
+    execution_outcome: Optional[str] = None
+    delay_minutes: Optional[int] = None
+    cancellation_reason: Optional[str] = None
+    actual_load_recorded: Optional[int] = None
+
+    # Revisão pós-sessão
+    post_review_completed_at: Optional[datetime] = None
+    post_review_completed_by_user_id: Optional[uuid.UUID] = None
+    post_review_deadline_at: Optional[datetime] = None
+    post_review_completed: Optional[bool] = None
+
+    # Planejamento capturado e objetivo
+    planned_content_snapshot: Optional[str] = None
+    objective_origin: Optional[str] = None
+
+    # Continuidade
+    continuity_notes: Optional[str] = None
+
     def validate_invariants(self) -> None:
         """Enforce invariantes de TrainingSession."""
         # INV-TRAIN-001: soma focus_*_pct ≤ 120 após arredondamento RC-2

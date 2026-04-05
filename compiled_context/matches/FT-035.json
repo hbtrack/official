@@ -95,7 +95,7 @@
     },
     {
       "relpath": "generated/source_graph/matches/matches.bundle.yaml",
-      "sha256": "6f7b0ab3445dc70faf124f40a105e87ec9c44d256d79010ebc211592522a26b7"
+      "sha256": "af3a8dcc43dc8e2e446fefbf10d8e23643b594f9b9cd0d6fd0346b046162ac3e"
     },
     {
       "relpath": "generated/source_graph/matches/matches.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/matches/impact_report.json",
-      "sha256": "b59c4cf5887c340d4045380dc849c2a35cf51e0e138c22320da8c6cda5eb4278"
+      "sha256": "e2579089b209603916a69ea355bb157f772c709b4145c9198823f08d9aef1915"
     }
   ],
   "module": "matches",
@@ -137,7 +137,7 @@
     "domain_rules": "src/matches/domain/rules.py",
     "use_cases": "src/matches/application/use_cases.py"
   },
-  "source_fingerprint": "5d5f3b0dba6da8bb91bc46ec9da87b35917d2e9a71f44de5c0fc47cab1e517dd",
+  "source_fingerprint": "9fac1310d379db113084e5f8d91c0233ae153920720098bf0553d1dfa2ce04da",
   "source_graph": {
     "entities": {
       "Match": {
@@ -478,7 +478,7 @@
         "officialIncidentIds referenciam módulo incidents (scheduling futuro) — DEC-MATCHES-001: CRUD simples.",
         "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch usa PATCH — mapeamento documentado em DEC-MATCHES-001."
       ],
-      "source_fingerprint": "86a3d1eecec68f4e84dcb19bed3375183570319c8b4af1c962a99861458d4aa1"
+      "source_fingerprint": "24f00cadfefcb99a8a126bfbd4a5b81ae46caa723eba4a38c6cc4d467a3f3c7f"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

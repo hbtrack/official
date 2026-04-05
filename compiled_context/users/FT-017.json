@@ -93,7 +93,7 @@
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
-      "sha256": "dd4314698e8c44296300d5e9078c0ec60d918f3aa925efab74b14e83fbb0d675"
+      "sha256": "a94a90e06e7b49cfad9f9bfc44ac84e603f292e8646396d933bbeee78578608e"
     },
     {
       "relpath": "generated/source_graph/users/users.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/users/impact_report.json",
-      "sha256": "c840c476303a87680986238a158f2a53b7553a6a1f66b5a23f7ac2459aa0aacc"
+      "sha256": "e536e3e23ecb78cc706b2c2d141c0145265287f469f449643d8e994659c7c26e"
     }
   ],
   "module": "users",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "4a98c0434104642c55690064d76a75cf911375ba19961083f19bb0b4c693c54c",
+  "source_fingerprint": "49fab2fb4a73e478d43e45f3d17d1caaa9bda00e73dc05760eb32f5bc3c026d8",
   "source_graph": {
     "entities": {
       "UserProfile": {
@@ -432,7 +432,7 @@
         "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
         "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
       ],
-      "source_fingerprint": "6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a"
+      "source_fingerprint": "5fc7e4c0661739ed5939df01b914067a99ddedc60a6002f87a888be794b4d6b2"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

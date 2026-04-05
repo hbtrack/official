@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-training
 resultado: DONE
-proxima_acao_permitida: "B10-001/training DONE. PR aberto. Aguardar merge e iniciar próximo módulo da fila B10-001."
+proxima_acao_permitida: "B10-001/training — fixes de integridade aplicados (16/16 PASS). Fazer merge com main e push para atualizar PR #48."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json

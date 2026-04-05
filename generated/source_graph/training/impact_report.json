@@ -141,7 +141,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
-      "sha256": "0047baacae917d587a259b2ec84c99a607b321c499bbafd3435a29f4e74baa35"
+      "sha256": "866fc431a6a7f057710dcb3e654a07cb5c3f8275fa554bdc59a4a015387169ea"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
@@ -149,7 +149,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/errors.yaml",
-      "sha256": "dc7f1b1715661e35bf7c642f600d8a98640df935765770cee0f2656223855f13"
+      "sha256": "85c1b6d01177f68e380cb55a3af6d3e14c82808a36a0b0ba6966706d60c75479"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
@@ -161,15 +161,15 @@
     },
     {
       "relpath": "src/training/api.py",
-      "sha256": "d58e160ef757427a1bdf16231c435bc29a783c8627bdda731545deb959e5f544"
+      "sha256": "e3984352cdf696f61be3e6a90e8a6021bcbc6f5e86333f5553ab9d0aefafccbe"
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "b70f3642052b832974fd375ac8f6b4f83ad79969015e7bf12dcf8af03d766992"
+      "sha256": "9bdbd528ae60004b66d05b6568973e483e7dd01cf0944b7ac8658560c26fbec1"
     },
     {
       "relpath": "src/training/domain/entities.py",
-      "sha256": "244636297c1b659ed7970c766b105527f6c3601fbda44144711c7c09dad1c02d"
+      "sha256": "2764b8687be5e4efa1087ba25fc79a6a7e70e1a737c2ed7ac62028c283cfb286"
     },
     {
       "relpath": "src/training/domain/rules.py",
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "9d41be4f1649ce518be4b0a29a8b43de765849863e0788a1fe6a2f685de1ab83"
+  "source_fingerprint": "c1449a9d72794316820fa09c2951aefc13d988f995523890b3cda0f456a9b670"
 }

@@ -65,7 +65,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
-      "sha256": "5788c65314bc7567408591d5219595a799b196c9fd5df7f1a2b30b5f2cb2f15c"
+      "sha256": "a7cf79abb3433536410f99058426c7b5f37568335bbd4ad047191ed2b2778e95"
     },
     {
       "relpath": "docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md",
@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/competitions/README.md",
-      "sha256": "c821a118b68fcabb506a6c7c7a77ada00b78ffa6798e0d5ba8c89686c2156226"
+      "sha256": "b6dddd96a717332f4f564a375f4924a6029438f9ac516afb9db039c20b051697"
     },
     {
       "relpath": "docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md",
@@ -142,5 +142,5 @@
     "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
     "generated/source_graph/competitions/impact_report.json"
   ],
-  "source_fingerprint": "2c4a0de6630def3e14a5a209e2117b5b2f710c564e1f319889906a1348224984"
+  "source_fingerprint": "149e02704d757d4d4536ff6b0bb811f0416e6686f4ad422a935766d2f659fa25"
 }

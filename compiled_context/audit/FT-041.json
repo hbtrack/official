@@ -93,7 +93,7 @@
     },
     {
       "relpath": "generated/source_graph/audit/audit.bundle.yaml",
-      "sha256": "2a8b9fbcde917d3dc9d1da5172c8000c3ce0f2b044493321c7b41ea4607b7c0f"
+      "sha256": "f6f2fe4f78ce38ebcc3a413463441486eeb9a0347699da909d30ca72df687bcc"
     },
     {
       "relpath": "generated/source_graph/audit/audit.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/audit/impact_report.json",
-      "sha256": "390f5f64d6040b2536df6409f1e4a6534aeb29279ed84ca1c6253eb39beec8fd"
+      "sha256": "58647a682298bc3778335a3fe509796ec75a5ad501f5d7543e0ecff524d12c08"
     }
   ],
   "module": "audit",
@@ -137,7 +137,7 @@
     "domain_rules": "src/audit/domain/rules.py",
     "use_cases": "src/audit/application/use_cases.py"
   },
-  "source_fingerprint": "b2187d7315308b28c059b0934799ff1fc4842a67fa052328dd1377163a56b457",
+  "source_fingerprint": "c1cf4482eddcb614b7f8a188db4782ca792fb02db2634be78b0d56311e302d55",
   "source_graph": {
     "entities": {
       "AuditEntry": {
@@ -280,7 +280,7 @@
         "Export (GET /audit/entries/export) é LGPD/compliance endpoint; payload e formato de saída seguem ADR separados pendentes.",
         "AsyncAPI/Arazzo do módulo continuam fora do source graph local nesta fase e seguem governança separada."
       ],
-      "source_fingerprint": "c7add13c5e36cdee0a3c68eabcefdcb0124e63829d0896644e2f70d529546055"
+      "source_fingerprint": "2f7b35fa4694bb01c70e77ddc42c9701d9d0081c2431639c608e9c28a6de41f3"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

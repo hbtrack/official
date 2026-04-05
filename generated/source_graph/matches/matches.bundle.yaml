@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md
-  sha256: f0e1294b107d1b1a1752e5a9bd710a155185b92310e8fd79d2b393ad3bce9447
+  sha256: 8f9679187b7b063fe6a7fed7e449c94fc7d09de6edaf63d58e3bfa84af901a5e
 - relpath: docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md
   sha256: a392e05897096374b733f1c077cf9abced0318cec229ee360cdc73dd4a3e6a94
 - relpath: docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md
@@ -33,13 +33,13 @@ inputs:
 - relpath: docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md
   sha256: 836840067b8a17e124574c1ef80cda53d00751a95a9c3e4fb3661e9e05eb89bf
 - relpath: docs/hbtrack/modulos/matches/README.md
-  sha256: 0f0e9da51936bf22c2978dbee62caa3ab618a7da2a38ef281b5bb39a7f70b654
+  sha256: dc0e603582dfbb4d140a8322685624239e03554dbb6cc494dfb3c4f92ad0353a
 - relpath: docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md
   sha256: e664b2877b1e330c6644b7794b3ccd898297cfeedebf9a33ddd5b339b6e9515a
 - relpath: docs/hbtrack/modulos/matches/graph/endpoints.yaml
   sha256: 7d8b71cd02e7e1388d0bb96ba551fb906f72c0a7bfac8916f58c0b06746db057
 - relpath: docs/hbtrack/modulos/matches/graph/entity_graph.yaml
-  sha256: 80bffa5b1690123d9990fc98116a1acdd74ddc357bae6e16c60b9e024f65a323
+  sha256: dd21d79d79d917a5891deec838c5c0298900378f6d17b4eb7817b853e3c5938a
 - relpath: docs/hbtrack/modulos/matches/graph/errors.yaml
   sha256: 1039e6a4ced36d117ea24d8a835cc1c7ea22dd5a16e6f9ef6343c881e259b6e8
 - relpath: docs/hbtrack/modulos/matches/graph/module_manifest.yaml

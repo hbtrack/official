@@ -1,0 +1,140 @@
+version: 1.0.0
+status: active
+module: training
+errors:
+- error_id: UNAUTHORIZED
+  http_status: 401
+  source: transport
+  class_ref: null
+  description: 'Token JWT ausente, expirado ou inválido. Retornado pelo middleware
+    de autenticação antes de qualquer lógica de domínio.
+
+    '
+  feature_ids:
+  - FT-001
+  - FT-002
+  - FT-003
+  - FT-004
+  - FT-005
+  - FT-006
+  - FT-007
+  - FT-008
+  - FT-009
+  - FT-010
+- error_id: INSUFFICIENT_PRIVILEGE
+  http_status: 403
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#InsufficientPrivilege
+  description: 'Usuário autenticado não possui o role necessário para a operação (BFLA
+    — Broken Function Level Authorization).
+
+    '
+  feature_ids:
+  - FT-001
+  - FT-002
+  - FT-003
+  - FT-004
+  - FT-005
+  - FT-006
+  - FT-007
+  - FT-008
+  - FT-009
+  - FT-010
+- error_id: TRAINING_SESSION_NOT_FOUND
+  http_status: 404
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#TrainingSessionNotFound
+  description: 'Sessão de treino com o ID informado não existe ou foi excluída (soft
+    delete).
+
+    '
+  feature_ids:
+  - FT-001
+  - FT-002
+  - FT-003
+  - FT-004
+  - FT-005
+  - FT-007
+  - FT-008
+  - FT-009
+  - FT-010
+- error_id: SESSION_BLOCK_NOT_FOUND
+  http_status: 404
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#SessionBlockNotFound
+  description: 'Bloco de sessão com o ID informado não existe na sessão especificada.
+
+    '
+  feature_ids:
+  - FT-003
+- error_id: INVALID_STATUS_TRANSITION
+  http_status: 422
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#InvalidStatusTransition
+  description: 'Transição de estado inválida na FSM da sessão (ex: tentar iniciar
+    uma sessão já cancelada, ou publicar uma sessão já publicada).
+
+    '
+  feature_ids:
+  - FT-002
+- error_id: SESSION_NOT_MUTABLE
+  http_status: 409
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#SessionNotMutable
+  description: 'Operação de modificação rejeitada porque a sessão está em um estado
+    imutável (ex: archived, completed).
+
+    '
+  feature_ids:
+  - FT-001
+  - FT-003
+- error_id: WELLNESS_WINDOW_CLOSED
+  http_status: 400
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#WellnessWindowClosed
+  description: 'Tentativa de submeter bem-estar (pré ou pós) fora da janela de tempo
+    permitida em relação ao horário da sessão.
+
+    '
+  feature_ids:
+  - FT-005
+- error_id: DUPLICATE_WELLNESS_ENTRY
+  http_status: 409
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#DuplicateWellnessEntry
+  description: 'Atleta tentou submeter bem-estar duplicado para a mesma sessão (já
+    existe registro de pré ou pós para esse atleta nessa sessão).
+
+    '
+  feature_ids:
+  - FT-005
+- error_id: ELASTIC_SUM_RULE_VIOLATION
+  http_status: 422
+  source: domain
+  class_ref: ../../../../../src/training/domain/rules.py#ElasticSumRuleViolation
+  description: 'Soma das frações de foco (phaseFocusDefense + phaseFocusAttack + phaseFocusTransitionOffense
+    + phaseFocusTransitionDefense) deve ser exatamente 100. Violação desta regra elástica
+    gera 422.
+
+    '
+  feature_ids:
+  - FT-001
+- error_id: INTERNAL_SERVER_ERROR
+  http_status: 500
+  source: infrastructure
+  class_ref: null
+  description: 'Erro inesperado de infraestrutura (banco, dependência externa). Não
+    expõe detalhes internos ao cliente.
+
+    '
+  feature_ids:
+  - FT-001
+  - FT-002
+  - FT-003
+  - FT-004
+  - FT-005
+  - FT-006
+  - FT-007
+  - FT-008
+  - FT-009
+  - FT-010
