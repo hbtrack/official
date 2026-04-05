@@ -1,0 +1,146 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/users.yaml",
+    "contracts/schemas/users/user_profile.schema.json",
+    "contracts/openapi/components/schemas/users/user_profile.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/users/README.md",
+    "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
+    "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+    "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+    "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+    "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md"
+  ],
+  "impacted_runtime": [
+    "src/users/api.py",
+    "src/users/domain/entities.py",
+    "src/users/domain/rules.py",
+    "src/users/application/use_cases.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "sha256": "52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884"
+    },
+    {
+      "relpath": "contracts/openapi/paths/users.yaml",
+      "sha256": "0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0"
+    },
+    {
+      "relpath": "contracts/schemas/users/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/users/user_profile.schema.json",
+      "sha256": "e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+      "sha256": "e905388365dde3a6f053e57373d4c822c68b36bd8c81a7850b4b2140d40643cc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+      "sha256": "4da036dbf5d372a4d63a494c4985e3ca962268404487e856dd6b34ca27881956"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
+      "sha256": "8c3cb9e9fb8a35c635cd4dac28ff35a4cdd803e03f70946d324e8eb46c0d6dd0"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+      "sha256": "7109f9bceb1fd8c1acde19d3074fbbd6e3cab0e3efc086043b1a94639f4b2597"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/README.md",
+      "sha256": "2c875b9f9c052bf57dbc2da57f3b20001721e5e1e41f5d46724d11b4e27057ab"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md",
+      "sha256": "db580d0269d4fea2881151c300be0d20ffde820597b0996fff5afe62d6b570b9"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/graph/endpoints.yaml",
+      "sha256": "890942f2100892cdd7a6854af610914660de03b2ea5dc534cf574200000380e0"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/graph/entity_graph.yaml",
+      "sha256": "113d89c0234fef894bec0c7871c72115ab275771ed3b745535b0e36c0473be72"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/graph/errors.yaml",
+      "sha256": "5d76873b757bc3e164e961d0dedad196100f90b5076087f513f6416177972c02"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/graph/module_manifest.yaml",
+      "sha256": "c9b47a3472592b680959cc578be74c9050361d74acea7d61c864ce0c3271d0cc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/users/graph/test_obligations.yaml",
+      "sha256": "db37ec5e524f7b6c1cfcbdd5f18f3fed860742a0cee7c2e9966c6ae913f0999a"
+    },
+    {
+      "relpath": "src/users/api.py",
+      "sha256": "dfe6824fd9d1d3722c8a8da8faecabeca2428f4f9bd5d538752358cb649322be"
+    },
+    {
+      "relpath": "src/users/application/use_cases.py",
+      "sha256": "a2187cfa853eba3cb16adfc87103e12743a1a0bb44ec345a2d81b1171bd29909"
+    },
+    {
+      "relpath": "src/users/domain/entities.py",
+      "sha256": "2b47da53aa7e616a6f89ee0e027ba95620bc6da35c921ca068b48eb6549c7cd2"
+    },
+    {
+      "relpath": "src/users/domain/rules.py",
+      "sha256": "5169dd8dc4b353df7bb707df0d094228ce9f9b83650f93bf438eefe209be08e9"
+    }
+  ],
+  "known_gaps": [
+    "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+    "organizationId é referência cruzada para módulo identity_access — boundary explicitado em DR-USR-001 e MODULE_SOURCE_AUTHORITY_MATRIX.",
+    "teamIds referenciam módulo teams — boundary explicitado em DR-USR-003.",
+    "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
+    "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
+  ],
+  "module": "users",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/users/users.bundle.yaml",
+    "generated/source_graph/users/users.schema_contract_view.yaml",
+    "generated/source_graph/users/users.openapi_contract_view.yaml",
+    "generated/source_graph/users/impact_report.json"
+  ],
+  "source_fingerprint": "6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a"
+}

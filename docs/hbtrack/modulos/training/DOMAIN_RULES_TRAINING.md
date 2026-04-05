@@ -210,3 +210,9 @@ Registrar as regras de negócio do módulo `training`.
 
 ## Prioridade de verdade (revisada)
 
+
+## Source Graph
+- Entidades: [graph/entity_graph.yaml](graph/entity_graph.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

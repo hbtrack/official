@@ -2374,7 +2374,31 @@ Evidencia implementada e validada no sistema atual:
 - `toolchain.json` restaurado (deletado em commit anterior — 5 survival-suite tests corrigidos)
 - `python3 scripts/validate_contracts.py --profile ci` em `PASS` com 51 gates apos a entrada de `audit`
 - survival-suite: `104 passed`
-- proximo modulo obrigatorio da fila: `seasons`
+- `python3 scripts/compile/compile_source_graph.py --module seasons` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module seasons` em `PASS`
+- `docs/hbtrack/modulos/seasons/graph/*.yaml` criados e validados
+- `generated/source_graph/seasons/*` gerado deterministicamente
+- `tests/pipeline_gates/test_seasons_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `tests/pipeline_gates/test_source_graph_compiler_seasons.py` em `PASS` (`4 passed`)
+- `tests/pipeline_gates/test_context_bundle_seasons.py` em `PASS` (`5 passed`)
+- PR #44 (teams) mergeado em `main` (SHA `fe483243`) — `docs/hbtrack/modulos/teams/graph/*.yaml` criados, 16 testes PASS
+- `python3 scripts/compile/compile_source_graph.py --module teams` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module teams` em `PASS`
+- `tests/pipeline_gates/test_teams_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `tests/pipeline_gates/test_source_graph_compiler_teams.py` em `PASS` (`4 passed`)
+- `tests/pipeline_gates/test_context_bundle_teams.py` em `PASS` (`5 passed`)
+- PR #45 (competitions) criado — `docs/hbtrack/modulos/competitions/graph/*.yaml` criados, 16 testes PASS
+- `python3 scripts/compile/compile_source_graph.py --module competitions` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module competitions` em `PASS`
+- `compiled_context/competitions/FT-034.json` gerado deterministicamente
+- `tests/pipeline_gates/test_competitions_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `tests/pipeline_gates/test_source_graph_compiler_competitions.py` em `PASS` (`4 passed`)
+- `tests/pipeline_gates/test_context_bundle_competitions.py` em `PASS` (`5 passed`)
+- fix gap `calendarEntryIds` aplicado: `src/competitions/domain/entities.py`, `src/competitions/schemas.py`, `src/competitions/application/use_cases.py`, `src/competitions/api.py`
+- `python3 scripts/compile/compile_source_graph.py --all --check` em `PASS` apos a entrada de `competitions`
+- `python3 scripts/compile/compile_context_bundle.py --all` em `PASS` apos a entrada de `competitions`
+- survival-suite: `104 passed` apos a entrada de `competitions`
+- proximo modulo obrigatorio da fila: `users`
 
 Criterio de saida:
 

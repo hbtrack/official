@@ -14,7 +14,7 @@ COMPILER_NAME = "hbtrack_source_graph_compiler"
 COMPILER_VERSION = "0.1.0"
 GRAPH_FILENAMES = (
     "module_manifest.yaml",
-    "entities.yaml",
+    "entity_graph.yaml",
     "endpoints.yaml",
     "errors.yaml",
     "test_obligations.yaml",
@@ -177,7 +177,7 @@ def _validate_graph_payload(
 
     entity_entries = entities.get("entities")
     if not isinstance(entity_entries, dict) or not entity_entries:
-        raise SourceGraphCompilerError("entities.yaml precisa declarar entities não vazias.")
+        raise SourceGraphCompilerError("entity_graph.yaml precisa declarar entities não vazias.")
 
     validated_entities: dict[str, Any] = {}
     for entity_name, entity_entry in entity_entries.items():
@@ -250,7 +250,7 @@ def _validate_graph_payload(
     ]
     if len(primary_entity_names) != 1:
         raise SourceGraphCompilerError(
-            "contract_surfaces.primary_schema deve corresponder exatamente a uma entidade em entities.yaml."
+            "contract_surfaces.primary_schema deve corresponder exatamente a uma entidade em entity_graph.yaml."
         )
     primary_entity = primary_entity_names[0]
 
@@ -469,7 +469,7 @@ def compile_expected(root: Path, module: str) -> list[ExpectedFile]:
         raise SourceGraphCompilerError(f"Source graph ausente para módulo `{module}`: {graph_root}")
 
     manifest = _load_yaml(graph_root / "module_manifest.yaml")
-    entities = _load_yaml(graph_root / "entities.yaml")
+    entities = _load_yaml(graph_root / "entity_graph.yaml")
     endpoints = _load_yaml(graph_root / "endpoints.yaml")
     errors = _load_yaml(graph_root / "errors.yaml")
     test_obligations = _load_yaml(graph_root / "test_obligations.yaml")

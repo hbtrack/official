@@ -1,0 +1,55 @@
+review:
+  mode: hybrid
+  model: gemini-2.5-flash
+  temperature: 0.2
+  max_files: 20
+  max_comments: 6
+  min_severity_to_publish: medium
+  allowed_severities:
+    - critical
+    - high
+    - medium
+    - low
+  post_summary_review: true
+  post_inline_comments: true
+  dedupe_window_comments: 40
+
+paths:
+  include:
+    - "docs/hbtrack/modulos/**/graph/**"
+    - "contracts/**"
+    - ".contract_driven/**"
+    - "docs/_canon/**"
+    - ".github/copilot-instructions.md"
+    - ".github/workflows/**"
+    - "scripts/contracts/validate/**"
+    - "scripts/hb"
+    - "backend/**"
+    - "frontend/**"
+    - "apps/**"
+    - "api/**"
+    - "tests/**"
+  exclude:
+    - "generated/**"
+    - "_reports/**"
+    - "dist/**"
+    - "build/**"
+    - "coverage/**"
+    - "node_modules/**"
+    - "**/*.min.js"
+    - "**/*.min.css"
+    - "**/package-lock.json"
+    - "**/pnpm-lock.yaml"
+    - "**/yarn.lock"
+    - "**/bun.lockb"
+
+prompts:
+  system_policy_path: ".github/ai-review/styleguide.md"
+
+publishing:
+  review_event: "COMMENT"
+  fallback_to_summary_only: true
+
+bridge:
+  output_json_path: "ai_review_findings.json"
+  summary_markdown_path: "ai_review_summary.md"

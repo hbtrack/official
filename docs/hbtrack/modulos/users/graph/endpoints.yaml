@@ -1,0 +1,93 @@
+version: "1.0.0"
+status: active
+module: users
+
+endpoints:
+  - operation_id: listUsers
+    method: GET
+    path: /users
+    openapi_ref: "../../../../../contracts/openapi/paths/users.yaml#/users/get"
+    runtime_handler_ref: "../../../../../src/users/api.py#list_users"
+    use_case_ref: "../../../../../src/users/application/use_cases.py#ListUsersUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 500
+
+  - operation_id: createUser
+    method: POST
+    path: /users
+    openapi_ref: "../../../../../contracts/openapi/paths/users.yaml#/users/post"
+    runtime_handler_ref: "../../../../../src/users/api.py#create_user"
+    use_case_ref: "../../../../../src/users/application/use_cases.py#CreateUserUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+    roles_denied:
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 409
+      - 500
+
+  - operation_id: getUser
+    method: GET
+    path: /users/{userId}
+    openapi_ref: "../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/get"
+    runtime_handler_ref: "../../../../../src/users/api.py#get_user"
+    use_case_ref: "../../../../../src/users/application/use_cases.py#GetUserUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: patchUser
+    method: PATCH
+    path: /users/{userId}
+    openapi_ref: "../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/patch"
+    runtime_handler_ref: "../../../../../src/users/api.py#patch_user"
+    use_case_ref: "../../../../../src/users/application/use_cases.py#PatchUserUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - athlete
+      - coach
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 500

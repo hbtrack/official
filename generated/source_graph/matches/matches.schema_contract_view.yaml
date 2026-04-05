@@ -1,0 +1,153 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: matches
+entity: Match
+primary_entity: Match
+primary_schema_ref: contracts/schemas/matches/match.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/matches/match.yaml
+required: &id001
+- id
+- competitionId
+- homeTeamId
+- awayTeamId
+- statusLabel
+- scheduledAt
+- lineupUserIds
+- officialIncidentIds
+- refereeNames
+- createdAt
+- updatedAt
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: competitionId
+  runtime_name: competition_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "DR-MATCH-001: matches \xE9 soberano do registro oficial; competitionId \xE9 obrigat\xF3\
+    rio"
+  - "INV-MATCH-001: campo obrigat\xF3rio"
+  - 'boundary: reference to competitions module'
+- name: homeTeamId
+  runtime_name: home_team_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - 'DR-MATCH-002: equipe mandante'
+  - "INV-MATCH-001: campo obrigat\xF3rio"
+  - 'INV-MATCH-002: homeTeamId != awayTeamId'
+  - 'boundary: reference to teams module'
+- name: awayTeamId
+  runtime_name: away_team_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - 'DR-MATCH-002: equipe visitante'
+  - "INV-MATCH-001: campo obrigat\xF3rio"
+  - 'INV-MATCH-002: homeTeamId != awayTeamId'
+  - 'boundary: reference to teams module'
+- name: venueLabel
+  runtime_name: venue_label
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'maxLength: 200'
+- name: statusLabel
+  runtime_name: status_label
+  required: true
+  type: enum
+  values:
+  - SCHEDULED
+  - PRE_MATCH
+  - FIRST_HALF
+  - HALF_TIME
+  - SECOND_HALF
+  - OVERTIME_1
+  - OVERTIME_2
+  - PENALTIES
+  - COMPLETED
+  - CANCELLED
+  constraints:
+  - 'DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013'
+  - "default: SCHEDULED na cria\xE7\xE3o"
+- name: scheduledAt
+  runtime_name: scheduled_at
+  required: true
+  type: datetime
+  constraints:
+  - "INV-MATCH-001: campo obrigat\xF3rio"
+- name: startedAt
+  runtime_name: started_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+  - 'INV-MATCH-004: startedAt <= endedAt quando ambos presentes'
+- name: endedAt
+  runtime_name: ended_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+  - 'INV-MATCH-004: startedAt <= endedAt quando ambos presentes'
+- name: homeScore
+  runtime_name: home_score
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'INV-MATCH-003: homeScore >= 0 quando presente'
+- name: awayScore
+  runtime_name: away_score
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'INV-MATCH-003: awayScore >= 0 quando presente'
+- name: lineupUserIds
+  runtime_name: lineup_user_ids
+  required: true
+  type: array_of_uuid
+  constraints:
+  - 'uniqueItems: true'
+  - 'INV-MATCH-005: sem duplicatas'
+  - 'HBR-008: max 16 por equipe'
+  - 'boundary: reference to users module'
+- name: officialIncidentIds
+  runtime_name: official_incident_ids
+  required: true
+  type: array_of_uuid
+  constraints:
+  - 'uniqueItems: true'
+  - 'INV-MATCH-005: sem duplicatas'
+  - "DEC-MATCHES-001: CRUD simples; s\xFAmula alimentada pelo operador p\xF3s-jogo"
+- name: refereeNames
+  runtime_name: referee_names
+  required: true
+  type: array_of_string
+  constraints:
+  - 'uniqueItems: true'
+  - 'INV-MATCH-005: sem duplicatas'
+  - "DR-MATCH-003: \xE1rbitros s\xE3o nomes simples, n\xE3o entidades do dom\xEDnio"
+- name: createdAt
+  runtime_name: created_at
+  required: true
+  type: datetime
+- name: updatedAt
+  runtime_name: updated_at
+  required: true
+  type: datetime
+runtime_extension_fields: []
+entities:
+  Match:
+    schema_ref: contracts/schemas/matches/match.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []

@@ -66,6 +66,21 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 3. Toda regra derivada do handebol deve apontar para `HANDBALL_RULES_DOMAIN.md`.
 4. Invariantes devem ser verificáveis por testes automatizados.
 
+## Source Graph
+
+Artefatos gerados pelo pipeline `compile_source_graph --module training`:
+
+- [graph/module_manifest.yaml](graph/module_manifest.yaml)
+- [graph/entity_graph.yaml](graph/entity_graph.yaml)
+- [graph/endpoints.yaml](graph/endpoints.yaml)
+- [graph/errors.yaml](graph/errors.yaml)
+- [graph/test_obligations.yaml](graph/test_obligations.yaml)
+
+Artefatos compilados:
+- `generated/source_graph/training/training.bundle.yaml`
+- `generated/source_graph/training/impact_report.json`
+- `compiled_context/training/FT-001.json` … `FT-010.json`
+
 ## Navegação rápida
 1. Leia `MODULE_SCOPE_TRAINING.md`
 2. Leia `DOMAIN_RULES_TRAINING.md`

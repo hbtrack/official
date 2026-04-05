@@ -1,0 +1,1003 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/users/users.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/users/users.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/users/users.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/users/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "USERS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/users.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/users/user_profile.yaml",
+    "primary_schema": "contracts/schemas/users/user_profile.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/users"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/users.yaml"
+    ],
+    "description": "Usuários autenticados (exceto member) consultam perfis cadastrados com paginação cursor-based. Coach filtra apenas membros do próprio time. Resultado filtrado por organizationId do JWT (BOLA / OWASP API4).",
+    "endpoints": [
+      "GET /users"
+    ],
+    "id": "FT-014",
+    "name": "Listar Perfis de Usuário",
+    "slug": "listar-perfis-de-usuário",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/users/api.py",
+      "src/users/application/use_cases.py",
+      "src/users/domain/entities.py",
+      "src/users/domain/rules.py",
+      "src/users/schemas.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "contracts/openapi/paths/users.yaml",
+      "contracts/schemas/users/user_profile.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/users/FT-014.json",
+      "compiled_context/users/FT-015.json",
+      "compiled_context/users/FT-016.json",
+      "compiled_context/users/FT-017.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+      "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+      "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
+      "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+      "docs/hbtrack/modulos/users/README.md",
+      "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_users.py",
+      "tests/pipeline_gates/test_source_graph_compiler_users.py",
+      "tests/pipeline_gates/test_users_source_graph_integrity.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+    },
+    {
+      "relpath": "generated/source_graph/users/users.bundle.yaml",
+      "sha256": "dd4314698e8c44296300d5e9078c0ec60d918f3aa925efab74b14e83fbb0d675"
+    },
+    {
+      "relpath": "generated/source_graph/users/users.schema_contract_view.yaml",
+      "sha256": "9dca449c61c1d89f6bad1ae6e22b4ba8b0acd00af5019c9ef4d342f4dbefedd7"
+    },
+    {
+      "relpath": "generated/source_graph/users/users.openapi_contract_view.yaml",
+      "sha256": "1e638758afbacb25485788c00647b4a2a0c8a673960574ec99caa12dbe5bf3da"
+    },
+    {
+      "relpath": "generated/source_graph/users/impact_report.json",
+      "sha256": "c840c476303a87680986238a158f2a53b7553a6a1f66b5a23f7ac2459aa0aacc"
+    }
+  ],
+  "module": "users",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+    "invariants": "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+    "permissions": "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+    "readme": "docs/hbtrack/modulos/users/README.md",
+    "scope": "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
+    "test_matrix": "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo",
+      "permissions",
+      "decision_ir"
+    ],
+    "owner": "platform-core",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/users/api.py",
+    "domain_entity": "src/users/domain/entities.py",
+    "domain_rules": "src/users/domain/rules.py",
+    "use_cases": "src/users/application/use_cases.py"
+  },
+  "source_fingerprint": "4a98c0434104642c55690064d76a75cf911375ba19961083f19bb0b4c693c54c",
+  "source_graph": {
+    "entities": {
+      "UserProfile": {
+        "docs_refs": [
+          "../DOMAIN_RULES_USERS.md",
+          "../INVARIANTS_USERS.md",
+          "../PERMISSIONS_USERS.md"
+        ],
+        "domain_enums": [
+          {
+            "name": "RoleLabel",
+            "source": "ADR-008 / SYSTEM_SCOPE.md",
+            "values": [
+              "admin",
+              "coordinator",
+              "coach",
+              "athlete",
+              "member"
+            ]
+          },
+          {
+            "name": "UserStatus",
+            "source": "DEC-USERS-002",
+            "values": [
+              "ACTIVE",
+              "PENDING_ACTIVATION",
+              "SUSPENDED"
+            ]
+          }
+        ],
+        "invariants": [
+          {
+            "id": "INV-USR-001",
+            "rule": "id, displayName e roleLabel são obrigatórios no perfil estável."
+          },
+          {
+            "id": "INV-USR-002",
+            "rule": "teamIds, seasonIds e preferenceTags devem ter uniqueItems."
+          },
+          {
+            "id": "INV-USR-003",
+            "rule": "Campos de authn/authz (password_hash, jwt, mfa, etc.) nunca pertencem a UserProfile."
+          },
+          {
+            "id": "INV-USR-004",
+            "rule": "Boundary: credenciais e sessão pertencem exclusivamente a identity_access."
+          }
+        ],
+        "runtime_entity_ref": "../../../../../src/users/domain/entities.py#UserProfile",
+        "schema_ref": "../../../../../contracts/schemas/users/user_profile.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "boundary: reference to identity_access module (DR-USR-001)",
+              "nullable: true"
+            ],
+            "name": "organizationId",
+            "required": false,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "firstName",
+            "required": false,
+            "runtime_name": "first_name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "lastName",
+            "required": false,
+            "runtime_name": "last_name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "minLength: 1",
+              "INV-USR-001: obrigatório no perfil estável"
+            ],
+            "name": "displayName",
+            "required": true,
+            "runtime_name": "display_name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "ADR-008: 5 atores canônicos do sistema",
+              "DR-USR-002: papel funcional/esportivo, não autoriza acesso técnico",
+              "INV-USR-001: obrigatório no perfil estável"
+            ],
+            "name": "roleLabel",
+            "required": true,
+            "runtime_name": "role_label",
+            "type": "enum",
+            "values": [
+              "admin",
+              "coordinator",
+              "coach",
+              "athlete",
+              "member"
+            ]
+          },
+          {
+            "constraints": [
+              "DEC-USERS-002: lifecycle status",
+              "default: PENDING_ACTIVATION na criação"
+            ],
+            "name": "statusLabel",
+            "required": false,
+            "runtime_name": "status_label",
+            "type": "enum",
+            "values": [
+              "ACTIVE",
+              "PENDING_ACTIVATION",
+              "SUSPENDED"
+            ]
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "DR-USR-004: contexto esportivo, não autorização"
+            ],
+            "name": "positionLabel",
+            "required": false,
+            "runtime_name": "position_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "DR-USR-005: preferência operacional, não estado de segurança"
+            ],
+            "name": "preferredLanguage",
+            "required": false,
+            "runtime_name": "preferred_language",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "items.maxLength: 40",
+              "INV-USR-002: sem duplicatas",
+              "DR-USR-005: preferência operacional, não credencial"
+            ],
+            "name": "preferenceTags",
+            "required": false,
+            "runtime_name": "preference_tags",
+            "type": "array_of_string"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-USR-002: sem duplicatas",
+              "DR-USR-003: vínculo contratual, não inferido",
+              "boundary: reference to teams module"
+            ],
+            "name": "teamIds",
+            "required": false,
+            "runtime_name": "team_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-USR-002: sem duplicatas",
+              "DR-USR-003: vínculo contratual, não inferido",
+              "boundary: reference to seasons module"
+            ],
+            "name": "seasonIds",
+            "required": false,
+            "runtime_name": "season_ids",
+            "type": "array_of_uuid"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-USR-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listUsers",
+          "createUser",
+          "getUser",
+          "patchUser"
+        ],
+        "source_ref": "../../../../../src/users/api.py#_get_actor_id"
+      },
+      {
+        "exception_ref": "../../../../../src/users/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-USR-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listUsers",
+          "createUser",
+          "getUser",
+          "patchUser"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/users/domain/rules.py#InvalidRoleLabel",
+        "http_status": 400,
+        "id": "ERR-USR-400-INVALID-ROLE-LABEL",
+        "kind": "domain",
+        "operations": [
+          "listUsers",
+          "createUser",
+          "patchUser"
+        ]
+      },
+      {
+        "http_status": 500,
+        "id": "ERR-USR-500-INTERNAL",
+        "kind": "transport",
+        "operations": [
+          "listUsers",
+          "createUser",
+          "getUser",
+          "patchUser"
+        ],
+        "source_ref": "../../../../../src/users/api.py#_get_actor_id"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/users.yaml",
+        "contracts/schemas/users/user_profile.schema.json",
+        "contracts/openapi/components/schemas/users/user_profile.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/users/README.md",
+        "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
+        "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+        "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+        "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+        "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md"
+      ],
+      "impacted_runtime": [
+        "src/users/api.py",
+        "src/users/domain/entities.py",
+        "src/users/domain/rules.py",
+        "src/users/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "organizationId é referência cruzada para módulo identity_access — boundary explicitado em DR-USR-001 e MODULE_SOURCE_AUTHORITY_MATRIX.",
+        "teamIds referenciam módulo teams — boundary explicitado em DR-USR-003.",
+        "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
+        "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
+      ],
+      "source_fingerprint": "6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-USR-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listUsers",
+            "createUser",
+            "getUser",
+            "patchUser"
+          ],
+          "source_ref": "../../../../../src/users/api.py#_get_actor_id"
+        },
+        {
+          "exception_ref": "../../../../../src/users/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-USR-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listUsers",
+            "createUser",
+            "getUser",
+            "patchUser"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/users/domain/rules.py#UserNotFound",
+          "http_status": 404,
+          "id": "ERR-USR-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getUser",
+            "patchUser"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/users/domain/rules.py#InvalidRoleLabel",
+          "http_status": 400,
+          "id": "ERR-USR-400-INVALID-ROLE-LABEL",
+          "kind": "domain",
+          "operations": [
+            "listUsers",
+            "createUser",
+            "patchUser"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/users/domain/rules.py#AuthnFieldForbidden",
+          "http_status": 400,
+          "id": "ERR-USR-400-AUTHN-FIELD-FORBIDDEN",
+          "kind": "domain",
+          "operations": [
+            "createUser",
+            "patchUser"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-USR-400-VALIDATION",
+          "kind": "domain",
+          "operations": [
+            "createUser",
+            "patchUser"
+          ],
+          "source_ref": "../../../../../src/users/domain/entities.py#validate_invariants"
+        },
+        {
+          "exception_ref": "../../../../../src/users/domain/rules.py#UserConflict",
+          "http_status": 409,
+          "id": "ERR-USR-409-CONFLICT",
+          "kind": "domain",
+          "operations": [
+            "createUser"
+          ]
+        },
+        {
+          "http_status": 500,
+          "id": "ERR-USR-500-INTERNAL",
+          "kind": "transport",
+          "operations": [
+            "listUsers",
+            "createUser",
+            "getUser",
+            "patchUser"
+          ],
+          "source_ref": "../../../../../src/users/api.py#_get_actor_id"
+        }
+      ],
+      "module": "users",
+      "openapi_paths_ref": "contracts/openapi/paths/users.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/users.yaml#/users/get",
+          "operation_id": "listUsers",
+          "owner_scoped_roles": [],
+          "path": "/users",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/users/api.py#list_users",
+          "use_case_ref": "../../../../../src/users/application/use_cases.py#ListUsersUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/users.yaml#/users/post",
+          "operation_id": "createUser",
+          "owner_scoped_roles": [],
+          "path": "/users",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/users/api.py#create_user",
+          "use_case_ref": "../../../../../src/users/application/use_cases.py#CreateUserUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/get",
+          "operation_id": "getUser",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/users/{userId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/users/api.py#get_user",
+          "use_case_ref": "../../../../../src/users/application/use_cases.py#GetUserUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/patch",
+          "operation_id": "patchUser",
+          "owner_scoped_roles": [
+            "athlete",
+            "coach"
+          ],
+          "path": "/users/{userId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/users/api.py#patch_user",
+          "use_case_ref": "../../../../../src/users/application/use_cases.py#PatchUserUseCase"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/users.yaml#/users/get",
+        "operation_id": "listUsers",
+        "owner_scoped_roles": [],
+        "path": "/users",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/users/api.py#list_users",
+        "use_case_ref": "../../../../../src/users/application/use_cases.py#ListUsersUseCase"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "UserProfile": {
+          "required": [
+            "id",
+            "displayName",
+            "roleLabel"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/users/user_profile.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "boundary: reference to identity_access module (DR-USR-001)",
+                "nullable: true"
+              ],
+              "name": "organizationId",
+              "required": false,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "firstName",
+              "required": false,
+              "runtime_name": "first_name",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "lastName",
+              "required": false,
+              "runtime_name": "last_name",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "minLength: 1",
+                "INV-USR-001: obrigatório no perfil estável"
+              ],
+              "name": "displayName",
+              "required": true,
+              "runtime_name": "display_name",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "ADR-008: 5 atores canônicos do sistema",
+                "DR-USR-002: papel funcional/esportivo, não autoriza acesso técnico",
+                "INV-USR-001: obrigatório no perfil estável"
+              ],
+              "name": "roleLabel",
+              "required": true,
+              "runtime_name": "role_label",
+              "type": "enum",
+              "values": [
+                "admin",
+                "coordinator",
+                "coach",
+                "athlete",
+                "member"
+              ]
+            },
+            {
+              "constraints": [
+                "DEC-USERS-002: lifecycle status",
+                "default: PENDING_ACTIVATION na criação"
+              ],
+              "name": "statusLabel",
+              "required": false,
+              "runtime_name": "status_label",
+              "type": "enum",
+              "values": [
+                "ACTIVE",
+                "PENDING_ACTIVATION",
+                "SUSPENDED"
+              ]
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "DR-USR-004: contexto esportivo, não autorização"
+              ],
+              "name": "positionLabel",
+              "required": false,
+              "runtime_name": "position_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "DR-USR-005: preferência operacional, não estado de segurança"
+              ],
+              "name": "preferredLanguage",
+              "required": false,
+              "runtime_name": "preferred_language",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "items.maxLength: 40",
+                "INV-USR-002: sem duplicatas",
+                "DR-USR-005: preferência operacional, não credencial"
+              ],
+              "name": "preferenceTags",
+              "required": false,
+              "runtime_name": "preference_tags",
+              "type": "array_of_string"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-USR-002: sem duplicatas",
+                "DR-USR-003: vínculo contratual, não inferido",
+                "boundary: reference to teams module"
+              ],
+              "name": "teamIds",
+              "required": false,
+              "runtime_name": "team_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-USR-002: sem duplicatas",
+                "DR-USR-003: vínculo contratual, não inferido",
+                "boundary: reference to seasons module"
+              ],
+              "name": "seasonIds",
+              "required": false,
+              "runtime_name": "season_ids",
+              "type": "array_of_uuid"
+            }
+          ]
+        }
+      },
+      "entity": "UserProfile",
+      "module": "users",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "primary_entity": "UserProfile",
+      "primary_schema_ref": "contracts/schemas/users/user_profile.schema.json",
+      "required": [
+        "id",
+        "displayName",
+        "roleLabel"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "boundary: reference to identity_access module (DR-USR-001)",
+            "nullable: true"
+          ],
+          "name": "organizationId",
+          "required": false,
+          "runtime_name": "organization_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "firstName",
+          "required": false,
+          "runtime_name": "first_name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "lastName",
+          "required": false,
+          "runtime_name": "last_name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "minLength: 1",
+            "INV-USR-001: obrigatório no perfil estável"
+          ],
+          "name": "displayName",
+          "required": true,
+          "runtime_name": "display_name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "ADR-008: 5 atores canônicos do sistema",
+            "DR-USR-002: papel funcional/esportivo, não autoriza acesso técnico",
+            "INV-USR-001: obrigatório no perfil estável"
+          ],
+          "name": "roleLabel",
+          "required": true,
+          "runtime_name": "role_label",
+          "type": "enum",
+          "values": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ]
+        },
+        {
+          "constraints": [
+            "DEC-USERS-002: lifecycle status",
+            "default: PENDING_ACTIVATION na criação"
+          ],
+          "name": "statusLabel",
+          "required": false,
+          "runtime_name": "status_label",
+          "type": "enum",
+          "values": [
+            "ACTIVE",
+            "PENDING_ACTIVATION",
+            "SUSPENDED"
+          ]
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "DR-USR-004: contexto esportivo, não autorização"
+          ],
+          "name": "positionLabel",
+          "required": false,
+          "runtime_name": "position_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "DR-USR-005: preferência operacional, não estado de segurança"
+          ],
+          "name": "preferredLanguage",
+          "required": false,
+          "runtime_name": "preferred_language",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "items.maxLength: 40",
+            "INV-USR-002: sem duplicatas",
+            "DR-USR-005: preferência operacional, não credencial"
+          ],
+          "name": "preferenceTags",
+          "required": false,
+          "runtime_name": "preference_tags",
+          "type": "array_of_string"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-USR-002: sem duplicatas",
+            "DR-USR-003: vínculo contratual, não inferido",
+            "boundary: reference to teams module"
+          ],
+          "name": "teamIds",
+          "required": false,
+          "runtime_name": "team_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-USR-002: sem duplicatas",
+            "DR-USR-003: vínculo contratual, não inferido",
+            "boundary: reference to seasons module"
+          ],
+          "name": "seasonIds",
+          "required": false,
+          "runtime_name": "season_ids",
+          "type": "array_of_uuid"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/users/user_profile.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "USR-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/users.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "USR-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/users/tests/unit/test_users_domain.py",
+        "covers": [
+          "INV-USR-001",
+          "INV-USR-002",
+          "INV-USR-003",
+          "INV-USR-004",
+          "DR-USR-001",
+          "DR-USR-002",
+          "DR-USR-003",
+          "DR-USR-004",
+          "DR-USR-005"
+        ],
+        "evidence_refs": [
+          "../../../../../src/users/tests/unit/test_users_domain.py"
+        ],
+        "id": "USR-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Domain unit tests enforcing invariants, boundary rules and permission checks"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_users_source_graph_integrity.py"
+        ],
+        "id": "USR-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/users/README.md",
+      "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+      "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md",
+      "contracts/openapi/paths/users.yaml",
+      "contracts/openapi/components/schemas/users/user_profile.yaml"
+    ],
+    "expected_output": "compiled_context/users/FT-014.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module users --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module users --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module users --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module users --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_users_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_users.py tests/pipeline_gates/test_context_bundle_users.py -q"
+    ]
+  }
+}

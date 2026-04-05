@@ -81,7 +81,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -93,11 +93,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dd2577e2910a4e4ae7fa6b0f72b58272847bc40b19007feef52652278d1937bc"
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "ad14505a56fed895371e26b51d51b9c385907d8bed1f14d7096405e4d4dd5e2f"
+      "sha256": "e27ce9006dd47db91133d0b238892d12092f902ef6e94886e5f5153f2c2ecf43"
     },
     {
       "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -109,7 +109,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/impact_report.json",
-      "sha256": "548a95531eaaee67eeb3926ede704d53a368c80b45e1ec8636736304b8ec1731"
+      "sha256": "d36b7c49b08a18565576b539fb8a37e6b0ef5409e0b7ccc7809038ddcfdc163f"
     }
   ],
   "module": "teams",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "6949ed8bc44a78640d192336406e7951f3a2d9de23994b07ecf7c1bf251f96ef",
+  "source_fingerprint": "0932186d3cbc9348af2edfc0566574ac461859a1599e978732821913f8400592",
   "source_graph": {
     "entities": {
       "Team": {
@@ -357,7 +357,7 @@
         "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
         "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
       ],
-      "source_fingerprint": "baaae3e77c018dc2d13f1a7fb3ee36762af7ad22bc82a8c99be47585c51786da"
+      "source_fingerprint": "04fc4ef0c30062cbf73c2a7bb9ab73197c6c1082d0f8a75caeddf58f87a99f9f"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

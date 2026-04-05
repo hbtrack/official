@@ -1,0 +1,147 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/matches.yaml",
+    "contracts/schemas/matches/match.schema.json",
+    "contracts/openapi/components/schemas/matches/match.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/matches/README.md",
+    "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md",
+    "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+    "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
+    "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+    "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+  ],
+  "impacted_runtime": [
+    "src/matches/api.py",
+    "src/matches/domain/entities.py",
+    "src/matches/domain/rules.py",
+    "src/matches/application/use_cases.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/matches/match.yaml",
+      "sha256": "f0d38d2f18f7d941921992617b0a46ea169eed2bb2e54d7b8f910350c5fdffbf"
+    },
+    {
+      "relpath": "contracts/openapi/paths/matches.yaml",
+      "sha256": "e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705"
+    },
+    {
+      "relpath": "contracts/schemas/matches/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/matches/match.schema.json",
+      "sha256": "0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+      "sha256": "f0e1294b107d1b1a1752e5a9bd710a155185b92310e8fd79d2b393ad3bce9447"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
+      "sha256": "a392e05897096374b733f1c077cf9abced0318cec229ee360cdc73dd4a3e6a94"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md",
+      "sha256": "d605c4a85bc62549eb35341562762a5f448e0a8ecdf70deb16560fc6e5296a23"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+      "sha256": "836840067b8a17e124574c1ef80cda53d00751a95a9c3e4fb3661e9e05eb89bf"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/README.md",
+      "sha256": "0f0e9da51936bf22c2978dbee62caa3ab618a7da2a38ef281b5bb39a7f70b654"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md",
+      "sha256": "e664b2877b1e330c6644b7794b3ccd898297cfeedebf9a33ddd5b339b6e9515a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/graph/endpoints.yaml",
+      "sha256": "7d8b71cd02e7e1388d0bb96ba551fb906f72c0a7bfac8916f58c0b06746db057"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
+      "sha256": "dd21d79d79d917a5891deec838c5c0298900378f6d17b4eb7817b853e3c5938a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/graph/errors.yaml",
+      "sha256": "1039e6a4ced36d117ea24d8a835cc1c7ea22dd5a16e6f9ef6343c881e259b6e8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
+      "sha256": "a5530eef51cf44b9c5f6e686ae13ee5ace4542537442a7ce61de8fc04724ea13"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
+      "sha256": "c54aef8e24afe03b9a0a62e01f8d531110a35d24d7305bfa31ade47cd811843f"
+    },
+    {
+      "relpath": "src/matches/api.py",
+      "sha256": "da633cac6886fd69804bf2813593de53becff2bf2bfcdb2d3713921d86207ccf"
+    },
+    {
+      "relpath": "src/matches/application/use_cases.py",
+      "sha256": "b6173bb05caacfb5df41d4ac4fa0304b5921baf022997f4bf0d9a3b6716a5b24"
+    },
+    {
+      "relpath": "src/matches/domain/entities.py",
+      "sha256": "4535c2eb63e55e9ec381f523c606070543c60c65cff856ca1fe0773056b1a6b0"
+    },
+    {
+      "relpath": "src/matches/domain/rules.py",
+      "sha256": "832533b8ffa27931ba8afab12f211d5508cf813aa76dc7bfad2bf84c207d7ce6"
+    }
+  ],
+  "known_gaps": [
+    "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+    "competitionId é referência cruzada para módulo competitions — boundary explicitado em DR-MATCH-001.",
+    "homeTeamId e awayTeamId referenciam módulo teams — boundary explicitado em DR-MATCH-002.",
+    "lineupUserIds referenciam módulo users — boundary explicitado em DR-MATCH-001.",
+    "officialIncidentIds referenciam módulo incidents (scheduling futuro) — DEC-MATCHES-001: CRUD simples.",
+    "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch usa PATCH — mapeamento documentado em DEC-MATCHES-001."
+  ],
+  "module": "matches",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/matches/matches.bundle.yaml",
+    "generated/source_graph/matches/matches.schema_contract_view.yaml",
+    "generated/source_graph/matches/matches.openapi_contract_view.yaml",
+    "generated/source_graph/matches/impact_report.json"
+  ],
+  "source_fingerprint": "4d848c9ada53bc78667f619018c4f41f1a0fb5c590e77645e02c509906c5df2f"
+}

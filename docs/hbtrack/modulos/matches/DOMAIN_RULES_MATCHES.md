@@ -33,3 +33,9 @@ Registrar as regras de negócio do módulo `matches`.
 - Não inferir taxonomia tática completa sem glossário próprio de `scout`.
 - Não mover credenciais, regra médica ou autorização para `matches`.
 - Não usar benchmark externo como norma oficial sem mapeamento explícito.
+
+## Source Graph
+- Entidades: [graph/entity_graph.yaml](graph/entity_graph.yaml)
+- Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
+- Erros: [graph/errors.yaml](graph/errors.yaml)
+- Obrigações: [graph/test_obligations.yaml](graph/test_obligations.yaml)

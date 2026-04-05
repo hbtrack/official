@@ -68,11 +68,28 @@ Não crie artefatos antes de `hb verify`.
 | Promoção de readiness | `readiness_promotion` | `readiness_promotion.prompt.md` |
 | Geração backend governada | `generate_code` | `generate_code.prompt.md` |
 | Executar fase do ROADMAP (0-13) | `execute_roadmap_phase` | `execute_roadmap_phase.prompt.md` |
+| Corrigir check falho em PR | `pr_fix` | `pr_fix.prompt.md` |
 
 Se houver dúvida sobre status ativo/congelado ou estágio permitido, consultar `TASK_CATALOG.yaml`.
 
 > **Para `execute_roadmap_phase`:** usar skill `hb-roadmap-executor` (não este skill CDD).
 > Não executar `hb verify`. Não executar `pre_contract_orchestrator`.
+
+## Protocolo PR_FIX (correção de CI)
+
+Quando a tarefa é corrigir um check falho em PR — entrar neste modo antes de qualquer outra ação:
+
+1. `task_type = pr_fix`
+2. Executar `gh pr checks <PR> --watch` → extrair `check_context` exato (case-sensitive)
+3. **Lookup obrigatório:** abrir `merge-readiness.json` → encontrar `context == check_context` → usar `local_equivalent`
+4. Se `check_context` não estiver em `merge-readiness.json` → **PARAR**, reportar `GAP_DE_PARIDADE` — não improvisar comando alternativo
+5. Executar exatamente o `local_equivalent`
+6. Corrigir até PASS local → push → CI confirma
+
+**Proibições absolutas em modo PR_FIX:**
+- Inferir ou substituir o `local_equivalent` por qualquer outro comando
+- Alterar arquivos de governance (`.contract_driven/`, `contracts/`, `docs/_canon/`) sem falha explícita de gate de governança
+- Usar `--no-verify`, `--force-push`, ou qualquer bypass de gate
 
 ## Pré-condições para `generate_code`
 

@@ -11,42 +11,48 @@
             "workflow": "contract-gates.yml",
             "job": "validate-contracts",
             "category": "required",
-            "local_equivalent": "python3 scripts/hb preflight"
+            "local_equivalent": "python3 scripts/hb validate --profile ci",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "Governance Tests",
             "workflow": "contract-gates.yml",
             "job": "governance-tests",
             "category": "required",
-            "local_equivalent": "pytest tests/test_pipeline_governance.py"
+            "local_equivalent": "pytest tests/test_pipeline_governance.py",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "Architecture Drift Check",
             "workflow": "contract-gates.yml",
             "job": "architecture-drift-check",
             "category": "required",
-            "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py"
+            "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "ci / Validate Contracts",
             "workflow": "_reusable-ci.yml",
             "job": "validate",
             "category": "required",
-            "local_equivalent": "python3 scripts/contracts/validate/validate_contracts.py --profile precommit"
+            "local_equivalent": "python3 scripts/hb validate --profile precommit",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "ci / Tests",
             "workflow": "_reusable-ci.yml",
             "job": "test",
             "category": "required",
-            "local_equivalent": "pytest -q"
+            "local_equivalent": "python3 scripts/hb ci --profile pr",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "ci / Frontend Build + Tests",
             "workflow": "_reusable-ci.yml",
             "job": "build-frontend",
             "category": "required",
-            "local_equivalent": "npm --prefix frontend ci && npm --prefix frontend run build && npm --prefix frontend test"
+            "local_equivalent": "cd frontend && npm ci --legacy-peer-deps && npx vitest run --reporter=verbose && npm run build",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "ci / Docker Build Check",
@@ -61,7 +67,9 @@
             "job": "governance-enforcement",
             "category": "conditional",
             "condition": "governance_changed == true",
-            "reason": "Condicional — só roda quando arquivos de governança (.contract_driven/, contracts/, docs/_canon/) são modificados"
+            "reason": "Condicional — só roda quando arquivos de governança (.contract_driven/, contracts/, docs/_canon/) são modificados",
+            "local_equivalent": "CI=true python3 scripts/hb survival-suite",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "Paridade Registry × Executor",
@@ -69,7 +77,9 @@
             "job": "registry-executor-parity",
             "category": "conditional",
             "condition": "governance_changed == true",
-            "reason": "Condicional — verifica paridade entre MODULE_REGISTRY.yaml e executores; ativado apenas em mudanças de governança"
+            "reason": "Condicional — verifica paridade entre MODULE_REGISTRY.yaml e executores; ativado apenas em mudanças de governança",
+            "local_equivalent": "python -m pytest tests/pipeline_gates/test_gate_registry_parity.py -v",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "Paridade Schema × Template × Skills",
@@ -77,7 +87,9 @@
             "job": "schema-template-skills-parity",
             "category": "conditional",
             "condition": "governance_changed == true",
-            "reason": "Condicional — verifica paridade entre schemas, templates e skills; ativado apenas em mudanças de governança"
+            "reason": "Condicional — verifica paridade entre schemas, templates e skills; ativado apenas em mudanças de governança",
+            "local_equivalent": "python -m pytest tests/pipeline_gates/test_schema_template_parity_phase4.py -v",
+            "local_equivalent_kind": "exact_job"
         },
         {
             "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
@@ -85,7 +97,9 @@
             "job": "session-handoff-crossval",
             "category": "conditional",
             "condition": "governance_changed == true",
-            "reason": "Condicional — cross-valida SESSION_HANDOFF.md contra session_start workflow; ativado apenas em mudanças de governança"
+            "reason": "Condicional — cross-valida SESSION_HANDOFF.md contra session_start workflow; ativado apenas em mudanças de governança",
+            "local_equivalent": "python -m pytest tests/pipeline_gates/test_session_state_phase3.py -v",
+            "local_equivalent_kind": "exact_job"
         }
     ],
     "enforcement": {

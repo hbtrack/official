@@ -696,3 +696,111 @@ class CreateMicrocycleUseCase:
         )
         micro.validate_invariants()
         return self._repo.save(micro)
+
+
+# ---------------------------------------------------------------------------
+# Stubs de use case — B10-001 source graph integrity
+# Implementação pendente (known_gaps). raise NotImplementedError até fase futura.
+# ---------------------------------------------------------------------------
+
+class UpdateTrainingSessionUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetSessionBlockUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ReorderSessionBlocksUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListSessionAttendanceUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class RecordSessionAttendanceUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetWellnessPreUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class UpdateWellnessPreUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetWellnessPostUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class UpdateWellnessPostUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListMesocyclesUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetMesocycleUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class UpdateMesocycleUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListMicrocyclesUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetMicrocycleUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class UpdateMicrocycleUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListExecutionRecordsUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetExecutionRecordUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListFeedbackThreadsUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class CreateFeedbackThreadUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class CloseFeedbackThreadUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListSessionObjectivesUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListAttentionQueueItemsUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ResolveAttentionQueueItemUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class DismissAttentionQueueItemUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class EscalateAttentionQueueItemUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListRecommendationsUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class AcceptRecommendationUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class DismissRecommendationUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetIneligibilityStatusUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class SubmitIneligibilityDeclarationUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class GetLoadChartUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class ListChatMessagesUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class SubmitTrainingSuggestionUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")
+
+class DeleteTrainingSessionUseCase:
+    def execute(self, *args, **kwargs): raise NotImplementedError("stub")

@@ -32,7 +32,7 @@ runtime_surfaces:
   use_cases: "../../../../../src/competitions/application/use_cases.py"
 
 structured_ir:
-  entities: "./entities.yaml"
+  entities: "./entity_graph.yaml"
   endpoints: "./endpoints.yaml"
   errors: "./errors.yaml"
   test_obligations: "./test_obligations.yaml"

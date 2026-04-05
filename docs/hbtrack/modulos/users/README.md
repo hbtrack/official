@@ -27,3 +27,10 @@ Documentar o escopo normativo do módulo `users` e suas superfícies soberanas.
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)
 - SSOT de convenções/templates de API HTTP: `.contract_driven/templates/api/api_rules.yaml`
+
+## Source Graph
+- [graph/module_manifest.yaml](graph/module_manifest.yaml)
+- [graph/entity_graph.yaml](graph/entity_graph.yaml)
+- [graph/endpoints.yaml](graph/endpoints.yaml)
+- [graph/errors.yaml](graph/errors.yaml)
+- [graph/test_obligations.yaml](graph/test_obligations.yaml)

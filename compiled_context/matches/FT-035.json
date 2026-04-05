@@ -1,0 +1,1334 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/matches/matches.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/matches/matches.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/matches/matches.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/matches/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "MATCHES_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/matches.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/matches/match.yaml",
+    "primary_schema": "contracts/schemas/matches/match.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/matches"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/matches.yaml"
+    ],
+    "description": "Admin e coordenador agendam partidas entre equipes e registram as escalações (lineup) dos jogadores convocados.",
+    "endpoints": [
+      "GET /matches",
+      "POST /matches",
+      "GET /matches/{matchId}",
+      "PATCH /matches/{matchId}",
+      "PUT /matches/{matchId}/lineup/{userId}",
+      "DELETE /matches/{matchId}/lineup/{userId}"
+    ],
+    "id": "FT-035",
+    "name": "Agendar Partidas e Gerenciar Escalações",
+    "slug": "agendar-partidas-e-gerenciar-escalações",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/matches/api.py",
+      "src/matches/application/use_cases.py",
+      "src/matches/domain/entities.py",
+      "src/matches/domain/rules.py",
+      "src/matches/schemas.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/matches/match.yaml",
+      "contracts/openapi/paths/matches.yaml",
+      "contracts/schemas/matches/match.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/matches/FT-035.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+      "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
+      "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md",
+      "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+      "docs/hbtrack/modulos/matches/README.md",
+      "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_matches.py",
+      "tests/pipeline_gates/test_matches_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_matches.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+    },
+    {
+      "relpath": "generated/source_graph/matches/matches.bundle.yaml",
+      "sha256": "21f4c19f422c7beb63758cbe4968e5e7d82493e80d9b2b65de7875ee34591ef1"
+    },
+    {
+      "relpath": "generated/source_graph/matches/matches.schema_contract_view.yaml",
+      "sha256": "7d376b7b0dd473f4dabad9ea6f4dda26162d7efb3f5e5fb35d8f6adae62955e1"
+    },
+    {
+      "relpath": "generated/source_graph/matches/matches.openapi_contract_view.yaml",
+      "sha256": "19143242ed11b9f028305c40c0076521a502482627ad93ec1ea8d48922ab3167"
+    },
+    {
+      "relpath": "generated/source_graph/matches/impact_report.json",
+      "sha256": "884df4585c6a81fcecf744663d7890e124f04cffca23561eed856f9488baa312"
+    }
+  ],
+  "module": "matches",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+    "invariants": "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
+    "permissions": "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+    "readme": "docs/hbtrack/modulos/matches/README.md",
+    "scope": "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md",
+    "test_matrix": "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "handball-ops",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/matches/api.py",
+    "domain_entity": "src/matches/domain/entities.py",
+    "domain_rules": "src/matches/domain/rules.py",
+    "use_cases": "src/matches/application/use_cases.py"
+  },
+  "source_fingerprint": "c7b7ba51d77e16d89d54e834bbbb6cc810de6b6f5307a9e42062853adad00de8",
+  "source_graph": {
+    "entities": {
+      "Match": {
+        "docs_refs": [
+          "../DOMAIN_RULES_MATCHES.md",
+          "../INVARIANTS_MATCHES.md",
+          "../PERMISSIONS_MATCHES.md"
+        ],
+        "domain_enums": [
+          {
+            "name": "RoleLabel",
+            "source": "ADR-008 / SYSTEM_SCOPE.md",
+            "values": [
+              "admin",
+              "coordinator",
+              "coach",
+              "athlete",
+              "member"
+            ]
+          },
+          {
+            "name": "MatchStatus",
+            "source": "DEC-MATCHES-002 / HBR-013",
+            "values": [
+              "SCHEDULED",
+              "PRE_MATCH",
+              "FIRST_HALF",
+              "HALF_TIME",
+              "SECOND_HALF",
+              "OVERTIME_1",
+              "OVERTIME_2",
+              "PENALTIES",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          }
+        ],
+        "invariants": [
+          {
+            "id": "INV-MATCH-001",
+            "rule": "id, competition_id, home_team_id, away_team_id, scheduled_at são obrigatórios."
+          },
+          {
+            "id": "INV-MATCH-002",
+            "rule": "home_team_id deve ser diferente de away_team_id."
+          },
+          {
+            "id": "INV-MATCH-003",
+            "rule": "home_score e away_score devem ser >= 0 quando presentes."
+          },
+          {
+            "id": "INV-MATCH-004",
+            "rule": "started_at deve ser <= ended_at quando ambos presentes."
+          },
+          {
+            "id": "INV-MATCH-005",
+            "rule": "lineup_user_ids, official_incident_ids e referee_names não podem ter duplicatas."
+          }
+        ],
+        "runtime_entity_ref": "../../../../../src/matches/domain/entities.py#Match",
+        "schema_ref": "../../../../../contracts/schemas/matches/match.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-MATCH-001: matches é soberano do registro oficial; competitionId é obrigatório",
+              "INV-MATCH-001: campo obrigatório",
+              "boundary: reference to competitions module"
+            ],
+            "name": "competitionId",
+            "required": true,
+            "runtime_name": "competition_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-MATCH-002: equipe mandante",
+              "INV-MATCH-001: campo obrigatório",
+              "INV-MATCH-002: homeTeamId != awayTeamId",
+              "boundary: reference to teams module"
+            ],
+            "name": "homeTeamId",
+            "required": true,
+            "runtime_name": "home_team_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-MATCH-002: equipe visitante",
+              "INV-MATCH-001: campo obrigatório",
+              "INV-MATCH-002: homeTeamId != awayTeamId",
+              "boundary: reference to teams module"
+            ],
+            "name": "awayTeamId",
+            "required": true,
+            "runtime_name": "away_team_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "maxLength: 200"
+            ],
+            "name": "venueLabel",
+            "required": false,
+            "runtime_name": "venue_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013",
+              "default: SCHEDULED na criação"
+            ],
+            "name": "statusLabel",
+            "required": true,
+            "runtime_name": "status_label",
+            "type": "enum",
+            "values": [
+              "SCHEDULED",
+              "PRE_MATCH",
+              "FIRST_HALF",
+              "HALF_TIME",
+              "SECOND_HALF",
+              "OVERTIME_1",
+              "OVERTIME_2",
+              "PENALTIES",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          {
+            "constraints": [
+              "INV-MATCH-001: campo obrigatório"
+            ],
+            "name": "scheduledAt",
+            "required": true,
+            "runtime_name": "scheduled_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+            ],
+            "name": "startedAt",
+            "required": false,
+            "runtime_name": "started_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+            ],
+            "name": "endedAt",
+            "required": false,
+            "runtime_name": "ended_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "INV-MATCH-003: homeScore >= 0 quando presente"
+            ],
+            "name": "homeScore",
+            "required": false,
+            "runtime_name": "home_score",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "INV-MATCH-003: awayScore >= 0 quando presente"
+            ],
+            "name": "awayScore",
+            "required": false,
+            "runtime_name": "away_score",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-MATCH-005: sem duplicatas",
+              "HBR-008: max 16 por equipe",
+              "boundary: reference to users module"
+            ],
+            "name": "lineupUserIds",
+            "required": true,
+            "runtime_name": "lineup_user_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-MATCH-005: sem duplicatas",
+              "DEC-MATCHES-001: CRUD simples; súmula alimentada pelo operador pós-jogo"
+            ],
+            "name": "officialIncidentIds",
+            "required": true,
+            "runtime_name": "official_incident_ids",
+            "type": "array_of_uuid"
+          },
+          {
+            "constraints": [
+              "uniqueItems: true",
+              "INV-MATCH-005: sem duplicatas",
+              "DR-MATCH-003: árbitros são nomes simples, não entidades do domínio"
+            ],
+            "name": "refereeNames",
+            "required": true,
+            "runtime_name": "referee_names",
+            "type": "array_of_string"
+          },
+          {
+            "name": "createdAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "datetime"
+          },
+          {
+            "name": "updatedAt",
+            "required": true,
+            "runtime_name": "updated_at",
+            "type": "datetime"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-MATCH-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listMatches",
+          "createMatch",
+          "getMatch",
+          "patchMatch",
+          "addPlayerToLineup",
+          "removePlayerFromLineup"
+        ],
+        "source_ref": "../../../../../src/matches/api.py#_role"
+      },
+      {
+        "exception_ref": "../../../../../src/matches/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-MATCH-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "createMatch",
+          "patchMatch",
+          "addPlayerToLineup",
+          "removePlayerFromLineup"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/matches/domain/rules.py#MatchNotFound",
+        "http_status": 404,
+        "id": "ERR-MATCH-404-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getMatch",
+          "patchMatch",
+          "addPlayerToLineup",
+          "removePlayerFromLineup"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-MATCH-400-VALIDATION",
+        "kind": "domain",
+        "operations": [
+          "createMatch",
+          "patchMatch"
+        ],
+        "source_ref": "../../../../../src/matches/domain/entities.py#validate_invariants"
+      },
+      {
+        "exception_ref": "../../../../../src/matches/domain/rules.py#MatchStateError",
+        "http_status": 409,
+        "id": "ERR-MATCH-409-STATE-ERROR",
+        "kind": "domain",
+        "operations": [
+          "createMatch",
+          "patchMatch",
+          "addPlayerToLineup",
+          "removePlayerFromLineup"
+        ]
+      },
+      {
+        "http_status": 500,
+        "id": "ERR-MATCH-500-INTERNAL",
+        "kind": "transport",
+        "operations": [
+          "listMatches",
+          "createMatch",
+          "getMatch",
+          "patchMatch",
+          "addPlayerToLineup",
+          "removePlayerFromLineup"
+        ],
+        "source_ref": "../../../../../src/matches/api.py#list_matches"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/matches.yaml",
+        "contracts/schemas/matches/match.schema.json",
+        "contracts/openapi/components/schemas/matches/match.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/matches/README.md",
+        "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md",
+        "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+        "docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
+        "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+        "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md"
+      ],
+      "impacted_runtime": [
+        "src/matches/api.py",
+        "src/matches/domain/entities.py",
+        "src/matches/domain/rules.py",
+        "src/matches/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "competitionId é referência cruzada para módulo competitions — boundary explicitado em DR-MATCH-001.",
+        "homeTeamId e awayTeamId referenciam módulo teams — boundary explicitado em DR-MATCH-002.",
+        "lineupUserIds referenciam módulo users — boundary explicitado em DR-MATCH-001.",
+        "officialIncidentIds referenciam módulo incidents (scheduling futuro) — DEC-MATCHES-001: CRUD simples.",
+        "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch usa PATCH — mapeamento documentado em DEC-MATCHES-001."
+      ],
+      "source_fingerprint": "4d848c9ada53bc78667f619018c4f41f1a0fb5c590e77645e02c509906c5df2f"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-MATCH-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listMatches",
+            "createMatch",
+            "getMatch",
+            "patchMatch",
+            "addPlayerToLineup",
+            "removePlayerFromLineup"
+          ],
+          "source_ref": "../../../../../src/matches/api.py#_role"
+        },
+        {
+          "exception_ref": "../../../../../src/matches/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-MATCH-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "createMatch",
+            "patchMatch",
+            "addPlayerToLineup",
+            "removePlayerFromLineup"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/matches/domain/rules.py#MatchNotFound",
+          "http_status": 404,
+          "id": "ERR-MATCH-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getMatch",
+            "patchMatch",
+            "addPlayerToLineup",
+            "removePlayerFromLineup"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-MATCH-400-VALIDATION",
+          "kind": "domain",
+          "operations": [
+            "createMatch",
+            "patchMatch"
+          ],
+          "source_ref": "../../../../../src/matches/domain/entities.py#validate_invariants"
+        },
+        {
+          "exception_ref": "../../../../../src/matches/domain/rules.py#MatchStateError",
+          "http_status": 409,
+          "id": "ERR-MATCH-409-STATE-ERROR",
+          "kind": "domain",
+          "operations": [
+            "createMatch",
+            "patchMatch",
+            "addPlayerToLineup",
+            "removePlayerFromLineup"
+          ]
+        },
+        {
+          "http_status": 500,
+          "id": "ERR-MATCH-500-INTERNAL",
+          "kind": "transport",
+          "operations": [
+            "listMatches",
+            "createMatch",
+            "getMatch",
+            "patchMatch",
+            "addPlayerToLineup",
+            "removePlayerFromLineup"
+          ],
+          "source_ref": "../../../../../src/matches/api.py#list_matches"
+        }
+      ],
+      "module": "matches",
+      "openapi_paths_ref": "contracts/openapi/paths/matches.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/get",
+          "operation_id": "listMatches",
+          "owner_scoped_roles": [],
+          "path": "/matches",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#list_matches",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#ListMatches"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/post",
+          "operation_id": "createMatch",
+          "owner_scoped_roles": [],
+          "path": "/matches",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#create_match",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#CreateMatch"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/get",
+          "operation_id": "getMatch",
+          "owner_scoped_roles": [],
+          "path": "/matches/{matchId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#get_match",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#GetMatch"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/patch",
+          "operation_id": "patchMatch",
+          "owner_scoped_roles": [],
+          "path": "/matches/{matchId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#patch_match",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#PatchMatch"
+        },
+        {
+          "method": "PUT",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/put",
+          "operation_id": "addPlayerToLineup",
+          "owner_scoped_roles": [],
+          "path": "/matches/{matchId}/lineup/{userId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#add_player_to_lineup",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#AddPlayerToLineup"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/delete",
+          "operation_id": "removePlayerFromLineup",
+          "owner_scoped_roles": [],
+          "path": "/matches/{matchId}/lineup/{userId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/matches/api.py#remove_player_from_lineup",
+          "use_case_ref": "../../../../../src/matches/application/use_cases.py#RemovePlayerFromLineup"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/get",
+        "operation_id": "listMatches",
+        "owner_scoped_roles": [],
+        "path": "/matches",
+        "response_codes": [
+          200,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#list_matches",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#ListMatches"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/post",
+        "operation_id": "createMatch",
+        "owner_scoped_roles": [],
+        "path": "/matches",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#create_match",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#CreateMatch"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/get",
+        "operation_id": "getMatch",
+        "owner_scoped_roles": [],
+        "path": "/matches/{matchId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#get_match",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#GetMatch"
+      },
+      {
+        "method": "PATCH",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/patch",
+        "operation_id": "patchMatch",
+        "owner_scoped_roles": [],
+        "path": "/matches/{matchId}",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#patch_match",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#PatchMatch"
+      },
+      {
+        "method": "PUT",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/put",
+        "operation_id": "addPlayerToLineup",
+        "owner_scoped_roles": [],
+        "path": "/matches/{matchId}/lineup/{userId}",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#add_player_to_lineup",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#AddPlayerToLineup"
+      },
+      {
+        "method": "DELETE",
+        "openapi_ref": "../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/delete",
+        "operation_id": "removePlayerFromLineup",
+        "owner_scoped_roles": [],
+        "path": "/matches/{matchId}/lineup/{userId}",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/matches/api.py#remove_player_from_lineup",
+        "use_case_ref": "../../../../../src/matches/application/use_cases.py#RemovePlayerFromLineup"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "Match": {
+          "required": [
+            "id",
+            "competitionId",
+            "homeTeamId",
+            "awayTeamId",
+            "statusLabel",
+            "scheduledAt",
+            "lineupUserIds",
+            "officialIncidentIds",
+            "refereeNames",
+            "createdAt",
+            "updatedAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/matches/match.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-MATCH-001: matches é soberano do registro oficial; competitionId é obrigatório",
+                "INV-MATCH-001: campo obrigatório",
+                "boundary: reference to competitions module"
+              ],
+              "name": "competitionId",
+              "required": true,
+              "runtime_name": "competition_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-MATCH-002: equipe mandante",
+                "INV-MATCH-001: campo obrigatório",
+                "INV-MATCH-002: homeTeamId != awayTeamId",
+                "boundary: reference to teams module"
+              ],
+              "name": "homeTeamId",
+              "required": true,
+              "runtime_name": "home_team_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-MATCH-002: equipe visitante",
+                "INV-MATCH-001: campo obrigatório",
+                "INV-MATCH-002: homeTeamId != awayTeamId",
+                "boundary: reference to teams module"
+              ],
+              "name": "awayTeamId",
+              "required": true,
+              "runtime_name": "away_team_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "maxLength: 200"
+              ],
+              "name": "venueLabel",
+              "required": false,
+              "runtime_name": "venue_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013",
+                "default: SCHEDULED na criação"
+              ],
+              "name": "statusLabel",
+              "required": true,
+              "runtime_name": "status_label",
+              "type": "enum",
+              "values": [
+                "SCHEDULED",
+                "PRE_MATCH",
+                "FIRST_HALF",
+                "HALF_TIME",
+                "SECOND_HALF",
+                "OVERTIME_1",
+                "OVERTIME_2",
+                "PENALTIES",
+                "COMPLETED",
+                "CANCELLED"
+              ]
+            },
+            {
+              "constraints": [
+                "INV-MATCH-001: campo obrigatório"
+              ],
+              "name": "scheduledAt",
+              "required": true,
+              "runtime_name": "scheduled_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+              ],
+              "name": "startedAt",
+              "required": false,
+              "runtime_name": "started_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+              ],
+              "name": "endedAt",
+              "required": false,
+              "runtime_name": "ended_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "INV-MATCH-003: homeScore >= 0 quando presente"
+              ],
+              "name": "homeScore",
+              "required": false,
+              "runtime_name": "home_score",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "INV-MATCH-003: awayScore >= 0 quando presente"
+              ],
+              "name": "awayScore",
+              "required": false,
+              "runtime_name": "away_score",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-MATCH-005: sem duplicatas",
+                "HBR-008: max 16 por equipe",
+                "boundary: reference to users module"
+              ],
+              "name": "lineupUserIds",
+              "required": true,
+              "runtime_name": "lineup_user_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-MATCH-005: sem duplicatas",
+                "DEC-MATCHES-001: CRUD simples; súmula alimentada pelo operador pós-jogo"
+              ],
+              "name": "officialIncidentIds",
+              "required": true,
+              "runtime_name": "official_incident_ids",
+              "type": "array_of_uuid"
+            },
+            {
+              "constraints": [
+                "uniqueItems: true",
+                "INV-MATCH-005: sem duplicatas",
+                "DR-MATCH-003: árbitros são nomes simples, não entidades do domínio"
+              ],
+              "name": "refereeNames",
+              "required": true,
+              "runtime_name": "referee_names",
+              "type": "array_of_string"
+            },
+            {
+              "name": "createdAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "datetime"
+            },
+            {
+              "name": "updatedAt",
+              "required": true,
+              "runtime_name": "updated_at",
+              "type": "datetime"
+            }
+          ]
+        }
+      },
+      "entity": "Match",
+      "module": "matches",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/matches/match.yaml",
+      "primary_entity": "Match",
+      "primary_schema_ref": "contracts/schemas/matches/match.schema.json",
+      "required": [
+        "id",
+        "competitionId",
+        "homeTeamId",
+        "awayTeamId",
+        "statusLabel",
+        "scheduledAt",
+        "lineupUserIds",
+        "officialIncidentIds",
+        "refereeNames",
+        "createdAt",
+        "updatedAt"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-MATCH-001: matches é soberano do registro oficial; competitionId é obrigatório",
+            "INV-MATCH-001: campo obrigatório",
+            "boundary: reference to competitions module"
+          ],
+          "name": "competitionId",
+          "required": true,
+          "runtime_name": "competition_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-MATCH-002: equipe mandante",
+            "INV-MATCH-001: campo obrigatório",
+            "INV-MATCH-002: homeTeamId != awayTeamId",
+            "boundary: reference to teams module"
+          ],
+          "name": "homeTeamId",
+          "required": true,
+          "runtime_name": "home_team_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-MATCH-002: equipe visitante",
+            "INV-MATCH-001: campo obrigatório",
+            "INV-MATCH-002: homeTeamId != awayTeamId",
+            "boundary: reference to teams module"
+          ],
+          "name": "awayTeamId",
+          "required": true,
+          "runtime_name": "away_team_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "maxLength: 200"
+          ],
+          "name": "venueLabel",
+          "required": false,
+          "runtime_name": "venue_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013",
+            "default: SCHEDULED na criação"
+          ],
+          "name": "statusLabel",
+          "required": true,
+          "runtime_name": "status_label",
+          "type": "enum",
+          "values": [
+            "SCHEDULED",
+            "PRE_MATCH",
+            "FIRST_HALF",
+            "HALF_TIME",
+            "SECOND_HALF",
+            "OVERTIME_1",
+            "OVERTIME_2",
+            "PENALTIES",
+            "COMPLETED",
+            "CANCELLED"
+          ]
+        },
+        {
+          "constraints": [
+            "INV-MATCH-001: campo obrigatório"
+          ],
+          "name": "scheduledAt",
+          "required": true,
+          "runtime_name": "scheduled_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+          ],
+          "name": "startedAt",
+          "required": false,
+          "runtime_name": "started_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-MATCH-004: startedAt <= endedAt quando ambos presentes"
+          ],
+          "name": "endedAt",
+          "required": false,
+          "runtime_name": "ended_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "INV-MATCH-003: homeScore >= 0 quando presente"
+          ],
+          "name": "homeScore",
+          "required": false,
+          "runtime_name": "home_score",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "INV-MATCH-003: awayScore >= 0 quando presente"
+          ],
+          "name": "awayScore",
+          "required": false,
+          "runtime_name": "away_score",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-MATCH-005: sem duplicatas",
+            "HBR-008: max 16 por equipe",
+            "boundary: reference to users module"
+          ],
+          "name": "lineupUserIds",
+          "required": true,
+          "runtime_name": "lineup_user_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-MATCH-005: sem duplicatas",
+            "DEC-MATCHES-001: CRUD simples; súmula alimentada pelo operador pós-jogo"
+          ],
+          "name": "officialIncidentIds",
+          "required": true,
+          "runtime_name": "official_incident_ids",
+          "type": "array_of_uuid"
+        },
+        {
+          "constraints": [
+            "uniqueItems: true",
+            "INV-MATCH-005: sem duplicatas",
+            "DR-MATCH-003: árbitros são nomes simples, não entidades do domínio"
+          ],
+          "name": "refereeNames",
+          "required": true,
+          "runtime_name": "referee_names",
+          "type": "array_of_string"
+        },
+        {
+          "name": "createdAt",
+          "required": true,
+          "runtime_name": "created_at",
+          "type": "datetime"
+        },
+        {
+          "name": "updatedAt",
+          "required": true,
+          "runtime_name": "updated_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/matches/match.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "MATCH-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/matches.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "MATCH-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/matches/tests/unit/test_matches_domain.py",
+        "covers": [
+          "INV-MATCH-001",
+          "INV-MATCH-002",
+          "INV-MATCH-003",
+          "INV-MATCH-004",
+          "INV-MATCH-005",
+          "DR-MATCH-001",
+          "DR-MATCH-002",
+          "DR-MATCH-003",
+          "DR-MATCH-004",
+          "DR-MATCH-005"
+        ],
+        "evidence_refs": [
+          "../../../../../src/matches/tests/unit/test_matches_domain.py"
+        ],
+        "id": "MATCH-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Domain unit tests enforcing invariants, boundary rules and permission checks"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_matches_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_matches_source_graph_integrity.py"
+        ],
+        "id": "MATCH-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/matches/README.md",
+      "docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
+      "docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md",
+      "contracts/openapi/paths/matches.yaml",
+      "contracts/openapi/components/schemas/matches/match.yaml"
+    ],
+    "expected_output": "compiled_context/matches/FT-035.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module matches --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module matches --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module matches --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module matches --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_matches_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_matches.py tests/pipeline_gates/test_context_bundle_matches.py -q"
+    ]
+  }
+}

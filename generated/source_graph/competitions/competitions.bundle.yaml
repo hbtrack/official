@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md
-  sha256: a7cf79abb3433536410f99058426c7b5f37568335bbd4ad047191ed2b2778e95
+  sha256: 5788c65314bc7567408591d5219595a799b196c9fd5df7f1a2b30b5f2cb2f15c
 - relpath: docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md
   sha256: 0cb82072d465bd7f11c699ebb53e84aad520351138970d0bfa83297b10a53c46
 - relpath: docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md
@@ -33,17 +33,17 @@ inputs:
 - relpath: docs/hbtrack/modulos/competitions/PERMISSIONS_COMPETITIONS.md
   sha256: 0fb1dd7e7e502476bf4b9f2e49fb0e5e479d93ec89270ae0a39a2be1d791ffa1
 - relpath: docs/hbtrack/modulos/competitions/README.md
-  sha256: b6dddd96a717332f4f564a375f4924a6029438f9ac516afb9db039c20b051697
+  sha256: c821a118b68fcabb506a6c7c7a77ada00b78ffa6798e0d5ba8c89686c2156226
 - relpath: docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md
   sha256: bcae34a1dab18c6ca4300f64d7d29f23734bba774e8489db5c5134069ac36725
 - relpath: docs/hbtrack/modulos/competitions/graph/endpoints.yaml
   sha256: c2e9ac30c08060a79acc7eeba0ff264a9acd95998dbf23d28531a43f6432f78a
-- relpath: docs/hbtrack/modulos/competitions/graph/entities.yaml
+- relpath: docs/hbtrack/modulos/competitions/graph/entity_graph.yaml
   sha256: e365805fe3a017e42846fcca6109276f1149f7a53f99cf3a8120fed7f188f4e9
 - relpath: docs/hbtrack/modulos/competitions/graph/errors.yaml
   sha256: 346520e960e5f174b3b4793a4ac83b3c2ed2521f3698cda04d599378432bfe60
 - relpath: docs/hbtrack/modulos/competitions/graph/module_manifest.yaml
-  sha256: 0a66ed9004becc8791ba3bee831d5752cbef991725df70c29b287fb9ef016f22
+  sha256: 1723ee052377a478fdb831e60b3d996f94829d0235abccdc51dbb3bc3e99a2ca
 - relpath: docs/hbtrack/modulos/competitions/graph/test_obligations.yaml
   sha256: ea0b6fa667344bbd90de3f8a0170f7b08a2a7554fe93d420f1934f1f1f7a039c
 - relpath: src/competitions/api.py
@@ -84,7 +84,7 @@ module_manifest:
     domain_rules: ../../../../../src/competitions/domain/rules.py
     use_cases: ../../../../../src/competitions/application/use_cases.py
   structured_ir:
-    entities: ./entities.yaml
+    entities: ./entity_graph.yaml
     endpoints: ./endpoints.yaml
     errors: ./errors.yaml
     test_obligations: ./test_obligations.yaml

@@ -65,16 +65,23 @@ jobs:
             sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT_REF}|" SESSION_HANDOFF.md
           fi
 
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: |
+          echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "oasdiff=$(jq -r .tools.oasdiff toolchain.json)" >> "$GITHUB_OUTPUT"
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: ${{ steps.versions.outputs.node }}
           cache: "npm"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Install Python dependencies
         run: |
@@ -83,7 +90,8 @@ jobs:
 
       - name: Install oasdiff
         run: |
-          curl -fsSL https://github.com/oasdiff/oasdiff/releases/download/v1.12.3/oasdiff_1.12.3_linux_amd64.tar.gz -o "$RUNNER_TEMP/oasdiff.tar.gz"
+          VER="${{ steps.versions.outputs.oasdiff }}"
+          curl -fsSL "https://github.com/oasdiff/oasdiff/releases/download/v${VER}/oasdiff_${VER}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/oasdiff.tar.gz"
           mkdir -p "$RUNNER_TEMP/oasdiff-extract"
           tar -xzf "$RUNNER_TEMP/oasdiff.tar.gz" -C "$RUNNER_TEMP/oasdiff-extract"
           install -m 0755 "$(find "$RUNNER_TEMP/oasdiff-extract" -type f -name oasdiff | head -n1)" "$RUNNER_TEMP/oasdiff"
@@ -118,9 +126,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
       - run: pip install -r scripts/_policy/requirements.txt pytest
       - run: pytest tests/test_pipeline_governance.py -v
 
@@ -132,10 +143,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Install dependencies
         run: pip install -r scripts/_policy/requirements.txt pytest
@@ -159,15 +174,22 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: |
+          echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "oasdiff=$(jq -r .tools.oasdiff toolchain.json)" >> "$GITHUB_OUTPUT"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: ${{ steps.versions.outputs.node }}
           cache: "npm"
 
       - name: Install Python dependencies
@@ -180,7 +202,8 @@ jobs:
 
       - name: Install oasdiff
         run: |
-          curl -fsSL https://github.com/oasdiff/oasdiff/releases/download/v1.12.3/oasdiff_1.12.3_linux_amd64.tar.gz -o "$RUNNER_TEMP/oasdiff.tar.gz"
+          VER="${{ steps.versions.outputs.oasdiff }}"
+          curl -fsSL "https://github.com/oasdiff/oasdiff/releases/download/v${VER}/oasdiff_${VER}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/oasdiff.tar.gz"
           mkdir -p "$RUNNER_TEMP/oasdiff-extract"
           tar -xzf "$RUNNER_TEMP/oasdiff.tar.gz" -C "$RUNNER_TEMP/oasdiff-extract"
           install -m 0755 "$(find "$RUNNER_TEMP/oasdiff-extract" -type f -name oasdiff | head -n1)" "$RUNNER_TEMP/oasdiff"
@@ -203,9 +226,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Install dependencies
         run: pip install -r scripts/_policy/requirements.txt pytest
@@ -222,9 +248,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Install dependencies
         run: pip install -r scripts/_policy/requirements.txt pytest
@@ -245,14 +274,21 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: |
+          echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "oasdiff=$(jq -r .tools.oasdiff toolchain.json)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ steps.versions.outputs.python }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: ${{ steps.versions.outputs.node }}
           cache: "npm"
 
       - name: Install dependencies
@@ -265,7 +301,8 @@ jobs:
 
       - name: Install oasdiff
         run: |
-          curl -fsSL https://github.com/oasdiff/oasdiff/releases/download/v1.12.3/oasdiff_1.12.3_linux_amd64.tar.gz -o "$RUNNER_TEMP/oasdiff.tar.gz"
+          VER="${{ steps.versions.outputs.oasdiff }}"
+          curl -fsSL "https://github.com/oasdiff/oasdiff/releases/download/v${VER}/oasdiff_${VER}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/oasdiff.tar.gz"
           mkdir -p "$RUNNER_TEMP/oasdiff-extract"
           tar -xzf "$RUNNER_TEMP/oasdiff.tar.gz" -C "$RUNNER_TEMP/oasdiff-extract"
           install -m 0755 "$(find "$RUNNER_TEMP/oasdiff-extract" -type f -name oasdiff | head -n1)" "$RUNNER_TEMP/oasdiff"

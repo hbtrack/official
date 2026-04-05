@@ -1,0 +1,494 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: matches
+graph_root: docs/hbtrack/modulos/matches/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/matches/match.yaml
+  sha256: f0d38d2f18f7d941921992617b0a46ea169eed2bb2e54d7b8f910350c5fdffbf
+- relpath: contracts/openapi/paths/matches.yaml
+  sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
+- relpath: contracts/schemas/matches/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/matches/match.schema.json
+  sha256: 0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md
+  sha256: f0e1294b107d1b1a1752e5a9bd710a155185b92310e8fd79d2b393ad3bce9447
+- relpath: docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md
+  sha256: a392e05897096374b733f1c077cf9abced0318cec229ee360cdc73dd4a3e6a94
+- relpath: docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md
+  sha256: d605c4a85bc62549eb35341562762a5f448e0a8ecdf70deb16560fc6e5296a23
+- relpath: docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md
+  sha256: 836840067b8a17e124574c1ef80cda53d00751a95a9c3e4fb3661e9e05eb89bf
+- relpath: docs/hbtrack/modulos/matches/README.md
+  sha256: 0f0e9da51936bf22c2978dbee62caa3ab618a7da2a38ef281b5bb39a7f70b654
+- relpath: docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md
+  sha256: e664b2877b1e330c6644b7794b3ccd898297cfeedebf9a33ddd5b339b6e9515a
+- relpath: docs/hbtrack/modulos/matches/graph/endpoints.yaml
+  sha256: 7d8b71cd02e7e1388d0bb96ba551fb906f72c0a7bfac8916f58c0b06746db057
+- relpath: docs/hbtrack/modulos/matches/graph/entity_graph.yaml
+  sha256: dd21d79d79d917a5891deec838c5c0298900378f6d17b4eb7817b853e3c5938a
+- relpath: docs/hbtrack/modulos/matches/graph/errors.yaml
+  sha256: 1039e6a4ced36d117ea24d8a835cc1c7ea22dd5a16e6f9ef6343c881e259b6e8
+- relpath: docs/hbtrack/modulos/matches/graph/module_manifest.yaml
+  sha256: a5530eef51cf44b9c5f6e686ae13ee5ace4542537442a7ce61de8fc04724ea13
+- relpath: docs/hbtrack/modulos/matches/graph/test_obligations.yaml
+  sha256: c54aef8e24afe03b9a0a62e01f8d531110a35d24d7305bfa31ade47cd811843f
+- relpath: src/matches/api.py
+  sha256: da633cac6886fd69804bf2813593de53becff2bf2bfcdb2d3713921d86207ccf
+- relpath: src/matches/application/use_cases.py
+  sha256: b6173bb05caacfb5df41d4ac4fa0304b5921baf022997f4bf0d9a3b6716a5b24
+- relpath: src/matches/domain/entities.py
+  sha256: 4535c2eb63e55e9ec381f523c606070543c60c65cff856ca1fe0773056b1a6b0
+- relpath: src/matches/domain/rules.py
+  sha256: 832533b8ffa27931ba8afab12f211d5508cf813aa76dc7bfad2bf84c207d7ce6
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: matches
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_MATCHES.md
+    domain_rules: ../DOMAIN_RULES_MATCHES.md
+    invariants: ../INVARIANTS_MATCHES.md
+    permissions: ../PERMISSIONS_MATCHES.md
+    test_matrix: ../TEST_MATRIX_MATCHES.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/matches.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/matches/
+    primary_schema: ../../../../../contracts/schemas/matches/match.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/matches/match.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/matches/api.py
+    domain_entity: ../../../../../src/matches/domain/entities.py
+    domain_rules: ../../../../../src/matches/domain/rules.py
+    use_cases: ../../../../../src/matches/application/use_cases.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "competitionId \xE9 refer\xEAncia cruzada para m\xF3dulo competitions \u2014 boundary\
+    \ explicitado em DR-MATCH-001."
+  - "homeTeamId e awayTeamId referenciam m\xF3dulo teams \u2014 boundary explicitado\
+    \ em DR-MATCH-002."
+  - "lineupUserIds referenciam m\xF3dulo users \u2014 boundary explicitado em DR-MATCH-001."
+  - "officialIncidentIds referenciam m\xF3dulo incidents (scheduling futuro) \u2014\
+    \ DEC-MATCHES-001: CRUD simples."
+  - "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch\
+    \ usa PATCH \u2014 mapeamento documentado em DEC-MATCHES-001."
+entities:
+  Match:
+    schema_ref: ../../../../../contracts/schemas/matches/match.schema.json
+    runtime_entity_ref: ../../../../../src/matches/domain/entities.py#Match
+    docs_refs:
+    - ../DOMAIN_RULES_MATCHES.md
+    - ../INVARIANTS_MATCHES.md
+    - ../PERMISSIONS_MATCHES.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: competitionId
+      runtime_name: competition_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "DR-MATCH-001: matches \xE9 soberano do registro oficial; competitionId \xE9\
+        \ obrigat\xF3rio"
+      - "INV-MATCH-001: campo obrigat\xF3rio"
+      - 'boundary: reference to competitions module'
+    - name: homeTeamId
+      runtime_name: home_team_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - 'DR-MATCH-002: equipe mandante'
+      - "INV-MATCH-001: campo obrigat\xF3rio"
+      - 'INV-MATCH-002: homeTeamId != awayTeamId'
+      - 'boundary: reference to teams module'
+    - name: awayTeamId
+      runtime_name: away_team_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - 'DR-MATCH-002: equipe visitante'
+      - "INV-MATCH-001: campo obrigat\xF3rio"
+      - 'INV-MATCH-002: homeTeamId != awayTeamId'
+      - 'boundary: reference to teams module'
+    - name: venueLabel
+      runtime_name: venue_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+      - 'maxLength: 200'
+    - name: statusLabel
+      runtime_name: status_label
+      required: true
+      type: enum
+      values:
+      - SCHEDULED
+      - PRE_MATCH
+      - FIRST_HALF
+      - HALF_TIME
+      - SECOND_HALF
+      - OVERTIME_1
+      - OVERTIME_2
+      - PENALTIES
+      - COMPLETED
+      - CANCELLED
+      constraints:
+      - 'DEC-MATCHES-002: 10 fases do ciclo de vida HBR-013'
+      - "default: SCHEDULED na cria\xE7\xE3o"
+    - name: scheduledAt
+      runtime_name: scheduled_at
+      required: true
+      type: datetime
+      constraints:
+      - "INV-MATCH-001: campo obrigat\xF3rio"
+    - name: startedAt
+      runtime_name: started_at
+      required: false
+      type: datetime
+      constraints:
+      - 'nullable: true'
+      - 'INV-MATCH-004: startedAt <= endedAt quando ambos presentes'
+    - name: endedAt
+      runtime_name: ended_at
+      required: false
+      type: datetime
+      constraints:
+      - 'nullable: true'
+      - 'INV-MATCH-004: startedAt <= endedAt quando ambos presentes'
+    - name: homeScore
+      runtime_name: home_score
+      required: false
+      type: integer
+      constraints:
+      - 'nullable: true'
+      - 'minimum: 0'
+      - 'INV-MATCH-003: homeScore >= 0 quando presente'
+    - name: awayScore
+      runtime_name: away_score
+      required: false
+      type: integer
+      constraints:
+      - 'nullable: true'
+      - 'minimum: 0'
+      - 'INV-MATCH-003: awayScore >= 0 quando presente'
+    - name: lineupUserIds
+      runtime_name: lineup_user_ids
+      required: true
+      type: array_of_uuid
+      constraints:
+      - 'uniqueItems: true'
+      - 'INV-MATCH-005: sem duplicatas'
+      - 'HBR-008: max 16 por equipe'
+      - 'boundary: reference to users module'
+    - name: officialIncidentIds
+      runtime_name: official_incident_ids
+      required: true
+      type: array_of_uuid
+      constraints:
+      - 'uniqueItems: true'
+      - 'INV-MATCH-005: sem duplicatas'
+      - "DEC-MATCHES-001: CRUD simples; s\xFAmula alimentada pelo operador p\xF3s-jogo"
+    - name: refereeNames
+      runtime_name: referee_names
+      required: true
+      type: array_of_string
+      constraints:
+      - 'uniqueItems: true'
+      - 'INV-MATCH-005: sem duplicatas'
+      - "DR-MATCH-003: \xE1rbitros s\xE3o nomes simples, n\xE3o entidades do dom\xED\
+        nio"
+    - name: createdAt
+      runtime_name: created_at
+      required: true
+      type: datetime
+    - name: updatedAt
+      runtime_name: updated_at
+      required: true
+      type: datetime
+    domain_enums:
+    - name: RoleLabel
+      values:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+      source: ADR-008 / SYSTEM_SCOPE.md
+    - name: MatchStatus
+      values:
+      - SCHEDULED
+      - PRE_MATCH
+      - FIRST_HALF
+      - HALF_TIME
+      - SECOND_HALF
+      - OVERTIME_1
+      - OVERTIME_2
+      - PENALTIES
+      - COMPLETED
+      - CANCELLED
+      source: DEC-MATCHES-002 / HBR-013
+    invariants:
+    - id: INV-MATCH-001
+      rule: "id, competition_id, home_team_id, away_team_id, scheduled_at s\xE3o obrigat\xF3\
+        rios."
+    - id: INV-MATCH-002
+      rule: home_team_id deve ser diferente de away_team_id.
+    - id: INV-MATCH-003
+      rule: home_score e away_score devem ser >= 0 quando presentes.
+    - id: INV-MATCH-004
+      rule: started_at deve ser <= ended_at quando ambos presentes.
+    - id: INV-MATCH-005
+      rule: "lineup_user_ids, official_incident_ids e referee_names n\xE3o podem ter\
+        \ duplicatas."
+endpoints:
+- operation_id: listMatches
+  method: GET
+  path: /matches
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/get
+  runtime_handler_ref: ../../../../../src/matches/api.py#list_matches
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#ListMatches
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createMatch
+  method: POST
+  path: /matches
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/post
+  runtime_handler_ref: ../../../../../src/matches/api.py#create_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#CreateMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 500
+- operation_id: getMatch
+  method: GET
+  path: /matches/{matchId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/get
+  runtime_handler_ref: ../../../../../src/matches/api.py#get_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#GetMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchMatch
+  method: PATCH
+  path: /matches/{matchId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/patch
+  runtime_handler_ref: ../../../../../src/matches/api.py#patch_match
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#PatchMatch
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: addPlayerToLineup
+  method: PUT
+  path: /matches/{matchId}/lineup/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/put
+  runtime_handler_ref: ../../../../../src/matches/api.py#add_player_to_lineup
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#AddPlayerToLineup
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: removePlayerFromLineup
+  method: DELETE
+  path: /matches/{matchId}/lineup/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/matches.yaml#/matches/{matchId}/lineup/{userId}/delete
+  runtime_handler_ref: ../../../../../src/matches/api.py#remove_player_from_lineup
+  use_case_ref: ../../../../../src/matches/application/use_cases.py#RemovePlayerFromLineup
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-MATCH-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/matches/api.py#_role
+  operations:
+  - listMatches
+  - createMatch
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/matches/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/matches/domain/rules.py#MatchNotFound
+  operations:
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/matches/domain/entities.py#validate_invariants
+  operations:
+  - createMatch
+  - patchMatch
+- id: ERR-MATCH-409-STATE-ERROR
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/matches/domain/rules.py#MatchStateError
+  operations:
+  - createMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+- id: ERR-MATCH-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/matches/api.py#list_matches
+  operations:
+  - listMatches
+  - createMatch
+  - getMatch
+  - patchMatch
+  - addPlayerToLineup
+  - removePlayerFromLineup
+test_obligations:
+- id: MATCH-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/matches/match.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: MATCH-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/matches.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: MATCH-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/matches/tests/unit/test_matches_domain.py
+  covers:
+  - INV-MATCH-001
+  - INV-MATCH-002
+  - INV-MATCH-003
+  - INV-MATCH-004
+  - INV-MATCH-005
+  - DR-MATCH-001
+  - DR-MATCH-002
+  - DR-MATCH-003
+  - DR-MATCH-004
+  - DR-MATCH-005
+  verification: Domain unit tests enforcing invariants, boundary rules and permission
+    checks
+  evidence_refs:
+  - ../../../../../src/matches/tests/unit/test_matches_domain.py
+- id: MATCH-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_matches_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_matches_source_graph_integrity.py

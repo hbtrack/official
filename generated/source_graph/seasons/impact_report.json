@@ -65,7 +65,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
-      "sha256": "2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62"
+      "sha256": "23f05825e8780440a7a0e5cd1f3447389325f8bc2dec795a8d19aeb50099059f"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md",
@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/README.md",
-      "sha256": "9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec"
+      "sha256": "f10ac2c0987da16a1628c8ad1e5430f8e99dfcba0a8ec0985dec2acb395b338d"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md",
@@ -92,7 +92,7 @@
       "sha256": "79539544c41029d5005d26018ce6d08f7c96e9aa12f34d531e61fb15815859d1"
     },
     {
-      "relpath": "docs/hbtrack/modulos/seasons/graph/entities.yaml",
+      "relpath": "docs/hbtrack/modulos/seasons/graph/entity_graph.yaml",
       "sha256": "e67c00d6ac7c524390568ecb70cf0da02d8f40fdf724c22a707cd818b5985713"
     },
     {
@@ -101,7 +101,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
-      "sha256": "6bd83f8063b4df68fbb064a7f67964d2ebc363b440816bb3559860eed383c26e"
+      "sha256": "8c313640cc4c740f2ca82538d781f61370d0b876f5d534e8c5dc8e13157a648c"
     },
     {
       "relpath": "docs/hbtrack/modulos/seasons/graph/test_obligations.yaml",
@@ -140,5 +140,5 @@
     "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
     "generated/source_graph/seasons/impact_report.json"
   ],
-  "source_fingerprint": "69d1be97df3b9147bf4aef05c8b389aa9036d053dc6df4a01ca6a508926e29f1"
+  "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
 }

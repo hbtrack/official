@@ -1,0 +1,394 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: training
+entity: TrainingSession
+primary_entity: TrainingSession
+primary_schema_ref: contracts/schemas/training/training_session.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/training/training_session.yaml
+required: &id001
+- id
+- organizationId
+- sessionAt
+- sessionType
+- status
+- createdAt
+- updatedAt
+- createdByUserId
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: organizationId
+  runtime_name: organization_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "DR-TRAIN-043: identity_access \xE9 soberano de autoriza\xE7\xE3o; organizationId\
+    \ \xE9 contexto"
+- name: teamId
+  runtime_name: team_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+  - 'boundary: reference to teams module'
+- name: seasonId
+  runtime_name: season_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+  - 'boundary: reference to seasons module'
+- name: microcycleId
+  runtime_name: microcycle_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+  - 'boundary: periodization planning'
+- name: sessionAt
+  runtime_name: session_at
+  required: true
+  type: datetime
+  constraints:
+  - 'INV-TRAIN-002: wellness_pre janela fecha 2h antes'
+  - "INV-TRAIN-004: janela de edi\xE7\xE3o baseada em session_at"
+  - "INV-TRAIN-005: sess\xF5es > 60 dias s\xE3o somente leitura"
+- name: durationPlannedMinutes
+  runtime_name: duration_planned_minutes
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 1'
+  - 'maximum: 480'
+- name: location
+  runtime_name: location
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'maxLength: 120'
+- name: sessionType
+  runtime_name: session_type
+  required: true
+  type: string
+  constraints:
+  - 'maxLength: 32'
+- name: mainObjective
+  runtime_name: main_objective
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'maxLength: 255'
+- name: secondaryObjective
+  runtime_name: secondary_objective
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'maxLength: 255'
+- name: plannedLoad
+  runtime_name: planned_load
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 10000'
+- name: groupClimate
+  runtime_name: group_climate
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 1'
+  - 'maximum: 5'
+- name: notes
+  runtime_name: notes
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: phaseFocusDefense
+  runtime_name: phase_focus_defense
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+- name: phaseFocusAttack
+  runtime_name: phase_focus_attack
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+- name: phaseFocusTransitionOffense
+  runtime_name: phase_focus_transition_offense
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+- name: phaseFocusTransitionDefense
+  runtime_name: phase_focus_transition_defense
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+- name: intensityTarget
+  runtime_name: intensity_target
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 1'
+  - 'maximum: 10'
+- name: sessionBlock
+  runtime_name: session_block
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: createdAt
+  runtime_name: created_at
+  required: true
+  type: datetime
+- name: createdByUserId
+  runtime_name: created_by_user_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "DR-TRAIN-001: cria\xE7\xE3o exige coach ou coordinator"
+- name: updatedAt
+  runtime_name: updated_at
+  required: true
+  type: datetime
+- name: deletedAt
+  runtime_name: deleted_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+  - 'INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos'
+- name: deletedReason
+  runtime_name: deleted_reason
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos'
+- name: focusAttackPositionalPct
+  runtime_name: focus_attack_positional_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - "INV-TRAIN-001: soma de todos focus_*_pct \u2264 120"
+  - "RC-2: 2 casas decimais m\xE1ximo"
+- name: focusDefensePositionalPct
+  runtime_name: focus_defense_positional_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: focusTransitionOffensePct
+  runtime_name: focus_transition_offense_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: focusTransitionDefensePct
+  runtime_name: focus_transition_defense_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: focusAttackTechnicalPct
+  runtime_name: focus_attack_technical_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: focusDefenseTechnicalPct
+  runtime_name: focus_defense_technical_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: focusPhysicalPct
+  runtime_name: focus_physical_pct
+  required: false
+  type: decimal
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+  - 'maximum: 100'
+  - INV-TRAIN-001
+- name: status
+  runtime_name: status
+  required: true
+  type: enum
+  values:
+  - DRAFT
+  - SCHEDULED
+  - PUBLISHED
+  - IN_PROGRESS
+  - COMPLETED
+  - CANCELLED
+  - ARCHIVED
+  constraints:
+  - 'ADR-017: FSM fechada de 7 estados (INV-TRAIN-006)'
+  - "default: DRAFT na cria\xE7\xE3o"
+  - "ARCHIVED \xE9 estado terminal \u2014 apenas automa\xE7\xE3o 60d ou admin/coordinator"
+- name: closedAt
+  runtime_name: closed_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+- name: closedByUserId
+  runtime_name: closed_by_user_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+- name: deviationJustification
+  runtime_name: deviation_justification
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: planningDeviationFlag
+  runtime_name: planning_deviation_flag
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+- name: standalone
+  runtime_name: standalone
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+  - "true = sess\xE3o avulsa sem v\xEDnculo com microciclo"
+- name: startedAt
+  runtime_name: started_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+  - "INV-TRAIN-006: preenchido na transi\xE7\xE3o IN_PROGRESS"
+- name: endedAt
+  runtime_name: ended_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+  - "INV-TRAIN-006: preenchido na transi\xE7\xE3o COMPLETED"
+- name: durationActualMinutes
+  runtime_name: duration_actual_minutes
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+- name: executionOutcome
+  runtime_name: execution_outcome
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: delayMinutes
+  runtime_name: delay_minutes
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+- name: cancellationReason
+  runtime_name: cancellation_reason
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - "INV-TRAIN-006: obrigat\xF3rio quando status=CANCELLED"
+- name: postReviewCompletedAt
+  runtime_name: post_review_completed_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+- name: postReviewCompletedByUserId
+  runtime_name: post_review_completed_by_user_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+- name: postReviewDeadlineAt
+  runtime_name: post_review_deadline_at
+  required: false
+  type: datetime
+  constraints:
+  - 'nullable: true'
+- name: individualizationMode
+  runtime_name: individualization_mode
+  required: false
+  type: enum
+  values:
+  - COLLECTIVE_UNIFORM
+  - COLLECTIVE_WITH_VARIANTS
+  - INDIVIDUAL_ONLY
+  constraints:
+  - 'nullable: true'
+  - "DR-TRAIN-030: obrigat\xF3rio se exerc\xEDcios com variantes individuais"
+- name: plannedContentSnapshot
+  runtime_name: planned_content_snapshot
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: objectiveOrigin
+  runtime_name: objective_origin
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+- name: actualLoadRecorded
+  runtime_name: actual_load_recorded
+  required: false
+  type: integer
+  constraints:
+  - 'nullable: true'
+  - 'minimum: 0'
+- name: continuityNotes
+  runtime_name: continuity_notes
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+runtime_extension_fields: []
+entities:
+  TrainingSession:
+    schema_ref: contracts/schemas/training/training_session.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []

@@ -1,0 +1,154 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: users
+openapi_paths_ref: contracts/openapi/paths/users.yaml
+operations:
+- operation_id: listUsers
+  method: GET
+  path: /users
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/get
+  runtime_handler_ref: ../../../../../src/users/api.py#list_users
+  use_case_ref: ../../../../../src/users/application/use_cases.py#ListUsersUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: createUser
+  method: POST
+  path: /users
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/post
+  runtime_handler_ref: ../../../../../src/users/api.py#create_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#CreateUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 500
+- operation_id: getUser
+  method: GET
+  path: /users/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/get
+  runtime_handler_ref: ../../../../../src/users/api.py#get_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#GetUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchUser
+  method: PATCH
+  path: /users/{userId}
+  openapi_ref: ../../../../../contracts/openapi/paths/users.yaml#/users/{userId}/patch
+  runtime_handler_ref: ../../../../../src/users/api.py#patch_user
+  use_case_ref: ../../../../../src/users/application/use_cases.py#PatchUserUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 500
+errors:
+- id: ERR-USR-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/users/api.py#_get_actor_id
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser
+- id: ERR-USR-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/users/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser
+- id: ERR-USR-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/users/domain/rules.py#UserNotFound
+  operations:
+  - getUser
+  - patchUser
+- id: ERR-USR-400-INVALID-ROLE-LABEL
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/users/domain/rules.py#InvalidRoleLabel
+  operations:
+  - listUsers
+  - createUser
+  - patchUser
+- id: ERR-USR-400-AUTHN-FIELD-FORBIDDEN
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/users/domain/rules.py#AuthnFieldForbidden
+  operations:
+  - createUser
+  - patchUser
+- id: ERR-USR-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/users/domain/entities.py#validate_invariants
+  operations:
+  - createUser
+  - patchUser
+- id: ERR-USR-409-CONFLICT
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/users/domain/rules.py#UserConflict
+  operations:
+  - createUser
+- id: ERR-USR-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/users/api.py#_get_actor_id
+  operations:
+  - listUsers
+  - createUser
+  - getUser
+  - patchUser

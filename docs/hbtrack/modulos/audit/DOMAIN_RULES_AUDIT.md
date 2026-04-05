@@ -35,6 +35,6 @@ Registrar as regras de negócio do módulo `audit`.
 - Não inferir payload completo a partir de rótulos ou summaries.
 
 ## Source Graph
-- Entidades: [graph/entities.yaml](graph/entities.yaml)
+- Entidades: [graph/entity_graph.yaml](graph/entity_graph.yaml)
 - Endpoints: [graph/endpoints.yaml](graph/endpoints.yaml)
 - Erros: [graph/errors.yaml](graph/errors.yaml)

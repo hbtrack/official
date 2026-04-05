@@ -30,7 +30,7 @@ Documentar o escopo normativo do módulo `audit` e suas superfícies soberanas.
 
 ## Source Graph
 - [graph/module_manifest.yaml](graph/module_manifest.yaml)
-- [graph/entities.yaml](graph/entities.yaml)
+- [graph/entity_graph.yaml](graph/entity_graph.yaml)
 - [graph/endpoints.yaml](graph/endpoints.yaml)
 - [graph/errors.yaml](graph/errors.yaml)
 - [graph/test_obligations.yaml](graph/test_obligations.yaml)

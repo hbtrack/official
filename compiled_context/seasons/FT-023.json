@@ -79,7 +79,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -91,11 +91,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dd2577e2910a4e4ae7fa6b0f72b58272847bc40b19007feef52652278d1937bc"
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
-      "sha256": "905a2a35ea99d1a6314969a1f40e5c970ac582456def0ac32e6d884bb3476fc4"
+      "sha256": "48a0405e8510dd8e29a74bc1e58175746de7d367842613b5d6b81b4ad55b2b50"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/impact_report.json",
-      "sha256": "79b9a3a0a1a826cb46690092abb42628427a3549412fe9d760ec8a0f755f4444"
+      "sha256": "9d9b61ee2a39ea724affc06b52dd00c5001499eea81a7d128d404042f2127172"
     }
   ],
   "module": "seasons",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "b78523b38e922eab40a6031325f113ab05d77f97409b2022481b7823bc8c0db5",
+  "source_fingerprint": "34395674f0de150674a205044e0011bc6a7afc2f63afbf6b0048d57202132605",
   "source_graph": {
     "entities": {
       "Season": {
@@ -315,7 +315,7 @@
         "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
         "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
       ],
-      "source_fingerprint": "69d1be97df3b9147bf4aef05c8b389aa9036d053dc6df4a01ca6a508926e29f1"
+      "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

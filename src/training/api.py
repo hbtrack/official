@@ -914,3 +914,116 @@ def get_microcycle(request, id: uuid.UUID):
         planned_sessions_count=micro.planned_sessions_count,
         notes=micro.notes,
     )
+
+
+# ---------------------------------------------------------------------------
+# Stubs de contrato — B10-001 source graph integrity
+# Implementação pendente (known_gaps). raise NotImplementedError até fase de implementação.
+# ---------------------------------------------------------------------------
+
+def update_training_session(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def delete_training_session(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def reorder_session_blocks(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def list_session_attendance(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def record_session_attendance(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def get_wellness_pre(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def update_wellness_pre(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def get_wellness_post(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def update_wellness_post(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def update_mesocycle(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def update_microcycle(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def get_execution_record(request, id, record_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def list_feedback_threads(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def create_feedback_thread(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def close_feedback_thread(request, id, thread_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def list_attention_queue_items(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def resolve_attention_queue_item(request, id, item_id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def dismiss_attention_queue_item(request, id, item_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def escalate_attention_queue_item(request, id, item_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def list_recommendations(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def accept_recommendation(request, id, rec_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def dismiss_recommendation(request, id, rec_id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def get_ineligibility_status(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def submit_ineligibility_declaration(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
+
+
+def get_load_chart(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def list_chat_messages(request, id):
+    raise NotImplementedError("stub — B10-001")
+
+
+def submit_training_suggestion(request, id, body=None):
+    raise NotImplementedError("stub — B10-001")
