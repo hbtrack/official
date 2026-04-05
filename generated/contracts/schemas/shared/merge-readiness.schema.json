@@ -72,6 +72,15 @@
                         "type": "string",
                         "description": "Comando local que reproduz este check. Obrigatório para category=required."
                     },
+                    "local_equivalent_kind": {
+                        "type": "string",
+                        "enum": [
+                            "exact_job",
+                            "aggregate_executor",
+                            "approximation"
+                        ],
+                        "description": "Grau de fidelidade do local_equivalent em relação ao check remoto."
+                    },
                     "condition": {
                         "type": "string",
                         "description": "Expressão que ativa o check. Obrigatório para category=conditional."
@@ -95,7 +104,8 @@
                         },
                         "then": {
                             "required": [
-                                "local_equivalent"
+                                "local_equivalent",
+                                "local_equivalent_kind"
                             ]
                         }
                     },

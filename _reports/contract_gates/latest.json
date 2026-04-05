@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-04T21:22:59Z",
+  "timestamp_utc": "2026-04-05T09:15:02Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "314819b7",
+    "git_commit": "74176f48",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260404T212259_d10909"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260405T091502_c9af48"
   },
   "status_detail": {
-    "active_gates_passed": 47,
+    "active_gates_passed": 50,
     "skip_count": 3,
     "critical_gates": [
       {
@@ -91,7 +91,7 @@
       },
       {
         "gate_id": "SHADOW_AUTHORITY_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "DECISION_IR_CONFORMANCE_GATE",
@@ -167,7 +167,7 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
@@ -207,7 +207,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 237
+        "duration_ms": 58
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13399
+        "duration_ms": 1467
       }
     },
     {
@@ -459,7 +459,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 8
       }
     },
     {
@@ -589,7 +589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 218
+        "duration_ms": 120
       }
     },
     {
@@ -620,8 +620,6 @@
         "/home/davis/HB-TRACK/docs/_canon/GLOBAL_INVARIANTS.md",
         "/home/davis/HB-TRACK/docs/_canon/HANDBALL_RULES_DOMAIN.md",
         "/home/davis/HB-TRACK/docs/_canon/INTEGRATION_FLOWS.md",
-        "/home/davis/HB-TRACK/docs/_canon/MCP_PREWORK.md",
-        "/home/davis/HB-TRACK/docs/_canon/MCP_SERVER_ARCHITECTURE.md",
         "/home/davis/HB-TRACK/docs/_canon/MODULE_MAP.md",
         "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md",
         "/home/davis/HB-TRACK/docs/_canon/README.md",
@@ -644,7 +642,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51
+        "duration_ms": 2
       }
     },
     {
@@ -665,7 +663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 39
       }
     },
     {
@@ -686,7 +684,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 34
       }
     },
     {
@@ -707,7 +705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 15
       }
     },
     {
@@ -728,7 +726,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 117
+        "duration_ms": 81
       }
     },
     {
@@ -749,7 +747,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 54
       }
     },
     {
@@ -770,7 +768,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 45
       }
     },
     {
@@ -791,7 +789,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 685
+        "duration_ms": 284
       }
     },
     {
@@ -812,7 +810,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 72
+        "duration_ms": 31
       }
     },
     {
@@ -871,16 +869,16 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 7
       }
     },
     {
       "gate_id": "SHADOW_AUTHORITY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_SHADOW_AUTHORITY",
-      "summary": "1 documento(s) com shadow authority detectado(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Nenhum shadow authority detectado nos docs DSS verificados.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/hbtrack/decisoes",
@@ -889,9 +887,9 @@
         "/home/davis/HB-TRACK/ANALISEARQUITETURA.md",
         "/home/davis/HB-TRACK/CLAUDE.md",
         "/home/davis/HB-TRACK/DEVCONT.md",
-        "/home/davis/HB-TRACK/PRS.md",
         "/home/davis/HB-TRACK/PR_SEQUENCE_PARIDADE.md",
         "/home/davis/HB-TRACK/compilance.md",
+        "/home/davis/HB-TRACK/reviwer.md",
         "/home/davis/HB-TRACK/docs/guias/AUDIT_INTEGRATION_SUMMARY.md",
         "/home/davis/HB-TRACK/docs/guias/CI_CD_AUDIT_PIPELINE.md",
         "/home/davis/HB-TRACK/docs/guias/CI_CD_DOMAIN_COMPLETENESS_INTEGRATION.md",
@@ -926,19 +924,12 @@
         "/home/davis/HB-TRACK/docs/guias/video.md"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_SHADOW_AUTHORITY",
-          "artifact": "PRS.md",
-          "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 136
+        "violations": 0,
+        "duration_ms": 23
       }
     },
     {
@@ -965,7 +956,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 157
+        "duration_ms": 118
       }
     },
     {
@@ -1001,9 +992,6 @@
         "docs/_canon/HANDBALL_RULES_DOMAIN.md",
         "docs/_canon/INTEGRATION_FLOWS.md",
         "docs/_canon/IR_TO_SURFACE_MAPPING.yaml",
-        "docs/_canon/MCP_PREWORK.md",
-        "docs/_canon/MCP_SERVER_ARCHITECTURE.md",
-        "docs/_canon/MCP_TOOL_MANIFEST.yaml",
         "docs/_canon/MODULE_MAP.md",
         "docs/_canon/MODULE_REGISTRY.yaml",
         "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -1061,9 +1049,6 @@
         "docs/_canon/decisions/ADR-032-training-arch-decisions.md",
         "docs/_canon/decisions/ADR-033-video-module-canonicalization.md",
         "docs/_canon/decisions/ADR-034-scope-boundary-validation.md",
-        "docs/_canon/decisions/ADR-035-agent-identity.md",
-        "docs/_canon/decisions/ADR-036-mcp-security-analysis.md",
-        "docs/_canon/decisions/ADR-037-mcp-runtime-governance.md",
         "docs/_canon/decisions/README.md"
       ],
       "evidence_files": [],
@@ -1072,7 +1057,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 3
       }
     },
     {
@@ -1444,7 +1429,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 300
+        "duration_ms": 29
       }
     },
     {
@@ -1530,7 +1515,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 877
+        "duration_ms": 684
       }
     },
     {
@@ -1553,7 +1538,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8604
+        "duration_ms": 1043
       }
     },
     {
@@ -1575,7 +1560,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4154
+        "duration_ms": 1271
       }
     },
     {
@@ -1614,7 +1599,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1116
+        "duration_ms": 549
       }
     },
     {
@@ -1654,7 +1639,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 3226
+        "duration_ms": 1618
       }
     },
     {
@@ -1722,7 +1707,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 2
       }
     },
     {
@@ -2103,7 +2088,6 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/TEST_MATRIX_AUDIT.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/entities.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
@@ -2117,7 +2101,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/TEST_MATRIX_COMPETITIONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/module_manifest.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/test_obligations.yaml",
@@ -2143,6 +2127,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/TEST_MATRIX_MATCHES.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md",
@@ -2182,7 +2172,6 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/entities.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
@@ -2196,7 +2185,6 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/entities.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
@@ -2215,6 +2203,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/UI_CONTRACT_TRAINING.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
@@ -2224,7 +2218,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/module_manifest.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/test_obligations.yaml",
@@ -2251,7 +2245,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2099
+        "duration_ms": 1696
       }
     },
     {
@@ -2275,7 +2269,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3516
+        "duration_ms": 1597
       }
     },
     {
@@ -2284,7 +2278,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "generated/ presente com 521 artefato(s).",
+      "summary": "generated/ presente com 531 artefato(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/generated"
@@ -2295,7 +2289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 67
+        "duration_ms": 2
       }
     },
     {
@@ -2335,7 +2329,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5451
+        "duration_ms": 1490
       }
     },
     {
@@ -2378,7 +2372,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 112
+        "duration_ms": 61
       }
     },
     {
@@ -2400,7 +2394,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1925
+        "duration_ms": 1290
       }
     },
     {
@@ -2456,7 +2450,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 61
       }
     },
     {
@@ -2476,268 +2470,27 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40
+        "duration_ms": 2
       }
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_TRACEABILITY_MANIFEST_INVALID",
-      "summary": "Manifests de rastreabilidade inválidos: 30 erro(s).",
-      "inputs": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml"
-      ],
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
+      "inputs": [],
       "artifacts_checked": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml"
+        "/home/davis/HB-TRACK/generated"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 30,
+        "errors": 0,
         "warnings": 0,
-        "violations": 30,
-        "duration_ms": 3881
+        "violations": 0,
+        "duration_ms": 41575
       }
     },
     {
@@ -2773,7 +2526,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 12
       }
     },
     {
@@ -2793,7 +2546,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 20
       }
     },
     {
@@ -2815,7 +2568,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 0
       }
     },
     {
@@ -2871,7 +2624,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 7
       }
     },
     {
@@ -2893,7 +2646,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       }
     },
     {
@@ -2950,37 +2703,37 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_training_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_training.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_training.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/entities.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/users/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_training_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_training.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_training.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2988,7 +2741,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 203
+        "duration_ms": 12
       }
     },
     {
@@ -3010,7 +2763,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 619
+        "duration_ms": 161
       }
     },
     {
@@ -3032,7 +2785,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 6
       }
     },
     {
@@ -3054,7 +2807,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 22
       }
     },
     {
@@ -3418,7 +3171,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2170
+        "duration_ms": 896
       }
     },
     {
@@ -3442,7 +3195,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 80
+        "duration_ms": 9
       }
     },
     {
@@ -3464,7 +3217,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 89
+        "duration_ms": 17
       }
     },
     {
@@ -3482,7 +3235,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -3503,7 +3256,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 26
       }
     },
     {
@@ -3526,16 +3279,16 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 137
+        "duration_ms": 5
       }
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 2 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 49 PASS, 3 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

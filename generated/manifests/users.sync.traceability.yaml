@@ -256,7 +256,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
   - path: generated/contracts/schemas/shared/merge-readiness.schema.json
-    sha256: 5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38
+    sha256: 50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256
   - path: generated/contracts/schemas/shared/module_registry.schema.json
     sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: generated/contracts/schemas/shared/module_source_authority_matrix.schema.json
@@ -323,7 +323,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: e8543accc3d0881f916f42dad7e04efc916d1d4108ec4122531aa1cb98e6bc4f
+  generated_tree_sha256: 68dddc307b2222e3836c34850997eb6ab95f8abc5b02836ee3663ec70b8d529b
   policy_path: generated/resolved_policy/users.sync.resolved.yaml
   policy_sha256: 7c79cffebeace077d94553e34e85ac59fc167071d70cf9df0f33e2e5fc3e1c33
   source_contracts:
@@ -580,7 +580,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
   - path: contracts/schemas/shared/merge-readiness.schema.json
-    sha256: 5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38
+    sha256: 50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256
   - path: contracts/schemas/shared/module_registry.schema.json
     sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: contracts/schemas/shared/module_source_authority_matrix.schema.json
@@ -658,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 7cc031998067e4ba4fb32b8c6a437d7e74ced232dbf71a53142faa6628a24704
+  source_tree_sha256: d317c2a34630ed1c20ee55976331030f101b3841e86ecf75c6f45fd01533af04
