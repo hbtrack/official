@@ -1,0 +1,832 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/wellness/wellness.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/wellness/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "WELLNESS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/wellness.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+    "primary_schema": "contracts/schemas/wellness/wellness_entry.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/wellness"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/wellness.yaml"
+    ],
+    "description": "Atleta registra entradas de bem-estar subjetivo (humor, carga percebida, qualidade do sono). Treinador e coordenador consultam entradas associadas aos atletas do time.",
+    "endpoints": [
+      "GET /wellness/entries",
+      "POST /wellness/entries",
+      "GET /wellness/entries/{entryId}"
+    ],
+    "id": "FT-032",
+    "name": "Registrar e Consultar Entradas de Bem-estar",
+    "slug": "registrar-e-consultar-entradas-de-bem-estar",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/wellness/api.py",
+      "src/wellness/application/use_cases.py",
+      "src/wellness/domain/entities.py",
+      "src/wellness/domain/rules.py",
+      "src/wellness/schemas.py",
+      "src/wellness/tests/unit/test_wellness_domain.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+      "contracts/openapi/paths/wellness.yaml",
+      "contracts/schemas/wellness/wellness_entry.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/wellness/FT-032.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/README.md",
+      "docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_wellness.py",
+      "tests/pipeline_gates/test_source_graph_compiler_wellness.py",
+      "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+    },
+    {
+      "relpath": "generated/source_graph/wellness/wellness.bundle.yaml",
+      "sha256": "0f5c0320013a001ffeb2e453086be4a6c20c4d98acfae4746d726b30d0fb3cae"
+    },
+    {
+      "relpath": "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+      "sha256": "57a69e20703f9b1cf8043b016a43cff07471553f39bfd7908fc641aae0c35417"
+    },
+    {
+      "relpath": "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+      "sha256": "6422ff84c439b17f0c70380a114118abce954d9b99078cc221c49ca92a888711"
+    },
+    {
+      "relpath": "generated/source_graph/wellness/impact_report.json",
+      "sha256": "c02c5dcbf54905fa3a99b3a9edf765bc4dc6b7eaf51d9302e39b863bc8f288d2"
+    }
+  ],
+  "module": "wellness",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+    "invariants": "docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md",
+    "permissions": "docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
+    "readme": "docs/hbtrack/modulos/wellness/README.md",
+    "scope": "docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md",
+    "test_matrix": "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "sport_science",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "performance-tech",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/wellness/api.py",
+    "domain_entity": "src/wellness/domain/entities.py",
+    "domain_rules": "src/wellness/domain/rules.py",
+    "unit_tests": "src/wellness/tests/unit/test_wellness_domain.py",
+    "use_cases": "src/wellness/application/use_cases.py"
+  },
+  "source_fingerprint": "cc5d98c957ddf9d7205733aadc9516b5792c0ab38c26ca1da67be881f4b220c2",
+  "source_graph": {
+    "entities": {
+      "WellnessEntry": {
+        "docs_refs": [
+          "../DOMAIN_RULES_WELLNESS.md",
+          "../INVARIANTS_WELLNESS.md",
+          "../PERMISSIONS_WELLNESS.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/wellness/domain/entities.py#WellnessEntry",
+        "schema_ref": "../../../../../contracts/schemas/wellness/wellness_entry.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "athleteUserId",
+            "required": true,
+            "runtime_name": "athlete_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "trainingSessionId",
+            "required": false,
+            "runtime_name": "training_session_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "questionnaireDate",
+            "required": true,
+            "runtime_name": "questionnaire_date",
+            "type": "date_only"
+          },
+          {
+            "name": "questionnaireLabel",
+            "required": false,
+            "runtime_name": "questionnaire_label",
+            "type": "string"
+          },
+          {
+            "name": "readinessScore",
+            "required": true,
+            "runtime_name": "readiness_score",
+            "type": "integer"
+          },
+          {
+            "name": "fatigueScore",
+            "required": false,
+            "runtime_name": "fatigue_score",
+            "type": "integer"
+          },
+          {
+            "name": "painScore",
+            "required": false,
+            "runtime_name": "pain_score",
+            "type": "integer"
+          },
+          {
+            "name": "recoveryScore",
+            "required": false,
+            "runtime_name": "recovery_score",
+            "type": "integer"
+          },
+          {
+            "name": "sleepHours",
+            "required": false,
+            "runtime_name": "sleep_hours",
+            "type": "number"
+          },
+          {
+            "name": "notes",
+            "required": false,
+            "runtime_name": "notes",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-WEL-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "createWellnessEntry",
+          "listWellnessEntries",
+          "getWellnessEntry",
+          "listAthleteWellnessEntries",
+          "getAthleteWellnessSummary"
+        ],
+        "source_ref": "../../../../../src/wellness/api.py#_role"
+      },
+      {
+        "exception_ref": "../../../../../src/wellness/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-WEL-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "createWellnessEntry",
+          "listWellnessEntries",
+          "getWellnessEntry",
+          "listAthleteWellnessEntries",
+          "getAthleteWellnessSummary"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/wellness/domain/rules.py#WellnessEntryNotFound",
+        "http_status": 404,
+        "id": "ERR-WEL-404-ENTRY-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getWellnessEntry"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-WEL-400-ENTRY-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "createWellnessEntry"
+        ],
+        "source_ref": "../../../../../src/wellness/domain/entities.py#validate_invariants"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/wellness.yaml",
+        "contracts/schemas/wellness/wellness_entry.schema.json",
+        "contracts/openapi/components/schemas/wellness/wellness_entry.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/wellness/README.md",
+        "docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+      ],
+      "impacted_runtime": [
+        "src/wellness/api.py",
+        "src/wellness/domain/entities.py",
+        "src/wellness/domain/rules.py",
+        "src/wellness/application/use_cases.py",
+        "src/wellness/tests/unit/test_wellness_domain.py"
+      ],
+      "known_gaps": [
+        "WellnessSummary ainda nao possui schema soberano em contracts/schemas/wellness/ e permanece como surface agregada de runtime/OpenAPI.",
+        "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
+        "As rotas de athlete history/summary documentam 404, mas o runtime atual nao materializa AthleteNotFound de forma explicita."
+      ],
+      "source_fingerprint": "d567573a1bb294c11805e0af52ec499010fc4eabd47cc2ae150b1cd01531926c"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-WEL-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "createWellnessEntry",
+            "listWellnessEntries",
+            "getWellnessEntry",
+            "listAthleteWellnessEntries",
+            "getAthleteWellnessSummary"
+          ],
+          "source_ref": "../../../../../src/wellness/api.py#_role"
+        },
+        {
+          "exception_ref": "../../../../../src/wellness/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-WEL-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "createWellnessEntry",
+            "listWellnessEntries",
+            "getWellnessEntry",
+            "listAthleteWellnessEntries",
+            "getAthleteWellnessSummary"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/wellness/domain/rules.py#WellnessEntryNotFound",
+          "http_status": 404,
+          "id": "ERR-WEL-404-ENTRY-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getWellnessEntry"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/wellness/domain/rules.py#AthleteNotFound",
+          "http_status": 404,
+          "id": "ERR-WEL-404-ATHLETE-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "listAthleteWellnessEntries",
+            "getAthleteWellnessSummary"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-WEL-400-ENTRY-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "createWellnessEntry"
+          ],
+          "source_ref": "../../../../../src/wellness/domain/entities.py#validate_invariants"
+        }
+      ],
+      "module": "wellness",
+      "openapi_paths_ref": "contracts/openapi/paths/wellness.yaml",
+      "operations": [
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/post",
+          "operation_id": "createWellnessEntry",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/wellness/entries",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/wellness/api.py#create_wellness_entry",
+          "use_case_ref": "../../../../../src/wellness/application/use_cases.py#CreateWellnessEntry"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/get",
+          "operation_id": "listWellnessEntries",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/wellness/entries",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/wellness/api.py#list_wellness_entries",
+          "use_case_ref": "../../../../../src/wellness/application/use_cases.py#ListWellnessEntries"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/{entryId}/get",
+          "operation_id": "getWellnessEntry",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/wellness/entries/{entryId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/wellness/api.py#get_wellness_entry",
+          "use_case_ref": "../../../../../src/wellness/application/use_cases.py#GetWellnessEntry"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/entries/get",
+          "operation_id": "listAthleteWellnessEntries",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/wellness/athletes/{athleteUserId}/entries",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/wellness/api.py#list_athlete_wellness_entries",
+          "use_case_ref": "../../../../../src/wellness/application/use_cases.py#ListAthleteWellnessEntries"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/summary/get",
+          "operation_id": "getAthleteWellnessSummary",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/wellness/athletes/{athleteUserId}/summary",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/wellness/api.py#get_athlete_wellness_summary",
+          "use_case_ref": "../../../../../src/wellness/application/use_cases.py#GetAthleteWellnessSummary"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/get",
+        "operation_id": "listWellnessEntries",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/wellness/entries",
+        "response_codes": [
+          200,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/wellness/api.py#list_wellness_entries",
+        "use_case_ref": "../../../../../src/wellness/application/use_cases.py#ListWellnessEntries"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/post",
+        "operation_id": "createWellnessEntry",
+        "owner_scoped_roles": [
+          "athlete"
+        ],
+        "path": "/wellness/entries",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          409,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/wellness/api.py#create_wellness_entry",
+        "use_case_ref": "../../../../../src/wellness/application/use_cases.py#CreateWellnessEntry"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/{entryId}/get",
+        "operation_id": "getWellnessEntry",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/wellness/entries/{entryId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/wellness/api.py#get_wellness_entry",
+        "use_case_ref": "../../../../../src/wellness/application/use_cases.py#GetWellnessEntry"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "WellnessEntry": {
+          "required": [
+            "id",
+            "athleteUserId",
+            "questionnaireDate",
+            "readinessScore"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/wellness/wellness_entry.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "athleteUserId",
+              "required": true,
+              "runtime_name": "athlete_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "trainingSessionId",
+              "required": false,
+              "runtime_name": "training_session_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "questionnaireDate",
+              "required": true,
+              "runtime_name": "questionnaire_date",
+              "type": "date_only"
+            },
+            {
+              "name": "questionnaireLabel",
+              "required": false,
+              "runtime_name": "questionnaire_label",
+              "type": "string"
+            },
+            {
+              "name": "readinessScore",
+              "required": true,
+              "runtime_name": "readiness_score",
+              "type": "integer"
+            },
+            {
+              "name": "fatigueScore",
+              "required": false,
+              "runtime_name": "fatigue_score",
+              "type": "integer"
+            },
+            {
+              "name": "painScore",
+              "required": false,
+              "runtime_name": "pain_score",
+              "type": "integer"
+            },
+            {
+              "name": "recoveryScore",
+              "required": false,
+              "runtime_name": "recovery_score",
+              "type": "integer"
+            },
+            {
+              "name": "sleepHours",
+              "required": false,
+              "runtime_name": "sleep_hours",
+              "type": "number"
+            },
+            {
+              "name": "notes",
+              "required": false,
+              "runtime_name": "notes",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "entity": "WellnessEntry",
+      "module": "wellness",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "primary_entity": "WellnessEntry",
+      "primary_schema_ref": "contracts/schemas/wellness/wellness_entry.schema.json",
+      "required": [
+        "id",
+        "athleteUserId",
+        "questionnaireDate",
+        "readinessScore"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "athleteUserId",
+          "required": true,
+          "runtime_name": "athlete_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "trainingSessionId",
+          "required": false,
+          "runtime_name": "training_session_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "questionnaireDate",
+          "required": true,
+          "runtime_name": "questionnaire_date",
+          "type": "date_only"
+        },
+        {
+          "name": "questionnaireLabel",
+          "required": false,
+          "runtime_name": "questionnaire_label",
+          "type": "string"
+        },
+        {
+          "name": "readinessScore",
+          "required": true,
+          "runtime_name": "readiness_score",
+          "type": "integer"
+        },
+        {
+          "name": "fatigueScore",
+          "required": false,
+          "runtime_name": "fatigue_score",
+          "type": "integer"
+        },
+        {
+          "name": "painScore",
+          "required": false,
+          "runtime_name": "pain_score",
+          "type": "integer"
+        },
+        {
+          "name": "recoveryScore",
+          "required": false,
+          "runtime_name": "recovery_score",
+          "type": "integer"
+        },
+        {
+          "name": "sleepHours",
+          "required": false,
+          "runtime_name": "sleep_hours",
+          "type": "number"
+        },
+        {
+          "name": "notes",
+          "required": false,
+          "runtime_name": "notes",
+          "type": "string"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/wellness/wellness_entry.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "WEL-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/wellness.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "WEL-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/wellness/tests/unit/test_wellness_domain.py",
+        "covers": [
+          "INV-WELL-001",
+          "INV-WELL-002",
+          "INV-WELL-003",
+          "INV-WELL-004",
+          "DR-WELL-005",
+          "PERM-WEL-002",
+          "PERM-WEL-003",
+          "PERM-WEL-004"
+        ],
+        "evidence_refs": [
+          "../../../../../src/wellness/tests/unit/test_wellness_domain.py"
+        ],
+        "id": "WEL-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for invariants, BOLA and wellness boundary enforcement"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_wellness_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_wellness_source_graph_integrity.py"
+        ],
+        "id": "WEL-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/wellness/README.md",
+      "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+      "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+      "contracts/openapi/paths/wellness.yaml",
+      "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+      "generated/source_graph/wellness/wellness.bundle.yaml",
+      "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
+      "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
+      "generated/source_graph/wellness/impact_report.json",
+      "compiled_context/wellness/FT-032.json",
+      "src/wellness/api.py",
+      "src/wellness/schemas.py",
+      "tests/pipeline_gates/test_wellness_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_wellness.py",
+      "tests/pipeline_gates/test_context_bundle_wellness.py"
+    ],
+    "expected_output": "compiled_context/wellness/FT-032.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module wellness --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module wellness --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module wellness --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module wellness --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_wellness_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_wellness.py tests/pipeline_gates/test_context_bundle_wellness.py -q"
+    ]
+  }
+}

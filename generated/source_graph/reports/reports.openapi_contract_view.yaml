@@ -1,0 +1,159 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: reports
+openapi_paths_ref: contracts/openapi/paths/reports.yaml
+operations:
+- operation_id: listReportJobs
+  method: GET
+  path: /reports/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#list_report_jobs
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#ListReportJobs
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createReportJob
+  method: POST
+  path: /reports/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/post
+  runtime_handler_ref: ../../../../../src/reports/api.py#create_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#CreateReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+  - 409
+  - 500
+- operation_id: getReportJob
+  method: GET
+  path: /reports/jobs/{jobId}
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#get_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#GetReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+- operation_id: updateReportJob
+  method: PATCH
+  path: /reports/jobs/{jobId}
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/patch
+  runtime_handler_ref: ../../../../../src/reports/api.py#update_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#UpdateReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+- operation_id: downloadReportArtifact
+  method: GET
+  path: /reports/jobs/{jobId}/download
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/download/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#download_report_artifact
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#DownloadReportArtifact
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+errors:
+- id: ERR-RPT-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/reports/api.py#_role
+  operations:
+  - listReportJobs
+  - createReportJob
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/reports/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listReportJobs
+  - createReportJob
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/reports/domain/rules.py#ReportJobNotFound
+  operations:
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-409-CONFLICT
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/reports/domain/rules.py#ReportJobConflict
+  operations:
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-422-VALIDATION
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/reports/domain/entities.py#validate_invariants
+  operations:
+  - listReportJobs
+  - createReportJob
+  - updateReportJob

@@ -1,0 +1,156 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: wellness
+openapi_paths_ref: contracts/openapi/paths/wellness.yaml
+operations:
+- operation_id: createWellnessEntry
+  method: POST
+  path: /wellness/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/post
+  runtime_handler_ref: ../../../../../src/wellness/api.py#create_wellness_entry
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#CreateWellnessEntry
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: listWellnessEntries
+  method: GET
+  path: /wellness/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#list_wellness_entries
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#ListWellnessEntries
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: getWellnessEntry
+  method: GET
+  path: /wellness/entries/{entryId}
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/{entryId}/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#get_wellness_entry
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#GetWellnessEntry
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: listAthleteWellnessEntries
+  method: GET
+  path: /wellness/athletes/{athleteUserId}/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/entries/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#list_athlete_wellness_entries
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#ListAthleteWellnessEntries
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: getAthleteWellnessSummary
+  method: GET
+  path: /wellness/athletes/{athleteUserId}/summary
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/summary/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#get_athlete_wellness_summary
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#GetAthleteWellnessSummary
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+errors:
+- id: ERR-WEL-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/wellness/api.py#_role
+  operations:
+  - createWellnessEntry
+  - listWellnessEntries
+  - getWellnessEntry
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/wellness/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createWellnessEntry
+  - listWellnessEntries
+  - getWellnessEntry
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-404-ENTRY-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/wellness/domain/rules.py#WellnessEntryNotFound
+  operations:
+  - getWellnessEntry
+- id: ERR-WEL-404-ATHLETE-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/wellness/domain/rules.py#AthleteNotFound
+  operations:
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-400-ENTRY-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/wellness/domain/entities.py#validate_invariants
+  operations:
+  - createWellnessEntry

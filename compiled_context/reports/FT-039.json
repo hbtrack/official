@@ -1,0 +1,925 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/reports/reports.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/reports/reports.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/reports/reports.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/reports/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "REPORTS_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/reports.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/reports/report_job.yaml",
+    "primary_schema": "contracts/schemas/reports/report_job.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/reports"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/reports.yaml"
+    ],
+    "description": "Usuário autorizado solicita geração de relatório (PDF, CSV). Sistema processa em background e disponibiliza para download.",
+    "endpoints": [
+      "GET /reports/jobs",
+      "POST /reports/jobs",
+      "GET /reports/jobs/{jobId}",
+      "GET /reports/jobs/{jobId}/download"
+    ],
+    "id": "FT-039",
+    "name": "Gerar e Baixar Relatórios",
+    "slug": "gerar-e-baixar-relatórios",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/reports/api.py",
+      "src/reports/application/use_cases.py",
+      "src/reports/domain/entities.py",
+      "src/reports/domain/rules.py",
+      "src/reports/schemas.py",
+      "src/reports/tests/unit/test_reports.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "contracts/openapi/paths/reports.yaml",
+      "contracts/schemas/reports/report_job.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/reports/FT-039.json"
+    ],
+    "generated_runtime": [
+      "src/reports/generated/api.py",
+      "src/reports/generated/application/use_cases.py",
+      "src/reports/generated/domain/entities.py",
+      "src/reports/generated/infrastructure/repository.py",
+      "src/reports/generated/schemas.py",
+      "src/reports/generated/tests/test_codegen_contract.py"
+    ],
+    "module_docs": [
+      "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+      "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
+      "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
+      "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+      "docs/hbtrack/modulos/reports/README.md",
+      "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md"
+    ],
+    "tests": [
+      "tests/parity/test_reports_codegen_parity.py",
+      "tests/pipeline_gates/test_backend_codegen_reports.py",
+      "tests/pipeline_gates/test_reports_openapi_schema_equivalence.py",
+      "tests/pipeline_gates/test_reports_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_reports.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+    },
+    {
+      "relpath": "generated/source_graph/reports/reports.bundle.yaml",
+      "sha256": "b306462b0da4e31927bf1c6b8eec373b0f0d1253d84d9c6ad7c8962bfadb46c4"
+    },
+    {
+      "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
+      "sha256": "11167fe7188c7437033d1c26dc66eefde8dbe6721fa3f2233678b4b89adc3928"
+    },
+    {
+      "relpath": "generated/source_graph/reports/reports.openapi_contract_view.yaml",
+      "sha256": "ef79b2bcde91248d9cab41a3db3ffce6897d3a132c83d10307e24f8e25c5be71"
+    },
+    {
+      "relpath": "generated/source_graph/reports/impact_report.json",
+      "sha256": "9d6ba0e1b086779fd39bbc2501e187316072ec5a30a08a2a90dfd71ac583c8db"
+    }
+  ],
+  "module": "reports",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+    "invariants": "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
+    "permissions": "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+    "readme": "docs/hbtrack/modulos/reports/README.md",
+    "scope": "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
+    "test_matrix": "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix"
+    ],
+    "owner": "performance-tech",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/reports/api.py",
+    "domain_entity": "src/reports/domain/entities.py",
+    "domain_rules": "src/reports/domain/rules.py",
+    "unit_tests": "src/reports/tests/unit/test_reports.py",
+    "use_cases": "src/reports/application/use_cases.py"
+  },
+  "source_fingerprint": "cd3f74fdd440dd60172ad0a9b4893a79476c2ac7fe722374e3c2d70a5fad305c",
+  "source_graph": {
+    "entities": {
+      "ReportJob": {
+        "docs_refs": [
+          "../DOMAIN_RULES_REPORTS.md",
+          "../INVARIANTS_REPORTS.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/reports/domain/entities.py#ReportJob",
+        "runtime_extension_fields": [
+          {
+            "allowed_values": [
+              "queued",
+              "processing",
+              "completed",
+              "failed",
+              "cancelled"
+            ],
+            "name": "statusLabel",
+            "runtime_name": "status_label",
+            "type": "enum"
+          },
+          {
+            "name": "completedAt",
+            "runtime_name": "completed_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "errorMessage",
+            "runtime_name": "error_message",
+            "type": "string"
+          }
+        ],
+        "schema_ref": "../../../../../contracts/schemas/reports/report_job.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "ownerUserId",
+            "required": true,
+            "runtime_name": "owner_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "reportType",
+            "required": true,
+            "runtime_name": "report_type",
+            "type": "string"
+          },
+          {
+            "name": "formatLabel",
+            "required": false,
+            "runtime_name": "format_label",
+            "type": "string"
+          },
+          {
+            "name": "parameterSummary",
+            "required": false,
+            "runtime_name": "parameter_summary",
+            "type": "string"
+          },
+          {
+            "name": "sourceMetricNames",
+            "required": false,
+            "runtime_name": "source_metric_names",
+            "type": "string[]"
+          },
+          {
+            "name": "generatedArtifactRef",
+            "required": false,
+            "runtime_name": "generated_artifact_ref",
+            "type": "string"
+          },
+          {
+            "name": "retentionLabel",
+            "required": false,
+            "runtime_name": "retention_label",
+            "type": "string"
+          },
+          {
+            "name": "requestedAt",
+            "required": false,
+            "runtime_name": "requested_at",
+            "type": "timestamp_utc"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-RPT-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listReportJobs",
+          "createReportJob",
+          "getReportJob",
+          "updateReportJob",
+          "downloadReportArtifact"
+        ],
+        "source_ref": "../../../../../src/reports/api.py#_role"
+      },
+      {
+        "exception_ref": "../../../../../src/reports/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-RPT-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listReportJobs",
+          "createReportJob",
+          "getReportJob",
+          "updateReportJob",
+          "downloadReportArtifact"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/reports/domain/rules.py#ReportJobNotFound",
+        "http_status": 404,
+        "id": "ERR-RPT-404-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getReportJob",
+          "updateReportJob",
+          "downloadReportArtifact"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/reports/domain/rules.py#ReportJobConflict",
+        "http_status": 409,
+        "id": "ERR-RPT-409-CONFLICT",
+        "kind": "domain",
+        "operations": [
+          "updateReportJob",
+          "downloadReportArtifact"
+        ]
+      },
+      {
+        "http_status": 422,
+        "id": "ERR-RPT-422-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "listReportJobs",
+          "createReportJob",
+          "updateReportJob"
+        ],
+        "source_ref": "../../../../../src/reports/domain/entities.py#validate_invariants"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/reports.yaml",
+        "contracts/schemas/reports/report_job.schema.json",
+        "contracts/openapi/components/schemas/reports/report_job.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/reports/README.md",
+        "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
+        "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+        "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
+        "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+        "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md"
+      ],
+      "impacted_runtime": [
+        "src/reports/api.py",
+        "src/reports/domain/entities.py",
+        "src/reports/domain/rules.py",
+        "src/reports/application/use_cases.py",
+        "src/reports/tests/unit/test_reports.py"
+      ],
+      "known_gaps": [
+        "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
+      ],
+      "source_fingerprint": "8b42fcc813f412dd1a18d55cdeba4e9f6d581361ee2e030db8beac86ea9f3a81"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-RPT-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listReportJobs",
+            "createReportJob",
+            "getReportJob",
+            "updateReportJob",
+            "downloadReportArtifact"
+          ],
+          "source_ref": "../../../../../src/reports/api.py#_role"
+        },
+        {
+          "exception_ref": "../../../../../src/reports/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-RPT-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listReportJobs",
+            "createReportJob",
+            "getReportJob",
+            "updateReportJob",
+            "downloadReportArtifact"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/reports/domain/rules.py#ReportJobNotFound",
+          "http_status": 404,
+          "id": "ERR-RPT-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getReportJob",
+            "updateReportJob",
+            "downloadReportArtifact"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/reports/domain/rules.py#ReportJobConflict",
+          "http_status": 409,
+          "id": "ERR-RPT-409-CONFLICT",
+          "kind": "domain",
+          "operations": [
+            "updateReportJob",
+            "downloadReportArtifact"
+          ]
+        },
+        {
+          "http_status": 422,
+          "id": "ERR-RPT-422-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "listReportJobs",
+            "createReportJob",
+            "updateReportJob"
+          ],
+          "source_ref": "../../../../../src/reports/domain/entities.py#validate_invariants"
+        }
+      ],
+      "module": "reports",
+      "openapi_paths_ref": "contracts/openapi/paths/reports.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/get",
+          "operation_id": "listReportJobs",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/reports/jobs",
+          "response_codes": [
+            200,
+            401,
+            403,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/reports/api.py#list_report_jobs",
+          "use_case_ref": "../../../../../src/reports/application/use_cases.py#ListReportJobs"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/post",
+          "operation_id": "createReportJob",
+          "path": "/reports/jobs",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            422,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/reports/api.py#create_report_job",
+          "use_case_ref": "../../../../../src/reports/application/use_cases.py#CreateReportJob"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/get",
+          "operation_id": "getReportJob",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/reports/jobs/{jobId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/reports/api.py#get_report_job",
+          "use_case_ref": "../../../../../src/reports/application/use_cases.py#GetReportJob"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/patch",
+          "operation_id": "updateReportJob",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/reports/jobs/{jobId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            409,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/reports/api.py#update_report_job",
+          "use_case_ref": "../../../../../src/reports/application/use_cases.py#UpdateReportJob"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/download/get",
+          "operation_id": "downloadReportArtifact",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete"
+          ],
+          "path": "/reports/jobs/{jobId}/download",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/reports/api.py#download_report_artifact",
+          "use_case_ref": "../../../../../src/reports/application/use_cases.py#DownloadReportArtifact"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/get",
+        "operation_id": "listReportJobs",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/reports/jobs",
+        "response_codes": [
+          200,
+          401,
+          403,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/reports/api.py#list_report_jobs",
+        "use_case_ref": "../../../../../src/reports/application/use_cases.py#ListReportJobs"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/post",
+        "operation_id": "createReportJob",
+        "path": "/reports/jobs",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          422,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/reports/api.py#create_report_job",
+        "use_case_ref": "../../../../../src/reports/application/use_cases.py#CreateReportJob"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/get",
+        "operation_id": "getReportJob",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/reports/jobs/{jobId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/reports/api.py#get_report_job",
+        "use_case_ref": "../../../../../src/reports/application/use_cases.py#GetReportJob"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/download/get",
+        "operation_id": "downloadReportArtifact",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete"
+        ],
+        "path": "/reports/jobs/{jobId}/download",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          409
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/reports/api.py#download_report_artifact",
+        "use_case_ref": "../../../../../src/reports/application/use_cases.py#DownloadReportArtifact"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "ReportJob": {
+          "required": [
+            "id",
+            "reportType",
+            "ownerUserId"
+          ],
+          "runtime_extension_fields": [
+            {
+              "allowed_values": [
+                "queued",
+                "processing",
+                "completed",
+                "failed",
+                "cancelled"
+              ],
+              "name": "statusLabel",
+              "runtime_name": "status_label",
+              "type": "enum"
+            },
+            {
+              "name": "completedAt",
+              "runtime_name": "completed_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "errorMessage",
+              "runtime_name": "error_message",
+              "type": "string"
+            }
+          ],
+          "schema_ref": "contracts/schemas/reports/report_job.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "ownerUserId",
+              "required": true,
+              "runtime_name": "owner_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "reportType",
+              "required": true,
+              "runtime_name": "report_type",
+              "type": "string"
+            },
+            {
+              "name": "formatLabel",
+              "required": false,
+              "runtime_name": "format_label",
+              "type": "string"
+            },
+            {
+              "name": "parameterSummary",
+              "required": false,
+              "runtime_name": "parameter_summary",
+              "type": "string"
+            },
+            {
+              "name": "sourceMetricNames",
+              "required": false,
+              "runtime_name": "source_metric_names",
+              "type": "string[]"
+            },
+            {
+              "name": "generatedArtifactRef",
+              "required": false,
+              "runtime_name": "generated_artifact_ref",
+              "type": "string"
+            },
+            {
+              "name": "retentionLabel",
+              "required": false,
+              "runtime_name": "retention_label",
+              "type": "string"
+            },
+            {
+              "name": "requestedAt",
+              "required": false,
+              "runtime_name": "requested_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        }
+      },
+      "entity": "ReportJob",
+      "module": "reports",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "primary_entity": "ReportJob",
+      "primary_schema_ref": "contracts/schemas/reports/report_job.schema.json",
+      "required": [
+        "id",
+        "reportType",
+        "ownerUserId"
+      ],
+      "runtime_extension_fields": [
+        {
+          "allowed_values": [
+            "queued",
+            "processing",
+            "completed",
+            "failed",
+            "cancelled"
+          ],
+          "name": "statusLabel",
+          "runtime_name": "status_label",
+          "type": "enum"
+        },
+        {
+          "name": "completedAt",
+          "runtime_name": "completed_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "errorMessage",
+          "runtime_name": "error_message",
+          "type": "string"
+        }
+      ],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "ownerUserId",
+          "required": true,
+          "runtime_name": "owner_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "reportType",
+          "required": true,
+          "runtime_name": "report_type",
+          "type": "string"
+        },
+        {
+          "name": "formatLabel",
+          "required": false,
+          "runtime_name": "format_label",
+          "type": "string"
+        },
+        {
+          "name": "parameterSummary",
+          "required": false,
+          "runtime_name": "parameter_summary",
+          "type": "string"
+        },
+        {
+          "name": "sourceMetricNames",
+          "required": false,
+          "runtime_name": "source_metric_names",
+          "type": "string[]"
+        },
+        {
+          "name": "generatedArtifactRef",
+          "required": false,
+          "runtime_name": "generated_artifact_ref",
+          "type": "string"
+        },
+        {
+          "name": "retentionLabel",
+          "required": false,
+          "runtime_name": "retention_label",
+          "type": "string"
+        },
+        {
+          "name": "requestedAt",
+          "required": false,
+          "runtime_name": "requested_at",
+          "type": "timestamp_utc"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/reports/report_job.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "RPT-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/reports.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "RPT-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/reports/tests/unit/test_reports.py",
+        "covers": [
+          "INV-RPT-001",
+          "INV-RPT-002",
+          "INV-RPT-003",
+          "INV-RPT-004"
+        ],
+        "evidence_refs": [
+          "../../../../../src/reports/tests/unit/test_reports.py"
+        ],
+        "id": "RPT-TO-003",
+        "scope": "domain_invariants",
+        "verification": "Unit tests for ReportJob invariants"
+      },
+      {
+        "artifact_ref": "../../../../../src/reports/tests/unit/test_reports.py",
+        "covers": [
+          "DR-RPT-005",
+          "PERM-REP-002",
+          "PERM-REP-003"
+        ],
+        "evidence_refs": [
+          "../../../../../src/reports/tests/unit/test_reports.py"
+        ],
+        "id": "RPT-TO-004",
+        "scope": "permissions_and_bola",
+        "verification": "Unit tests for RBAC, owner scoping and conflict paths"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py"
+        ],
+        "id": "RPT-TO-005",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/reports/README.md",
+      "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+      "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
+      "contracts/openapi/paths/reports.yaml",
+      "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "generated/source_graph/reports/reports.bundle.yaml",
+      "generated/source_graph/reports/reports.schema_contract_view.yaml",
+      "generated/source_graph/reports/reports.openapi_contract_view.yaml",
+      "generated/source_graph/reports/impact_report.json",
+      "compiled_context/reports/FT-039.json",
+      "src/reports/generated/api.py",
+      "src/reports/generated/schemas.py",
+      "src/reports/generated/domain/entities.py",
+      "src/reports/generated/application/use_cases.py",
+      "src/reports/generated/infrastructure/repository.py",
+      "src/reports/generated/tests/test_codegen_contract.py",
+      "src/reports/api.py",
+      "src/reports/schemas.py",
+      "tests/pipeline_gates/test_reports_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_reports.py",
+      "tests/pipeline_gates/test_reports_openapi_schema_equivalence.py",
+      "tests/pipeline_gates/test_backend_codegen_reports.py",
+      "tests/parity/test_reports_codegen_parity.py"
+    ],
+    "expected_output": "compiled_context/reports/FT-039.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module reports --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module reports --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module reports --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module reports --check --format json",
+      "python3 scripts/generate/backend_codegen.py --module reports --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_context_bundle_reports.py -q"
+    ]
+  }
+}

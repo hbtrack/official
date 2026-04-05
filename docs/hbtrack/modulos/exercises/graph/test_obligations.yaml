@@ -1,0 +1,64 @@
+version: "1.0.0"
+status: active
+module: exercises
+
+obligations:
+  - id: EXB-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/exercises/exercise.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: EXB-TO-002
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/exercises/exercise_version.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: EXB-TO-003
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/exercises/exercise_relation.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: EXB-TO-004
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/exercises/exercise_acl.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: EXB-TO-005
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/exercises.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: EXB-TO-006
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/exercises/tests/unit/test_exercises.py"
+    covers:
+      - INV-EXB-001
+      - INV-EXB-002
+      - INV-EXB-003
+      - INV-EXB-004
+      - INV-EXB-013
+      - INV-EXB-014
+      - INV-EXB-015
+      - INV-EXB-016
+      - DR-EXB-003
+      - DR-EXB-004
+      - DR-EXB-009
+      - DR-EXB-010
+      - PERM-EXB-002
+      - PERM-EXB-003
+      - PERM-EXB-004
+      - PERM-EXB-007
+    verification: "Unit tests for invariants, RBAC and ACL boundaries"
+    evidence_refs:
+      - "../../../../../src/exercises/tests/unit/test_exercises.py"
+  - id: EXB-TO-007
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_exercises_source_graph_integrity.py"

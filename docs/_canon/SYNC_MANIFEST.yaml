@@ -1212,3 +1212,36 @@ rules:
       - "python3 scripts/compile/compile_context_bundle.py --module scout --check --format json"
       - "python3 scripts/validate_contracts.py --profile ci"
       - "python3 -m pytest tests/pipeline_gates/test_scout_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_scout.py tests/pipeline_gates/test_context_bundle_scout.py -q"
+
+  - rule_id: AI_INGESTION_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml"
+    source_kind: "module_source_graph"
+    change_types:
+      - "domain_contract_change"
+      - "runtime_projection_change"
+      - "codegen_shape_change"
+    required_consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/README.md"
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+      - "contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+      - "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml"
+      - "generated/source_graph/ai_ingestion/impact_report.json"
+      - "compiled_context/ai_ingestion/FT-040.json"
+      - "src/ai_ingestion/api.py"
+      - "src/ai_ingestion/domain/entities.py"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module ai_ingestion --check"
+      - "python3 scripts/compile/compile_context_bundle.py --module ai_ingestion --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py -q"

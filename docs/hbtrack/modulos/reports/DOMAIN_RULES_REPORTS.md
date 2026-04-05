@@ -18,6 +18,8 @@ Registrar as regras de negócio do módulo `reports`.
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `contracts/schemas/reports/report_job.schema.json`
 - `docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md`
+- `docs/hbtrack/modulos/reports/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/reports/graph/errors.yaml`
 - Artefatos assíncronos do módulo quando aplicável (`Arazzo`)
 
 ## Regras de negócio
@@ -33,3 +35,7 @@ Registrar as regras de negócio do módulo `reports`.
 - Não gerar conteúdo fora dos limites de acesso dos módulos-fonte.
 - Não inferir insight analítico apenas do nome do relatório.
 - Não usar `reports` para contornar retenção, auditoria ou proteção de dados.
+
+## Âncoras estruturadas
+- A entidade soberana e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/reports/graph/entity_graph.yaml`.
+- O mapa de erros transport/domain do módulo está em `docs/hbtrack/modulos/reports/graph/errors.yaml`.

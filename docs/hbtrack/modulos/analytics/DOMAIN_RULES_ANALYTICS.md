@@ -22,6 +22,8 @@ Registrar as regras de negócio do módulo `analytics`.
 - `contracts/schemas/analytics/analytics_query_response.schema.json`
 - `docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md`
 - `docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md`
+- `docs/hbtrack/modulos/analytics/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/analytics/graph/errors.yaml`
 - Fontes técnico-científicas permitidas via authority matrix (`EHF`, `ACSM`) quando aplicável
 
 ## Regras de negócio
@@ -42,3 +44,7 @@ Registrar as regras de negócio do módulo `analytics`.
 - Não misturar dado bruto protegido com insight derivado no mesmo contrato sem explicitação.
 - Não reescrever regra de domínio a partir de visualização analítica.
 - Não aceitar linguagem de query aberta quando o contrato não define gramática soberana.
+
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/analytics/graph/entity_graph.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/analytics/graph/errors.yaml`.

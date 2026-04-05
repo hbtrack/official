@@ -1,0 +1,166 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/exercises.yaml",
+    "contracts/schemas/exercises/exercise.schema.json",
+    "contracts/openapi/components/schemas/exercises/exercise.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/exercises/README.md",
+    "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+    "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+    "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+    "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+    "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
+    "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml"
+  ],
+  "impacted_runtime": [
+    "src/exercises/api.py",
+    "src/exercises/domain/entities.py",
+    "src/exercises/domain/rules.py",
+    "src/exercises/application/use_cases.py",
+    "src/exercises/tests/unit/test_exercises.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/exercises/exercise.yaml",
+      "sha256": "9a11941f583d22a8eaad4c35314243c8ab3f344e16f06edfe587e560adb3b398"
+    },
+    {
+      "relpath": "contracts/openapi/paths/exercises.yaml",
+      "sha256": "147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc"
+    },
+    {
+      "relpath": "contracts/schemas/exercises/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/exercises/exercise.schema.json",
+      "sha256": "07694a5d58f1a260df76d33b1588690e0ef5439fc8f006499f147d699548a9b1"
+    },
+    {
+      "relpath": "contracts/schemas/exercises/exercise_acl.schema.json",
+      "sha256": "cbf3b897dc0735a26f2a14e30e569a7e67e3d46a879a41e5933308c583ec14f1"
+    },
+    {
+      "relpath": "contracts/schemas/exercises/exercise_relation.schema.json",
+      "sha256": "cffd6a53a2f65f2a785eef6bf5eb45c9af2498596cbed23337147a6f2a3a6572"
+    },
+    {
+      "relpath": "contracts/schemas/exercises/exercise_version.schema.json",
+      "sha256": "4cd54ad3b175b14a39563aef2a1ef5dc32d31bb539433f41a50c4ea83181cd5d"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml",
+      "sha256": "e9d832b5cf336c2a8c30f00b22a3fb02c256dc6dd8f3e493d08823b44a796432"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+      "sha256": "edec326ddaa783c17ce321eda435cb95861c121756fdb5cc5c99abcd0d21dad1"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+      "sha256": "9b321dd55e8dbb898359b7ceea87262d3a6df2d7c063d23f5e534d84ed1976dc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+      "sha256": "d71158a52a8239081c9b61242bdd6d6795bc98e458aa7fcd055f4a7b5c9bd3ca"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+      "sha256": "870735059c327864572dbf8cccb408f038a2721f1370a3e48f45231139c8e7e3"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/README.md",
+      "sha256": "74d53b83def6ee4c9287c402e2aa4894535230c97cdc65b8590563cdd390312b"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
+      "sha256": "6d16e040114d54d6a84d8cc04112c720418c60ad96f4163da5ec1174e9b42954"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/graph/endpoints.yaml",
+      "sha256": "c7bca45bd160bb9a785e794998082933723eb61c320992b09873db23a9243d14"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/graph/entity_graph.yaml",
+      "sha256": "12042ac890d213421eec21c0836589f5c6fd024571108b177206e21c2b0b7715"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/graph/errors.yaml",
+      "sha256": "bc875899916936d5c58244e38f954d82b12119f2fe5daa96090af7fb8bf39a0d"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
+      "sha256": "a11d68c6138cae98a4c2ab4fc420854cc2abea47356adceb60ccff58732ef312"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/exercises/graph/test_obligations.yaml",
+      "sha256": "1111c13a6c88809e396edebced44a545ecebc2a2535a5927a3f255f78822a37c"
+    },
+    {
+      "relpath": "src/exercises/api.py",
+      "sha256": "3189beeda590e1768d7d1f3e2139b74eccc0e8e78e17d97b65deb58caa8a4d59"
+    },
+    {
+      "relpath": "src/exercises/application/use_cases.py",
+      "sha256": "a90c05e50289d3f58b1ceef717bd9147fcea37b50b2a4ec120a2f21af216df89"
+    },
+    {
+      "relpath": "src/exercises/domain/entities.py",
+      "sha256": "50fa8480f6cb9731567168febb2340bf010c52e0abcf2b6ac9f1119ae2a99dd9"
+    },
+    {
+      "relpath": "src/exercises/domain/rules.py",
+      "sha256": "4b133a7339cefc77a8bff10569566795cecb79e827592873d240056f74eb5373"
+    },
+    {
+      "relpath": "src/exercises/tests/unit/test_exercises.py",
+      "sha256": "44a9a9d158ace252e1d72359d06f65a42f84dbfe9dab20f001ef31856f41624d"
+    }
+  ],
+  "known_gaps": [
+    "OpenAPI transport projections `exercise.yaml` e `exercise_preview.yaml` ainda nao refletem integralmente o shape soberano de `exercise.schema.json`.",
+    "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`.",
+    "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."
+  ],
+  "module": "exercises",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/exercises/exercises.bundle.yaml",
+    "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
+    "generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
+    "generated/source_graph/exercises/impact_report.json"
+  ],
+  "source_fingerprint": "e2c9c4219b0b13fad6fc02028a75d8bd3e6a1fa8bfaa8801366816a9e1f6ad68"
+}

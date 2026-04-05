@@ -1,0 +1,44 @@
+version: "1.0.0"
+status: active
+module: reports
+
+obligations:
+  - id: RPT-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/reports/report_job.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: RPT-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/reports.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: RPT-TO-003
+    scope: domain_invariants
+    artifact_ref: "../../../../../src/reports/tests/unit/test_reports.py"
+    covers:
+      - INV-RPT-001
+      - INV-RPT-002
+      - INV-RPT-003
+      - INV-RPT-004
+    verification: "Unit tests for ReportJob invariants"
+    evidence_refs:
+      - "../../../../../src/reports/tests/unit/test_reports.py"
+  - id: RPT-TO-004
+    scope: permissions_and_bola
+    artifact_ref: "../../../../../src/reports/tests/unit/test_reports.py"
+    covers:
+      - DR-RPT-005
+      - PERM-REP-002
+      - PERM-REP-003
+    verification: "Unit tests for RBAC, owner scoping and conflict paths"
+    evidence_refs:
+      - "../../../../../src/reports/tests/unit/test_reports.py"
+  - id: RPT-TO-005
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py"

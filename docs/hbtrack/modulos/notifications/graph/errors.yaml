@@ -1,0 +1,43 @@
+version: "1.0.0"
+status: active
+module: notifications
+
+errors:
+  - id: ERR-NTF-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/notifications/api.py#_get_role"
+    operations:
+      - createNotificationIntent
+      - listDeliveries
+      - getDelivery
+      - getUserNotificationPreferences
+      - updateUserNotificationPreferences
+  - id: ERR-NTF-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/notifications/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createNotificationIntent
+      - listDeliveries
+      - getDelivery
+      - getUserNotificationPreferences
+      - updateUserNotificationPreferences
+  - id: ERR-NTF-404-DELIVERY-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/notifications/domain/rules.py#NotificationDeliveryNotFound"
+    operations:
+      - getDelivery
+  - id: ERR-NTF-400-DELIVERY-VALIDATION
+    kind: validation
+    http_status: 400
+    source_ref: "../../../../../src/notifications/domain/entities.py#validate_invariants"
+    operations:
+      - createNotificationIntent
+  - id: ERR-NTF-400-PREFERENCES-VALIDATION
+    kind: validation
+    http_status: 400
+    source_ref: "../../../../../src/notifications/api.py#update_user_notification_preferences"
+    operations:
+      - updateUserNotificationPreferences

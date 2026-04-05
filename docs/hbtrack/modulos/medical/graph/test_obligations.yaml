@@ -1,0 +1,40 @@
+version: "1.0.0"
+status: active
+module: medical
+
+obligations:
+  - id: MED-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/medical/medical_record.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: MED-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/medical.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: MED-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/medical/tests/unit/test_medical_domain.py"
+    covers:
+      - INV-MED-001
+      - INV-MED-002
+      - INV-MED-003
+      - INV-MED-004
+      - DR-MED-002
+      - DR-MED-003
+      - DR-MED-004
+      - PERM-MED-001
+      - PERM-MED-003
+      - PERM-MED-004
+    verification: "Unit tests for invariants, PHI access constraints and BOLA/BFLA medical boundaries"
+    evidence_refs:
+      - "../../../../../src/medical/tests/unit/test_medical_domain.py"
+  - id: MED-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_medical_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_medical_source_graph_integrity.py"

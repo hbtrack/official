@@ -1,0 +1,44 @@
+version: "1.0.0"
+status: active
+module: ai_ingestion
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_AI_INGESTION.md"
+  domain_rules: "../DOMAIN_RULES_AI_INGESTION.md"
+  invariants: "../INVARIANTS_AI_INGESTION.md"
+  permissions: "../PERMISSIONS_AI_INGESTION.md"
+  test_matrix: "../TEST_MATRIX_AI_INGESTION.md"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/ai_ingestion.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/ai_ingestion/"
+  primary_schema: "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/ai_ingestion/api.py"
+  domain_entity: "../../../../../src/ai_ingestion/domain/entities.py"
+  domain_rules: "../../../../../src/ai_ingestion/domain/rules.py"
+  use_cases: "../../../../../src/ai_ingestion/application/use_cases.py"
+  unit_tests: "../../../../../src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+
+structured_ir:
+  entities: "./entity_graph.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json."
+  - "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução."
+  - "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."

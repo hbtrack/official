@@ -487,6 +487,25 @@ entries:
       - "src/training/"
       - "tests/pipeline_gates/test_training_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_AI_INGESTION_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/ai_ingestion/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/README.md"
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/ai_ingestion/*.md"
+      - "contracts/schemas/ai_ingestion/"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+      - "contracts/openapi/components/schemas/ai_ingestion/"
+      - "src/ai_ingestion/"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+
   - rule_id: HBTRACK_SCOUT_GRAPH
     class: hbtrack_module_graph
     path_globs:

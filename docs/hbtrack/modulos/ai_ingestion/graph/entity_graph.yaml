@@ -1,0 +1,59 @@
+version: "1.0.0"
+status: active
+module: ai_ingestion
+
+entities:
+  IngestionJob:
+    schema_ref: "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+    runtime_entity_ref: "../../../../../src/ai_ingestion/domain/entities.py#IngestionJob"
+    docs_refs:
+      - "../DOMAIN_RULES_AI_INGESTION.md"
+      - "../INVARIANTS_AI_INGESTION.md"
+      - "../PERMISSIONS_AI_INGESTION.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: sourceLabel
+        runtime_name: source_label
+        required: true
+        type: string
+      - name: ingestionMode
+        runtime_name: ingestion_mode
+        required: true
+        type: string
+      - name: payloadSchemaRef
+        runtime_name: payload_schema_ref
+        required: false
+        type: string
+      - name: mappingProfile
+        runtime_name: mapping_profile
+        required: false
+        type: string
+      - name: idempotencyKey
+        runtime_name: idempotency_key
+        required: false
+        type: string
+      - name: executionBindingLabel
+        runtime_name: execution_binding_label
+        required: false
+        type: string
+      - name: receivedAt
+        runtime_name: received_at
+        required: true
+        type: timestamp_utc
+      - name: completedAt
+        runtime_name: completed_at
+        required: false
+        type: timestamp_utc
+    runtime_extension_fields:
+      - name: statusLabel
+        runtime_name: status_label
+        type: string
+      - name: errorMessage
+        runtime_name: error_message
+        type: string
+      - name: originJobId
+        runtime_name: origin_job_id
+        type: uuid_v4

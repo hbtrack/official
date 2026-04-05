@@ -1,0 +1,149 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/medical.yaml",
+    "contracts/schemas/medical/medical_record.schema.json",
+    "contracts/openapi/components/schemas/medical/medical_record.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/medical/README.md",
+    "docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md",
+    "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
+    "docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md",
+    "docs/hbtrack/modulos/medical/PERMISSIONS_MEDICAL.md",
+    "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md"
+  ],
+  "impacted_runtime": [
+    "src/medical/api.py",
+    "src/medical/domain/entities.py",
+    "src/medical/domain/rules.py",
+    "src/medical/application/use_cases.py",
+    "src/medical/tests/unit/test_medical_domain.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/medical/medical_record.yaml",
+      "sha256": "863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2"
+    },
+    {
+      "relpath": "contracts/openapi/paths/medical.yaml",
+      "sha256": "47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c"
+    },
+    {
+      "relpath": "contracts/schemas/medical/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/medical/medical_record.schema.json",
+      "sha256": "e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
+      "sha256": "e463132c436b52f3520efbc3d704300e7381e0ae34ac65551653676ada5629ee"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md",
+      "sha256": "b10a11d173f72872976c72895cf0db540d1a44bca4a41e066b29c85e397ed85e"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md",
+      "sha256": "e0192dcc123e6cb54105e1febc11aaeb43eb54e3ae6f9b7eaf35a5a23341f88f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/PERMISSIONS_MEDICAL.md",
+      "sha256": "437f67e4ac2d000aa091b14d151c2c6a65432855d0573f0b5b7889e8d7db6881"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/README.md",
+      "sha256": "5a633f58c6a80cb6dd5e37089d432b2614954454f46b7bb2a45872b82f609ff8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md",
+      "sha256": "9b7eae6310b0d731700ec98cf2d4f88707583dbe310c8aa4a2632b7bd69d2060"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/graph/endpoints.yaml",
+      "sha256": "47a9b2dc228f871c2e1e97cebf55feee8b6d078b60103294d9ad0edc77216e63"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/graph/entity_graph.yaml",
+      "sha256": "14c0d087dd5d15883baa9cac7c848d7f6d19d1acc98b64327873892c985f7f9b"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/graph/errors.yaml",
+      "sha256": "c919df24c7c43f869226e4e905785e8d1cb5c6f016b2f94b4c089950d7085124"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
+      "sha256": "8bde51f993de5da3ee32280e4f50e20fc5296c46be2cf86aac6e5fcf1a277ca1"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/medical/graph/test_obligations.yaml",
+      "sha256": "48eee0ce49b47c51cc6581930f3cb78d1f82339770ea05258985cc511cfb70ff"
+    },
+    {
+      "relpath": "src/medical/api.py",
+      "sha256": "329b1ff6aeb6f2586bf7c8d170755dc759b4577528909d8c65ba3e94d2eb208b"
+    },
+    {
+      "relpath": "src/medical/application/use_cases.py",
+      "sha256": "7c7ccbc633fdf4bad918ab93130a0bab9e8819ce19237672cce6dd79c8835ce9"
+    },
+    {
+      "relpath": "src/medical/domain/entities.py",
+      "sha256": "fe3b1e7f03dd8af94f3a3a53763b86ac9ef239e58deee9bf54b77e09df06016d"
+    },
+    {
+      "relpath": "src/medical/domain/rules.py",
+      "sha256": "c0d79a71271f1b7b6290d4f4c4f05280f090b5e08c9761643a0fee4ea42f0494"
+    },
+    {
+      "relpath": "src/medical/tests/unit/test_medical_domain.py",
+      "sha256": "021c8dcb8d43c146e9f662bced78f5f6dd61b71fe47c05edcd7c5d245092741b"
+    }
+  ],
+  "known_gaps": [
+    "MedicalRecordOut ainda expõe campos de runtime/auditoria (isDeleted, createdAt, updatedAt) fora do schema soberano medical_record.schema.json.",
+    "Delete/soft-delete e retention LGPD seguem descritos no contrato, mas a trilha de auditoria externa permanece governada fora do source graph local.",
+    "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada."
+  ],
+  "module": "medical",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/medical/medical.bundle.yaml",
+    "generated/source_graph/medical/medical.schema_contract_view.yaml",
+    "generated/source_graph/medical/medical.openapi_contract_view.yaml",
+    "generated/source_graph/medical/impact_report.json"
+  ],
+  "source_fingerprint": "14212c89c278e2a750d24e8b6ee735958abaa119340b27864b07814f4f3a76e7"
+}

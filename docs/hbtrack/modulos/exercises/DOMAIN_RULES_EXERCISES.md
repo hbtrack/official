@@ -22,6 +22,9 @@ Registrar as regras de negócio do módulo `exercises`.
 - `HANDBALL_RULES_DOMAIN.md` (quando aplicável)
 - OpenAPI e schemas do módulo (`contracts/openapi/paths/exercises.yaml`, `contracts/openapi/components/schemas/exercises/`)
 - Decisões arquiteturais: TRAIN-DEC-047, TRAIN-DEC-048 (`docs/hbtrack/decisoes/ARCH_DECISIONS_TRAINING.md`)
+- `docs/hbtrack/modulos/exercises/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/exercises/graph/errors.yaml`
+- `docs/hbtrack/modulos/exercises/graph/endpoints.yaml`
 
 ## Regras de negócio
 
@@ -138,3 +141,8 @@ Tentativa de PATCH/DELETE por usuário não-curador → 403. Para adaptar um exe
 ### DR-EXB-010 — Criador de exercício ORG mantém acesso independentemente da ACL
 
 O criador (`created_by_user_id`) não precisa estar na ACL. Tem acesso garantido. Nenhuma configuração de ACL pode remover o acesso do próprio criador.
+
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/exercises/graph/entity_graph.yaml`.
+- O mapa mínimo de operações e permissões publicadas está em `docs/hbtrack/modulos/exercises/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/exercises/graph/errors.yaml`.
