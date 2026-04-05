@@ -1,0 +1,976 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/scout/scout.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/scout/scout.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/scout/scout.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/scout/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "SCOUT_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/scout.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/scout/scout_event.yaml",
+    "primary_schema": "contracts/schemas/scout/scout_event.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/scout"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/scout.yaml"
+    ],
+    "description": "Analista registra eventos técnico-táticos de partidas (gols, assistências, faltas, erros). Treinador consulta agregações estatísticas por atleta ou equipe.",
+    "endpoints": [
+      "GET /scout/events",
+      "POST /scout/events",
+      "GET /scout/events/aggregations"
+    ],
+    "id": "FT-036",
+    "name": "Registrar e Agregar Eventos de Scout",
+    "slug": "registrar-e-agregar-eventos-de-scout",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/scout/api.py",
+      "src/scout/application/use_cases.py",
+      "src/scout/domain/entities.py",
+      "src/scout/domain/rules.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/scout/scout_event.yaml",
+      "contracts/openapi/paths/scout.yaml",
+      "contracts/schemas/scout/scout_event.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/scout/FT-036.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md",
+      "docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md",
+      "docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md",
+      "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
+      "docs/hbtrack/modulos/scout/README.md",
+      "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_scout.py",
+      "tests/pipeline_gates/test_scout_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_scout.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "c26b2c48c73a548343614a34e67ace3d83ec1b5e42eb3f97696e02fb090aea16"
+    },
+    {
+      "relpath": "generated/source_graph/scout/scout.bundle.yaml",
+      "sha256": "cad9da4780d82659c552e741ead93dbc86e8ee2675ab8f553e1204de4fc5d21b"
+    },
+    {
+      "relpath": "generated/source_graph/scout/scout.schema_contract_view.yaml",
+      "sha256": "435885960bf6d98881cfeee04aa0dda3a465945b6327d80790dcd2baa65ddb3c"
+    },
+    {
+      "relpath": "generated/source_graph/scout/scout.openapi_contract_view.yaml",
+      "sha256": "ba01045eef1321bc882c645c53099d826f8d82b100f584fd751b9cb302b78ad4"
+    },
+    {
+      "relpath": "generated/source_graph/scout/impact_report.json",
+      "sha256": "06c60262ec605cb96f7d2bb4d2c5a6be8feef6b4a78bdf90bb1ad82c957f118a"
+    }
+  ],
+  "module": "scout",
+  "module_docs": {
+    "canonical_taxonomy": "docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml",
+    "domain_rules": "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md",
+    "invariants": "docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md",
+    "permissions": "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
+    "readme": "docs/hbtrack/modulos/scout/README.md",
+    "scope": "docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md",
+    "test_matrix": "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo",
+      "permissions",
+      "decision_ir"
+    ],
+    "owner": "handball-ops",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/scout/api.py",
+    "domain_entity": "src/scout/domain/entities.py",
+    "domain_rules": "src/scout/domain/rules.py",
+    "use_cases": "src/scout/application/use_cases.py"
+  },
+  "source_fingerprint": "ce439812150dddaaf0ef9339ce622b53bb10d45fac0f1cf8f3c319f62b88ffcb",
+  "source_graph": {
+    "entities": {
+      "ScoutEvent": {
+        "docs_refs": [
+          "../DOMAIN_RULES_SCOUT.md",
+          "../INVARIANTS_SCOUT.md",
+          "../PERMISSIONS_SCOUT.md",
+          "../CANONICAL_EVENT_TAXONOMY_SCOUT.yaml"
+        ],
+        "runtime_entity_ref": "../../../../../src/scout/domain/entities.py#ScoutEvent",
+        "runtime_extension_fields": [],
+        "schema_ref": "../../../../../contracts/schemas/scout/scout_event.schema.json",
+        "sovereign_fields": [
+          {
+            "constraints": [
+              "INV-SCOUT-001: obrigatório"
+            ],
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-003: todo evento está ancorado a matchId",
+              "INV-SCOUT-001: obrigatório",
+              "boundary: reference to matches module"
+            ],
+            "name": "matchId",
+            "required": true,
+            "runtime_name": "match_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "DR-SCOUT-003: refina contexto da observação, não muda soberania",
+              "boundary: reference to identity_access module"
+            ],
+            "name": "athleteUserId",
+            "required": false,
+            "runtime_name": "athlete_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "DR-SCOUT-003: refina contexto da observação",
+              "boundary: reference to teams module"
+            ],
+            "name": "teamId",
+            "required": false,
+            "runtime_name": "team_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-002: deve ser da taxonomia canônica CANONICAL_EVENT_TAXONOMY_SCOUT",
+              "INV-SCOUT-001: obrigatório",
+              "INV-SCOUT-003: verificável contra taxonomia canônica",
+              "maxLength: 120"
+            ],
+            "name": "eventLabel",
+            "required": true,
+            "runtime_name": "event_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-002: cada item deve ser da taxonomia canônica",
+              "INV-SCOUT-002: sem duplicatas",
+              "nullable: true",
+              "maxItems: 20"
+            ],
+            "name": "tagLabels",
+            "required": false,
+            "runtime_name": "tag_labels",
+            "type": "array_of_string"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-004: scout não é dono do storage subjacente",
+              "INV-SCOUT-002: sem duplicatas",
+              "nullable: true",
+              "maxItems: 10"
+            ],
+            "name": "clipAssetRefs",
+            "required": false,
+            "runtime_name": "clip_asset_refs",
+            "type": "array_of_string"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-002: deve ser da taxonomia canônica",
+              "nullable: true",
+              "maxLength: 120"
+            ],
+            "name": "codingSchemaLabel",
+            "required": false,
+            "runtime_name": "coding_schema_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "DR-SCOUT-002: deve ser da taxonomia canônica",
+              "DR-SCOUT-005: não redefine estatística oficial sem mapeamento aprovado",
+              "nullable: true",
+              "maxLength: 120"
+            ],
+            "name": "tacticalAggregationLabel",
+            "required": false,
+            "runtime_name": "tactical_aggregation_label",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "INV-SCOUT-001: obrigatório"
+            ],
+            "name": "recordedAt",
+            "required": true,
+            "runtime_name": "recorded_at",
+            "type": "datetime_utc"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-SCOUT-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listScoutEvents",
+          "createScoutEvent",
+          "getScoutEvent",
+          "getScoutAggregations",
+          "completeScoutSession"
+        ],
+        "source_ref": "../../../../../src/scout/api.py#_get_actor_id"
+      },
+      {
+        "exception_ref": "../../../../../src/scout/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-SCOUT-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listScoutEvents",
+          "createScoutEvent",
+          "getScoutEvent",
+          "getScoutAggregations",
+          "completeScoutSession"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-SCOUT-400-INVALID-TAXONOMY",
+        "kind": "domain",
+        "notes": "DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem ser da taxonomia canônica (INV-SCOUT-003)",
+        "operations": [
+          "createScoutEvent"
+        ],
+        "source_ref": "../../../../../src/scout/domain/entities.py#validate_invariants"
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-SCOUT-400-VALIDATION",
+        "kind": "domain",
+        "operations": [
+          "createScoutEvent"
+        ],
+        "source_ref": "../../../../../src/scout/domain/entities.py#validate_invariants"
+      },
+      {
+        "http_status": 500,
+        "id": "ERR-SCOUT-500-INTERNAL",
+        "kind": "transport",
+        "operations": [
+          "listScoutEvents",
+          "createScoutEvent",
+          "getScoutEvent",
+          "getScoutAggregations",
+          "completeScoutSession"
+        ],
+        "source_ref": "../../../../../src/scout/api.py#_get_actor_id"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/scout.yaml",
+        "contracts/schemas/scout/scout_event.schema.json",
+        "contracts/openapi/components/schemas/scout/scout_event.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/scout/README.md",
+        "docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md",
+        "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md",
+        "docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md",
+        "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
+        "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md",
+        "docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml"
+      ],
+      "impacted_runtime": [
+        "src/scout/api.py",
+        "src/scout/domain/entities.py",
+        "src/scout/domain/rules.py",
+        "src/scout/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "matchId é referência cruzada para módulo matches — boundary explicitado em DR-SCOUT-003.",
+        "athleteUserId é referência cruzada para identity_access — scout não é dono de identidade.",
+        "teamId é referência cruzada para módulo teams — scout apenas refina contexto observacional.",
+        "clipAssetRefs referenciam storage externo — scout não é dono do storage (DR-SCOUT-004).",
+        "SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002)."
+      ],
+      "source_fingerprint": "ec21603b76f3594de24b73ca5bbbdaac831791b5e299e09e6c4f5caca3563605"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-SCOUT-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listScoutEvents",
+            "createScoutEvent",
+            "getScoutEvent",
+            "getScoutAggregations",
+            "completeScoutSession"
+          ],
+          "source_ref": "../../../../../src/scout/api.py#_get_actor_id"
+        },
+        {
+          "exception_ref": "../../../../../src/scout/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-SCOUT-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listScoutEvents",
+            "createScoutEvent",
+            "getScoutEvent",
+            "getScoutAggregations",
+            "completeScoutSession"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/scout/domain/rules.py#ScoutEventNotFound",
+          "http_status": 404,
+          "id": "ERR-SCOUT-404-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getScoutEvent",
+            "completeScoutSession"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-SCOUT-400-INVALID-TAXONOMY",
+          "kind": "domain",
+          "notes": "DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem ser da taxonomia canônica (INV-SCOUT-003)",
+          "operations": [
+            "createScoutEvent"
+          ],
+          "source_ref": "../../../../../src/scout/domain/entities.py#validate_invariants"
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-SCOUT-400-VALIDATION",
+          "kind": "domain",
+          "operations": [
+            "createScoutEvent"
+          ],
+          "source_ref": "../../../../../src/scout/domain/entities.py#validate_invariants"
+        },
+        {
+          "http_status": 409,
+          "id": "ERR-SCOUT-409-SESSION-CONFLICT",
+          "kind": "domain",
+          "operations": [
+            "completeScoutSession"
+          ],
+          "source_ref": "../../../../../src/scout/application/use_cases.py#CompleteScoutSession"
+        },
+        {
+          "http_status": 500,
+          "id": "ERR-SCOUT-500-INTERNAL",
+          "kind": "transport",
+          "operations": [
+            "listScoutEvents",
+            "createScoutEvent",
+            "getScoutEvent",
+            "getScoutAggregations",
+            "completeScoutSession"
+          ],
+          "source_ref": "../../../../../src/scout/api.py#_get_actor_id"
+        }
+      ],
+      "module": "scout",
+      "openapi_paths_ref": "contracts/openapi/paths/scout.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/get",
+          "operation_id": "listScoutEvents",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/scout/events",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/scout/api.py#list_scout_events",
+          "use_case_ref": "../../../../../src/scout/application/use_cases.py#ListScoutEvents"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/post",
+          "operation_id": "createScoutEvent",
+          "owner_scoped_roles": [],
+          "path": "/scout/events",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/scout/api.py#create_scout_event",
+          "use_case_ref": "../../../../../src/scout/application/use_cases.py#CreateScoutEvent"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1{eventId}/get",
+          "operation_id": "getScoutEvent",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/scout/events/{eventId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/scout/api.py#get_scout_event",
+          "use_case_ref": "../../../../../src/scout/application/use_cases.py#GetScoutEvent"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1aggregations/get",
+          "operation_id": "getScoutAggregations",
+          "owner_scoped_roles": [],
+          "path": "/scout/events/aggregations",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/scout/api.py#get_scout_aggregations",
+          "use_case_ref": "../../../../../src/scout/application/use_cases.py#GetScoutAggregations"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1sessions~1{matchId}~1complete/post",
+          "operation_id": "completeScoutSession",
+          "owner_scoped_roles": [],
+          "path": "/scout/sessions/{matchId}/complete",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/scout/api.py#complete_scout_session",
+          "use_case_ref": "../../../../../src/scout/application/use_cases.py#CompleteScoutSession"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/get",
+        "operation_id": "listScoutEvents",
+        "owner_scoped_roles": [
+          "athlete"
+        ],
+        "path": "/scout/events",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/scout/api.py#list_scout_events",
+        "use_case_ref": "../../../../../src/scout/application/use_cases.py#ListScoutEvents"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/post",
+        "operation_id": "createScoutEvent",
+        "owner_scoped_roles": [],
+        "path": "/scout/events",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/scout/api.py#create_scout_event",
+        "use_case_ref": "../../../../../src/scout/application/use_cases.py#CreateScoutEvent"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1aggregations/get",
+        "operation_id": "getScoutAggregations",
+        "owner_scoped_roles": [],
+        "path": "/scout/events/aggregations",
+        "response_codes": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/scout/api.py#get_scout_aggregations",
+        "use_case_ref": "../../../../../src/scout/application/use_cases.py#GetScoutAggregations"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "ScoutEvent": {
+          "required": [
+            "id",
+            "matchId",
+            "eventLabel",
+            "recordedAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/scout/scout_event.schema.json",
+          "sovereign_fields": [
+            {
+              "constraints": [
+                "INV-SCOUT-001: obrigatório"
+              ],
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-003: todo evento está ancorado a matchId",
+                "INV-SCOUT-001: obrigatório",
+                "boundary: reference to matches module"
+              ],
+              "name": "matchId",
+              "required": true,
+              "runtime_name": "match_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "DR-SCOUT-003: refina contexto da observação, não muda soberania",
+                "boundary: reference to identity_access module"
+              ],
+              "name": "athleteUserId",
+              "required": false,
+              "runtime_name": "athlete_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "DR-SCOUT-003: refina contexto da observação",
+                "boundary: reference to teams module"
+              ],
+              "name": "teamId",
+              "required": false,
+              "runtime_name": "team_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-002: deve ser da taxonomia canônica CANONICAL_EVENT_TAXONOMY_SCOUT",
+                "INV-SCOUT-001: obrigatório",
+                "INV-SCOUT-003: verificável contra taxonomia canônica",
+                "maxLength: 120"
+              ],
+              "name": "eventLabel",
+              "required": true,
+              "runtime_name": "event_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-002: cada item deve ser da taxonomia canônica",
+                "INV-SCOUT-002: sem duplicatas",
+                "nullable: true",
+                "maxItems: 20"
+              ],
+              "name": "tagLabels",
+              "required": false,
+              "runtime_name": "tag_labels",
+              "type": "array_of_string"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-004: scout não é dono do storage subjacente",
+                "INV-SCOUT-002: sem duplicatas",
+                "nullable: true",
+                "maxItems: 10"
+              ],
+              "name": "clipAssetRefs",
+              "required": false,
+              "runtime_name": "clip_asset_refs",
+              "type": "array_of_string"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-002: deve ser da taxonomia canônica",
+                "nullable: true",
+                "maxLength: 120"
+              ],
+              "name": "codingSchemaLabel",
+              "required": false,
+              "runtime_name": "coding_schema_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "DR-SCOUT-002: deve ser da taxonomia canônica",
+                "DR-SCOUT-005: não redefine estatística oficial sem mapeamento aprovado",
+                "nullable: true",
+                "maxLength: 120"
+              ],
+              "name": "tacticalAggregationLabel",
+              "required": false,
+              "runtime_name": "tactical_aggregation_label",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "INV-SCOUT-001: obrigatório"
+              ],
+              "name": "recordedAt",
+              "required": true,
+              "runtime_name": "recorded_at",
+              "type": "datetime_utc"
+            }
+          ]
+        }
+      },
+      "entity": "ScoutEvent",
+      "module": "scout",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/scout/scout_event.yaml",
+      "primary_entity": "ScoutEvent",
+      "primary_schema_ref": "contracts/schemas/scout/scout_event.schema.json",
+      "required": [
+        "id",
+        "matchId",
+        "eventLabel",
+        "recordedAt"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "constraints": [
+            "INV-SCOUT-001: obrigatório"
+          ],
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-003: todo evento está ancorado a matchId",
+            "INV-SCOUT-001: obrigatório",
+            "boundary: reference to matches module"
+          ],
+          "name": "matchId",
+          "required": true,
+          "runtime_name": "match_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "DR-SCOUT-003: refina contexto da observação, não muda soberania",
+            "boundary: reference to identity_access module"
+          ],
+          "name": "athleteUserId",
+          "required": false,
+          "runtime_name": "athlete_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "DR-SCOUT-003: refina contexto da observação",
+            "boundary: reference to teams module"
+          ],
+          "name": "teamId",
+          "required": false,
+          "runtime_name": "team_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-002: deve ser da taxonomia canônica CANONICAL_EVENT_TAXONOMY_SCOUT",
+            "INV-SCOUT-001: obrigatório",
+            "INV-SCOUT-003: verificável contra taxonomia canônica",
+            "maxLength: 120"
+          ],
+          "name": "eventLabel",
+          "required": true,
+          "runtime_name": "event_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-002: cada item deve ser da taxonomia canônica",
+            "INV-SCOUT-002: sem duplicatas",
+            "nullable: true",
+            "maxItems: 20"
+          ],
+          "name": "tagLabels",
+          "required": false,
+          "runtime_name": "tag_labels",
+          "type": "array_of_string"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-004: scout não é dono do storage subjacente",
+            "INV-SCOUT-002: sem duplicatas",
+            "nullable: true",
+            "maxItems: 10"
+          ],
+          "name": "clipAssetRefs",
+          "required": false,
+          "runtime_name": "clip_asset_refs",
+          "type": "array_of_string"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-002: deve ser da taxonomia canônica",
+            "nullable: true",
+            "maxLength: 120"
+          ],
+          "name": "codingSchemaLabel",
+          "required": false,
+          "runtime_name": "coding_schema_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "DR-SCOUT-002: deve ser da taxonomia canônica",
+            "DR-SCOUT-005: não redefine estatística oficial sem mapeamento aprovado",
+            "nullable: true",
+            "maxLength: 120"
+          ],
+          "name": "tacticalAggregationLabel",
+          "required": false,
+          "runtime_name": "tactical_aggregation_label",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "INV-SCOUT-001: obrigatório"
+          ],
+          "name": "recordedAt",
+          "required": true,
+          "runtime_name": "recorded_at",
+          "type": "datetime_utc"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/scout/scout_event.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "SCT-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/scout.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "SCT-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/scout/tests/",
+        "covers": [
+          "INV-SCOUT-001",
+          "INV-SCOUT-002",
+          "INV-SCOUT-003",
+          "INV-SCOUT-004",
+          "DR-SCOUT-001",
+          "DR-SCOUT-002",
+          "DR-SCOUT-003",
+          "DR-SCOUT-004",
+          "DR-SCOUT-005"
+        ],
+        "evidence_refs": [
+          "../../../../../src/scout/tests/"
+        ],
+        "id": "SCT-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Domain unit and integration tests enforcing invariants, taxonomy, boundary rules and permission checks"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py"
+        ],
+        "id": "SCT-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/scout/README.md",
+      "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md",
+      "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md",
+      "contracts/openapi/paths/scout.yaml",
+      "contracts/openapi/components/schemas/scout/scout_event.yaml"
+    ],
+    "expected_output": "compiled_context/scout/FT-036.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module scout --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module scout --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module scout --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module scout --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_scout_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_scout.py tests/pipeline_gates/test_context_bundle_scout.py -q"
+    ]
+  }
+}

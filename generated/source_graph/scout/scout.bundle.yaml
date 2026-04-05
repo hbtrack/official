@@ -1,0 +1,396 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: scout
+graph_root: docs/hbtrack/modulos/scout/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/scout/scout_event.yaml
+  sha256: ab6902418c98ae65cab61d61760c822be859a448a55499d43ee1d851fa328991
+- relpath: contracts/openapi/paths/scout.yaml
+  sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
+- relpath: contracts/schemas/scout/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/scout/scout_event.schema.json
+  sha256: 4dac87f80d2fef7676f6f121273c4b1e5c60479f9fa46281e4588b109ce36991
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
+  sha256: c5f45e62a76aacb86b645f622c58b677387636e585354068aa2220e0565ecdec
+- relpath: docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md
+  sha256: 6892bcfb86ca325b8b87e9e0773a53ccbb6b5f587f62e83df69a8290a5865f26
+- relpath: docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md
+  sha256: 7dec2616b23bb06207f69752bc9afd147dd2a9920fd35e96c279b51b0b25a43d
+- relpath: docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md
+  sha256: 3a2a8988361974cd25680bd3cca4ee61e3de50232a479243137fad62cb889cd0
+- relpath: docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md
+  sha256: 0a291ebb896415fff340b2de5c6b871da1ed8302fe46a6a0d11a81508b5a369c
+- relpath: docs/hbtrack/modulos/scout/README.md
+  sha256: 4178f2e34e8082bfd75cac0a9fa28a1243ed26b91fbf0a0083fb9395c1b529e9
+- relpath: docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md
+  sha256: 07c4e281f610790d1a3ab49369abcf7223bcdce7d9ef94682e7d77861bd25656
+- relpath: docs/hbtrack/modulos/scout/graph/endpoints.yaml
+  sha256: b7528548b959b1584759190f706969ff83ddac07b78871f1b6d2a0c790153904
+- relpath: docs/hbtrack/modulos/scout/graph/entity_graph.yaml
+  sha256: 4445dae9793d87a771dc595fec2d34a750cacb20274c345f666972707f6ee11e
+- relpath: docs/hbtrack/modulos/scout/graph/errors.yaml
+  sha256: 33872e5fde88e65235828fb71f33145914b8cb9443e963eb3cee7270cccc8544
+- relpath: docs/hbtrack/modulos/scout/graph/module_manifest.yaml
+  sha256: 49fee51b4658b3de2988d914fd401eedd382abbf31f4a41c82ae3eb8725d9120
+- relpath: docs/hbtrack/modulos/scout/graph/test_obligations.yaml
+  sha256: 5741223d06760e43c7598d6df10161179834be7f43560fa8b7548da613ef74b9
+- relpath: src/scout/api.py
+  sha256: 318c026f381fc5429a88c1c38df0fe74c3da3ea77fe78a6223b54d1bf08ff820
+- relpath: src/scout/application/use_cases.py
+  sha256: c9911eaf0965acf7b7fcc49f59a0c2d0a89433c5466bbe4c52eaf8db73da462f
+- relpath: src/scout/domain/entities.py
+  sha256: 5a862e4e9bddcad9e0e04ff69aeee9e8c99e57e82cb5af1385e8a35a3be553f1
+- relpath: src/scout/domain/rules.py
+  sha256: 9e0d4987580b24ca6a6e4de65e89b50937517b8d6303d3dd874827063474184e
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: scout
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_SCOUT.md
+    domain_rules: ../DOMAIN_RULES_SCOUT.md
+    invariants: ../INVARIANTS_SCOUT.md
+    permissions: ../PERMISSIONS_SCOUT.md
+    test_matrix: ../TEST_MATRIX_SCOUT.md
+    canonical_taxonomy: ../CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/scout.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/scout/
+    primary_schema: ../../../../../contracts/schemas/scout/scout_event.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/scout/scout_event.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/scout/api.py
+    domain_entity: ../../../../../src/scout/domain/entities.py
+    domain_rules: ../../../../../src/scout/domain/rules.py
+    use_cases: ../../../../../src/scout/application/use_cases.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "matchId \xE9 refer\xEAncia cruzada para m\xF3dulo matches \u2014 boundary explicitado\
+    \ em DR-SCOUT-003."
+  - "athleteUserId \xE9 refer\xEAncia cruzada para identity_access \u2014 scout n\xE3\
+    o \xE9 dono de identidade."
+  - "teamId \xE9 refer\xEAncia cruzada para m\xF3dulo teams \u2014 scout apenas refina\
+    \ contexto observacional."
+  - "clipAssetRefs referenciam storage externo \u2014 scout n\xE3o \xE9 dono do storage\
+    \ (DR-SCOUT-004)."
+  - SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
+    (DR-SCOUT-002).
+entities:
+  ScoutEvent:
+    schema_ref: ../../../../../contracts/schemas/scout/scout_event.schema.json
+    runtime_entity_ref: ../../../../../src/scout/domain/entities.py#ScoutEvent
+    docs_refs:
+    - ../DOMAIN_RULES_SCOUT.md
+    - ../INVARIANTS_SCOUT.md
+    - ../PERMISSIONS_SCOUT.md
+    - ../CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-SCOUT-001: obrigat\xF3rio"
+    - name: matchId
+      runtime_name: match_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "DR-SCOUT-003: todo evento est\xE1 ancorado a matchId"
+      - "INV-SCOUT-001: obrigat\xF3rio"
+      - 'boundary: reference to matches module'
+    - name: athleteUserId
+      runtime_name: athlete_user_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - "DR-SCOUT-003: refina contexto da observa\xE7\xE3o, n\xE3o muda soberania"
+      - 'boundary: reference to identity_access module'
+    - name: teamId
+      runtime_name: team_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - "DR-SCOUT-003: refina contexto da observa\xE7\xE3o"
+      - 'boundary: reference to teams module'
+    - name: eventLabel
+      runtime_name: event_label
+      required: true
+      type: string
+      constraints:
+      - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica CANONICAL_EVENT_TAXONOMY_SCOUT"
+      - "INV-SCOUT-001: obrigat\xF3rio"
+      - "INV-SCOUT-003: verific\xE1vel contra taxonomia can\xF4nica"
+      - 'maxLength: 120'
+    - name: tagLabels
+      runtime_name: tag_labels
+      required: false
+      type: array_of_string
+      constraints:
+      - "DR-SCOUT-002: cada item deve ser da taxonomia can\xF4nica"
+      - 'INV-SCOUT-002: sem duplicatas'
+      - 'nullable: true'
+      - 'maxItems: 20'
+    - name: clipAssetRefs
+      runtime_name: clip_asset_refs
+      required: false
+      type: array_of_string
+      constraints:
+      - "DR-SCOUT-004: scout n\xE3o \xE9 dono do storage subjacente"
+      - 'INV-SCOUT-002: sem duplicatas'
+      - 'nullable: true'
+      - 'maxItems: 10'
+    - name: codingSchemaLabel
+      runtime_name: coding_schema_label
+      required: false
+      type: string
+      constraints:
+      - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica"
+      - 'nullable: true'
+      - 'maxLength: 120'
+    - name: tacticalAggregationLabel
+      runtime_name: tactical_aggregation_label
+      required: false
+      type: string
+      constraints:
+      - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica"
+      - "DR-SCOUT-005: n\xE3o redefine estat\xEDstica oficial sem mapeamento aprovado"
+      - 'nullable: true'
+      - 'maxLength: 120'
+    - name: recordedAt
+      runtime_name: recorded_at
+      required: true
+      type: datetime_utc
+      constraints:
+      - "INV-SCOUT-001: obrigat\xF3rio"
+    runtime_extension_fields: []
+endpoints:
+- operation_id: listScoutEvents
+  method: GET
+  path: /scout/events
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#list_scout_events
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#ListScoutEvents
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: createScoutEvent
+  method: POST
+  path: /scout/events
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/post
+  runtime_handler_ref: ../../../../../src/scout/api.py#create_scout_event
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#CreateScoutEvent
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: getScoutEvent
+  method: GET
+  path: /scout/events/{eventId}
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1{eventId}/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#get_scout_event
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#GetScoutEvent
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: getScoutAggregations
+  method: GET
+  path: /scout/events/aggregations
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1aggregations/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#get_scout_aggregations
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#GetScoutAggregations
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: completeScoutSession
+  method: POST
+  path: /scout/sessions/{matchId}/complete
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1sessions~1{matchId}~1complete/post
+  runtime_handler_ref: ../../../../../src/scout/api.py#complete_scout_session
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#CompleteScoutSession
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-SCOUT-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/scout/api.py#_get_actor_id
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession
+- id: ERR-SCOUT-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/scout/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession
+- id: ERR-SCOUT-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/scout/domain/rules.py#ScoutEventNotFound
+  operations:
+  - getScoutEvent
+  - completeScoutSession
+- id: ERR-SCOUT-400-INVALID-TAXONOMY
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/scout/domain/entities.py#validate_invariants
+  operations:
+  - createScoutEvent
+  notes: "DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem ser da taxonomia\
+    \ can\xF4nica (INV-SCOUT-003)"
+- id: ERR-SCOUT-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/scout/domain/entities.py#validate_invariants
+  operations:
+  - createScoutEvent
+- id: ERR-SCOUT-409-SESSION-CONFLICT
+  kind: domain
+  http_status: 409
+  source_ref: ../../../../../src/scout/application/use_cases.py#CompleteScoutSession
+  operations:
+  - completeScoutSession
+- id: ERR-SCOUT-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/scout/api.py#_get_actor_id
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession
+test_obligations:
+- id: SCT-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/scout/scout_event.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: SCT-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/scout.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: SCT-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/scout/tests/
+  covers:
+  - INV-SCOUT-001
+  - INV-SCOUT-002
+  - INV-SCOUT-003
+  - INV-SCOUT-004
+  - DR-SCOUT-001
+  - DR-SCOUT-002
+  - DR-SCOUT-003
+  - DR-SCOUT-004
+  - DR-SCOUT-005
+  verification: Domain unit and integration tests enforcing invariants, taxonomy,
+    boundary rules and permission checks
+  evidence_refs:
+  - ../../../../../src/scout/tests/
+- id: SCT-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py

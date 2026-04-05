@@ -5,7 +5,7 @@
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -19,10 +19,43 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "users",
-  "module_focus": "users",
+  "module": "scout",
+  "module_focus": "scout",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-05T20:00:05.323060+00:00"
+  "hook_validated_at": "2026-04-05T20:22:38.303449+00:00",
+  "stage2_artifacts": [
+    {
+      "path": "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
+      "sha256": "49fee51b4658b3de2988d914fd401eedd382abbf31f4a41c82ae3eb8725d9120",
+      "created_at": "2026-04-05T21:31:27.925344+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/graph/entity_graph.yaml",
+      "sha256": "4445dae9793d87a771dc595fec2d34a750cacb20274c345f666972707f6ee11e",
+      "created_at": "2026-04-05T21:31:40.032812+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/graph/endpoints.yaml",
+      "sha256": "b7528548b959b1584759190f706969ff83ddac07b78871f1b6d2a0c790153904",
+      "created_at": "2026-04-05T21:31:44.435347+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/graph/errors.yaml",
+      "sha256": "33872e5fde88e65235828fb71f33145914b8cb9443e963eb3cee7270cccc8544",
+      "created_at": "2026-04-05T21:31:47.703422+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/graph/test_obligations.yaml",
+      "sha256": "5741223d06760e43c7598d6df10161179834be7f43560fa8b7548da613ef74b9",
+      "created_at": "2026-04-05T21:31:50.936633+00:00",
+      "gate_exit_code": 0
+    }
+  ],
+  "stage2_exit_code": 0
 }

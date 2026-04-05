@@ -1,0 +1,67 @@
+version: "1.0.0"
+status: active
+module: scout
+
+errors:
+  - id: ERR-SCOUT-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/scout/api.py#_get_actor_id"
+    operations:
+      - listScoutEvents
+      - createScoutEvent
+      - getScoutEvent
+      - getScoutAggregations
+      - completeScoutSession
+
+  - id: ERR-SCOUT-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/scout/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listScoutEvents
+      - createScoutEvent
+      - getScoutEvent
+      - getScoutAggregations
+      - completeScoutSession
+
+  - id: ERR-SCOUT-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/scout/domain/rules.py#ScoutEventNotFound"
+    operations:
+      - getScoutEvent
+      - completeScoutSession
+
+  - id: ERR-SCOUT-400-INVALID-TAXONOMY
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/scout/domain/entities.py#validate_invariants"
+    operations:
+      - createScoutEvent
+    notes: "DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem ser da taxonomia canônica (INV-SCOUT-003)"
+
+  - id: ERR-SCOUT-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/scout/domain/entities.py#validate_invariants"
+    operations:
+      - createScoutEvent
+
+  - id: ERR-SCOUT-409-SESSION-CONFLICT
+    kind: domain
+    http_status: 409
+    source_ref: "../../../../../src/scout/application/use_cases.py#CompleteScoutSession"
+    operations:
+      - completeScoutSession
+
+  - id: ERR-SCOUT-500-INTERNAL
+    kind: transport
+    http_status: 500
+    source_ref: "../../../../../src/scout/api.py#_get_actor_id"
+    operations:
+      - listScoutEvents
+      - createScoutEvent
+      - getScoutEvent
+      - getScoutAggregations
+      - completeScoutSession

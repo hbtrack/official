@@ -91,7 +91,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+      "sha256": "c26b2c48c73a548343614a34e67ace3d83ec1b5e42eb3f97696e02fb090aea16"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "34395674f0de150674a205044e0011bc6a7afc2f63afbf6b0048d57202132605",
+  "source_fingerprint": "979afd4c44415f7452638424d929f62df0aee166816b2fba858fcf157c20d594",
   "source_graph": {
     "entities": {
       "Season": {

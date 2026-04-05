@@ -1,0 +1,167 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: scout
+openapi_paths_ref: contracts/openapi/paths/scout.yaml
+operations:
+- operation_id: listScoutEvents
+  method: GET
+  path: /scout/events
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#list_scout_events
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#ListScoutEvents
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: createScoutEvent
+  method: POST
+  path: /scout/events
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events/post
+  runtime_handler_ref: ../../../../../src/scout/api.py#create_scout_event
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#CreateScoutEvent
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: getScoutEvent
+  method: GET
+  path: /scout/events/{eventId}
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1{eventId}/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#get_scout_event
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#GetScoutEvent
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: getScoutAggregations
+  method: GET
+  path: /scout/events/aggregations
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1events~1aggregations/get
+  runtime_handler_ref: ../../../../../src/scout/api.py#get_scout_aggregations
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#GetScoutAggregations
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: completeScoutSession
+  method: POST
+  path: /scout/sessions/{matchId}/complete
+  openapi_ref: ../../../../../contracts/openapi/paths/scout.yaml#/scout~1sessions~1{matchId}~1complete/post
+  runtime_handler_ref: ../../../../../src/scout/api.py#complete_scout_session
+  use_case_ref: ../../../../../src/scout/application/use_cases.py#CompleteScoutSession
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-SCOUT-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/scout/api.py#_get_actor_id
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession
+- id: ERR-SCOUT-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/scout/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession
+- id: ERR-SCOUT-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/scout/domain/rules.py#ScoutEventNotFound
+  operations:
+  - getScoutEvent
+  - completeScoutSession
+- id: ERR-SCOUT-400-INVALID-TAXONOMY
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/scout/domain/entities.py#validate_invariants
+  operations:
+  - createScoutEvent
+  notes: "DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem ser da taxonomia\
+    \ can\xF4nica (INV-SCOUT-003)"
+- id: ERR-SCOUT-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/scout/domain/entities.py#validate_invariants
+  operations:
+  - createScoutEvent
+- id: ERR-SCOUT-409-SESSION-CONFLICT
+  kind: domain
+  http_status: 409
+  source_ref: ../../../../../src/scout/application/use_cases.py#CompleteScoutSession
+  operations:
+  - completeScoutSession
+- id: ERR-SCOUT-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/scout/api.py#_get_actor_id
+  operations:
+  - listScoutEvents
+  - createScoutEvent
+  - getScoutEvent
+  - getScoutAggregations
+  - completeScoutSession

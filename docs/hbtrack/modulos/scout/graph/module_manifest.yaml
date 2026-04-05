@@ -1,0 +1,47 @@
+version: "1.0.0"
+status: active
+module: scout
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_SCOUT.md"
+  domain_rules: "../DOMAIN_RULES_SCOUT.md"
+  invariants: "../INVARIANTS_SCOUT.md"
+  permissions: "../PERMISSIONS_SCOUT.md"
+  test_matrix: "../TEST_MATRIX_SCOUT.md"
+  canonical_taxonomy: "../CANONICAL_EVENT_TAXONOMY_SCOUT.yaml"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/scout.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/scout/"
+  primary_schema: "../../../../../contracts/schemas/scout/scout_event.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/scout/scout_event.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/scout/api.py"
+  domain_entity: "../../../../../src/scout/domain/entities.py"
+  domain_rules: "../../../../../src/scout/domain/rules.py"
+  use_cases: "../../../../../src/scout/application/use_cases.py"
+
+structured_ir:
+  entities: "./entity_graph.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph."
+  - "matchId é referência cruzada para módulo matches — boundary explicitado em DR-SCOUT-003."
+  - "athleteUserId é referência cruzada para identity_access — scout não é dono de identidade."
+  - "teamId é referência cruzada para módulo teams — scout apenas refina contexto observacional."
+  - "clipAssetRefs referenciam storage externo — scout não é dono do storage (DR-SCOUT-004)."
+  - "SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002)."
