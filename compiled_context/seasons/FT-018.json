@@ -95,7 +95,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
-      "sha256": "39ff70e9c2f9d74cf1f720d62f3edbaba6e82dbbf032ceebcb24b8f4d6d2cb28"
+      "sha256": "48a0405e8510dd8e29a74bc1e58175746de7d367842613b5d6b81b4ad55b2b50"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/impact_report.json",
-      "sha256": "a6254e4ac6e93dd2e641158cdc93851a1be39d0580390a69d41f850015e8c7a6"
+      "sha256": "9d9b61ee2a39ea724affc06b52dd00c5001499eea81a7d128d404042f2127172"
     }
   ],
   "module": "seasons",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "66b80dfc04682fbbfc029bf406f3ac592eed9df63bd90d8e5165871dc1059fc9",
+  "source_fingerprint": "34395674f0de150674a205044e0011bc6a7afc2f63afbf6b0048d57202132605",
   "source_graph": {
     "entities": {
       "Season": {
@@ -291,7 +291,7 @@
         "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
         "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
       ],
-      "source_fingerprint": "e5bebc7b17fc928682c01ad6ed8c2e1867cba3d2332d3224173519626ee724ef"
+      "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

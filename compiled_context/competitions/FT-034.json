@@ -93,7 +93,7 @@
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.bundle.yaml",
-      "sha256": "e42cc7cfec9db7a490b4c231304c44c8e87dc958209cf3db18b4162691b206ac"
+      "sha256": "1e788b60576a4147aadd0617fbfed5d753cd498681f09b2b2c1bc3737184469c"
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/competitions/impact_report.json",
-      "sha256": "d3e85c2814939c0b215ee23d0a82b1876e74f1354ec495cffa5036b395332e9c"
+      "sha256": "6c01188368b36e98f3807449a33a4d8c010ca39c4dd87698402159b3b788313a"
     }
   ],
   "module": "competitions",
@@ -135,7 +135,7 @@
     "domain_rules": "src/competitions/domain/rules.py",
     "use_cases": "src/competitions/application/use_cases.py"
   },
-  "source_fingerprint": "56c2d9cf8700a0f265b7d3cf6d87883282bea7f5125f7325ef5dfe14af139d49",
+  "source_fingerprint": "d877af348bc399e7e7cf04086c41558656784a2626bbea8e1d51ac3cbfaa8c51",
   "source_graph": {
     "entities": {
       "Competition": {
@@ -389,7 +389,7 @@
         "registrationTeamIds referenciam módulo teams — boundary explicitado em DR-COMP-003.",
         "calendarEntryIds referenciam módulo scheduling — boundary explicitado em module docs."
       ],
-      "source_fingerprint": "149e02704d757d4d4536ff6b0bb811f0416e6686f4ad422a935766d2f659fa25"
+      "source_fingerprint": "2c4a0de6630def3e14a5a209e2117b5b2f710c564e1f319889906a1348224984"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

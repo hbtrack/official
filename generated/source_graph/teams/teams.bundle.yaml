@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md
-  sha256: c0d0d4e15434d709cff94f6f4c7b39e3a267ab730bbbbdf9aa8d338f94e39a37
+  sha256: d815af96b4c6fceaffaae3312ca97a5c70f786e706e040e6d65b36c98d5748da
 - relpath: docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md
   sha256: d45d4fa772eae783d3a8e6998aa809a682852b46edb76271c606fd5004bc2861
 - relpath: docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md
@@ -33,7 +33,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md
   sha256: fe502bf1ccafdc2e6de0d1fd3a0bac07f4334a03f93fcccaf63eb96611cd3758
 - relpath: docs/hbtrack/modulos/teams/README.md
-  sha256: 4386c254121d17c138f11ed1d70d9cd332f412580ab5fadff883dc07e1da9b72
+  sha256: dce38e6c47d1f5998b99a4c371e6b225c69cc2db69a6ae04c19c79ab63a59e10
 - relpath: docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md
   sha256: c18557e9722ab3cbc1dc735a9741e51a40d2c1dbbcac9f29f62cd39108449b57
 - relpath: docs/hbtrack/modulos/teams/graph/endpoints.yaml

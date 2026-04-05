@@ -65,7 +65,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
-      "sha256": "5f1fae315a6b9a004d98aa45dd7c56b4d2d0897bc8d252a4a2e5125679f7a102"
+      "sha256": "e905388365dde3a6f053e57373d4c822c68b36bd8c81a7850b4b2140d40643cc"
     },
     {
       "relpath": "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/users/README.md",
-      "sha256": "140e4973a97b8f54b9d2021d2aa657b17dc03eef8bcf440e5209ca73f63d44a6"
+      "sha256": "2c875b9f9c052bf57dbc2da57f3b20001721e5e1e41f5d46724d11b4e27057ab"
     },
     {
       "relpath": "docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md",
@@ -142,5 +142,5 @@
     "generated/source_graph/users/users.openapi_contract_view.yaml",
     "generated/source_graph/users/impact_report.json"
   ],
-  "source_fingerprint": "5fc7e4c0661739ed5939df01b914067a99ddedc60a6002f87a888be794b4d6b2"
+  "source_fingerprint": "6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a"
 }

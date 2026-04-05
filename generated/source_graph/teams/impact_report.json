@@ -65,7 +65,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
-      "sha256": "c0d0d4e15434d709cff94f6f4c7b39e3a267ab730bbbbdf9aa8d338f94e39a37"
+      "sha256": "d815af96b4c6fceaffaae3312ca97a5c70f786e706e040e6d65b36c98d5748da"
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/INVARIANTS_TEAMS.md",
@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/README.md",
-      "sha256": "4386c254121d17c138f11ed1d70d9cd332f412580ab5fadff883dc07e1da9b72"
+      "sha256": "dce38e6c47d1f5998b99a4c371e6b225c69cc2db69a6ae04c19c79ab63a59e10"
     },
     {
       "relpath": "docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md",
@@ -141,5 +141,5 @@
     "generated/source_graph/teams/teams.openapi_contract_view.yaml",
     "generated/source_graph/teams/impact_report.json"
   ],
-  "source_fingerprint": "159789cc98687a50366819c27f9422b5394d3cd4bb4b529b9cedd0d6bf179329"
+  "source_fingerprint": "04fc4ef0c30062cbf73c2a7bb9ab73197c6c1082d0f8a75caeddf58f87a99f9f"
 }

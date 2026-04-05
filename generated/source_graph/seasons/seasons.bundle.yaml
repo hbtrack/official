@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md
-  sha256: 2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62
+  sha256: 23f05825e8780440a7a0e5cd1f3447389325f8bc2dec795a8d19aeb50099059f
 - relpath: docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md
   sha256: cc79728478fbaebcc2fc0bed1d406b022b3c8493bfe6309345a83d5beada6349
 - relpath: docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md
@@ -33,7 +33,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md
   sha256: 6cab919bf5cab4579a7a10a90a8c68963fcaf007fb690cb4d4b66bb3ded0258e
 - relpath: docs/hbtrack/modulos/seasons/README.md
-  sha256: 9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec
+  sha256: f10ac2c0987da16a1628c8ad1e5430f8e99dfcba0a8ec0985dec2acb395b338d
 - relpath: docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md
   sha256: 7f499b8c33acafec2f68629123040459407e4ee955b6b1853d4ce79f3d0f5b45
 - relpath: docs/hbtrack/modulos/seasons/graph/endpoints.yaml
