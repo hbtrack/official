@@ -70,7 +70,7 @@ jobs:
         id: cfg
         run: |
           python - <<'PY'
-          import yaml
+          import os, yaml
           from pathlib import Path
           cfg = yaml.safe_load(Path('.github/ai-review/config.yaml').read_text(encoding='utf-8'))
           review = cfg.get('review', {})
