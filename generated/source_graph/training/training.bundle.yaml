@@ -59,9 +59,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
   sha256: e07dd2f567fcbca89837a2374b52df89d8a2692a725c650c217f83196bad6f76
 - relpath: docs/hbtrack/modulos/training/README.md
-  sha256: 41c4ec560d626a0bc91eb191247fb87dc6d0cffdbad422d7db536489aeb6a1c4
+  sha256: 7c7c34c9f8d7a19a2866622a0c42f12bc85961b36076f2559d19e96b50d9cf29
 - relpath: docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md
-  sha256: a76966eb05da6158445303800eab4996fa1c00ce37048f1aa8b6e2608a76f8ef
+  sha256: 629d34fc554c148b2a6888c70d1f9404afe33fcddf87aa0676a8c28ef48b6ba1
 - relpath: docs/hbtrack/modulos/training/graph/endpoints.yaml
   sha256: 0047baacae917d587a259b2ec84c99a607b321c499bbafd3435a29f4e74baa35
 - relpath: docs/hbtrack/modulos/training/graph/entity_graph.yaml

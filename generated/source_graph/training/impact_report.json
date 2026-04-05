@@ -133,11 +133,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/README.md",
-      "sha256": "41c4ec560d626a0bc91eb191247fb87dc6d0cffdbad422d7db536489aeb6a1c4"
+      "sha256": "7c7c34c9f8d7a19a2866622a0c42f12bc85961b36076f2559d19e96b50d9cf29"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md",
-      "sha256": "a76966eb05da6158445303800eab4996fa1c00ce37048f1aa8b6e2608a76f8ef"
+      "sha256": "629d34fc554c148b2a6888c70d1f9404afe33fcddf87aa0676a8c28ef48b6ba1"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "ad556b4967c577d8d5382c9b4a30f78c33fd66cc9bc9ad6bd821f7492f1d55d8"
+  "source_fingerprint": "9d41be4f1649ce518be4b0a29a8b43de765849863e0788a1fe6a2f685de1ab83"
 }

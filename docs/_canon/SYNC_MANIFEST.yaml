@@ -1154,6 +1154,8 @@ rules:
       - "src/training/domain/rules.py"
       - "src/training/application/use_cases.py"
       - "tests/pipeline_gates/test_training_source_graph_integrity.py"
+      - "tests/pipeline_gates/test_source_graph_compiler_training.py"
+      - "tests/pipeline_gates/test_context_bundle_training.py"
     blocking_consumers:
       - "docs/hbtrack/modulos/training/README.md"
       - "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md"
@@ -1163,4 +1165,4 @@ rules:
       - "python3 scripts/compile/compile_source_graph.py --module training --check --format json"
       - "python3 scripts/compile/compile_context_bundle.py --module training --check --format json"
       - "python3 scripts/validate_contracts.py --profile ci"
-      - "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py -q"
+      - "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_training.py tests/pipeline_gates/test_context_bundle_training.py -q"

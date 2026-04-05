@@ -28,6 +28,18 @@ Toda superfície contratual e toda regra crítica do módulo deve ter prova corr
 | TM-002 | Schemas JSON | `contracts/schemas/training/*.schema.json` (7 schemas) | Schema validation | JSON Schema validator | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | Spectral OpenAPI | `contracts/openapi/openapi.yaml` + `.spectral.yaml` | Lint / ruleset | Spectral CLI | Sim | `_reports/contract_gates/latest.json` |
 | TM-004 | FSM training_session | `STATE_MODEL_TRAINING.md` + ADR-017 | Transition test | pytest | Sim | `tests/training/test_state_machine.py` |
+| TM-005 | Source Graph integrity | `docs/hbtrack/modulos/training/graph/` (5 YAMLs) | Pipeline gate | pytest | Sim | `tests/pipeline_gates/test_training_source_graph_integrity.py` |
+
+---
+
+## Obrigações de Teste — Source Graph (TRAIN-TO-001..004)
+
+| Obrigação | ID | Artefato-fonte | Arquivo de evidência |
+|---|---|---|---|
+| Sovereign schema coverage | TRAIN-TO-001 | `contracts/schemas/training/training_session.schema.json` | `tests/pipeline_gates/test_training_source_graph_integrity.py` |
+| OpenAPI contract coverage | TRAIN-TO-002 | `contracts/openapi/paths/training.yaml` | `tests/pipeline_gates/test_source_graph_compiler_training.py` |
+| Domain invariants | TRAIN-TO-003 | `src/training/tests/unit/test_invariants.py` | `tests/pipeline_gates/test_training_source_graph_integrity.py` |
+| Source graph integrity | TRAIN-TO-004 | `docs/hbtrack/modulos/training/graph/` | `tests/pipeline_gates/test_training_source_graph_integrity.py` |
 
 ---
 

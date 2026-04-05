@@ -8,21 +8,24 @@ fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-training
-resultado: PENDENTE
-proxima_acao_permitida: "fix(rename) commitado. Retomar implementação B10-001/training: docs (README+TEST_MATRIX), commit + push + PR."
+resultado: DONE
+proxima_acao_permitida: "B10-001/training DONE. PR aberto. Aguardar merge e iniciar próximo módulo da fila B10-001."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
-  - docs/hbtrack/modulos/matches/graph/module_manifest.yaml
-  - docs/hbtrack/modulos/matches/graph/entity_graph.yaml
-  - docs/hbtrack/modulos/matches/graph/endpoints.yaml
-  - docs/hbtrack/modulos/matches/graph/errors.yaml
-  - docs/hbtrack/modulos/matches/graph/test_obligations.yaml
-  - generated/source_graph/matches/matches.bundle.yaml
-  - generated/source_graph/matches/matches.openapi_contract_view.yaml
-  - generated/source_graph/matches/matches.schema_contract_view.yaml
-  - generated/source_graph/matches/impact_report.json
-  - compiled_context/matches/FT-035.json
+  - docs/hbtrack/modulos/training/graph/module_manifest.yaml
+  - docs/hbtrack/modulos/training/graph/entity_graph.yaml
+  - docs/hbtrack/modulos/training/graph/endpoints.yaml
+  - docs/hbtrack/modulos/training/graph/errors.yaml
+  - docs/hbtrack/modulos/training/graph/test_obligations.yaml
+  - generated/source_graph/training/training.bundle.yaml
+  - generated/source_graph/training/training.openapi_contract_view.yaml
+  - generated/source_graph/training/training.schema_contract_view.yaml
+  - generated/source_graph/training/impact_report.json
+  - compiled_context/training/FT-001.json
+  - tests/pipeline_gates/test_training_source_graph_integrity.py
+  - tests/pipeline_gates/test_source_graph_compiler_training.py
+  - tests/pipeline_gates/test_context_bundle_training.py
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`

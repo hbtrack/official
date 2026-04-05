@@ -78,6 +78,8 @@
       "docs/hbtrack/modulos/training/README.md"
     ],
     "tests": [
+      "tests/pipeline_gates/test_context_bundle_training.py",
+      "tests/pipeline_gates/test_source_graph_compiler_training.py",
       "tests/pipeline_gates/test_training_source_graph_integrity.py"
     ]
   },
@@ -96,11 +98,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b"
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "d19c2973b57bce3adc2a630cbeb8c8323630f1c6b9429155f62f2bfa2811a670"
+      "sha256": "c1e54087c4c9a3fd600b40058d27494edc4b60af565a0f612288e07c2b196806"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -112,7 +114,7 @@
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "137157d3432189a830df1de691753b5751f285e6814667a809a7e28a8a4a0bda"
+      "sha256": "7b34336c2509b3b7b6f1c21963bcfd37b33c515458e3546ea9831048c4778051"
     }
   ],
   "module": "training",
@@ -148,7 +150,7 @@
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "8e26e5a65c5f47f1862f94259726453b41496453acf750d2737b335649449d94",
+  "source_fingerprint": "9af3eebeac61c421634c2541a9b438e8ec88685fbc57abb64400e981ffaabea4",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -779,7 +781,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "ad556b4967c577d8d5382c9b4a30f78c33fd66cc9bc9ad6bd821f7492f1d55d8"
+      "source_fingerprint": "9d41be4f1649ce518be4b0a29a8b43de765849863e0788a1fe6a2f685de1ab83"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -3562,7 +3564,7 @@
       "python3 scripts/compile/compile_source_graph.py --module training --check --format json",
       "python3 scripts/compile/compile_context_bundle.py --module training --check --format json",
       "python3 scripts/validate_contracts.py --profile ci",
-      "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py -q"
+      "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_training.py tests/pipeline_gates/test_context_bundle_training.py -q"
     ]
   }
 }

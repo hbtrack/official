@@ -93,7 +93,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b"
+      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "967aa0cb74cf58c9d639ab70f9d565f58b1a23fdd626a2fe115d759106b36757",
+  "source_fingerprint": "0932186d3cbc9348af2edfc0566574ac461859a1599e978732821913f8400592",
   "source_graph": {
     "entities": {
       "Team": {

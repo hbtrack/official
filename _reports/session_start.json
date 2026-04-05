@@ -1,11 +1,11 @@
 {
-  "session_id": "bfa3cd2d-6bb7-4157-a5e3-2bff7b902ece",
-  "session_timestamp": "2026-04-05T00:27:50.057915+00:00",
+  "session_id": "68be23c1-6c49-4081-9920-cb86d6ef8981",
+  "session_timestamp": "2026-04-05T01:17:00.966567+00:00",
   "branch": "feat/b10-001-training",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -19,66 +19,8 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "roadmap_phase": 5,
-  "stage0_exit_code": 0,
   "module": "training",
   "module_focus": "training",
-  "stage2_artifacts": [
-    {
-      "path": "SESSION_HANDOFF.md",
-      "sha256": "09521ffd744c162a98b9adf2400b322b51973e4f27a25995e8ac42e254f21b61",
-      "created_at": "2026-04-05T00:27:58.546781+00:00",
-      "gate_exit_code": 0,
-      "validated_at": "2026-04-05T00:28:56.118358+00:00"
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
-      "sha256": "08b994c6dd75a079413de370825cc822d9969a959ff828f744649b57e3abc0d2",
-      "created_at": "2026-04-05T00:28:31.637558+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
-      "sha256": "5dee71049833c2a49ee48243dcb4a81af20a71730a0a6d20b981ad9d019cacf1",
-      "created_at": "2026-04-05T00:28:34.663574+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-      "sha256": "0ba0183c615b9bebd43c95063fcba3bb8947515377baa2748c4bd40c36208cf8",
-      "created_at": "2026-04-05T00:28:37.794538+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/graph/test_obligations.yaml",
-      "sha256": "5fadae9a1f794d00c6b6de66b08cc93aa121d8ff237f662dcc6cd489653ca5cc",
-      "created_at": "2026-04-05T00:28:40.809819+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b",
-      "created_at": "2026-04-05T00:28:44.029160+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/_canon/DOC_USAGE_MANIFEST.yaml",
-      "sha256": "100d29d7f0cff960c7e48c06932538b73bc8ebf1ef5a5df1d0f7beafa740ea7f",
-      "created_at": "2026-04-05T00:28:47.083763+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "tests/pipeline_gates/test_training_source_graph_integrity.py",
-      "sha256": "a4f52d24e121e4b675681a695b76c6ad9e0450228ff1f6f5b44ca0fdf2afc058",
-      "created_at": "2026-04-05T00:28:50.101478+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "scripts/compile/compile_source_graph.py",
-      "sha256": "6e056150e3e9b367d8418d1f483220e38f5e4d27847ce755db9c606984976367",
-      "created_at": "2026-04-05T00:28:53.088744+00:00",
-      "gate_exit_code": 0
-    }
-  ],
-  "stage2_exit_code": 0
+  "roadmap_phase": 5,
+  "stage0_exit_code": 0
 }
