@@ -196,7 +196,8 @@ jobs:
             ],
             'generationConfig': {
               'temperature': float('${{ steps.cfg.outputs.temperature }}'),
-              'maxOutputTokens': 4096
+              'maxOutputTokens': 4096,
+              'response_mime_type': 'application/json'
             }
           }
           Path('gemini_request.json').write_text(json.dumps(body, ensure_ascii=False), encoding='utf-8')
