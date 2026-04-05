@@ -1,4 +1,4 @@
-> ⚠️ **NON-SOVEREIGN** — Documento operacional de acompanhamento. Não define regras canônicas, contratos nem políticas. Não substitui `ROADMAP.md`, `SESSION_HANDOFF.md` nem os contratos em `contracts/`. Em caso de conflito, prevalecem os artefatos soberanos.
+> ⚠️ **NON-SOVEREIGN** — Documento operacional de acompanhamento. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem: enforcement executável (`scripts/hb`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este arquivo.
 
 Abaixo está o guia final de implementação do reviewer automático do HB Track, em modo Pacote B, do Passo 0 até o DONE.
 
