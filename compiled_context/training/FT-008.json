@@ -1,0 +1,3464 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/training/training.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/training/training.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/training/training.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/training/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "TRAINING_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/training.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/training/training_session.yaml",
+    "primary_schema": "contracts/schemas/training/training_session.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/training"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/training.yaml"
+    ],
+    "description": "Treinador e atletas trocam feedback técnico sobre a sessão em threads de comentários vinculados diretamente ao treino.",
+    "endpoints": [
+      "GET /training-sessions/{id}/feedback-threads",
+      "POST /training-sessions/{id}/feedback-threads"
+    ],
+    "id": "FT-008",
+    "name": "Feedback Técnico na Sessão de Treino",
+    "slug": "feedback-técnico-na-sessão-de-treino",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/training/api.py",
+      "src/training/application/use_cases.py",
+      "src/training/domain/entities.py",
+      "src/training/domain/rules.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/training/training_session.yaml",
+      "contracts/openapi/paths/training.yaml",
+      "contracts/schemas/training/training_session.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/training/FT-001.json",
+      "compiled_context/training/FT-002.json",
+      "compiled_context/training/FT-003.json",
+      "compiled_context/training/FT-004.json",
+      "compiled_context/training/FT-005.json",
+      "compiled_context/training/FT-006.json",
+      "compiled_context/training/FT-007.json",
+      "compiled_context/training/FT-008.json",
+      "compiled_context/training/FT-009.json",
+      "compiled_context/training/FT-010.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+      "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+      "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+      "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
+      "docs/hbtrack/modulos/training/README.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_training_source_graph_integrity.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b"
+    },
+    {
+      "relpath": "generated/source_graph/training/training.bundle.yaml",
+      "sha256": "d19c2973b57bce3adc2a630cbeb8c8323630f1c6b9429155f62f2bfa2811a670"
+    },
+    {
+      "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
+      "sha256": "bb2ffe2ea5fad5c19b60ffb70ef5389f7e7a1c496caef6f959d367839689c778"
+    },
+    {
+      "relpath": "generated/source_graph/training/training.openapi_contract_view.yaml",
+      "sha256": "76ddc0740800771724988db36f7650f9b1fcfa32861d287593e78b2bc07332ef"
+    },
+    {
+      "relpath": "generated/source_graph/training/impact_report.json",
+      "sha256": "137157d3432189a830df1de691753b5751f285e6814667a809a7e28a8a4a0bda"
+    }
+  ],
+  "module": "training",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+    "invariants": "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+    "permissions": "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
+    "readme": "docs/hbtrack/modulos/training/README.md",
+    "scope": "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+    "test_matrix": "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "state_model",
+      "permissions",
+      "errors",
+      "sport_science",
+      "ui_contract",
+      "arazzo",
+      "asyncapi",
+      "decision_ir"
+    ],
+    "owner": "performance-tech",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/training/api.py",
+    "domain_entity": "src/training/domain/entities.py",
+    "domain_rules": "src/training/domain/rules.py",
+    "use_cases": "src/training/application/use_cases.py"
+  },
+  "source_fingerprint": "8e26e5a65c5f47f1862f94259726453b41496453acf750d2737b335649449d94",
+  "source_graph": {
+    "entities": {
+      "TrainingSession": {
+        "docs_refs": [
+          "../DOMAIN_RULES_TRAINING.md",
+          "../INVARIANTS_TRAINING.md",
+          "../PERMISSIONS_TRAINING.md"
+        ],
+        "domain_enums": [
+          {
+            "name": "RoleLabel",
+            "source": "ADR-008 / SYSTEM_SCOPE.md",
+            "values": [
+              "admin",
+              "coordinator",
+              "coach",
+              "athlete",
+              "member"
+            ]
+          },
+          {
+            "name": "TrainingSessionStatus",
+            "source": "ADR-017 / INV-TRAIN-006",
+            "values": [
+              "DRAFT",
+              "SCHEDULED",
+              "PUBLISHED",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "CANCELLED",
+              "ARCHIVED"
+            ]
+          },
+          {
+            "name": "IndividualizationMode",
+            "source": "DR-TRAIN-030",
+            "values": [
+              "COLLECTIVE_UNIFORM",
+              "COLLECTIVE_WITH_VARIANTS",
+              "INDIVIDUAL_ONLY"
+            ]
+          }
+        ],
+        "invariants": [
+          {
+            "id": "INV-TRAIN-001",
+            "rule": "A soma dos percentuais focus_*_pct ≤ 120.00 após arredondamento RC-2."
+          },
+          {
+            "id": "INV-TRAIN-002",
+            "rule": "Submissão/edição de wellness_pre bloqueada quando NOW_UTC ≥ session_at_utc - 2h + 30s."
+          },
+          {
+            "id": "INV-TRAIN-004",
+            "rule": "Janela de edição: coach (autor) até 10min antes de session_at; coordinator/admin até 24h após ended_at."
+          },
+          {
+            "id": "INV-TRAIN-005",
+            "rule": "Sessões com session_at > 60 dias são somente leitura."
+          },
+          {
+            "id": "INV-TRAIN-006",
+            "rule": "Status segue FSM fechada de 7 estados canônicos (ADR-017). ARCHIVED é terminal."
+          },
+          {
+            "id": "INV-TRAIN-008",
+            "rule": "deleted_at e deleted_reason devem ser ambos nulos ou ambos preenchidos."
+          }
+        ],
+        "runtime_entity_ref": "../../../../../src/training/domain/entities.py#TrainingSession",
+        "schema_ref": "../../../../../contracts/schemas/training/training_session.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "DR-TRAIN-043: identity_access é soberano de autorização; organizationId é contexto"
+            ],
+            "name": "organizationId",
+            "required": true,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "boundary: reference to teams module"
+            ],
+            "name": "teamId",
+            "required": false,
+            "runtime_name": "team_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "boundary: reference to seasons module"
+            ],
+            "name": "seasonId",
+            "required": false,
+            "runtime_name": "season_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "boundary: periodization planning"
+            ],
+            "name": "microcycleId",
+            "required": false,
+            "runtime_name": "microcycle_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "INV-TRAIN-002: wellness_pre janela fecha 2h antes",
+              "INV-TRAIN-004: janela de edição baseada em session_at",
+              "INV-TRAIN-005: sessões > 60 dias são somente leitura"
+            ],
+            "name": "sessionAt",
+            "required": true,
+            "runtime_name": "session_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 1",
+              "maximum: 480"
+            ],
+            "name": "durationPlannedMinutes",
+            "required": false,
+            "runtime_name": "duration_planned_minutes",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "maxLength: 120"
+            ],
+            "name": "location",
+            "required": false,
+            "runtime_name": "location",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "maxLength: 32"
+            ],
+            "name": "sessionType",
+            "required": true,
+            "runtime_name": "session_type",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "maxLength: 255"
+            ],
+            "name": "mainObjective",
+            "required": false,
+            "runtime_name": "main_objective",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "maxLength: 255"
+            ],
+            "name": "secondaryObjective",
+            "required": false,
+            "runtime_name": "secondary_objective",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 10000"
+            ],
+            "name": "plannedLoad",
+            "required": false,
+            "runtime_name": "planned_load",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 1",
+              "maximum: 5"
+            ],
+            "name": "groupClimate",
+            "required": false,
+            "runtime_name": "group_climate",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "notes",
+            "required": false,
+            "runtime_name": "notes",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "phaseFocusDefense",
+            "required": false,
+            "runtime_name": "phase_focus_defense",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "phaseFocusAttack",
+            "required": false,
+            "runtime_name": "phase_focus_attack",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "phaseFocusTransitionOffense",
+            "required": false,
+            "runtime_name": "phase_focus_transition_offense",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "phaseFocusTransitionDefense",
+            "required": false,
+            "runtime_name": "phase_focus_transition_defense",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 1",
+              "maximum: 10"
+            ],
+            "name": "intensityTarget",
+            "required": false,
+            "runtime_name": "intensity_target",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "sessionBlock",
+            "required": false,
+            "runtime_name": "session_block",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "DR-TRAIN-001: criação exige coach ou coordinator"
+            ],
+            "name": "createdByUserId",
+            "required": true,
+            "runtime_name": "created_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "updatedAt",
+            "required": true,
+            "runtime_name": "updated_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+            ],
+            "name": "deletedAt",
+            "required": false,
+            "runtime_name": "deleted_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+            ],
+            "name": "deletedReason",
+            "required": false,
+            "runtime_name": "deleted_reason",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001: soma de todos focus_*_pct ≤ 120",
+              "RC-2: 2 casas decimais máximo"
+            ],
+            "name": "focusAttackPositionalPct",
+            "required": false,
+            "runtime_name": "focus_attack_positional_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusDefensePositionalPct",
+            "required": false,
+            "runtime_name": "focus_defense_positional_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusTransitionOffensePct",
+            "required": false,
+            "runtime_name": "focus_transition_offense_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusTransitionDefensePct",
+            "required": false,
+            "runtime_name": "focus_transition_defense_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusAttackTechnicalPct",
+            "required": false,
+            "runtime_name": "focus_attack_technical_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusDefenseTechnicalPct",
+            "required": false,
+            "runtime_name": "focus_defense_technical_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0",
+              "maximum: 100",
+              "INV-TRAIN-001"
+            ],
+            "name": "focusPhysicalPct",
+            "required": false,
+            "runtime_name": "focus_physical_pct",
+            "type": "decimal"
+          },
+          {
+            "constraints": [
+              "ADR-017: FSM fechada de 7 estados (INV-TRAIN-006)",
+              "default: DRAFT na criação",
+              "ARCHIVED é estado terminal — apenas automação 60d ou admin/coordinator"
+            ],
+            "name": "status",
+            "required": true,
+            "runtime_name": "status",
+            "type": "enum",
+            "values": [
+              "DRAFT",
+              "SCHEDULED",
+              "PUBLISHED",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "CANCELLED",
+              "ARCHIVED"
+            ]
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "closedAt",
+            "required": false,
+            "runtime_name": "closed_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "closedByUserId",
+            "required": false,
+            "runtime_name": "closed_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "deviationJustification",
+            "required": false,
+            "runtime_name": "deviation_justification",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "planningDeviationFlag",
+            "required": false,
+            "runtime_name": "planning_deviation_flag",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "true = sessão avulsa sem vínculo com microciclo"
+            ],
+            "name": "standalone",
+            "required": false,
+            "runtime_name": "standalone",
+            "type": "boolean"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-TRAIN-006: preenchido na transição IN_PROGRESS"
+            ],
+            "name": "startedAt",
+            "required": false,
+            "runtime_name": "started_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-TRAIN-006: preenchido na transição COMPLETED"
+            ],
+            "name": "endedAt",
+            "required": false,
+            "runtime_name": "ended_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0"
+            ],
+            "name": "durationActualMinutes",
+            "required": false,
+            "runtime_name": "duration_actual_minutes",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "executionOutcome",
+            "required": false,
+            "runtime_name": "execution_outcome",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0"
+            ],
+            "name": "delayMinutes",
+            "required": false,
+            "runtime_name": "delay_minutes",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "INV-TRAIN-006: obrigatório quando status=CANCELLED"
+            ],
+            "name": "cancellationReason",
+            "required": false,
+            "runtime_name": "cancellation_reason",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "postReviewCompletedAt",
+            "required": false,
+            "runtime_name": "post_review_completed_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "postReviewCompletedByUserId",
+            "required": false,
+            "runtime_name": "post_review_completed_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "postReviewDeadlineAt",
+            "required": false,
+            "runtime_name": "post_review_deadline_at",
+            "type": "datetime"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "DR-TRAIN-030: obrigatório se exercícios com variantes individuais"
+            ],
+            "name": "individualizationMode",
+            "required": false,
+            "runtime_name": "individualization_mode",
+            "type": "enum",
+            "values": [
+              "COLLECTIVE_UNIFORM",
+              "COLLECTIVE_WITH_VARIANTS",
+              "INDIVIDUAL_ONLY"
+            ]
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "plannedContentSnapshot",
+            "required": false,
+            "runtime_name": "planned_content_snapshot",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "objectiveOrigin",
+            "required": false,
+            "runtime_name": "objective_origin",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "minimum: 0"
+            ],
+            "name": "actualLoadRecorded",
+            "required": false,
+            "runtime_name": "actual_load_recorded",
+            "type": "integer"
+          },
+          {
+            "constraints": [
+              "nullable: true"
+            ],
+            "name": "continuityNotes",
+            "required": false,
+            "runtime_name": "continuity_notes",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "errors": [],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/training.yaml",
+        "contracts/schemas/training/training_session.schema.json",
+        "contracts/openapi/components/schemas/training/training_session.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/training/README.md",
+        "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+        "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+        "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+        "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
+        "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
+      ],
+      "impacted_runtime": [
+        "src/training/api.py",
+        "src/training/domain/entities.py",
+        "src/training/domain/rules.py",
+        "src/training/application/use_cases.py"
+      ],
+      "known_gaps": [
+        "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+        "Entity graph cobre apenas TrainingSession (entidade soberana primária). Entidades secundárias (SessionBlock, WellnessPre, WellnessPost, ExecutionRecord, SessionObjective, FeedbackThread, AttentionQueueItem, Mesocycle, Microcycle) declaradas em known_gaps — schemas individuais em contracts/schemas/training/.",
+        "27 handlers em api.py são stubs de contrato (NotImplementedError) — implementação pendente. Stubs adicionados para source graph integrity em B10-001.",
+        "33 use cases em use_cases.py são stubs de contrato — implementação pendente.",
+        "OpenAPI YAML tem bug estrutural: PATCH /training-sessions/{id} (updateTrainingSession) e DELETE /training-sessions/{id} (deleteTrainingSession) estão no bloco /training-sessions/{id}/blocks/reorder. Source graph usa paths lógicos alinhados com FEATURE_REGISTRY.",
+        "teamId, seasonId referenciam módulo teams/seasons — boundaries explicitados em DOMAIN_RULES_TRAINING.",
+        "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
+        "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
+      ],
+      "source_fingerprint": "ad556b4967c577d8d5382c9b4a30f78c33fd66cc9bc9ad6bd821f7492f1d55d8"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "class_ref": null,
+          "description": "Token JWT ausente, expirado ou inválido. Retornado pelo middleware de autenticação antes de qualquer lógica de domínio.\n",
+          "error_id": "UNAUTHORIZED",
+          "feature_ids": [
+            "FT-001",
+            "FT-002",
+            "FT-003",
+            "FT-004",
+            "FT-005",
+            "FT-006",
+            "FT-007",
+            "FT-008",
+            "FT-009",
+            "FT-010"
+          ],
+          "http_status": 401,
+          "source": "transport"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#InsufficientPrivilege",
+          "description": "Usuário autenticado não possui o role necessário para a operação (BFLA — Broken Function Level Authorization).\n",
+          "error_id": "INSUFFICIENT_PRIVILEGE",
+          "feature_ids": [
+            "FT-001",
+            "FT-002",
+            "FT-003",
+            "FT-004",
+            "FT-005",
+            "FT-006",
+            "FT-007",
+            "FT-008",
+            "FT-009",
+            "FT-010"
+          ],
+          "http_status": 403,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#TrainingSessionNotFound",
+          "description": "Sessão de treino com o ID informado não existe ou foi excluída (soft delete).\n",
+          "error_id": "TRAINING_SESSION_NOT_FOUND",
+          "feature_ids": [
+            "FT-001",
+            "FT-002",
+            "FT-003",
+            "FT-004",
+            "FT-005",
+            "FT-007",
+            "FT-008",
+            "FT-009",
+            "FT-010"
+          ],
+          "http_status": 404,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#SessionBlockNotFound",
+          "description": "Bloco de sessão com o ID informado não existe na sessão especificada.\n",
+          "error_id": "SESSION_BLOCK_NOT_FOUND",
+          "feature_ids": [
+            "FT-003"
+          ],
+          "http_status": 404,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#InvalidStatusTransition",
+          "description": "Transição de estado inválida na FSM da sessão (ex: tentar iniciar uma sessão já cancelada, ou publicar uma sessão já publicada).\n",
+          "error_id": "INVALID_STATUS_TRANSITION",
+          "feature_ids": [
+            "FT-002"
+          ],
+          "http_status": 422,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#SessionNotMutable",
+          "description": "Operação de modificação rejeitada porque a sessão está em um estado imutável (ex: archived, completed).\n",
+          "error_id": "SESSION_NOT_MUTABLE",
+          "feature_ids": [
+            "FT-001",
+            "FT-003"
+          ],
+          "http_status": 409,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#WellnessWindowClosed",
+          "description": "Tentativa de submeter bem-estar (pré ou pós) fora da janela de tempo permitida em relação ao horário da sessão.\n",
+          "error_id": "WELLNESS_WINDOW_CLOSED",
+          "feature_ids": [
+            "FT-005"
+          ],
+          "http_status": 400,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#DuplicateWellnessEntry",
+          "description": "Atleta tentou submeter bem-estar duplicado para a mesma sessão (já existe registro de pré ou pós para esse atleta nessa sessão).\n",
+          "error_id": "DUPLICATE_WELLNESS_ENTRY",
+          "feature_ids": [
+            "FT-005"
+          ],
+          "http_status": 409,
+          "source": "domain"
+        },
+        {
+          "class_ref": "../../../../../src/training/domain/rules.py#ElasticSumRuleViolation",
+          "description": "Soma das frações de foco (phaseFocusDefense + phaseFocusAttack + phaseFocusTransitionOffense + phaseFocusTransitionDefense) deve ser exatamente 100. Violação desta regra elástica gera 422.\n",
+          "error_id": "ELASTIC_SUM_RULE_VIOLATION",
+          "feature_ids": [
+            "FT-001"
+          ],
+          "http_status": 422,
+          "source": "domain"
+        },
+        {
+          "class_ref": null,
+          "description": "Erro inesperado de infraestrutura (banco, dependência externa). Não expõe detalhes internos ao cliente.\n",
+          "error_id": "INTERNAL_SERVER_ERROR",
+          "feature_ids": [
+            "FT-001",
+            "FT-002",
+            "FT-003",
+            "FT-004",
+            "FT-005",
+            "FT-006",
+            "FT-007",
+            "FT-008",
+            "FT-009",
+            "FT-010"
+          ],
+          "http_status": 500,
+          "source": "infrastructure"
+        }
+      ],
+      "module": "training",
+      "openapi_paths_ref": "contracts/openapi/paths/training.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/get",
+          "operation_id": "listTrainingSessions",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_training_sessions",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListTrainingSessionsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/post",
+          "operation_id": "createTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateTrainingSessionUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/get",
+          "operation_id": "getTrainingSessionById",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetTrainingSessionUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/patch",
+          "operation_id": "updateTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateTrainingSessionUseCase"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/delete",
+          "operation_id": "deleteTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}",
+          "response_codes": [
+            204,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#delete_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/publish/post",
+          "operation_id": "publishTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/publish",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#publish_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/unpublish/post",
+          "operation_id": "unpublishTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/unpublish",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#unpublish_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/start/post",
+          "operation_id": "startTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/start",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#start_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/complete/post",
+          "operation_id": "completeTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/complete",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#complete_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/cancel/post",
+          "operation_id": "cancelTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/cancel",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#cancel_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/archive/post",
+          "operation_id": "archiveTrainingSession",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/archive",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#archive_training_session",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/get",
+          "operation_id": "listSessionBlocks",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/blocks",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_blocks",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionBlocksUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/post",
+          "operation_id": "addSessionBlock",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/blocks",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#add_session_block",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#AddSessionBlockUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/get",
+          "operation_id": "getSessionBlock",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/blocks/{blockId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_session_block",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetSessionBlockUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/patch",
+          "operation_id": "updateSessionBlock",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/blocks/{blockId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_session_block",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateSessionBlockUseCase"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/delete",
+          "operation_id": "deleteSessionBlock",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/blocks/{blockId}",
+          "response_codes": [
+            204,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#delete_session_block",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteSessionBlockUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/post",
+          "operation_id": "reorderSessionBlocks",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/blocks/reorder",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#reorder_session_blocks",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ReorderSessionBlocksUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attendance/get",
+          "operation_id": "listSessionAttendance",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/attendance",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_attendance",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionAttendanceUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attendance/post",
+          "operation_id": "recordSessionAttendance",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/attendance",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#record_session_attendance",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#RecordSessionAttendanceUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/post",
+          "operation_id": "submitWellnessPre",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-pre",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404,
+            409
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#submit_wellness_pre",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPreUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/{athleteId}/get",
+          "operation_id": "getWellnessPre",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-pre/{athleteId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_wellness_pre",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPreUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/{athleteId}/patch",
+          "operation_id": "updateWellnessPre",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-pre/{athleteId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_wellness_pre",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPreUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/post",
+          "operation_id": "submitWellnessPost",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-post",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404,
+            409
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#submit_wellness_post",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPostUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/{athleteId}/get",
+          "operation_id": "getWellnessPost",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-post/{athleteId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_wellness_post",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPostUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/{athleteId}/patch",
+          "operation_id": "updateWellnessPost",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/wellness-post/{athleteId}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_wellness_post",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPostUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/mesocycles/get",
+          "operation_id": "listMesocycles",
+          "owner_scoped_roles": [],
+          "path": "/mesocycles",
+          "response_codes": [
+            200,
+            401,
+            403
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_mesocycles",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMesocyclesUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/mesocycles/post",
+          "operation_id": "createMesocycle",
+          "owner_scoped_roles": [],
+          "path": "/mesocycles",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_mesocycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMesocycleUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/mesocycles/{id}/get",
+          "operation_id": "getMesocycleById",
+          "owner_scoped_roles": [],
+          "path": "/mesocycles/{id}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_mesocycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMesocycleUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/mesocycles/{id}/patch",
+          "operation_id": "updateMesocycle",
+          "owner_scoped_roles": [],
+          "path": "/mesocycles/{id}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_mesocycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMesocycleUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/microcycles/get",
+          "operation_id": "listMicrocycles",
+          "owner_scoped_roles": [],
+          "path": "/microcycles",
+          "response_codes": [
+            200,
+            401,
+            403
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_microcycles",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMicrocyclesUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/microcycles/post",
+          "operation_id": "createMicrocycle",
+          "owner_scoped_roles": [],
+          "path": "/microcycles",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            422
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_microcycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMicrocycleUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/microcycles/{id}/get",
+          "operation_id": "getMicrocycleById",
+          "owner_scoped_roles": [],
+          "path": "/microcycles/{id}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_microcycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMicrocycleUseCase"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/microcycles/{id}/patch",
+          "operation_id": "updateMicrocycle",
+          "owner_scoped_roles": [],
+          "path": "/microcycles/{id}",
+          "response_codes": [
+            200,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#update_microcycle",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMicrocycleUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/get",
+          "operation_id": "listExecutionRecords",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/execution-records",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_execution_records",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListExecutionRecordsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/post",
+          "operation_id": "createExecutionRecord",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/execution-records",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_execution_record",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateExecutionRecordUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/{recordId}/get",
+          "operation_id": "getExecutionRecord",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/execution-records/{recordId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_execution_record",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetExecutionRecordUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/get",
+          "operation_id": "listFeedbackThreads",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/feedback-threads",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_feedback_threads",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListFeedbackThreadsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/post",
+          "operation_id": "createFeedbackThread",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/feedback-threads",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_feedback_thread",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateFeedbackThreadUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/{threadId}/close/post",
+          "operation_id": "closeFeedbackThread",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/feedback-threads/{threadId}/close",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#close_feedback_thread",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CloseFeedbackThreadUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/objectives/get",
+          "operation_id": "listSessionObjectives",
+          "owner_scoped_roles": [
+            "athlete"
+          ],
+          "path": "/training-sessions/{id}/objectives",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_objectives",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionObjectivesUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/objectives/post",
+          "operation_id": "createSessionObjective",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/objectives",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#create_session_objective",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateSessionObjectiveUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/get",
+          "operation_id": "listAttentionQueueItems",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/attention-queue",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_attention_queue_items",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListAttentionQueueItemsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/resolve/post",
+          "operation_id": "resolveAttentionQueueItem",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/attention-queue/{itemId}/resolve",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#resolve_attention_queue_item",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ResolveAttentionQueueItemUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/dismiss/post",
+          "operation_id": "dismissAttentionQueueItem",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/attention-queue/{itemId}/dismiss",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#dismiss_attention_queue_item",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissAttentionQueueItemUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/escalate/post",
+          "operation_id": "escalateAttentionQueueItem",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/attention-queue/{itemId}/escalate",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#escalate_attention_queue_item",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#EscalateAttentionQueueItemUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/get",
+          "operation_id": "listRecommendations",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/recommendations",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_recommendations",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListRecommendationsUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/{recommendationId}/accept/post",
+          "operation_id": "acceptRecommendation",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/recommendations/{recommendationId}/accept",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#accept_recommendation",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#AcceptRecommendationUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/{recommendationId}/dismiss/post",
+          "operation_id": "dismissRecommendation",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/recommendations/{recommendationId}/dismiss",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#dismiss_recommendation",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissRecommendationUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/ineligibility/get",
+          "operation_id": "getIneligibilityStatus",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/ineligibility",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_ineligibility_status",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetIneligibilityStatusUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/ineligibility/post",
+          "operation_id": "submitIneligibilityDeclaration",
+          "owner_scoped_roles": [],
+          "path": "/training-sessions/{id}/ineligibility",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#submit_ineligibility_declaration",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitIneligibilityDeclarationUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training/load-chart/get",
+          "operation_id": "getLoadChart",
+          "owner_scoped_roles": [],
+          "path": "/training/load-chart",
+          "response_codes": [
+            200,
+            401,
+            403
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete"
+          ],
+          "roles_denied": [
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#get_load_chart",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetLoadChartUseCase"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/hb-pro-coach/conversations/{conversationId}/messages/get",
+          "operation_id": "listChatMessages",
+          "owner_scoped_roles": [],
+          "path": "/hb-pro-coach/conversations/{conversationId}/messages",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#list_chat_messages",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListChatMessagesUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/hb-pro-coach/training-suggestions/post",
+          "operation_id": "submitTrainingSuggestion",
+          "owner_scoped_roles": [],
+          "path": "/hb-pro-coach/training-suggestions",
+          "response_codes": [
+            201,
+            400,
+            401,
+            403
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/training/api.py#submit_training_suggestion",
+          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitTrainingSuggestionUseCase"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/get",
+        "operation_id": "listFeedbackThreads",
+        "owner_scoped_roles": [
+          "athlete"
+        ],
+        "path": "/training-sessions/{id}/feedback-threads",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/training/api.py#list_feedback_threads",
+        "use_case_ref": "../../../../../src/training/application/use_cases.py#ListFeedbackThreadsUseCase"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/post",
+        "operation_id": "createFeedbackThread",
+        "owner_scoped_roles": [
+          "athlete"
+        ],
+        "path": "/training-sessions/{id}/feedback-threads",
+        "response_codes": [
+          201,
+          400,
+          401,
+          403,
+          404
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete"
+        ],
+        "roles_denied": [
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/training/api.py#create_feedback_thread",
+        "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateFeedbackThreadUseCase"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "TrainingSession": {
+          "required": [
+            "id",
+            "organizationId",
+            "sessionAt",
+            "sessionType",
+            "status",
+            "createdAt",
+            "updatedAt",
+            "createdByUserId"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/training/training_session.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "DR-TRAIN-043: identity_access é soberano de autorização; organizationId é contexto"
+              ],
+              "name": "organizationId",
+              "required": true,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "boundary: reference to teams module"
+              ],
+              "name": "teamId",
+              "required": false,
+              "runtime_name": "team_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "boundary: reference to seasons module"
+              ],
+              "name": "seasonId",
+              "required": false,
+              "runtime_name": "season_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "boundary: periodization planning"
+              ],
+              "name": "microcycleId",
+              "required": false,
+              "runtime_name": "microcycle_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "INV-TRAIN-002: wellness_pre janela fecha 2h antes",
+                "INV-TRAIN-004: janela de edição baseada em session_at",
+                "INV-TRAIN-005: sessões > 60 dias são somente leitura"
+              ],
+              "name": "sessionAt",
+              "required": true,
+              "runtime_name": "session_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 1",
+                "maximum: 480"
+              ],
+              "name": "durationPlannedMinutes",
+              "required": false,
+              "runtime_name": "duration_planned_minutes",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "maxLength: 120"
+              ],
+              "name": "location",
+              "required": false,
+              "runtime_name": "location",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "maxLength: 32"
+              ],
+              "name": "sessionType",
+              "required": true,
+              "runtime_name": "session_type",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "maxLength: 255"
+              ],
+              "name": "mainObjective",
+              "required": false,
+              "runtime_name": "main_objective",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "maxLength: 255"
+              ],
+              "name": "secondaryObjective",
+              "required": false,
+              "runtime_name": "secondary_objective",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 10000"
+              ],
+              "name": "plannedLoad",
+              "required": false,
+              "runtime_name": "planned_load",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 1",
+                "maximum: 5"
+              ],
+              "name": "groupClimate",
+              "required": false,
+              "runtime_name": "group_climate",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "notes",
+              "required": false,
+              "runtime_name": "notes",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "phaseFocusDefense",
+              "required": false,
+              "runtime_name": "phase_focus_defense",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "phaseFocusAttack",
+              "required": false,
+              "runtime_name": "phase_focus_attack",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "phaseFocusTransitionOffense",
+              "required": false,
+              "runtime_name": "phase_focus_transition_offense",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "phaseFocusTransitionDefense",
+              "required": false,
+              "runtime_name": "phase_focus_transition_defense",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 1",
+                "maximum: 10"
+              ],
+              "name": "intensityTarget",
+              "required": false,
+              "runtime_name": "intensity_target",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "sessionBlock",
+              "required": false,
+              "runtime_name": "session_block",
+              "type": "string"
+            },
+            {
+              "name": "createdAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "DR-TRAIN-001: criação exige coach ou coordinator"
+              ],
+              "name": "createdByUserId",
+              "required": true,
+              "runtime_name": "created_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "updatedAt",
+              "required": true,
+              "runtime_name": "updated_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+              ],
+              "name": "deletedAt",
+              "required": false,
+              "runtime_name": "deleted_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+              ],
+              "name": "deletedReason",
+              "required": false,
+              "runtime_name": "deleted_reason",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001: soma de todos focus_*_pct ≤ 120",
+                "RC-2: 2 casas decimais máximo"
+              ],
+              "name": "focusAttackPositionalPct",
+              "required": false,
+              "runtime_name": "focus_attack_positional_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusDefensePositionalPct",
+              "required": false,
+              "runtime_name": "focus_defense_positional_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusTransitionOffensePct",
+              "required": false,
+              "runtime_name": "focus_transition_offense_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusTransitionDefensePct",
+              "required": false,
+              "runtime_name": "focus_transition_defense_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusAttackTechnicalPct",
+              "required": false,
+              "runtime_name": "focus_attack_technical_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusDefenseTechnicalPct",
+              "required": false,
+              "runtime_name": "focus_defense_technical_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0",
+                "maximum: 100",
+                "INV-TRAIN-001"
+              ],
+              "name": "focusPhysicalPct",
+              "required": false,
+              "runtime_name": "focus_physical_pct",
+              "type": "decimal"
+            },
+            {
+              "constraints": [
+                "ADR-017: FSM fechada de 7 estados (INV-TRAIN-006)",
+                "default: DRAFT na criação",
+                "ARCHIVED é estado terminal — apenas automação 60d ou admin/coordinator"
+              ],
+              "name": "status",
+              "required": true,
+              "runtime_name": "status",
+              "type": "enum",
+              "values": [
+                "DRAFT",
+                "SCHEDULED",
+                "PUBLISHED",
+                "IN_PROGRESS",
+                "COMPLETED",
+                "CANCELLED",
+                "ARCHIVED"
+              ]
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "closedAt",
+              "required": false,
+              "runtime_name": "closed_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "closedByUserId",
+              "required": false,
+              "runtime_name": "closed_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "deviationJustification",
+              "required": false,
+              "runtime_name": "deviation_justification",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "planningDeviationFlag",
+              "required": false,
+              "runtime_name": "planning_deviation_flag",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "true = sessão avulsa sem vínculo com microciclo"
+              ],
+              "name": "standalone",
+              "required": false,
+              "runtime_name": "standalone",
+              "type": "boolean"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-TRAIN-006: preenchido na transição IN_PROGRESS"
+              ],
+              "name": "startedAt",
+              "required": false,
+              "runtime_name": "started_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-TRAIN-006: preenchido na transição COMPLETED"
+              ],
+              "name": "endedAt",
+              "required": false,
+              "runtime_name": "ended_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0"
+              ],
+              "name": "durationActualMinutes",
+              "required": false,
+              "runtime_name": "duration_actual_minutes",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "executionOutcome",
+              "required": false,
+              "runtime_name": "execution_outcome",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0"
+              ],
+              "name": "delayMinutes",
+              "required": false,
+              "runtime_name": "delay_minutes",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "INV-TRAIN-006: obrigatório quando status=CANCELLED"
+              ],
+              "name": "cancellationReason",
+              "required": false,
+              "runtime_name": "cancellation_reason",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "postReviewCompletedAt",
+              "required": false,
+              "runtime_name": "post_review_completed_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "postReviewCompletedByUserId",
+              "required": false,
+              "runtime_name": "post_review_completed_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "postReviewDeadlineAt",
+              "required": false,
+              "runtime_name": "post_review_deadline_at",
+              "type": "datetime"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "DR-TRAIN-030: obrigatório se exercícios com variantes individuais"
+              ],
+              "name": "individualizationMode",
+              "required": false,
+              "runtime_name": "individualization_mode",
+              "type": "enum",
+              "values": [
+                "COLLECTIVE_UNIFORM",
+                "COLLECTIVE_WITH_VARIANTS",
+                "INDIVIDUAL_ONLY"
+              ]
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "plannedContentSnapshot",
+              "required": false,
+              "runtime_name": "planned_content_snapshot",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "objectiveOrigin",
+              "required": false,
+              "runtime_name": "objective_origin",
+              "type": "string"
+            },
+            {
+              "constraints": [
+                "nullable: true",
+                "minimum: 0"
+              ],
+              "name": "actualLoadRecorded",
+              "required": false,
+              "runtime_name": "actual_load_recorded",
+              "type": "integer"
+            },
+            {
+              "constraints": [
+                "nullable: true"
+              ],
+              "name": "continuityNotes",
+              "required": false,
+              "runtime_name": "continuity_notes",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "entity": "TrainingSession",
+      "module": "training",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "primary_entity": "TrainingSession",
+      "primary_schema_ref": "contracts/schemas/training/training_session.schema.json",
+      "required": [
+        "id",
+        "organizationId",
+        "sessionAt",
+        "sessionType",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "createdByUserId"
+      ],
+      "runtime_extension_fields": [],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "DR-TRAIN-043: identity_access é soberano de autorização; organizationId é contexto"
+          ],
+          "name": "organizationId",
+          "required": true,
+          "runtime_name": "organization_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "boundary: reference to teams module"
+          ],
+          "name": "teamId",
+          "required": false,
+          "runtime_name": "team_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "boundary: reference to seasons module"
+          ],
+          "name": "seasonId",
+          "required": false,
+          "runtime_name": "season_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "boundary: periodization planning"
+          ],
+          "name": "microcycleId",
+          "required": false,
+          "runtime_name": "microcycle_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "INV-TRAIN-002: wellness_pre janela fecha 2h antes",
+            "INV-TRAIN-004: janela de edição baseada em session_at",
+            "INV-TRAIN-005: sessões > 60 dias são somente leitura"
+          ],
+          "name": "sessionAt",
+          "required": true,
+          "runtime_name": "session_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 1",
+            "maximum: 480"
+          ],
+          "name": "durationPlannedMinutes",
+          "required": false,
+          "runtime_name": "duration_planned_minutes",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "maxLength: 120"
+          ],
+          "name": "location",
+          "required": false,
+          "runtime_name": "location",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "maxLength: 32"
+          ],
+          "name": "sessionType",
+          "required": true,
+          "runtime_name": "session_type",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "maxLength: 255"
+          ],
+          "name": "mainObjective",
+          "required": false,
+          "runtime_name": "main_objective",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "maxLength: 255"
+          ],
+          "name": "secondaryObjective",
+          "required": false,
+          "runtime_name": "secondary_objective",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 10000"
+          ],
+          "name": "plannedLoad",
+          "required": false,
+          "runtime_name": "planned_load",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 1",
+            "maximum: 5"
+          ],
+          "name": "groupClimate",
+          "required": false,
+          "runtime_name": "group_climate",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "notes",
+          "required": false,
+          "runtime_name": "notes",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "phaseFocusDefense",
+          "required": false,
+          "runtime_name": "phase_focus_defense",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "phaseFocusAttack",
+          "required": false,
+          "runtime_name": "phase_focus_attack",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "phaseFocusTransitionOffense",
+          "required": false,
+          "runtime_name": "phase_focus_transition_offense",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "phaseFocusTransitionDefense",
+          "required": false,
+          "runtime_name": "phase_focus_transition_defense",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 1",
+            "maximum: 10"
+          ],
+          "name": "intensityTarget",
+          "required": false,
+          "runtime_name": "intensity_target",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "sessionBlock",
+          "required": false,
+          "runtime_name": "session_block",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "required": true,
+          "runtime_name": "created_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "DR-TRAIN-001: criação exige coach ou coordinator"
+          ],
+          "name": "createdByUserId",
+          "required": true,
+          "runtime_name": "created_by_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "updatedAt",
+          "required": true,
+          "runtime_name": "updated_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+          ],
+          "name": "deletedAt",
+          "required": false,
+          "runtime_name": "deleted_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-TRAIN-008: deletedAt e deletedReason devem ser ambos nulos ou ambos preenchidos"
+          ],
+          "name": "deletedReason",
+          "required": false,
+          "runtime_name": "deleted_reason",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001: soma de todos focus_*_pct ≤ 120",
+            "RC-2: 2 casas decimais máximo"
+          ],
+          "name": "focusAttackPositionalPct",
+          "required": false,
+          "runtime_name": "focus_attack_positional_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusDefensePositionalPct",
+          "required": false,
+          "runtime_name": "focus_defense_positional_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusTransitionOffensePct",
+          "required": false,
+          "runtime_name": "focus_transition_offense_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusTransitionDefensePct",
+          "required": false,
+          "runtime_name": "focus_transition_defense_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusAttackTechnicalPct",
+          "required": false,
+          "runtime_name": "focus_attack_technical_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusDefenseTechnicalPct",
+          "required": false,
+          "runtime_name": "focus_defense_technical_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0",
+            "maximum: 100",
+            "INV-TRAIN-001"
+          ],
+          "name": "focusPhysicalPct",
+          "required": false,
+          "runtime_name": "focus_physical_pct",
+          "type": "decimal"
+        },
+        {
+          "constraints": [
+            "ADR-017: FSM fechada de 7 estados (INV-TRAIN-006)",
+            "default: DRAFT na criação",
+            "ARCHIVED é estado terminal — apenas automação 60d ou admin/coordinator"
+          ],
+          "name": "status",
+          "required": true,
+          "runtime_name": "status",
+          "type": "enum",
+          "values": [
+            "DRAFT",
+            "SCHEDULED",
+            "PUBLISHED",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELLED",
+            "ARCHIVED"
+          ]
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "closedAt",
+          "required": false,
+          "runtime_name": "closed_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "closedByUserId",
+          "required": false,
+          "runtime_name": "closed_by_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "deviationJustification",
+          "required": false,
+          "runtime_name": "deviation_justification",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "planningDeviationFlag",
+          "required": false,
+          "runtime_name": "planning_deviation_flag",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "true = sessão avulsa sem vínculo com microciclo"
+          ],
+          "name": "standalone",
+          "required": false,
+          "runtime_name": "standalone",
+          "type": "boolean"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-TRAIN-006: preenchido na transição IN_PROGRESS"
+          ],
+          "name": "startedAt",
+          "required": false,
+          "runtime_name": "started_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-TRAIN-006: preenchido na transição COMPLETED"
+          ],
+          "name": "endedAt",
+          "required": false,
+          "runtime_name": "ended_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0"
+          ],
+          "name": "durationActualMinutes",
+          "required": false,
+          "runtime_name": "duration_actual_minutes",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "executionOutcome",
+          "required": false,
+          "runtime_name": "execution_outcome",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0"
+          ],
+          "name": "delayMinutes",
+          "required": false,
+          "runtime_name": "delay_minutes",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "INV-TRAIN-006: obrigatório quando status=CANCELLED"
+          ],
+          "name": "cancellationReason",
+          "required": false,
+          "runtime_name": "cancellation_reason",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "postReviewCompletedAt",
+          "required": false,
+          "runtime_name": "post_review_completed_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "postReviewCompletedByUserId",
+          "required": false,
+          "runtime_name": "post_review_completed_by_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "postReviewDeadlineAt",
+          "required": false,
+          "runtime_name": "post_review_deadline_at",
+          "type": "datetime"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "DR-TRAIN-030: obrigatório se exercícios com variantes individuais"
+          ],
+          "name": "individualizationMode",
+          "required": false,
+          "runtime_name": "individualization_mode",
+          "type": "enum",
+          "values": [
+            "COLLECTIVE_UNIFORM",
+            "COLLECTIVE_WITH_VARIANTS",
+            "INDIVIDUAL_ONLY"
+          ]
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "plannedContentSnapshot",
+          "required": false,
+          "runtime_name": "planned_content_snapshot",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "objectiveOrigin",
+          "required": false,
+          "runtime_name": "objective_origin",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "minimum: 0"
+          ],
+          "name": "actualLoadRecorded",
+          "required": false,
+          "runtime_name": "actual_load_recorded",
+          "type": "integer"
+        },
+        {
+          "constraints": [
+            "nullable: true"
+          ],
+          "name": "continuityNotes",
+          "required": false,
+          "runtime_name": "continuity_notes",
+          "type": "string"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/training/training_session.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "TRAIN-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/training.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "TRAIN-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/training/tests/unit/test_invariants.py",
+        "covers": [
+          "INV-TRAIN-001",
+          "INV-TRAIN-002",
+          "INV-TRAIN-003",
+          "INV-TRAIN-004",
+          "INV-TRAIN-005",
+          "INV-TRAIN-006",
+          "INV-TRAIN-007"
+        ],
+        "evidence_refs": [
+          "../../../../../src/training/tests/unit/test_invariants.py"
+        ],
+        "id": "TRAIN-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Domain unit tests enforcing invariants, FSM, elastic-sum, wellness window, boundary rules and permission checks"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_training_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_training_source_graph_integrity.py"
+        ],
+        "id": "TRAIN-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/training/README.md",
+      "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+      "contracts/openapi/paths/training.yaml",
+      "contracts/openapi/components/schemas/training/training_session.yaml"
+    ],
+    "expected_output": "compiled_context/training/FT-008.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module training --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module training --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module training --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module training --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py -q"
+    ]
+  }
+}

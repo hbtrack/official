@@ -1,20 +1,20 @@
 ---
 data_ultima_sessao: "2026-04-04"
-branch_ativo: feat/b10-001-matches
+branch_ativo: feat/b10-001-training
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: matches
+modulo_foco: training
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: B10-001-matches
-resultado: DONE
-proxima_acao_permitida: "B10-001/matches CONCLUÍDO — commit + push + PR → main. Próximo módulo: training (B10-001 posição 13)."
+task_id: B10-001-training
+resultado: PENDENTE
+proxima_acao_permitida: "fix(rename) commitado. Retomar implementação B10-001/training: docs (README+TEST_MATRIX), commit + push + PR."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
   - docs/hbtrack/modulos/matches/graph/module_manifest.yaml
-  - docs/hbtrack/modulos/matches/graph/entities.yaml
+  - docs/hbtrack/modulos/matches/graph/entity_graph.yaml
   - docs/hbtrack/modulos/matches/graph/endpoints.yaml
   - docs/hbtrack/modulos/matches/graph/errors.yaml
   - docs/hbtrack/modulos/matches/graph/test_obligations.yaml

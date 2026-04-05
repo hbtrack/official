@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md
-  sha256: 5f1fae315a6b9a004d98aa45dd7c56b4d2d0897bc8d252a4a2e5125679f7a102
+  sha256: e905388365dde3a6f053e57373d4c822c68b36bd8c81a7850b4b2140d40643cc
 - relpath: docs/hbtrack/modulos/users/INVARIANTS_USERS.md
   sha256: 4da036dbf5d372a4d63a494c4985e3ca962268404487e856dd6b34ca27881956
 - relpath: docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md
@@ -33,17 +33,17 @@ inputs:
 - relpath: docs/hbtrack/modulos/users/PERMISSIONS_USERS.md
   sha256: 7109f9bceb1fd8c1acde19d3074fbbd6e3cab0e3efc086043b1a94639f4b2597
 - relpath: docs/hbtrack/modulos/users/README.md
-  sha256: 140e4973a97b8f54b9d2021d2aa657b17dc03eef8bcf440e5209ca73f63d44a6
+  sha256: 2c875b9f9c052bf57dbc2da57f3b20001721e5e1e41f5d46724d11b4e27057ab
 - relpath: docs/hbtrack/modulos/users/TEST_MATRIX_USERS.md
   sha256: db580d0269d4fea2881151c300be0d20ffde820597b0996fff5afe62d6b570b9
 - relpath: docs/hbtrack/modulos/users/graph/endpoints.yaml
   sha256: 890942f2100892cdd7a6854af610914660de03b2ea5dc534cf574200000380e0
-- relpath: docs/hbtrack/modulos/users/graph/entities.yaml
+- relpath: docs/hbtrack/modulos/users/graph/entity_graph.yaml
   sha256: 113d89c0234fef894bec0c7871c72115ab275771ed3b745535b0e36c0473be72
 - relpath: docs/hbtrack/modulos/users/graph/errors.yaml
   sha256: 5d76873b757bc3e164e961d0dedad196100f90b5076087f513f6416177972c02
 - relpath: docs/hbtrack/modulos/users/graph/module_manifest.yaml
-  sha256: 6a36d9eb4bd2dc7d6c1aead00ca630bd2dbcb31de0b82eb539736abb46a8f517
+  sha256: c9b47a3472592b680959cc578be74c9050361d74acea7d61c864ce0c3271d0cc
 - relpath: docs/hbtrack/modulos/users/graph/test_obligations.yaml
   sha256: db37ec5e524f7b6c1cfcbdd5f18f3fed860742a0cee7c2e9966c6ae913f0999a
 - relpath: src/users/api.py
@@ -84,7 +84,7 @@ module_manifest:
     domain_rules: ../../../../../src/users/domain/rules.py
     use_cases: ../../../../../src/users/application/use_cases.py
   structured_ir:
-    entities: ./entities.yaml
+    entities: ./entity_graph.yaml
     endpoints: ./endpoints.yaml
     errors: ./errors.yaml
     test_obligations: ./test_obligations.yaml

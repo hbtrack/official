@@ -469,6 +469,24 @@ entries:
       - "src/matches/"
       - "tests/pipeline_gates/test_matches_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_TRAINING_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/training/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/training/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/training/README.md"
+      - "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md"
+      - "tests/pipeline_gates/test_training_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/training/*.md"
+      - "contracts/schemas/training/"
+      - "contracts/openapi/paths/training.yaml"
+      - "contracts/openapi/components/schemas/training/"
+      - "src/training/"
+      - "tests/pipeline_gates/test_training_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

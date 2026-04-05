@@ -89,11 +89,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c5446e63ede4771183942aed2fa78b8b009653272456511d402ada2083a78d9c"
+      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b"
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
-      "sha256": "930889412cc012a93d2ab2dda0a12cf35ce2429d97eb13b36a0f9a6de1020e14"
+      "sha256": "dd4314698e8c44296300d5e9078c0ec60d918f3aa925efab74b14e83fbb0d675"
     },
     {
       "relpath": "generated/source_graph/users/users.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/users/impact_report.json",
-      "sha256": "5a2759c5163dfc7be7040ca8f7cd10b806be05c861cd093b11b8ca0c3e60add2"
+      "sha256": "c840c476303a87680986238a158f2a53b7553a6a1f66b5a23f7ac2459aa0aacc"
     }
   ],
   "module": "users",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "dce61d8de80bbd41e9f23e0c5f761e58545c1c7fac15d91b2474541a0a2baccd",
+  "source_fingerprint": "b199e80643793b51962d661abfaff76c3b7d1b55e2457643bce365f010ef2f80",
   "source_graph": {
     "entities": {
       "UserProfile": {
@@ -402,7 +402,7 @@
         "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
         "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
       ],
-      "source_fingerprint": "f10e4aa8469a436b47ddbf771a045a05e3aa00236b70339f164c8d5d977c15cb"
+      "source_fingerprint": "6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

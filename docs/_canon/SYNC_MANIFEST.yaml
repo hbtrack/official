@@ -378,7 +378,7 @@ rules:
   - rule_id: REPORTS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/reports/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/reports/graph/entities.yaml"
+      - "docs/hbtrack/modulos/reports/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/reports/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/reports/graph/errors.yaml"
       - "docs/hbtrack/modulos/reports/graph/test_obligations.yaml"
@@ -453,7 +453,7 @@ rules:
   - rule_id: ANALYTICS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/analytics/graph/entities.yaml"
+      - "docs/hbtrack/modulos/analytics/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/analytics/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/analytics/graph/errors.yaml"
       - "docs/hbtrack/modulos/analytics/graph/test_obligations.yaml"
@@ -520,7 +520,7 @@ rules:
   - rule_id: EXERCISES_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/exercises/graph/entities.yaml"
+      - "docs/hbtrack/modulos/exercises/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/exercises/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/exercises/graph/errors.yaml"
       - "docs/hbtrack/modulos/exercises/graph/test_obligations.yaml"
@@ -587,7 +587,7 @@ rules:
   - rule_id: NOTIFICATIONS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/notifications/graph/entities.yaml"
+      - "docs/hbtrack/modulos/notifications/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/notifications/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/notifications/graph/errors.yaml"
       - "docs/hbtrack/modulos/notifications/graph/test_obligations.yaml"
@@ -647,7 +647,7 @@ rules:
   - rule_id: WELLNESS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/wellness/graph/entities.yaml"
+      - "docs/hbtrack/modulos/wellness/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/wellness/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/wellness/graph/errors.yaml"
       - "docs/hbtrack/modulos/wellness/graph/test_obligations.yaml"
@@ -708,7 +708,7 @@ rules:
   - rule_id: MEDICAL_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/medical/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/medical/graph/entities.yaml"
+      - "docs/hbtrack/modulos/medical/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/medical/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/medical/graph/errors.yaml"
       - "docs/hbtrack/modulos/medical/graph/test_obligations.yaml"
@@ -767,7 +767,7 @@ rules:
   - rule_id: AUDIT_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/audit/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/audit/graph/entities.yaml"
+      - "docs/hbtrack/modulos/audit/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/audit/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/audit/graph/errors.yaml"
       - "docs/hbtrack/modulos/audit/graph/test_obligations.yaml"
@@ -825,7 +825,7 @@ rules:
   - rule_id: SEASONS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/seasons/graph/entities.yaml"
+      - "docs/hbtrack/modulos/seasons/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/seasons/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/seasons/graph/errors.yaml"
       - "docs/hbtrack/modulos/seasons/graph/test_obligations.yaml"
@@ -892,7 +892,7 @@ rules:
   - rule_id: TEAMS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/teams/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/teams/graph/entities.yaml"
+      - "docs/hbtrack/modulos/teams/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/teams/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/teams/graph/errors.yaml"
       - "docs/hbtrack/modulos/teams/graph/test_obligations.yaml"
@@ -963,7 +963,7 @@ rules:
   - rule_id: COMPETITIONS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/competitions/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/competitions/graph/entities.yaml"
+      - "docs/hbtrack/modulos/competitions/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/competitions/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/competitions/graph/errors.yaml"
       - "docs/hbtrack/modulos/competitions/graph/test_obligations.yaml"
@@ -1020,7 +1020,7 @@ rules:
   - rule_id: USERS_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/users/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/users/graph/entities.yaml"
+      - "docs/hbtrack/modulos/users/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/users/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/users/graph/errors.yaml"
       - "docs/hbtrack/modulos/users/graph/test_obligations.yaml"
@@ -1070,7 +1070,7 @@ rules:
   - rule_id: MATCHES_SOURCE_GRAPH_SYNC
     source_master: "docs/hbtrack/modulos/matches/graph/module_manifest.yaml"
     source_inputs:
-      - "docs/hbtrack/modulos/matches/graph/entities.yaml"
+      - "docs/hbtrack/modulos/matches/graph/entity_graph.yaml"
       - "docs/hbtrack/modulos/matches/graph/endpoints.yaml"
       - "docs/hbtrack/modulos/matches/graph/errors.yaml"
       - "docs/hbtrack/modulos/matches/graph/test_obligations.yaml"
@@ -1113,3 +1113,54 @@ rules:
       - "python3 scripts/compile/compile_context_bundle.py --module matches --check --format json"
       - "python3 scripts/validate_contracts.py --profile ci"
       - "python3 -m pytest tests/pipeline_gates/test_matches_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_matches.py tests/pipeline_gates/test_context_bundle_matches.py -q"
+
+  - rule_id: TRAINING_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/training/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/training/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/training/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/training/graph/errors.yaml"
+      - "docs/hbtrack/modulos/training/graph/test_obligations.yaml"
+    source_kind: module_source_graph
+    change_types:
+      - domain_contract_change
+      - runtime_projection_change
+      - codegen_shape_change
+    required_consumers:
+      - "docs/hbtrack/modulos/training/README.md"
+      - "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md"
+      - "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md"
+      - "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md"
+      - "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md"
+      - "contracts/openapi/paths/training.yaml"
+      - "contracts/openapi/components/schemas/training/training_session.yaml"
+      - "contracts/schemas/training/training_session.schema.json"
+      - "generated/source_graph/training/training.bundle.yaml"
+      - "generated/source_graph/training/training.schema_contract_view.yaml"
+      - "generated/source_graph/training/training.openapi_contract_view.yaml"
+      - "generated/source_graph/training/impact_report.json"
+      - "compiled_context/training/FT-001.json"
+      - "compiled_context/training/FT-002.json"
+      - "compiled_context/training/FT-003.json"
+      - "compiled_context/training/FT-004.json"
+      - "compiled_context/training/FT-005.json"
+      - "compiled_context/training/FT-006.json"
+      - "compiled_context/training/FT-007.json"
+      - "compiled_context/training/FT-008.json"
+      - "compiled_context/training/FT-009.json"
+      - "compiled_context/training/FT-010.json"
+      - "src/training/api.py"
+      - "src/training/domain/entities.py"
+      - "src/training/domain/rules.py"
+      - "src/training/application/use_cases.py"
+      - "tests/pipeline_gates/test_training_source_graph_integrity.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/training/README.md"
+      - "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md"
+      - "contracts/openapi/paths/training.yaml"
+      - "contracts/openapi/components/schemas/training/training_session.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module training --check --format json"
+      - "python3 scripts/compile/compile_context_bundle.py --module training --check --format json"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py -q"

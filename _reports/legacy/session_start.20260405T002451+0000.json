@@ -1,0 +1,12 @@
+{
+  "stage": 2,
+  "stage2_artifacts": [
+    {
+      "path": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "5831f20d5e2a0a2f17bb0200c09017ce637faa1cf703e6b705afbd840345df3b",
+      "created_at": "2026-04-05T00:24:47.970825+00:00",
+      "gate_exit_code": 0
+    }
+  ],
+  "stage2_exit_code": 0
+}

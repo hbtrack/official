@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md
-  sha256: 2e8e8131890be73fe8bb995e4805e1dadfa4ef8863fd4d622ab6ebe3afcd9b62
+  sha256: 23f05825e8780440a7a0e5cd1f3447389325f8bc2dec795a8d19aeb50099059f
 - relpath: docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md
   sha256: cc79728478fbaebcc2fc0bed1d406b022b3c8493bfe6309345a83d5beada6349
 - relpath: docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md
@@ -33,17 +33,17 @@ inputs:
 - relpath: docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md
   sha256: 6cab919bf5cab4579a7a10a90a8c68963fcaf007fb690cb4d4b66bb3ded0258e
 - relpath: docs/hbtrack/modulos/seasons/README.md
-  sha256: 9dc26f5bab515f12a5b9f50bcb3be26b699f793d14dcffed362b819e41b6beec
+  sha256: f10ac2c0987da16a1628c8ad1e5430f8e99dfcba0a8ec0985dec2acb395b338d
 - relpath: docs/hbtrack/modulos/seasons/TEST_MATRIX_SEASONS.md
   sha256: 7f499b8c33acafec2f68629123040459407e4ee955b6b1853d4ce79f3d0f5b45
 - relpath: docs/hbtrack/modulos/seasons/graph/endpoints.yaml
   sha256: 79539544c41029d5005d26018ce6d08f7c96e9aa12f34d531e61fb15815859d1
-- relpath: docs/hbtrack/modulos/seasons/graph/entities.yaml
+- relpath: docs/hbtrack/modulos/seasons/graph/entity_graph.yaml
   sha256: e67c00d6ac7c524390568ecb70cf0da02d8f40fdf724c22a707cd818b5985713
 - relpath: docs/hbtrack/modulos/seasons/graph/errors.yaml
   sha256: 1f76042b4142f081002bbb08082ed57c0532b07cc30ed6d04f39488bbb549117
 - relpath: docs/hbtrack/modulos/seasons/graph/module_manifest.yaml
-  sha256: 6bd83f8063b4df68fbb064a7f67964d2ebc363b440816bb3559860eed383c26e
+  sha256: 8c313640cc4c740f2ca82538d781f61370d0b876f5d534e8c5dc8e13157a648c
 - relpath: docs/hbtrack/modulos/seasons/graph/test_obligations.yaml
   sha256: 37f2636d94f5f82980d9ea0d491c370c1db9593d582f46fbcf149fd2c3539e2d
 - relpath: src/seasons/api.py
@@ -84,7 +84,7 @@ module_manifest:
     domain_rules: ../../../../../src/seasons/domain/rules.py
     use_cases: ../../../../../src/seasons/application/use_cases.py
   structured_ir:
-    entities: ./entities.yaml
+    entities: ./entity_graph.yaml
     endpoints: ./endpoints.yaml
     errors: ./errors.yaml
     test_obligations: ./test_obligations.yaml
