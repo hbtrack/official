@@ -231,6 +231,10 @@ def main() -> None:
     pr_files = load_json(os.environ.get("AI_REVIEW_PR_FILES", "pr_files.json"))
 
     raw_text = extract_model_text(model_resp)
+    # Log finishReason to detect token limit truncation
+    for cand in model_resp.get("candidates", []):
+        finish = cand.get("finishReason", "?")
+        print(f"[bridge] finishReason={finish}", file=sys.stderr)
     parsed = parse_model_json(raw_text)
 
     findings = parsed.get("findings", [])

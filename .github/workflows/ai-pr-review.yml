@@ -196,7 +196,7 @@ jobs:
             ],
             'generationConfig': {
               'temperature': float('${{ steps.cfg.outputs.temperature }}'),
-              'maxOutputTokens': 4096,
+              'maxOutputTokens': 8192,
               'response_mime_type': 'application/json'
             }
           }
