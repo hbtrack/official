@@ -199,6 +199,18 @@ def build_inline_comments(findings: List[Dict[str, Any]], diff_index: Dict[str, 
     return inline, residual
 
 
+def load_existing_comments(path: str) -> set:
+    """Carrega chaves de comentários existentes para deduplicação cross-run."""
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        return {
+            (c.get("path"), c.get("line"), (c.get("body") or "")[:120])
+            for c in data
+        }
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return set()
+
+
 def build_summary(verdict: str, summary: str, residual: List[Dict[str, Any]]) -> str:
     lines = []
     lines.append("## Veredito")
@@ -243,6 +255,20 @@ def main() -> None:
 
     diff_index = build_changed_line_index(pr_files)
     inline, residual = build_inline_comments(findings, diff_index)
+
+    # G3 — Deduplicação cross-run: remover inline comments já publicados no PR
+    existing_key = os.environ.get("PR_EXISTING_COMMENTS", "pr_existing_comments.json")
+    existing = load_existing_comments(existing_key)
+    if existing:
+        before = len(inline)
+        inline = [
+            c for c in inline
+            if (c["path"], c["line"], c["body"][:120]) not in existing
+        ]
+        deduped = before - len(inline)
+        if deduped:
+            print(f"[bridge] {deduped} inline comment(s) deduplicado(s) (já existiam no PR)")
+
     summary = build_summary(parsed.get("verdict", "COMMENT"), parsed.get("summary", ""), residual)
 
     output_json_path = cfg.get("bridge", {}).get("output_json_path", "ai_review_findings.json")

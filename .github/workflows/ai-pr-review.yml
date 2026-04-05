@@ -20,11 +20,16 @@ on:
       - 'apps/**'
       - 'api/**'
       - 'tests/**'
+      - 'src/*/api.py'
+      - 'src/*/domain/*.py'
+      - 'src/*/application/use_cases.py'
+      - 'src/*/schemas.py'
 
 permissions:
   contents: read
   pull-requests: write
   issues: write
+  actions: write
 
 concurrency:
   group: ai-pr-review-${{ github.event.pull_request.number }}
@@ -78,7 +83,7 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
               fh.write(f"model={review.get('model','gemini-2.5-flash')}\n")
               fh.write(f"temperature={review.get('temperature',0.2)}\n")
-              fh.write(f"max_files={review.get('max_files',20)}\n")
+              fh.write(f"max_files={review.get('max_files',30)}\n")
               fh.write(f"include={json.dumps(paths.get('include',[]))}\n")
               fh.write(f"exclude={json.dumps(paths.get('exclude',[]))}\n")
           PY
@@ -95,7 +100,7 @@ jobs:
             const fs = require('fs');
             const include = JSON.parse(process.env.INCLUDE_JSON || '[]');
             const exclude = JSON.parse(process.env.EXCLUDE_JSON || '[]');
-            const maxFiles = parseInt(process.env.MAX_FILES || '20', 10);
+            const maxFiles = parseInt(process.env.MAX_FILES || '30', 10);
 
             function globToRegex(glob) {
               const s = glob
@@ -118,12 +123,45 @@ jobs:
               { owner, repo, pull_number: pr, per_page: 100 }
             );
 
-            const selected = allFiles.filter(f => {
+            // G4 — Prioridade de seleção: contratos > graph > canon > governance > CI > scripts > src > testes
+            const PRIORITY_ORDER = [
+              /^contracts\//,
+              /^docs\/hbtrack\/modulos\/.*\/graph\//,
+              /^docs\/_canon\//,
+              /^\.contract_driven\//,
+              /^\.github\/workflows\//,
+              /^scripts\//,
+              /^src\/[^/]+\/api\.py$/,
+              /^src\/[^/]+\/domain\//,
+              /^src\/[^/]+\/application\//,
+              /^src\/[^/]+\/schemas\.py$/,
+            ];
+
+            function filePriority(filename) {
+              for (let i = 0; i < PRIORITY_ORDER.length; i++) {
+                if (PRIORITY_ORDER[i].test(filename)) return i;
+              }
+              return PRIORITY_ORDER.length;
+            }
+
+            const eligible = allFiles.filter(f => {
               const filename = f.filename;
               const ok = includeRx.some(rx => rx.test(filename));
               const no = excludeRx.some(rx => rx.test(filename));
               return ok && !no;
-            }).slice(0, maxFiles);
+            });
+
+            const nonTestFiles = eligible.filter(f => !f.filename.startsWith('tests/'));
+            const testFiles = eligible.filter(f => f.filename.startsWith('tests/'));
+
+            nonTestFiles.sort((a, b) => filePriority(a.filename) - filePriority(b.filename));
+
+            const MAX_PRIORITY = 22;
+            const MAX_TESTS = 8;
+            const selected = [
+              ...nonTestFiles.slice(0, MAX_PRIORITY),
+              ...testFiles.slice(0, MAX_TESTS)
+            ].slice(0, maxFiles);
 
             fs.writeFileSync('pr_files.json', JSON.stringify(selected.map(f => ({
               filename: f.filename,
@@ -144,27 +182,63 @@ jobs:
         if: steps.files.outputs.count != '0'
         run: |
           python - <<'PY'
-          import json
+          import json, re
           from pathlib import Path
 
           files = json.loads(Path('pr_files.json').read_text(encoding='utf-8'))
           styleguide = Path('.github/ai-review/styleguide.md').read_text(encoding='utf-8')
 
+          # G8 — Detectar módulos tocados para context injection por módulo
+          changed_modules = set()
+          for f in files:
+              m = re.match(r'(?:docs/hbtrack/modulos|src)/([a-z_]+)/', f['filename'])
+              if m:
+                  changed_modules.add(m.group(1))
+
+          # G8 — Context files em ordem de prioridade (primeiros 3 sempre completos)
           context_files = [
-              'README.md',
-              'SESSION_HANDOFF.md',
               '.github/copilot-instructions.md',
-              'docs/_canon/AGENT_INSTRUCTIONS.md',
               'docs/_canon/CONTRACT_PIPELINE.md',
               'docs/_canon/gates/GATES_REGISTRY.yaml',
+              'docs/_canon/AGENT_INSTRUCTIONS.md',
               '.contract_driven/CONTRACT_SYSTEM_RULES.md',
+              'README.md',
           ]
 
+          MAX_CHARS_PER_CONTEXT_FILE = 6000
+          MAX_CONTEXT_TOTAL = 36000
+          MAX_DIFF_CHARS_PER_FILE = 3000
+          MAX_PAYLOAD_CHARS = 180000
+
           repo_context = {}
-          for file in context_files:
-              p = Path(file)
+          context_budget = MAX_CONTEXT_TOTAL
+          for cf in context_files:
+              if context_budget <= 0:
+                  break
+              p = Path(cf)
               if p.exists() and p.is_file():
-                  repo_context[file] = p.read_text(encoding='utf-8')[:14000]
+                  content = p.read_text(encoding='utf-8')
+                  cap = min(len(content), MAX_CHARS_PER_CONTEXT_FILE, context_budget)
+                  repo_context[cf] = content[:cap]
+                  context_budget -= cap
+
+          # G8 — Injetar graph YAML dos módulos afetados (não duplicar arquivos já no diff)
+          diff_filenames = {f['filename'] for f in files}
+          for module in sorted(changed_modules)[:3]:
+              graph_dir = Path(f'docs/hbtrack/modulos/{module}/graph')
+              if graph_dir.exists():
+                  for yf in sorted(graph_dir.glob('*.yaml'))[:2]:
+                      key = str(yf)
+                      if key not in diff_filenames and key not in repo_context:
+                          repo_context[key] = yf.read_text(encoding='utf-8')[:3000]
+
+          # G8 — Truncar patches longos em boundary de linha
+          for f in files:
+              patch = f.get('patch', '')
+              if len(patch) > MAX_DIFF_CHARS_PER_FILE:
+                  cut = patch[:MAX_DIFF_CHARS_PER_FILE].rfind('\n')
+                  cut = cut if cut > 0 else MAX_DIFF_CHARS_PER_FILE
+                  f['patch'] = patch[:cut] + '\n... [patch truncado]'
 
           payload = {
               'styleguide': styleguide,
@@ -175,11 +249,68 @@ jobs:
                   'Retorne JSON válido conforme o formato obrigatório do styleguide.'
               )
           }
-          Path('review_input.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+
+          # G8 — Safety cap: remover context files menos prioritários até caber
+          payload_str = json.dumps(payload, ensure_ascii=False)
+          while len(payload_str) > MAX_PAYLOAD_CHARS and len(repo_context) > 2:
+              last_key = list(repo_context.keys())[-1]
+              del repo_context[last_key]
+              payload_str = json.dumps(payload, ensure_ascii=False)
+
+          Path('review_input.json').write_text(payload_str, encoding='utf-8')
+          print(f'[context] arquivos={len(files)} context_keys={len(repo_context)} payload_chars={len(payload_str)}')
           PY
 
-      - name: Chamar Gemini
+      - name: Carregar comentários existentes do PR (deduplicação)
         if: steps.files.outputs.count != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const pr = context.payload.pull_request.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const reviews = await github.paginate(
+              github.rest.pulls.listReviewComments,
+              { owner, repo, pull_number: pr, per_page: 100 }
+            );
+            const botComments = reviews
+              .filter(r => r.user.type === 'Bot')
+              .map(r => ({
+                path: r.path,
+                line: r.line || r.original_line,
+                body: (r.body || '').slice(0, 120)
+              }));
+            fs.writeFileSync('pr_existing_comments.json', JSON.stringify(botComments));
+            console.log(`Loaded ${botComments.length} existing bot comments for dedup`);
+
+      - name: Verificar cota diária do Gemini
+        id: quota
+        if: steps.files.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          THRESHOLD=1400
+          DATE=$(date -u +%Y-%m-%d)
+          CURRENT=$(gh variable get AI_REVIEW_DAILY_COUNT --repo "${{ github.repository }}" 2>/dev/null || echo "")
+          if [[ "$CURRENT" == "${DATE}:"* ]]; then
+            COUNT=${CURRENT#*:}
+          else
+            COUNT=0
+          fi
+          echo "Gemini calls hoje: ${COUNT} / ${THRESHOLD} (limite: 1500 RPD)"
+          if [ "${COUNT}" -ge "${THRESHOLD}" ]; then
+            echo "::warning::Cota diária próxima do limite (${COUNT}/${THRESHOLD}). Review pulado."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            NEW_COUNT=$((COUNT + 1))
+            gh variable set AI_REVIEW_DAILY_COUNT --body "${DATE}:${NEW_COUNT}" --repo "${{ github.repository }}" 2>/dev/null \
+              || echo "::warning::Falha ao atualizar contador de cota (review continua)"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Chamar Gemini
+        if: steps.files.outputs.count != '0' && steps.quota.outputs.skip != 'true'
         run: |
           python - <<'PY'
           import json
@@ -210,22 +341,32 @@ jobs:
             > gemini_response.json
 
       - name: Processar resposta e gerar comentários inline
-        if: steps.files.outputs.count != '0'
+        if: steps.files.outputs.count != '0' && steps.quota.outputs.skip != 'true'
         run: |
           python scripts/ai_review_bridge.py
 
       - name: Publicar review híbrido
-        if: steps.files.outputs.count != '0'
+        if: steps.files.outputs.count != '0' && steps.quota.outputs.skip != 'true'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const summary = fs.readFileSync('ai_review_summary.md', 'utf8');
             const findings = JSON.parse(fs.readFileSync('ai_review_findings.json', 'utf8'));
+            const inlineComments = findings.comments || [];
             const pr = context.payload.pull_request.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const commit_id = context.payload.pull_request.head.sha;
+
+            if (summary.trim().length < 10) {
+              console.log('Summary vazio — pulando publicação.');
+              return;
+            }
+
+            const reviewBody = inlineComments.length === 0 && summary.length > 100
+              ? '> ℹ️ Nenhum achado pôde ser ancorado inline — review consolidado apenas.\n\n' + summary
+              : summary;
 
             await github.rest.pulls.createReview({
               owner,
@@ -233,9 +374,11 @@ jobs:
               pull_number: pr,
               commit_id,
               event: 'COMMENT',
-              body: summary,
-              comments: findings.comments || []
+              body: reviewBody,
+              comments: inlineComments
             });
+
+            console.log(`Review publicado: ${inlineComments.length} inline, summary ${summary.length} chars`);
 
       - name: Resumo
         if: always()

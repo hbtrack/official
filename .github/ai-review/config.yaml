@@ -1,8 +1,14 @@
+# AI PR Reviewer — HB Track
+# Modelo: Gemini 2.5 Flash (Google AI Studio free tier — 1500 RPD)
+# Independente do Codex (chatgpt-codex-connector) — falha de um não afeta o outro
+# Secret necessário: GEMINI_API_KEY (Settings > Secrets > Actions)
+# Tracking de cota: variável AI_REVIEW_DAILY_COUNT (Settings > Variables > Actions)
+
 review:
   mode: hybrid
   model: gemini-2.5-flash
   temperature: 0.2
-  max_files: 20
+  max_files: 30
   max_comments: 6
   min_severity_to_publish: medium
   allowed_severities:
@@ -29,6 +35,10 @@ paths:
     - "apps/**"
     - "api/**"
     - "tests/**"
+    - "src/*/api.py"
+    - "src/*/domain/*.py"
+    - "src/*/application/use_cases.py"
+    - "src/*/schemas.py"
   exclude:
     - "generated/**"
     - "_reports/**"
@@ -42,6 +52,8 @@ paths:
     - "**/pnpm-lock.yaml"
     - "**/yarn.lock"
     - "**/bun.lockb"
+    - "compiled_context/**"
+    - "SESSION_HANDOFF.md"
 
 prompts:
   system_policy_path: ".github/ai-review/styleguide.md"
