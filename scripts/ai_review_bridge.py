@@ -68,14 +68,13 @@ def parse_model_json(text: str) -> Dict[str, Any]:
     # First attempt: direct parse
     try:
         return json.loads(text)
-    except json.JSONDecodeError as e1:
-        print(f"[bridge] json.loads falhou: {e1}", file=sys.stderr)
-        print(f"[bridge] text repr (300 chars): {repr(text[:300])}", file=sys.stderr)
+    except json.JSONDecodeError:
+        pass
     # Second attempt: repair literal control chars inside strings
     try:
         return json.loads(repair_json_control_chars(text))
-    except json.JSONDecodeError as e2:
-        print(f"[bridge] repair+parse falhou: {e2}", file=sys.stderr)
+    except json.JSONDecodeError:
+        pass
     # Third attempt: regex to extract JSON object or array, then repair+parse
     import re
     for pattern in [r'\{[\s\S]*\}', r'\[[\s\S]*\]']:
@@ -231,10 +230,11 @@ def main() -> None:
     pr_files = load_json(os.environ.get("AI_REVIEW_PR_FILES", "pr_files.json"))
 
     raw_text = extract_model_text(model_resp)
-    # Log finishReason to detect token limit truncation
+    # Log finishReason (keep for operational visibility)
     for cand in model_resp.get("candidates", []):
         finish = cand.get("finishReason", "?")
-        print(f"[bridge] finishReason={finish}", file=sys.stderr)
+        if finish != "STOP":
+            print(f"[bridge] AVISO finishReason={finish}", file=sys.stderr)
     parsed = parse_model_json(raw_text)
 
     findings = parsed.get("findings", [])

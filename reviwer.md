@@ -1,5 +1,3 @@
-> ⚠️ **NON-SOVEREIGN** — Documento operacional de acompanhamento. Não define regras canônicas, contratos nem políticas. Não substitui `ROADMAP.md`, `SESSION_HANDOFF.md` nem os contratos em `contracts/`. Em caso de conflito, prevalecem os artefatos soberanos.
-
 Abaixo está o guia final de implementação do reviewer automático do HB Track, em modo Pacote B, do Passo 0 até o DONE.
 
 Ele assume este objetivo fechado:
