@@ -29,6 +29,32 @@ def extract_model_text(resp: Dict[str, Any]) -> str:
     return ""
 
 
+def repair_json_control_chars(text: str) -> str:
+    """Escape bare control characters inside JSON string values."""
+    result: list[str] = []
+    in_string = False
+    escaped = False
+    for ch in text:
+        if escaped:
+            result.append(ch)
+            escaped = False
+        elif ch == "\\" and in_string:
+            result.append(ch)
+            escaped = True
+        elif ch == '"':
+            in_string = not in_string
+            result.append(ch)
+        elif in_string and ch == "\n":
+            result.append("\\n")
+        elif in_string and ch == "\r":
+            result.append("\\r")
+        elif in_string and ch == "\t":
+            result.append("\\t")
+        else:
+            result.append(ch)
+    return "".join(result)
+
+
 def parse_model_json(text: str) -> Dict[str, Any]:
     text = text.strip()
     if text.startswith("```"):
@@ -39,28 +65,35 @@ def parse_model_json(text: str) -> Dict[str, Any]:
         if lines and lines[-1].startswith("```"):
             lines = lines[:-1]
         text = "\n".join(lines).strip()
+    # First attempt: direct parse
     try:
         return json.loads(text)
     except json.JSONDecodeError:
-        import re
-        # Try to find a JSON object or array embedded in the text
-        for pattern in [r'\{[\s\S]*\}', r'\[[\s\S]*\]']:
-            m = re.search(pattern, text)
-            if m:
-                try:
-                    return json.loads(m.group(0))
-                except json.JSONDecodeError:
-                    pass
-        # Fallback: return empty findings with error in summary
-        preview = text[:600].replace("\n", " ")
-        return {
-            "verdict": "COMMENT",
-            "summary": (
-                "O modelo não retornou JSON válido — nenhum achado foi processado. "
-                f"Início da resposta bruta: {preview}"
-            ),
-            "findings": [],
-        }
+        pass
+    # Second attempt: repair literal control chars inside strings
+    try:
+        return json.loads(repair_json_control_chars(text))
+    except json.JSONDecodeError:
+        pass
+    # Third attempt: regex to extract JSON object or array, then repair+parse
+    import re
+    for pattern in [r'\{[\s\S]*\}', r'\[[\s\S]*\]']:
+        m = re.search(pattern, text)
+        if m:
+            try:
+                return json.loads(repair_json_control_chars(m.group(0)))
+            except json.JSONDecodeError:
+                pass
+    # Fallback: return empty findings with error in summary
+    preview = repr(text[:400])
+    return {
+        "verdict": "COMMENT",
+        "summary": (
+            "O modelo não retornou JSON válido — nenhum achado foi processado. "
+            f"Início da resposta bruta: {preview}"
+        ),
+        "findings": [],
+    }
 
 
 def build_changed_line_index(files_payload: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
