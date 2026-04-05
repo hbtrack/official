@@ -946,24 +946,127 @@ Considere DONE quando tudo abaixo for verdadeiro:
 Resumo operacional curto:
 
 ```text id="e4lxzu"
-[ ] Entrar em /home/davis/HB-TRACK
-[ ] Garantir gh, actionlint, python3
-[ ] Criar/usar branch chore/ai-reviewer-hybrid
-[ ] Confirmar os 4 arquivos
-[ ] Validar config.yaml
-[ ] Validar styleguide.md
-[ ] Compilar ai_review_bridge.py
-[ ] Rodar actionlint
-[ ] Confirmar secret GEMINI_API_KEY
-[ ] git add dos 4 arquivos
-[ ] git commit
-[ ] git push
-[ ] gh pr create
-[ ] Mover PR para Ready for review
-[ ] gh run list / gh run view --log
-[ ] Verificar inline + summary no PR
-[ ] Classificar PASS / DEGRADED / FAIL
-[ ] Ajustar thresholds/path filters se necessário
+[x] Entrar em /home/davis/HB-TRACK
+    EVIDÊNCIA: pwd=/home/davis/HB-TRACK | git rev-parse=OK | remote=git@github.com:hbtrack/official.git
+
+[x] Garantir gh, actionlint, python3
+    EVIDÊNCIA:
+    - gh version 2.67.0 (2025-02-11) ✅
+    - actionlint 1.7.12 (instalado via download direto, sem sudo) ✅
+    - Python 3.12.3 ✅
+    - jq 1.8.1 (instalado via binary download) ✅
+    - pyyaml + requests: OK ✅
+
+[x] Criar/usar branch chore/ai-reviewer-hybrid
+    EVIDÊNCIA: git checkout -b chore/ai-reviewer-hybrid origin/main → branch criada e publicada
+    Branch isolada de feat/b10-001-training (PR #48) conforme exigência do guia.
+
+[x] Confirmar os 4 arquivos
+    EVIDÊNCIA:
+    - .github/workflows/ai-pr-review.yml (8080 bytes) ✅
+    - .github/ai-review/config.yaml (1146 bytes) ✅
+    - .github/ai-review/styleguide.md (2723 bytes) ✅
+    - scripts/ai_review_bridge.py (path canonônico correto, não scripts/run/) ✅
+    Correção aplicada: bridge estava em scripts/run/ — movido para scripts/ conforme guia.
+
+[x] Validar config.yaml
+    EVIDÊNCIA: python3 assertions PASS
+    - mode: hybrid ✅
+    - model: gemini-2.5-flash ✅
+    - min_severity_to_publish: medium ✅
+    - include paths: 13 ✅
+    - exclude paths: 12 (inclui generated/**, _reports/**) ✅
+    Saída: "config.yaml OK"
+
+[x] Validar styleguide.md
+    EVIDÊNCIA: grep confirmado
+    - "HB Track" → linha 1, 3, 19 ✅
+    - "Contract-Driven Development (CDD)" → linha 7 ✅
+    - "generated/**" → linhas 20, 42 ✅
+    - "_reports/**" → linhas 20, 42 ✅
+    - "português claro" → linha 46 ✅
+
+[x] Compilar ai_review_bridge.py
+    EVIDÊNCIA: python3 -m py_compile scripts/ai_review_bridge.py → sem erros ✅
+    Testes adicionais: repair_json_control_chars + parse_model_json testados localmente ✅
+
+[x] Rodar actionlint
+    EVIDÊNCIA: actionlint .github/workflows/ai-pr-review.yml → sem saída (OK) ✅
+    Correções aplicadas durante processo:
+    - import os omitido no step Python → corrigido
+    - js-yaml removido do github-script → include/exclude passados via env vars ✅
+
+[x] Confirmar secret GEMINI_API_KEY
+    EVIDÊNCIA: gh secret list --repo hbtrack/official
+    NAME               UPDATED
+    GEMINI_API_KEY     about 3 hours ago ✅
+    (secret já configurado no repositório)
+
+[x] git add dos 4 arquivos
+    EVIDÊNCIA: git add .github/workflows/ai-pr-review.yml .github/ai-review/config.yaml
+               .github/ai-review/styleguide.md scripts/ai_review_bridge.py → staged ✅
+
+[x] git commit
+    EVIDÊNCIA: commit 2310904f "infra(ai-review): add hybrid Gemini PR reviewer for HB Track"
+    PRE-COMMIT HOOK: PASS ✅ (5 files changed, 569 insertions)
+
+[x] git push
+    EVIDÊNCIA: git push -u origin chore/ai-reviewer-hybrid
+    → chore/ai-reviewer-hybrid publicada no GitHub ✅
+
+[x] gh pr create
+    EVIDÊNCIA: PR #49 criado via GitHub API (gh CLI sem auth, usando GH_TOKEN)
+    URL: https://github.com/hbtrack/official/pull/49
+    Title: "infra(ai-review): add hybrid Gemini PR reviewer for HB Track" ✅
+
+[x] Mover PR para Ready for review
+    EVIDÊNCIA: GraphQL mutation markPullRequestReadyForReview
+    → isDraft: false ✅
+    Workflow disparado pelo evento ready_for_review ✅
+
+[x] gh run list / gh run view --log
+    EVIDÊNCIA: Runs executados na branch chore/ai-reviewer-hybrid:
+    - Run 23996034124: [skipped] (draft ignorado) ✅
+    - Run 23996039794: [failure] ← fix: import os
+    - Run 23996071882: [failure] ← fix: js-yaml → env vars
+    - Run 23996107414: [failure] ← fix: bridge JSON repair
+    - Run 23996142225: [success] ← fix: response_mime_type + repair
+    - Run 23996181001: [success] ✅
+    - Run 23996236620: [success] ✅
+    - Run 23996283167: [success] finishReason=STOP, inline_comments=2 ✅
+    - Run 23996332010: [success] finishReason=STOP, inline_comments=2 ✅
+
+[x] Verificar inline + summary no PR
+    EVIDÊNCIA: PR #49 com 5 reviews publicados por github-actions[bot]
+    Última review (Run 23996332010):
+    - State: COMMENTED ✅
+    - Veredito: APPROVE_WITH_REMARKS ✅
+    - Resumo em português ✅
+    - 2 inline comments:
+      • .github/workflows/ai-pr-review.yml:1 [HIGH] "Novo workflow não registrado no canon de governança"
+      • .github/workflows/ai-pr-review.yml:30 [MEDIUM] "Dependência de artefatos não verificados/versionados"
+    - Achados sem âncora: Nenhum (todos foram anchorados inline) ✅
+    - Sem comentários em generated/** ou _reports/** ✅
+    - Não interferiu no contract-gates.yml ✅
+
+[x] Classificar PASS / DEGRADED / FAIL
+    RESULTADO: **PASS** ✅
+    - Workflow rodou: ✅
+    - Review útil apareceu em português: ✅
+    - Híbrido funcionou (2 inline + summary): ✅
+    - Sem ruído em derivados: ✅
+    - Sem interferência no pipeline contratual: ✅
+    - GEMINI_API_KEY válido: ✅
+    - finishReason=STOP (não truncado): ✅
+
+[x] Ajustar thresholds/path filters se necessário
+    Ajustes aplicados durante processo:
+    - maxOutputTokens: 4096 → 8192 (resposta era truncada)
+    - response_mime_type: application/json adicionado (forçar JSON puro)
+    - bridge: repair_json_control_chars() para newlines literais em strings
+    - bridge: parse_model_json com 3 tentativas (direct, repair, regex+repair)
+    Resultado atual: estável e operacional sem ajustes adicionais imediatos.
 ```
+
 
 

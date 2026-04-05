@@ -70,28 +70,32 @@ jobs:
         id: cfg
         run: |
           python - <<'PY'
-          import yaml
+          import os, json, yaml
           from pathlib import Path
           cfg = yaml.safe_load(Path('.github/ai-review/config.yaml').read_text(encoding='utf-8'))
           review = cfg.get('review', {})
-          print(f"model={review.get('model','gemini-2.5-flash')}")
-          print(f"temperature={review.get('temperature',0.2)}")
+          paths = cfg.get('paths', {})
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
               fh.write(f"model={review.get('model','gemini-2.5-flash')}\n")
               fh.write(f"temperature={review.get('temperature',0.2)}\n")
+              fh.write(f"max_files={review.get('max_files',20)}\n")
+              fh.write(f"include={json.dumps(paths.get('include',[]))}\n")
+              fh.write(f"exclude={json.dumps(paths.get('exclude',[]))}\n")
           PY
 
       - name: Coletar arquivos alterados do PR
         id: files
         uses: actions/github-script@v7
+        env:
+          INCLUDE_JSON: ${{ steps.cfg.outputs.include }}
+          EXCLUDE_JSON: ${{ steps.cfg.outputs.exclude }}
+          MAX_FILES: ${{ steps.cfg.outputs.max_files }}
         with:
           script: |
             const fs = require('fs');
-            const path = require('path');
-            const yaml = require('js-yaml');
-            const cfg = yaml.load(fs.readFileSync('.github/ai-review/config.yaml', 'utf8'));
-            const include = (cfg.paths && cfg.paths.include) || [];
-            const exclude = (cfg.paths && cfg.paths.exclude) || [];
+            const include = JSON.parse(process.env.INCLUDE_JSON || '[]');
+            const exclude = JSON.parse(process.env.EXCLUDE_JSON || '[]');
+            const maxFiles = parseInt(process.env.MAX_FILES || '20', 10);
 
             function globToRegex(glob) {
               const s = glob
@@ -119,7 +123,7 @@ jobs:
               const ok = includeRx.some(rx => rx.test(filename));
               const no = excludeRx.some(rx => rx.test(filename));
               return ok && !no;
-            }).slice(0, Number(cfg.review?.max_files || 20));
+            }).slice(0, maxFiles);
 
             fs.writeFileSync('pr_files.json', JSON.stringify(selected.map(f => ({
               filename: f.filename,
@@ -192,7 +196,8 @@ jobs:
             ],
             'generationConfig': {
               'temperature': float('${{ steps.cfg.outputs.temperature }}'),
-              'maxOutputTokens': 4096
+              'maxOutputTokens': 8192,
+              'response_mime_type': 'application/json'
             }
           }
           Path('gemini_request.json').write_text(json.dumps(body, ensure_ascii=False), encoding='utf-8')
