@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-05"
-branch_ativo: feat/b10-001-training
+branch_ativo: chore/ai-reviewer-hybrid
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
