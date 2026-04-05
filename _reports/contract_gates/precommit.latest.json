@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-05T00:29:29Z",
+  "timestamp_utc": "2026-04-05T02:41:35Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "c8b73c16",
+    "git_commit": "f03d37e7",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260405T002929_e77b24"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260405T024135_5d7fe3"
   },
   "status_detail": {
     "active_gates_passed": 23,
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 44
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 481
+        "duration_ms": 548
       }
     },
     {
@@ -365,7 +365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 16
       }
     },
     {
@@ -545,9 +545,6 @@
         "docs/_canon/HANDBALL_RULES_DOMAIN.md",
         "docs/_canon/INTEGRATION_FLOWS.md",
         "docs/_canon/IR_TO_SURFACE_MAPPING.yaml",
-        "docs/_canon/MCP_PREWORK.md",
-        "docs/_canon/MCP_SERVER_ARCHITECTURE.md",
-        "docs/_canon/MCP_TOOL_MANIFEST.yaml",
         "docs/_canon/MODULE_MAP.md",
         "docs/_canon/MODULE_REGISTRY.yaml",
         "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -605,9 +602,6 @@
         "docs/_canon/decisions/ADR-032-training-arch-decisions.md",
         "docs/_canon/decisions/ADR-033-video-module-canonicalization.md",
         "docs/_canon/decisions/ADR-034-scope-boundary-validation.md",
-        "docs/_canon/decisions/ADR-035-agent-identity.md",
-        "docs/_canon/decisions/ADR-036-mcp-security-analysis.md",
-        "docs/_canon/decisions/ADR-037-mcp-runtime-governance.md",
         "docs/_canon/decisions/README.md"
       ],
       "evidence_files": [],
@@ -988,7 +982,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 31
       }
     },
     {
@@ -1074,7 +1068,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 662
+        "duration_ms": 696
       }
     },
     {
@@ -1097,7 +1091,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 932
+        "duration_ms": 1007
       }
     },
     {
@@ -1119,7 +1113,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1133
+        "duration_ms": 1154
       }
     },
     {
@@ -1158,7 +1152,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 518
+        "duration_ms": 540
       }
     },
     {
@@ -1198,7 +1192,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1384
+        "duration_ms": 1461
       }
     },
     {
@@ -1804,7 +1798,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1642
+        "duration_ms": 1683
       }
     },
     {
@@ -1880,7 +1874,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1321
+        "duration_ms": 1444
       }
     },
     {
@@ -1923,7 +1917,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
+        "duration_ms": 56
       }
     },
     {
@@ -1945,7 +1939,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 882
+        "duration_ms": 946
       }
     },
     {
@@ -2001,7 +1995,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 63
       }
     },
     {
@@ -2197,31 +2191,37 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/matches/FT-035.json"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_training_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_training.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_training.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/matches/FT-035.json"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/training/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_training_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_training.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_training.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2229,7 +2229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 5
       }
     },
     {
@@ -2251,7 +2251,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 153
+        "duration_ms": 162
       }
     },
     {
@@ -2333,7 +2333,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 6
       }
     },
     {
@@ -2355,7 +2355,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 16
       }
     },
     {
@@ -2373,7 +2373,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
