@@ -132,6 +132,7 @@ rules:
       Parâmetros de path ({id}) são excluídos.
     message: "Segmento de path deve ser kebab-case: {{value}}"
     severity: warn
+    formats: [oas3]
     given: "$.paths.*~"
     then:
       function: pattern

@@ -15,7 +15,6 @@ apis:
 rules:
   # Estrutura obrigatória
   info-license: warn
-  info-license-url: off
   no-invalid-media-type-examples: warn
   no-unresolved-refs: error
 
@@ -47,14 +46,6 @@ rules:
   # Compatibilidade OpenAPI 3.1
   struct: error
   spec-components-invalid-map-name: error
-
-overrides:
-  - files:
-      - "contracts/openapi/paths/**/*.yaml"
-    rules:
-      # Path files são componentes de $ref — securitySchemes está no root (openapi.yaml).
-      # Validar security-defined em arquivos isolados gera falso positivo no VS Code.
-      security-defined: off
 
 theme:
   openapi:

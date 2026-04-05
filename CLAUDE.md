@@ -33,6 +33,14 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - Fases são sequenciais e bloqueantes: não iniciar fase N sem critério de Done da fase N-1 confirmado
 - Fase atual do projeto: verificar `SESSION_HANDOFF.md` + seção "Estado atual" do `ROADMAP.md`
 
+### Modo PR_FIX (correção de CI)
+Tarefas de identificação e correção de checks falhos em PR aberto.
+- Ponto de entrada: task_type `pr_fix` → worker `.contract_driven/agent_prompts/pr_fix.prompt.md`
+- **Primeiro passo obrigatório:** lookup em `merge-readiness.json` pelo `context` exato do check falho — antes de ler código, antes de rodar qualquer comando
+- **Proibido:** inferir `local_equivalent`; alterar governance sem falha explícita de gate de governança
+- Executor canônico: `python3 scripts/hb ci --profile pr`
+- Não rotear por `pre_contract_orchestrator` — modo PR_FIX é incompatível com pipeline CDD
+
 ### Regras transversais (valem nos dois modos)
 - Nunca inventar módulos fora dos 17 canônicos do `MODULE_REGISTRY.yaml`
 - `generate_frontend` está FROZEN no TASK_CATALOG: FASE 5 usa **código React manual** + `openapi-typescript` — não bloquear por causa do worker frozen

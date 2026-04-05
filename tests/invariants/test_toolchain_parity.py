@@ -32,11 +32,12 @@ class TestNodeVersion:
 
 
 class TestPythonVersion:
-    def test_contract_gates_matches_toolchain(self):
-        tc = _tc()
+    def test_contract_gates_reads_python_from_toolchain(self):
+        """contract-gates.yml deve ler python version de toolchain.json via jq."""
         wf = (ROOT / ".github/workflows/contract-gates.yml").read_text()
-        expected = f'python-version: "{tc["runtimes"]["python"]}"'
-        assert expected in wf, f"contract-gates.yml missing {expected!r}"
+        assert "jq -r .runtimes.python toolchain.json" in wf, (
+            "contract-gates.yml não lê python version de toolchain.json via jq"
+        )
 
     def test_reusable_reads_python_version_from_toolchain(self):
         """_reusable-ci.yml deve ler python version de toolchain.json via jq."""
@@ -55,8 +56,9 @@ class TestPostgresVersion:
 
 
 class TestOasdiffVersion:
-    def test_contract_gates_references_version(self):
-        tc = _tc()
+    def test_contract_gates_reads_oasdiff_from_toolchain(self):
+        """contract-gates.yml deve ler oasdiff version de toolchain.json via jq."""
         wf = (ROOT / ".github/workflows/contract-gates.yml").read_text()
-        ver = tc["tools"]["oasdiff"]
-        assert ver in wf, f"contract-gates.yml missing oasdiff version {ver!r}"
+        assert "jq -r .tools.oasdiff toolchain.json" in wf, (
+            "contract-gates.yml não lê oasdiff version de toolchain.json via jq"
+        )

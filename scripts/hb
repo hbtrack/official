@@ -890,6 +890,22 @@ class HBCLIv2:
             "JWT_SECRET": "ci-jwt-secret-for-testing-only",
         }
 
+    def cmd_validate(self, profile: str = "ci") -> int:
+        """Rodar validate_contracts.py com perfil de CI — executor canônico para 'Validate Contract Gates'.
+
+        Perfil padrão: ci (equivalente a CI=true sem flag).
+        """
+        print(f"\n══ VALIDATE CONTRACTS — perfil: {profile} ══")
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--profile", profile],
+            cwd=self.root,
+        )
+        if result.returncode == 0:
+            print(f"\n✅ validate ({profile}): PASS")
+        else:
+            print(f"\n❌ validate ({profile}): FAIL")
+        return result.returncode
+
     def cmd_ci(self, profile: str = "pr") -> int:
         """Rodar suíte CI local com ambiente derivado de toolchain.json.
 
@@ -912,6 +928,15 @@ class HBCLIv2:
         else:
             print(f"❌ Perfil desconhecido: {profile!r}. Use 'pr' ou 'full'.", file=sys.stderr)
             return 2
+
+        print("Sincronizando schema do banco (migrate)...")
+        migrate = subprocess.run(
+            [sys.executable, "manage.py", "migrate", "--noinput"],
+            env=env, cwd=self.root,
+        )
+        if migrate.returncode != 0:
+            print(f"\n❌ CI local ({profile}): migrate falhou")
+            return migrate.returncode
 
         result = subprocess.run(cmd, env=env, cwd=self.root)
         if result.returncode == 0:
@@ -1008,6 +1033,16 @@ class HBCLIv2:
             help="FASE 3: rodar validate_contracts.py completo e registrar stage3_exit_code",
         )
 
+        # validate -- executor canônico para Validate Contract Gates
+        validate_p = subparsers.add_parser(
+            "validate",
+            help="Rodar validate_contracts.py --profile ci (executor canônico para 'Validate Contract Gates')",
+        )
+        validate_p.add_argument(
+            "--profile", default="ci", choices=["local", "precommit", "ci"],
+            help="Perfil de validação (padrão: ci)",
+        )
+
         # ci -- rodar suíte CI local com ambiente derivado de toolchain.json
         ci_p = subparsers.add_parser("ci", help="Rodar suíte CI local (pr|full)")
         ci_p.add_argument(
@@ -1046,6 +1081,8 @@ class HBCLIv2:
                 return self.cmd_survival_suite()
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()
+            elif parsed_args.command == "validate":
+                return self.cmd_validate(parsed_args.profile)
             elif parsed_args.command == "ci":
                 return self.cmd_ci(parsed_args.profile)
         except FileNotFoundError as e:

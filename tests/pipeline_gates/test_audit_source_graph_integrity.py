@@ -41,7 +41,7 @@ def _operation_ids_from_openapi(path_doc: dict) -> list[str]:
 def test_audit_graph_files_exist_and_are_active():
     expected = {
         "module_manifest.yaml",
-        "entities.yaml",
+        "entity_graph.yaml",
         "endpoints.yaml",
         "errors.yaml",
         "test_obligations.yaml",
@@ -67,7 +67,7 @@ def test_audit_module_manifest_refs_resolve():
 
 
 def test_audit_entities_graph_matches_schema_and_runtime():
-    entities = _load_yaml(GRAPH_ROOT / "entities.yaml")["entities"]
+    entities = _load_yaml(GRAPH_ROOT / "entity_graph.yaml")["entities"]
     entity = entities["AuditEntry"]
     schema = _load_json(_resolve(entity["schema_ref"]))
     entity_file, symbol = _resolve_symbol(entity["runtime_entity_ref"])
@@ -146,14 +146,14 @@ def test_audit_module_docs_and_manifest_reference_source_graph():
 
     for ref in (
         "graph/module_manifest.yaml",
-        "graph/entities.yaml",
+        "graph/entity_graph.yaml",
         "graph/endpoints.yaml",
         "graph/errors.yaml",
         "graph/test_obligations.yaml",
     ):
         assert ref in readme
 
-    assert "graph/entities.yaml" in domain_rules
+    assert "graph/entity_graph.yaml" in domain_rules
     assert "graph/endpoints.yaml" in domain_rules
     assert "graph/errors.yaml" in domain_rules
     assert "graph/test_obligations.yaml" in test_matrix
@@ -168,7 +168,7 @@ def test_audit_module_docs_and_manifest_reference_source_graph():
         }
     assert covered == {
         "docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
-        "docs/hbtrack/modulos/audit/graph/entities.yaml",
+        "docs/hbtrack/modulos/audit/graph/entity_graph.yaml",
         "docs/hbtrack/modulos/audit/graph/endpoints.yaml",
         "docs/hbtrack/modulos/audit/graph/errors.yaml",
         "docs/hbtrack/modulos/audit/graph/test_obligations.yaml",

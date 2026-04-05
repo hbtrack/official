@@ -345,6 +345,27 @@ task_catalog:
     artifacts_produced: []
     pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
 
+  pr_fix:
+    task_type: pr_fix
+    worker_id: pr_fix_worker
+    worker_path: .contract_driven/agent_prompts/pr_fix.prompt.md
+    status: active
+    description: "Corrigir falha de CI em PR a partir de check do GitHub"
+    profile_id: null
+    stage_allowed: []
+    input_requirements:
+      - check_context (string — nome exato do check do GitHub que falhou, case-sensitive)
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: pr_fix opera sobre CI/PR, não sobre artefatos canônicos"
+    notes: |
+      Executor canônico: python3 scripts/hb ci --profile pr
+      SSOT de mapeamento: merge-readiness.json
+      Restrições operacionais:
+        - nunca alterar escopo fora do diff do PR
+        - nunca modificar governance sem falha explícita de check de governança
+        - sempre resolver check_context → local_equivalent via merge-readiness.json antes de qualquer ação
+        - se check_context não tiver local_equivalent mapeado → reportar gap de paridade, não improvizar
+
 # Validações de roteamento
 routing_validation:
   rule_1: |

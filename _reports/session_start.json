@@ -22,5 +22,7 @@
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 5,
-  "stage0_exit_code": 0
+  "stage0_exit_code": 0,
+  "hook_exit_code": 0,
+  "hook_validated_at": "2026-04-05T02:42:33.461961+00:00"
 }
