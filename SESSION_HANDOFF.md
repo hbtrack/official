@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-001-users
 resultado: DONE
-proxima_acao_permitida: "B10-001/users CONCLUÍDO — PR #50 em rebase. Após merge, próximo módulo: matches (já mergeado via PR #48)."
+proxima_acao_permitida: "B10-001/users MERGEADO (PR #50, SHA 3301cc88). B10-001/matches JÁ MERGEADO (PR #48). Todos os 6 módulos em main. Próxima fase: B10-002 ou verificar estado do ROADMAP."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
