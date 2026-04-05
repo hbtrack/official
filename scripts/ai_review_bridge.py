@@ -68,13 +68,14 @@ def parse_model_json(text: str) -> Dict[str, Any]:
     # First attempt: direct parse
     try:
         return json.loads(text)
-    except json.JSONDecodeError:
-        pass
+    except json.JSONDecodeError as e1:
+        print(f"[bridge] json.loads falhou: {e1}", file=sys.stderr)
+        print(f"[bridge] text repr (300 chars): {repr(text[:300])}", file=sys.stderr)
     # Second attempt: repair literal control chars inside strings
     try:
         return json.loads(repair_json_control_chars(text))
-    except json.JSONDecodeError:
-        pass
+    except json.JSONDecodeError as e2:
+        print(f"[bridge] repair+parse falhou: {e2}", file=sys.stderr)
     # Third attempt: regex to extract JSON object or array, then repair+parse
     import re
     for pattern in [r'\{[\s\S]*\}', r'\[[\s\S]*\]']:
