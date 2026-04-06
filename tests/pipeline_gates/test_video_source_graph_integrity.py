@@ -146,3 +146,4 @@ def test_video_module_docs_and_manifest_reference_source_graph():
     )
     assert video_graph_entry is not None, "HBTRACK_VIDEO_GRAPH ausente do DOC_USAGE_MANIFEST"
 
+
