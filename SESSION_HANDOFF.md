@@ -1,15 +1,15 @@
 ---
-data_ultima_sessao: "2026-04-05"
+data_ultima_sessao: "2026-04-06"
 branch_ativo: feat/b10-001-users
-modo_operacao: ROADMAP
+modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: video
+modulo_foco: reports
 fase_roadmap: 5
-task_type: execute_roadmap_phase
-boot_profile_id: roadmap_execution
-task_id: B10-001-final-2modules
-resultado: DONE
-proxima_acao_permitida: "B10-001 CONCLUÍDO — 17/17 módulos com source graph compilado e contexto compilado. Push feat/b10-001-users e abrir PR."
+task_type: generate_code
+boot_profile_id: contract_execution
+task_id: B10-002-fase0
+resultado: PENDENTE
+proxima_acao_permitida: "B10-002 Fase 0 concluída — backend_codegen.py recuperado e piloto reports regenerado. Iniciar Fase 1: genericizar backend_codegen.py para todos os módulos."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json

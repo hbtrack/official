@@ -91,7 +91,7 @@
     },
     {
       "relpath": "generated/source_graph/scout/scout.bundle.yaml",
-      "sha256": "cad9da4780d82659c552e741ead93dbc86e8ee2675ab8f553e1204de4fc5d21b"
+      "sha256": "576cb708a6d7e67e2c00862d0cc67b6a65c75e6e0b2fd5a28e399a1fdf2eb808"
     },
     {
       "relpath": "generated/source_graph/scout/scout.schema_contract_view.yaml",
@@ -103,7 +103,7 @@
     },
     {
       "relpath": "generated/source_graph/scout/impact_report.json",
-      "sha256": "06c60262ec605cb96f7d2bb4d2c5a6be8feef6b4a78bdf90bb1ad82c957f118a"
+      "sha256": "559728578a5428c7265d9f924d018c18dad5929cd663714f9035c1363a40bbeb"
     }
   ],
   "module": "scout",
@@ -136,7 +136,7 @@
     "domain_rules": "src/scout/domain/rules.py",
     "use_cases": "src/scout/application/use_cases.py"
   },
-  "source_fingerprint": "a9cae548647552e95020c767dc6aedeababb97b23f28b14fdcbbd6f643a9d8da",
+  "source_fingerprint": "cd552ced77d8221ff73bb0e057cb2db322e67fb8491baabcb5325c3a9591fb82",
   "source_graph": {
     "entities": {
       "ScoutEvent": {
@@ -353,7 +353,7 @@
         "clipAssetRefs referenciam storage externo — scout não é dono do storage (DR-SCOUT-004).",
         "SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002)."
       ],
-      "source_fingerprint": "ec21603b76f3594de24b73ca5bbbdaac831791b5e299e09e6c4f5caca3563605"
+      "source_fingerprint": "03c67dcaa513297e694cf794c1018c0d858b6063a7e1b69e1fa507c1df73201b"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

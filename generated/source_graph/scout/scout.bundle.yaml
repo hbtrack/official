@@ -27,7 +27,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
   sha256: c5f45e62a76aacb86b645f622c58b677387636e585354068aa2220e0565ecdec
 - relpath: docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md
-  sha256: 6892bcfb86ca325b8b87e9e0773a53ccbb6b5f587f62e83df69a8290a5865f26
+  sha256: d70114db4dc9f190cd7252c602f61ccec63df176654f0da2feaa581717875afd
 - relpath: docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md
   sha256: 7dec2616b23bb06207f69752bc9afd147dd2a9920fd35e96c279b51b0b25a43d
 - relpath: docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md
@@ -35,9 +35,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md
   sha256: 0a291ebb896415fff340b2de5c6b871da1ed8302fe46a6a0d11a81508b5a369c
 - relpath: docs/hbtrack/modulos/scout/README.md
-  sha256: 4178f2e34e8082bfd75cac0a9fa28a1243ed26b91fbf0a0083fb9395c1b529e9
+  sha256: 190302d4f398a31d5cbf98d7e8ac0a6d7ab82ba9d606c8087609ac3ae5bf3118
 - relpath: docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md
-  sha256: 07c4e281f610790d1a3ab49369abcf7223bcdce7d9ef94682e7d77861bd25656
+  sha256: 23e030fb989381c6d8b740424098e4e9e62f359fd6fe1c0e869153279b9e67c2
 - relpath: docs/hbtrack/modulos/scout/graph/endpoints.yaml
   sha256: b7528548b959b1584759190f706969ff83ddac07b78871f1b6d2a0c790153904
 - relpath: docs/hbtrack/modulos/scout/graph/entity_graph.yaml

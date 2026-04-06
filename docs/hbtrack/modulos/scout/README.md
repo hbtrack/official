@@ -23,6 +23,13 @@ Documentar o escopo normativo do módulo `scout` e suas superfícies soberanas.
 - Workflows (Arazzo): `contracts/workflows/scout/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
 
+## Source graph estruturado
+- `graph/module_manifest.yaml` — manifesto soberano do módulo
+- `graph/entity_graph.yaml` — entidades e campos soberanos
+- `graph/endpoints.yaml` — operações HTTP e use cases
+- `graph/errors.yaml` — mapeamento de exceções e códigos HTTP
+- `graph/test_obligations.yaml` — obrigações de teste e cobertura
+
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)

@@ -19,3 +19,6 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-002 | `contracts/schemas/scout/` | Validação JSON Schema | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | `DOMAIN_RULES_SCOUT.md` | Revisão normativa + testes de regra (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-004 | `INVARIANTS_SCOUT.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
+
+## Source graph
+| TM-005 | `graph/test_obligations.yaml` | Obrigações de teste do source graph | Sim | `generated/source_graph/scout/` |

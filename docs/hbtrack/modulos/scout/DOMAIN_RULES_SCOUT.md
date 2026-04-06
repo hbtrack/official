@@ -33,3 +33,8 @@ Registrar as regras de negócio do módulo `scout`.
 - Não inferir taxonomia sem glossário/taxonomia canônica.
 - Não tratar observação tática como fato oficial de súmula sem contrato em `matches`.
 - Não mover credenciais, regras médicas ou autorização para `scout`.
+
+## Source graph soberano
+- Entidades e invariantes: `graph/entity_graph.yaml`
+- Operações HTTP: `graph/endpoints.yaml`
+- Exceções mapeadas: `graph/errors.yaml`

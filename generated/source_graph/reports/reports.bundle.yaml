@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/reports/report_job.yaml
   sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
 - relpath: contracts/openapi/paths/reports.yaml
-  sha256: 81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00
+  sha256: f2f66a034edc4b916b456a6d01c52805d75f83fb73e3d6e48c68f4f2150ae3df
 - relpath: contracts/schemas/reports/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/reports/report_job.schema.json
