@@ -80,11 +80,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
-      "sha256": "0388af5557e679d5a4c6b9cf7632d8720811a14e8464c078345aa5d445d23078"
+      "sha256": "b1180aeaf1c3c6d131c12405975f5fc3d89029319b8fdd4071032902ead060da"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
-      "sha256": "dfe228b46a2aedc2f29b66bfe4a77ed542bd6c23b9bad765c0bcde4896797697"
+      "sha256": "4d4ab254a69c536d17ae2c0a5b430bba3ed7e1ea6a5823b1665d5d1ae59b71d1"
     }
   ],
   "module": "ai_ingestion",
@@ -127,7 +127,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "0733f0eca9b9eddc053fc371a5814e8f993dd93a0a62bb5400562cd983ef50a5",
+  "source_fingerprint": "0250e90cb71c06ff892f621070cd8e5e90ba9ff1f636b982db6a192ef8b8c134",
   "source_graph": {
     "entities": {
       "IngestionJob": {
@@ -295,7 +295,7 @@
         "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
         "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
       ],
-      "source_fingerprint": "e1d002dc6968f2e43e2d90991a7ce9335e68b2d1f17790c9d13ea664df60e4f4"
+      "source_fingerprint": "e64c0ea5c190a6d5ddead900c5d3513b27a8578c4c92c2a377c47a30e9769d6e"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

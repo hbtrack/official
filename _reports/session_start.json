@@ -1,11 +1,11 @@
 {
   "session_id": "68be23c1-6c49-4081-9920-cb86d6ef8981",
-  "session_timestamp": "2026-04-05T01:17:00.966567+00:00",
+  "session_timestamp": "2026-04-06T02:36:07.585744+00:00",
   "branch": "feat/b10-001-users",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -19,12 +19,12 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "reports",
-  "module_focus": "reports",
+  "module": "video",
+  "module_focus": "video",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-05T21:34:52.087282+00:00",
+  "hook_validated_at": "2026-04-05T21:58:42.811159+00:00",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
@@ -391,7 +391,169 @@
       "sha256": "4c9f18400cf911f75d3f1a7f4e6c9db5a8d33ae335f338866a03511cbf68bb34",
       "created_at": "2026-04-05T21:53:58.405340+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/graph/module_manifest.yaml",
+      "sha256": "a03604de23478a8b2a6b61da37155f968d2e538d38c837c7f3559efd6d38e787",
+      "created_at": "2026-04-06T02:21:11.664878+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:22:00.377587+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/graph/entity_graph.yaml",
+      "sha256": "d3a38c427ffb2a7c08cf815ab4995588bc9810c6e6cb9129ec857a8083b50d4f",
+      "created_at": "2026-04-06T02:21:24.640133+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:23:45.367760+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/graph/endpoints.yaml",
+      "sha256": "945be515ef869e0e247fdc1d6069c07b2363df3065b12f89fadc8c5625dcdc0a",
+      "created_at": "2026-04-06T02:21:28.349980+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:23:54.859068+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/graph/errors.yaml",
+      "sha256": "99e4642c747060cc18ae662a6d7dbf1058be7ed74fd26695da97afcedb9cd4e6",
+      "created_at": "2026-04-06T02:21:31.906598+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:01.126561+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/graph/test_obligations.yaml",
+      "sha256": "7b58b4274969817c9c71ad4443b02c7d119f90d8c2d082a0c81b2cf274ea16e1",
+      "created_at": "2026-04-06T02:21:35.339769+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:05.459169+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
+      "sha256": "839f3a09a95ab34493fb3f615f07db9d05aa2724d9b9d9f958d4d1bfab880781",
+      "created_at": "2026-04-06T02:21:38.609419+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:08.930335+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml",
+      "sha256": "b969d0a7ed05194ddaa7e89f75670de9341da365a8ad403a96acaf997969c083",
+      "created_at": "2026-04-06T02:21:41.848830+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:12.079947+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/endpoints.yaml",
+      "sha256": "13ea1ca51ff8daa6c72e63ed3821dc20dacb87bcdcee8637d959cedf1b15ffc2",
+      "created_at": "2026-04-06T02:21:45.136535+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:15.461465+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/errors.yaml",
+      "sha256": "7a6576d822290636004ded48ca57fdd9294bbbda0d726bf93a316d589d0d2f93",
+      "created_at": "2026-04-06T02:21:48.368559+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:19.181919+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml",
+      "sha256": "e71485defc0e4f03ba38467ba4d8ceb0165c9588f349143f935b15bb12ca6aec",
+      "created_at": "2026-04-06T02:21:51.714134+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:24:22.756942+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/README.md",
+      "sha256": "b7ce1d3d90fabe42ab4ab9728583c62d90701a6d5b3b969597a7bd910b7f8d45",
+      "created_at": "2026-04-06T02:24:35.013915+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md",
+      "sha256": "c6fd9993a7ec3672ab64dc4f59ba990eceb98681907416098072fcaa464ed78a",
+      "created_at": "2026-04-06T02:24:38.751014+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md",
+      "sha256": "6c57f0a1a2dee338d5a7073571aeaf72a7f809a9a67cce040b6277c7f196698b",
+      "created_at": "2026-04-06T02:24:42.363624+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/README.md",
+      "sha256": "c9401ec85c9c44e2438cd360a02c92d340bfe317e4e5151e05251cb446978ac8",
+      "created_at": "2026-04-06T02:24:45.612872+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
+      "sha256": "4d6737f71f7728523cf0343e78530a09387f2390b38546af54a471e2f44c9205",
+      "created_at": "2026-04-06T02:24:48.703387+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md",
+      "sha256": "0adfdc7b8a496b28bf151e100dba1b77098e356618c244e720f9e3879eddc3cc",
+      "created_at": "2026-04-06T02:24:51.876736+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/video/distribution_profile.schema.json",
+      "sha256": "e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6",
+      "created_at": "2026-04-06T02:24:54.930312+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745",
+      "created_at": "2026-04-06T02:24:58.008906+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/DOC_USAGE_MANIFEST.yaml",
+      "sha256": "3fe01ab77ab9543459cb4f57f87d4ce449706ebd1a2f9f58ba4aa12190540ee2",
+      "created_at": "2026-04-06T02:25:01.079495+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".spectral.yaml",
+      "sha256": "e7fdfb11893b626e2b394cddf96bf888ce1dcd8c5da06fb91cfc411b998b0ac5",
+      "created_at": "2026-04-06T02:25:04.194411+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-06T02:34:50.500828+00:00"
+    },
+    {
+      "path": "src/video/domain/entities.py",
+      "sha256": "534682e61dbd27a2f09ec5561bfddc4f9460ba436d27b768c04a5e6e5be6c3ae",
+      "created_at": "2026-04-06T02:25:07.262701+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_video_source_graph_integrity.py",
+      "sha256": "09b9a4f15a0ea08eebd32711c265ded8dba3daef3290f7397742c1cf84e75e56",
+      "created_at": "2026-04-06T02:25:10.360419+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_identity_access_source_graph_integrity.py",
+      "sha256": "7affe2bd608b6581b537a27b2d6d229ffa83f7dc268c6bfbe69854584159b5e5",
+      "created_at": "2026-04-06T02:25:13.508258+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+      "sha256": "d20e343aa66826e99a1f66b5a470b16f526e340789a03bbfbbf1707d8008cfad",
+      "created_at": "2026-04-06T02:25:16.489543+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "sha256": "8d72392080b69b9b0cdf2401334a4b32a6540cdc754f53822d420a9911677d8b",
+      "created_at": "2026-04-06T02:34:55.189584+00:00",
+      "gate_exit_code": 0
     }
   ],
-  "stage2_exit_code": 0
+  "stage2_exit_code": 0,
+  "stage3_exit_code": 2
 }

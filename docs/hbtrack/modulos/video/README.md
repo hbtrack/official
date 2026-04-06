@@ -43,6 +43,15 @@ O módulo `video` é responsável por **captura ao vivo, ingestão, sincronizaç
 - `STATE_MODEL_VIDEO.md` (quando houver machine de estados de captura/transcode)
 - `PERMISSIONS_VIDEO.md` (quando RBAC for introduzido)
 
+## Source graph estruturado
+- Manifesto do módulo: `docs/hbtrack/modulos/video/graph/module_manifest.yaml`
+- Entidades: `docs/hbtrack/modulos/video/graph/entity_graph.yaml`
+- Endpoints: `docs/hbtrack/modulos/video/graph/endpoints.yaml`
+- Erros: `docs/hbtrack/modulos/video/graph/errors.yaml`
+- Obrigações de teste: `docs/hbtrack/modulos/video/graph/test_obligations.yaml`
+
+Este conjunto ativa `video` na trilha soberana de source graph. Ele deve permanecer alinhado com `contracts/`, `src/video/` e os documentos normativos do módulo.
+
 ## Dependências
 - Sistema: `SYSTEM_SCOPE.md`
 - Domínio esportivo: `HANDBALL_RULES_DOMAIN.md`

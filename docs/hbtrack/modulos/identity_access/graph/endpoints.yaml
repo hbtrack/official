@@ -1,0 +1,201 @@
+version: "1.0.0"
+status: active
+module: identity_access
+
+endpoints:
+  - operation_id: authLogin
+    method: POST
+    path: /auth/login
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1login/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_login"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#LoginUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 429
+      - 500
+
+  - operation_id: authLogout
+    method: POST
+    path: /auth/logout
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1logout/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_logout"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#LogoutUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 204
+      - 401
+      - 500
+
+  - operation_id: authRefreshToken
+    method: POST
+    path: /auth/refresh
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1refresh/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_refresh"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#RefreshTokenUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 500
+
+  - operation_id: authGetCurrentSession
+    method: GET
+    path: /auth/me
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1me/get"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_me"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#GetCurrentSessionUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 500
+
+  - operation_id: listActiveSessions
+    method: GET
+    path: /auth/sessions
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions/get"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#list_active_sessions"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#ListActiveSessionsUseCase"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 500
+
+  - operation_id: revokeSession
+    method: DELETE
+    path: /auth/sessions/{sessionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions~1{sessionId}/delete"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#revoke_session"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: listUserRoles
+    method: GET
+    path: /auth/users/{userId}/roles
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/get"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#list_user_roles"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#ListUserRolesUseCase"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: assignRole
+    method: POST
+    path: /auth/users/{userId}/roles
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#assign_role"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#AssignRoleUseCase"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: revokeRole
+    method: DELETE
+    path: /auth/users/{userId}/roles/{roleLabel}
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles~1{roleLabel}/delete"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#revoke_role"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#RevokeRoleUseCase"
+    roles_allowed:
+      - admin
+    roles_denied:
+      - coordinator
+      - coach
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 204
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500

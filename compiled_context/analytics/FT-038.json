@@ -96,11 +96,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.bundle.yaml",
-      "sha256": "3a46d171eeca659db4545e25121981f7e8e3d856788072d4df5a8a0ad5feef2a"
+      "sha256": "368ea27ecedd3af01e33516f6244ad683285fd8ad56c873703d0e7005604105a"
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
@@ -112,7 +112,7 @@
     },
     {
       "relpath": "generated/source_graph/analytics/impact_report.json",
-      "sha256": "6ee6a81c14048fa6c0056b61dbf33d6e63c1eafcdd4cbdba9938782aeb3cf3d7"
+      "sha256": "2a983bdbb02157f8c2372410bfd234adc7f203049d8a863365a9a9be00cbab77"
     }
   ],
   "module": "analytics",
@@ -142,7 +142,7 @@
     "unit_tests": "src/analytics/tests/unit/test_analytics.py",
     "use_cases": "src/analytics/application/use_cases.py"
   },
-  "source_fingerprint": "7b6a7311c7213f9f6fdb7ce6c2091083f0aa4d1dbb35b00be7cb29152a861632",
+  "source_fingerprint": "fbc9439124e1f719ff0c7ee592b2662d3af2948cbf6afa4c609e405fcc5f1f31",
   "source_graph": {
     "entities": {
       "AnalyticsQueryRequest": {
@@ -341,7 +341,7 @@
         "AnalyticsDashboard segue descrito inline em contracts/openapi/paths/analytics.yaml; ainda não existe schema soberano dedicado para esse envelope.",
         "AnalyticsQueryResponse permanece como surface de transporte fechada, mas sem entidade runtime dedicada em src/analytics/domain/."
       ],
-      "source_fingerprint": "ba3a9086fe2af030487395d09f943cafb7c486d032ff8412b430ed160686cb07"
+      "source_fingerprint": "9ab39092aa289fdce4caaddc393cd10ce981af2bdee441e3f36bd60a36143722"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

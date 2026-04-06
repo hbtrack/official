@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c26b2c48c73a548343614a34e67ace3d83ec1b5e42eb3f97696e02fb090aea16"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.bundle.yaml",
@@ -135,7 +135,7 @@
     "domain_rules": "src/competitions/domain/rules.py",
     "use_cases": "src/competitions/application/use_cases.py"
   },
-  "source_fingerprint": "933a1ec1b7fc154072dfd5c2d5b4a156ba132db608cb281ac8f498e837baa809",
+  "source_fingerprint": "0f9307e1fe9f516822d68d26140c08f619cc271718f078db5c092dd4522dc741",
   "source_graph": {
     "entities": {
       "Competition": {

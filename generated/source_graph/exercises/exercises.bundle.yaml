@@ -33,7 +33,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml
   sha256: e9d832b5cf336c2a8c30f00b22a3fb02c256dc6dd8f3e493d08823b44a796432
 - relpath: docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md
-  sha256: edec326ddaa783c17ce321eda435cb95861c121756fdb5cc5c99abcd0d21dad1
+  sha256: 620fb651febb0b81d4cac4bf40681f53113f600f13510cdb774b8b1b4aca298a
 - relpath: docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md
   sha256: 9b321dd55e8dbb898359b7ceea87262d3a6df2d7c063d23f5e534d84ed1976dc
 - relpath: docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md
@@ -41,9 +41,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md
   sha256: 870735059c327864572dbf8cccb408f038a2721f1370a3e48f45231139c8e7e3
 - relpath: docs/hbtrack/modulos/exercises/README.md
-  sha256: 74d53b83def6ee4c9287c402e2aa4894535230c97cdc65b8590563cdd390312b
+  sha256: 47b89fed2723f209c471fc431e6274c846ba21c79acdd3cf5f47339448c8c4e2
 - relpath: docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md
-  sha256: 6d16e040114d54d6a84d8cc04112c720418c60ad96f4163da5ec1174e9b42954
+  sha256: c568fddb0aaf3e751400940179979bd4f418255aa81b296cd8837ba1e9013c36
 - relpath: docs/hbtrack/modulos/exercises/graph/endpoints.yaml
   sha256: c7bca45bd160bb9a785e794998082933723eb61c320992b09873db23a9243d14
 - relpath: docs/hbtrack/modulos/exercises/graph/entity_graph.yaml

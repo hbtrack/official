@@ -1,0 +1,87 @@
+version: "1.0.0"
+status: active
+module: identity_access
+
+entities:
+  AuthSession:
+    schema_ref: "../../../../../contracts/schemas/identity_access/auth_session.schema.json"
+    runtime_entity_ref: "../../../../../src/identity_access/domain/entities.py#AuthSession"
+    docs_refs:
+      - "../DOMAIN_RULES_IDENTITY_ACCESS.md"
+      - "../INVARIANTS_IDENTITY_ACCESS.md"
+      - "../PERMISSIONS_IDENTITY_ACCESS.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-IAM-001: obrigatório"
+      - name: principalUserId
+        runtime_name: principal_user_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-IAM-001: obrigatório"
+          - "DR-IAM-002: referência ao módulo users — identity_access não duplica perfil esportivo"
+          - "boundary: reference to users module"
+      - name: sessionScopeLabel
+        runtime_name: session_scope_label
+        required: true
+        type: string
+        constraints:
+          - "INV-IAM-001: obrigatório"
+          - "DR-IAM-003: contexto técnico de autorização — nunca derivado de posição esportiva"
+          - "maxLength: 80"
+      - name: roleLabels
+        runtime_name: role_labels
+        required: false
+        type: array_of_string
+        constraints:
+          - "INV-IAM-002: sem duplicatas (uniqueItems)"
+          - "DR-IAM-003: roleLabels é contexto técnico (admin|coordinator|coach|athlete|member)"
+          - "nullable: true (default: [])"
+      - name: authMethodLabel
+        runtime_name: auth_method_label
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+          - "exemplo: 'password', 'oauth2', 'saml'"
+      - name: mfaRequired
+        runtime_name: mfa_required
+        required: false
+        type: boolean
+        constraints:
+          - "nullable: true"
+          - "DR-IAM-004: ciclo de vida da sessão rastreável"
+      - name: mfaSatisfied
+        runtime_name: mfa_satisfied
+        required: false
+        type: boolean
+        constraints:
+          - "nullable: true"
+          - "DR-IAM-004: somente válido se mfaRequired=true"
+      - name: issuedAt
+        runtime_name: issued_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "INV-IAM-003: issuedAt < expiresAt quando ambos presentes"
+      - name: expiresAt
+        runtime_name: expires_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "INV-IAM-003: expiresAt > issuedAt"
+      - name: revokedAt
+        runtime_name: revoked_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "INV-IAM-003: revokedAt >= issuedAt quando presente"
+          - "DR-IAM-005: revogação somente via identity_access"
+    runtime_extension_fields: []

@@ -90,11 +90,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/medical/medical.bundle.yaml",
-      "sha256": "1088ddf02486b51f337b728d029d97dafff597f8607875895e4b592bb7480d3f"
+      "sha256": "4ad632edd7039a62ae4535cf844a37e45c89aa5efd2e1785fa6cb1f63d8efdec"
     },
     {
       "relpath": "generated/source_graph/medical/medical.schema_contract_view.yaml",
@@ -106,7 +106,7 @@
     },
     {
       "relpath": "generated/source_graph/medical/impact_report.json",
-      "sha256": "5ae792da3d404e5b1247318400d7e361801fc5350f72a2e4ebb25dff9ce44181"
+      "sha256": "bd8f81f8877ad32974e6f647cde01d6ddf81bfcc1ebf0586f29caccd9e59ce69"
     }
   ],
   "module": "medical",
@@ -136,7 +136,7 @@
     "unit_tests": "src/medical/tests/unit/test_medical_domain.py",
     "use_cases": "src/medical/application/use_cases.py"
   },
-  "source_fingerprint": "6ff44d62790c64b65a9b2e65d09488cf0fe0a1e15522b00c0cabe57577cfbc4f",
+  "source_fingerprint": "4f5c33fb516adee4f63c2d10064bc1cbfa378b68e22c043685444d607790e77e",
   "source_graph": {
     "entities": {
       "MedicalRecord": {
@@ -310,7 +310,7 @@
         "Delete/soft-delete e retention LGPD seguem descritos no contrato, mas a trilha de auditoria externa permanece governada fora do source graph local.",
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada."
       ],
-      "source_fingerprint": "14212c89c278e2a750d24e8b6ee735958abaa119340b27864b07814f4f3a76e7"
+      "source_fingerprint": "0ca441b290a1871df0f4daa3093237e5355853821432b3548b2f7133962b3448"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

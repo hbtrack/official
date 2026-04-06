@@ -33,3 +33,8 @@ Registrar as regras de negócio do módulo `identity_access`.
 - Não modelar `birth_date`, `height`, `position`, `injury_history_summary` ou qualquer dado de perfil/saúde neste módulo.
 - Não inferir papel técnico a partir de posição esportiva ou equipe.
 - Não mover política de autenticação para módulos de negócio.
+
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml`.
+- O mapa mínimo de operações e permissões publicadas está em `docs/hbtrack/modulos/identity_access/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/identity_access/graph/errors.yaml`.

@@ -111,9 +111,9 @@ properties:
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     description: Server-side timestamp of computation. Client uses for cache invalidation.
 example:
-  mode: team
+  mode: TEAM
   teamId: 550e8400-e29b-41d4-a716-446655440010
-  range: 7d
+  range: PERIOD_7D
   points:
   - date: '2026-03-11'
     sessionCount: 1

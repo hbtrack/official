@@ -66,7 +66,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
-      "sha256": "e463132c436b52f3520efbc3d704300e7381e0ae34ac65551653676ada5629ee"
+      "sha256": "247f85f54635380736307c8e9dd0daeae602a3a5259d1720fa0db9a106991488"
     },
     {
       "relpath": "docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md",
@@ -82,11 +82,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/medical/README.md",
-      "sha256": "5a633f58c6a80cb6dd5e37089d432b2614954454f46b7bb2a45872b82f609ff8"
+      "sha256": "1558a5dca177c7322accdeb1596d8ecb17c0192257c1e9976698ec311c7340af"
     },
     {
       "relpath": "docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md",
-      "sha256": "9b7eae6310b0d731700ec98cf2d4f88707583dbe310c8aa4a2632b7bd69d2060"
+      "sha256": "4c01b4a031f349078ec5b4731ca02c3dabd6263157d99e0b6dc768163ff82f04"
     },
     {
       "relpath": "docs/hbtrack/modulos/medical/graph/endpoints.yaml",
@@ -145,5 +145,5 @@
     "generated/source_graph/medical/medical.openapi_contract_view.yaml",
     "generated/source_graph/medical/impact_report.json"
   ],
-  "source_fingerprint": "14212c89c278e2a750d24e8b6ee735958abaa119340b27864b07814f4f3a76e7"
+  "source_fingerprint": "0ca441b290a1871df0f4daa3093237e5355853821432b3548b2f7133962b3448"
 }

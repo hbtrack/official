@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md
-  sha256: 71189b3dd2f6f2bf5ec04a1e84b913d809beb652dfa0323d4246696385511afb
+  sha256: 014efa17191147d54a62442972b5e8c7800967091e95e545eb8b518e304b9bec
 - relpath: docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md
   sha256: 0b03212371e786864c9ab369bcde0b30c9ab532f7225d5e1b0b00baba9cbaca6
 - relpath: docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md
@@ -33,9 +33,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md
   sha256: 89e9b17825fb06c8f245e7570e1e651e03b3491e453970099f02cb940ea24e75
 - relpath: docs/hbtrack/modulos/reports/README.md
-  sha256: 5feae3bbb494e61fcef880ee9ca87382d6c564296a3006a462d158406f3b0b63
+  sha256: 32ea8d9ac8e165ea4913f52c075d1778b752844a9a40142a14b27e0cfd38da78
 - relpath: docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md
-  sha256: e43f9dd49fb8ab8e82e19e75cf96437a1ddfdd22951ca30638bdd101c52a52b5
+  sha256: e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412
 - relpath: docs/hbtrack/modulos/reports/graph/endpoints.yaml
   sha256: 037825b74bf96d3ef812d5cf24a2563f2acec30d7a94c5c88612a90021d91f3b
 - relpath: docs/hbtrack/modulos/reports/graph/entity_graph.yaml

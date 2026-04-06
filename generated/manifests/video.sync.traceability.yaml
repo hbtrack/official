@@ -102,7 +102,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/components/schemas/training/feedback_thread.yaml
     sha256: 0c9ec557c21b9ce8337bc6ec97755577525d2616ed194ac6e566d6ed3ce52219
   - path: generated/contracts/openapi/components/schemas/training/load_chart.yaml
-    sha256: ec06d3d94373f89f661e3ec6e0a8e1db15b035fda355353cb19d17b8307abfbf
+    sha256: 8d72392080b69b9b0cdf2401334a4b32a6540cdc754f53822d420a9911677d8b
   - path: generated/contracts/openapi/components/schemas/training/mesocycle.yaml
     sha256: e2aaba69274659da278bcc77d9a39dcbb2d017acbe7f34b86d665dff336e999f
   - path: generated/contracts/openapi/components/schemas/training/microcycle.yaml
@@ -314,7 +314,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/video/clip_definition.schema.json
     sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
   - path: generated/contracts/schemas/video/distribution_profile.schema.json
-    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+    sha256: e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6
   - path: generated/contracts/schemas/video/match_media_session.schema.json
     sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
   - path: generated/contracts/schemas/video/media_segment.schema.json
@@ -323,7 +323,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 68dddc307b2222e3836c34850997eb6ab95f8abc5b02836ee3663ec70b8d529b
+  generated_tree_sha256: 77b02b3a8a202225dac21d28df14e0d28c5cf97bf1ed8fb9633f4bf0037807c7
   policy_path: generated/resolved_policy/video.sync.resolved.yaml
   policy_sha256: 283c3628bd1d16a2f4b2a97deacfae352d27c2d5a9d87591f403de0fa4a6ac5c
   source_contracts:
@@ -426,7 +426,7 @@ traceability_manifest:
   - path: contracts/openapi/components/schemas/training/feedback_thread.yaml
     sha256: 0c9ec557c21b9ce8337bc6ec97755577525d2616ed194ac6e566d6ed3ce52219
   - path: contracts/openapi/components/schemas/training/load_chart.yaml
-    sha256: ec06d3d94373f89f661e3ec6e0a8e1db15b035fda355353cb19d17b8307abfbf
+    sha256: 8d72392080b69b9b0cdf2401334a4b32a6540cdc754f53822d420a9911677d8b
   - path: contracts/openapi/components/schemas/training/mesocycle.yaml
     sha256: e2aaba69274659da278bcc77d9a39dcbb2d017acbe7f34b86d665dff336e999f
   - path: contracts/openapi/components/schemas/training/microcycle.yaml
@@ -638,7 +638,7 @@ traceability_manifest:
   - path: contracts/schemas/video/clip_definition.schema.json
     sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
   - path: contracts/schemas/video/distribution_profile.schema.json
-    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+    sha256: e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6
   - path: contracts/schemas/video/match_media_session.schema.json
     sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
   - path: contracts/schemas/video/media_segment.schema.json
@@ -658,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: d317c2a34630ed1c20ee55976331030f101b3841e86ecf75c6f45fd01533af04
+  source_tree_sha256: e0b1546ec22f11e6d0da4ee36a9114d4202228289473099e6766099d3f608c60

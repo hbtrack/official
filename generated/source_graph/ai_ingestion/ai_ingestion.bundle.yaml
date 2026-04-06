@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md
-  sha256: 682acc1368d993021a6e52fbd01f8b82cff30591306f74a0b24adaf96ba318d5
+  sha256: a5bf3d04ced9270b165163870227621848267fcf87570e977ce538881b312247
 - relpath: docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md
   sha256: 9aafcbab91b33effcd2fe3c7ed8e35f3c70a4cbc434e0940ff476c2b5ca52919
 - relpath: docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md
@@ -33,9 +33,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md
   sha256: 95c954cc90cfc88c25aaac9a87dec768b3eb9f81130196d09a6cbe1948dd473f
 - relpath: docs/hbtrack/modulos/ai_ingestion/README.md
-  sha256: 4fbef06de2399834f5549be674ce4327dff68c92ae2dea389e3b3d596a0b7fee
+  sha256: ba1237008911563349737286e4a7414ace0d7cc78500c293f9404f472918e5d5
 - relpath: docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md
-  sha256: 129d855fb23f6e1a3867643609ba03bdcefd05bf43e61b01c65d6be78af123d9
+  sha256: 4c9f18400cf911f75d3f1a7f4e6c9db5a8d33ae335f338866a03511cbf68bb34
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml
   sha256: d80f32b4a2eb1c0a24011a92c52495a5e2e9b25b7a3a315f3c3e2e2784be3057
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml

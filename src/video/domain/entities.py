@@ -60,6 +60,13 @@ class MatchMediaSession:
     created_by_user_id: UUID
     last_timecode: int = 0
     technical_contact_user_id: Optional[UUID] = None
+    capture_started_at: Optional[datetime] = None
+    sync_completed_at: Optional[datetime] = None
+    transcode_completed_at: Optional[datetime] = None
+    published_at: Optional[datetime] = None
+    segment_count: int = 0
+    total_duration_ms: int = 0
+    active_transcode_job_count: int = 0
 
     def validate_invariants(self) -> None:
         """INV-VID-007: Toda sessão deve ter retentionPolicy explícita (padrão = KEEP_7_DAYS)."""

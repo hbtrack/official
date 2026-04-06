@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md
-  sha256: e463132c436b52f3520efbc3d704300e7381e0ae34ac65551653676ada5629ee
+  sha256: 247f85f54635380736307c8e9dd0daeae602a3a5259d1720fa0db9a106991488
 - relpath: docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md
   sha256: b10a11d173f72872976c72895cf0db540d1a44bca4a41e066b29c85e397ed85e
 - relpath: docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md
@@ -33,9 +33,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/medical/PERMISSIONS_MEDICAL.md
   sha256: 437f67e4ac2d000aa091b14d151c2c6a65432855d0573f0b5b7889e8d7db6881
 - relpath: docs/hbtrack/modulos/medical/README.md
-  sha256: 5a633f58c6a80cb6dd5e37089d432b2614954454f46b7bb2a45872b82f609ff8
+  sha256: 1558a5dca177c7322accdeb1596d8ecb17c0192257c1e9976698ec311c7340af
 - relpath: docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md
-  sha256: 9b7eae6310b0d731700ec98cf2d4f88707583dbe310c8aa4a2632b7bd69d2060
+  sha256: 4c01b4a031f349078ec5b4731ca02c3dabd6263157d99e0b6dc768163ff82f04
 - relpath: docs/hbtrack/modulos/medical/graph/endpoints.yaml
   sha256: 47a9b2dc228f871c2e1e97cebf55feee8b6d078b60103294d9ad0edc77216e63
 - relpath: docs/hbtrack/modulos/medical/graph/entity_graph.yaml

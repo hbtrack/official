@@ -66,7 +66,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
-      "sha256": "b8751912bb4cb0e871b0faf4525bc7737cee4156e9dc2896c1b156e80d4ac088"
+      "sha256": "cb45b55d7591fde5952a3bb97bc67dc3b8d975a03f60f7241745301c4caad872"
     },
     {
       "relpath": "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
@@ -82,11 +82,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/notifications/README.md",
-      "sha256": "9275e2a92098dc34a2598d6360e3f31e984e7403d8c5c1781c355769deffa0c2"
+      "sha256": "63f03c972dcf8e6f2dd69a8d1a9f6bed29b71b032ec0250a4a87ff3288dcef08"
     },
     {
       "relpath": "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
-      "sha256": "fa00996dd0b8b8e661afb85b4c5fd26aa6e159dd055c95627ed7bc40bc5ba828"
+      "sha256": "5e0768b4c6b357a0d4dfb4bb13c849a8d00b1d6123f6c31597c332ede375ee0a"
     },
     {
       "relpath": "docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
@@ -145,5 +145,5 @@
     "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
     "generated/source_graph/notifications/impact_report.json"
   ],
-  "source_fingerprint": "7fe4b46bfdfb7ba42ea9dfdb1b12d67e24f3b43c58113dac9a121c275512ff2a"
+  "source_fingerprint": "ff1df0bf0fefa6a65aa4392c2f712f7c85074a3598ec3870f141324eb64e6a0a"
 }

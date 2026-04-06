@@ -50,3 +50,8 @@ Toda distribuição a um destino externo (CDN, parceiro, API) registra evento de
 ### DR-VID-010: Sincronização com Scout é Referência
 Quando há conflito de timecode entre vídeo e evento de scout (ex: scout registra evento em T=300s mas vídeo diz T=295s), **scout marca o correto**. Video readapta se necessário durante sync layer.
 
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/video/graph/entity_graph.yaml`.
+- O mapa mínimo de operações e permissões publicadas está em `docs/hbtrack/modulos/video/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/video/graph/errors.yaml`.
+

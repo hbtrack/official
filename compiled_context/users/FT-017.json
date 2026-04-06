@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c26b2c48c73a548343614a34e67ace3d83ec1b5e42eb3f97696e02fb090aea16"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "3e0b874599179aaf16438c0fe326604467e002b27499ed2b45032598a5eabb08",
+  "source_fingerprint": "e88b42efd677d2509ebd9823d85c6936abbe122fa5a182d7ed88c14b6b8a1a3f",
   "source_graph": {
     "entities": {
       "UserProfile": {

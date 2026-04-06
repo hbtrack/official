@@ -90,11 +90,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.bundle.yaml",
-      "sha256": "d78bcc93358939d05f0d67f1b3025957d344fc6c135031b51a50acbfb966a564"
+      "sha256": "cd522d52dcb2f159f4564936ab8bc56dc469ee20ceb6e2f33f40c572e2cbf140"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
@@ -106,7 +106,7 @@
     },
     {
       "relpath": "generated/source_graph/notifications/impact_report.json",
-      "sha256": "aeed79530e774d307267d0deb68a84cbf54819ccce4fdcc6b29228f81c028281"
+      "sha256": "1748f51e27196a7d5455090943aedb5fbad40293e1e416e336f99f37a227fbe2"
     }
   ],
   "module": "notifications",
@@ -137,7 +137,7 @@
     "unit_tests": "src/notifications/tests/unit/test_notifications.py",
     "use_cases": "src/notifications/application/use_cases.py"
   },
-  "source_fingerprint": "bcd5d300664fcb1adbfec7e9e80003ed7592f5d74e2e948e489fe749e6317e69",
+  "source_fingerprint": "e2315d7f00c2a187386f08ac8469641bdc083b575f63a0304a6ea9636916894c",
   "source_graph": {
     "entities": {
       "NotificationDelivery": {
@@ -285,7 +285,7 @@
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
         "As rotas de preferences documentam 404 para usuario inexistente, mas o runtime atual materializa defaults via repository."
       ],
-      "source_fingerprint": "7fe4b46bfdfb7ba42ea9dfdb1b12d67e24f3b43c58113dac9a121c275512ff2a"
+      "source_fingerprint": "ff1df0bf0fefa6a65aa4392c2f712f7c85074a3598ec3870f141324eb64e6a0a"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

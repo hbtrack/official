@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -29,7 +30,7 @@ def _resolve_symbol(ref: str) -> tuple[Path, str]:
     return _resolve(path_str), symbol
 
 
-def _operation_ids_from_openapi(path_doc: dict) -> list[str]:
+def _operation_ids_from_openapi(path_doc: dict[str, Any]) -> list[str]:
     operation_ids: list[str] = []
     for path_item in path_doc.values():
         for method_doc in path_item.values():
@@ -70,7 +71,7 @@ def test_ai_ingestion_entities_graph_matches_schema_and_runtime():
     entities = _load_yaml(GRAPH_ROOT / "entity_graph.yaml")["entities"]
 
     entity = entities["IngestionJob"]
-    schema = _load_json(_resolve(entity["schema_ref"]))
+    _ = _load_json(_resolve(entity["schema_ref"]))
     entity_file, symbol = _resolve_symbol(entity["runtime_entity_ref"])
     entity_source = entity_file.read_text(encoding="utf-8")
 

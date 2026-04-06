@@ -99,11 +99,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
-      "sha256": "b306462b0da4e31927bf1c6b8eec373b0f0d1253d84d9c6ad7c8962bfadb46c4"
+      "sha256": "7d9ab610f15b7c8798edaa696468457650aaa1d2f8bb97a3c7151151998ab2df"
     },
     {
       "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
@@ -115,7 +115,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/impact_report.json",
-      "sha256": "9d6ba0e1b086779fd39bbc2501e187316072ec5a30a08a2a90dfd71ac583c8db"
+      "sha256": "b15254047c040a54a65f80ec60065d0d8d2025ee198f15e514d7d06af7f0beea"
     }
   ],
   "module": "reports",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "cd3f74fdd440dd60172ad0a9b4893a79476c2ac7fe722374e3c2d70a5fad305c",
+  "source_fingerprint": "e93ea63f88fba237a86d9bdf05146870353c1ef57a52900dd7e8f918f5842a97",
   "source_graph": {
     "entities": {
       "ReportJob": {
@@ -321,7 +321,7 @@
       "known_gaps": [
         "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
       ],
-      "source_fingerprint": "8b42fcc813f412dd1a18d55cdeba4e9f6d581361ee2e030db8beac86ea9f3a81"
+      "source_fingerprint": "ea15b13ce47f46a39460800d4eaf598225bd8ba641cb872c4be12f6572fcae6d"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

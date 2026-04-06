@@ -66,7 +66,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
-      "sha256": "682acc1368d993021a6e52fbd01f8b82cff30591306f74a0b24adaf96ba318d5"
+      "sha256": "a5bf3d04ced9270b165163870227621848267fcf87570e977ce538881b312247"
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
@@ -82,11 +82,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/README.md",
-      "sha256": "4fbef06de2399834f5549be674ce4327dff68c92ae2dea389e3b3d596a0b7fee"
+      "sha256": "ba1237008911563349737286e4a7414ace0d7cc78500c293f9404f472918e5d5"
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
-      "sha256": "129d855fb23f6e1a3867643609ba03bdcefd05bf43e61b01c65d6be78af123d9"
+      "sha256": "4c9f18400cf911f75d3f1a7f4e6c9db5a8d33ae335f338866a03511cbf68bb34"
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
@@ -145,5 +145,5 @@
     "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
     "generated/source_graph/ai_ingestion/impact_report.json"
   ],
-  "source_fingerprint": "e1d002dc6968f2e43e2d90991a7ce9335e68b2d1f17790c9d13ea664df60e4f4"
+  "source_fingerprint": "e64c0ea5c190a6d5ddead900c5d3513b27a8578c4c92c2a377c47a30e9769d6e"
 }

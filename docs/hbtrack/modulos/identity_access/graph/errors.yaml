@@ -1,0 +1,127 @@
+version: "1.0.0"
+status: active
+module: identity_access
+
+errors:
+  - id: ERR-IAM-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/identity_access/domain/rules.py#AuthError"
+    operations:
+      - authLogout
+      - authGetCurrentSession
+      - listActiveSessions
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole
+
+  - id: ERR-IAM-401-INVALID-CREDENTIALS
+    kind: domain
+    http_status: 401
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#AuthError"
+    operations:
+      - authLogin
+      - authRefreshToken
+    notes: "Credenciais inválidas ou refresh token expirado/revogado"
+
+  - id: ERR-IAM-401-SESSION-REVOKED
+    kind: domain
+    http_status: 401
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#SessionRevoked"
+    operations:
+      - authLogout
+      - authGetCurrentSession
+      - listActiveSessions
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole
+    notes: "INV-IAM-003: sessão revogada (revokedAt preenchido)"
+
+  - id: ERR-IAM-401-SESSION-EXPIRED
+    kind: domain
+    http_status: 401
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#SessionExpired"
+    operations:
+      - authLogout
+      - authGetCurrentSession
+      - listActiveSessions
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole
+    notes: "INV-IAM-003: sessão expirada (expiresAt no passado)"
+
+  - id: ERR-IAM-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listActiveSessions
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole
+    notes: "DR-IAM-001: operações de gestão de sessões e roles requerem role admin"
+
+  - id: ERR-IAM-400-INVALID-ROLE
+    kind: domain
+    http_status: 400
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#InvalidRole"
+    operations:
+      - assignRole
+      - revokeRole
+    notes: "DR-IAM-003: roleLabel não é canônico (admin|coordinator|coach|athlete|member)"
+
+  - id: ERR-IAM-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/identity_access/domain/entities.py#validate_invariants"
+    operations:
+      - authLogin
+      - authRefreshToken
+      - assignRole
+    notes: "INV-IAM-001: campos obrigatórios ausentes; INV-IAM-002: roleLabels com duplicatas"
+
+  - id: ERR-IAM-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    source_ref: "../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase"
+    operations:
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole
+    notes: "Sessão ou usuário não encontrado"
+
+  - id: ERR-IAM-409-LAST-ADMIN
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/identity_access/domain/rules.py#LastAdminProtection"
+    operations:
+      - revokeRole
+    notes: "DR-IAM-005: o último admin da plataforma não pode ter role revogado"
+
+  - id: ERR-IAM-429-RATE-LIMIT
+    kind: transport
+    http_status: 429
+    source_ref: "../../../../../src/identity_access/api.py#auth_login"
+    operations:
+      - authLogin
+    notes: "OWASP API4:2023 — rate limiting obrigatório em endpoint de autenticação"
+
+  - id: ERR-IAM-500-INTERNAL
+    kind: transport
+    http_status: 500
+    source_ref: "../../../../../src/identity_access/api.py#auth_login"
+    operations:
+      - authLogin
+      - authLogout
+      - authRefreshToken
+      - authGetCurrentSession
+      - listActiveSessions
+      - revokeSession
+      - listUserRoles
+      - assignRole
+      - revokeRole

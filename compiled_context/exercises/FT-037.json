@@ -97,11 +97,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "4e54342e08dcf72a41a582e003a9b3359019e33ffa986a01c6149c16d54ff5f4"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.bundle.yaml",
-      "sha256": "1639449a74b99ce3fec21073dd54918dd93ac1dd48fe2acb30adf0d79e9e94db"
+      "sha256": "1dc765a398b13dfe54ed17302776a94cb160a39f4cc54bd4fa60bb34ff627824"
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "relpath": "generated/source_graph/exercises/impact_report.json",
-      "sha256": "17cc4e0655d8d0a2532805d774d9c8bc0309665a0d9436af1383d404f99f5d77"
+      "sha256": "d60043841e826564f6c74efec4b73917cfb40c8b35b73297b6d725dbe7e9eba3"
     }
   ],
   "module": "exercises",
@@ -144,7 +144,7 @@
     "unit_tests": "src/exercises/tests/unit/test_exercises.py",
     "use_cases": "src/exercises/application/use_cases.py"
   },
-  "source_fingerprint": "3edbab5efb488f5c140bd43b196a40337f7d7e8d198280409db706716c002548",
+  "source_fingerprint": "8fce68a7b361b7f4d0ac82ddc93f728c96594a643f5a0b464027ae21c95f4acb",
   "source_graph": {
     "entities": {
       "Exercise": {
@@ -743,7 +743,7 @@
         "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`.",
         "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."
       ],
-      "source_fingerprint": "e2c9c4219b0b13fad6fc02028a75d8bd3e6a1fa8bfaa8801366816a9e1f6ad68"
+      "source_fingerprint": "67299d9912719912aa2df7c309c30c7cf414bc8deb71c0e6cad23e768edd29c4"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

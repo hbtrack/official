@@ -1,0 +1,530 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: identity_access
+graph_root: docs/hbtrack/modulos/identity_access/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/identity_access/auth_session.yaml
+  sha256: 1efc76528abf6388a9ab1bbd92ce8e33871ae8a9567ddeae5d3c71777a84b663
+- relpath: contracts/openapi/paths/identity_access.yaml
+  sha256: c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483
+- relpath: contracts/schemas/identity_access/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/identity_access/auth_session.schema.json
+  sha256: f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md
+  sha256: 4d6737f71f7728523cf0343e78530a09387f2390b38546af54a471e2f44c9205
+- relpath: docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md
+  sha256: 8198ef84a735a843fdee6fdbf427b4437f483184e93a4d0cb30eefb63b9a6d39
+- relpath: docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md
+  sha256: 75d36cecd7ae1065ae91903315c3dfa723127216bbf4b9eb45887962ed7b1b3a
+- relpath: docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md
+  sha256: c5ddad36f61e8e7e5cf3150708711ff017a2ec228299c55eb54535906879313e
+- relpath: docs/hbtrack/modulos/identity_access/README.md
+  sha256: c9401ec85c9c44e2438cd360a02c92d340bfe317e4e5151e05251cb446978ac8
+- relpath: docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md
+  sha256: 0adfdc7b8a496b28bf151e100dba1b77098e356618c244e720f9e3879eddc3cc
+- relpath: docs/hbtrack/modulos/identity_access/graph/endpoints.yaml
+  sha256: 13ea1ca51ff8daa6c72e63ed3821dc20dacb87bcdcee8637d959cedf1b15ffc2
+- relpath: docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml
+  sha256: b969d0a7ed05194ddaa7e89f75670de9341da365a8ad403a96acaf997969c083
+- relpath: docs/hbtrack/modulos/identity_access/graph/errors.yaml
+  sha256: 7a6576d822290636004ded48ca57fdd9294bbbda0d726bf93a316d589d0d2f93
+- relpath: docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml
+  sha256: 839f3a09a95ab34493fb3f615f07db9d05aa2724d9b9d9f958d4d1bfab880781
+- relpath: docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml
+  sha256: e71485defc0e4f03ba38467ba4d8ceb0165c9588f349143f935b15bb12ca6aec
+- relpath: src/identity_access/api.py
+  sha256: 01c24c207c06a7f0b65f79b08b25077eadcdc42a401a49b0d29d93d960c8754c
+- relpath: src/identity_access/application/use_cases.py
+  sha256: f8cc6906fc536828258094a7ea53a7203112760032f3fd0adfa3b26ad6942bb5
+- relpath: src/identity_access/domain/entities.py
+  sha256: 67839214c660ae11fcb25d11c9e1210eac2374dfa6ca3e613b583571398af960
+- relpath: src/identity_access/domain/rules.py
+  sha256: a31ae38eed3fae6b20133a997aa30dfde3a509f411390a49f664fedabe1c4a1b
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: identity_access
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_IDENTITY_ACCESS.md
+    domain_rules: ../DOMAIN_RULES_IDENTITY_ACCESS.md
+    invariants: ../INVARIANTS_IDENTITY_ACCESS.md
+    permissions: ../PERMISSIONS_IDENTITY_ACCESS.md
+    test_matrix: ../TEST_MATRIX_IDENTITY_ACCESS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/identity_access.yaml
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/identity_access/auth_session.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/identity_access/
+    primary_schema: ../../../../../contracts/schemas/identity_access/auth_session.schema.json
+  runtime_surfaces:
+    api_router: ../../../../../src/identity_access/api.py
+    domain_entity: ../../../../../src/identity_access/domain/entities.py
+    domain_rules: ../../../../../src/identity_access/domain/rules.py
+    use_cases: ../../../../../src/identity_access/application/use_cases.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "principalUserId em AuthSession referencia o m\xF3dulo users \u2014 identity_access\
+    \ n\xE3o \xE9 dono de perfil esportivo (DR-IAM-002)."
+  - "Consentimentos OAuth/OIDC provider externos n\xE3o s\xE3o modelados aqui \u2014\
+    \ boundary explicitado em DR-IAM-005."
+  - "MFA provider externo (TOTP, WebAuthn) \xE9 infraestrutura \u2014 n\xE3o modelado\
+    \ como entidade soberana nesta fase."
+  - "JWT signing key management \xE9 infraestrutura \u2014 fora do escopo do source\
+    \ graph de dom\xEDnio."
+  - "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position n\xE3\
+    o aparecem neste m\xF3dulo (INV-IAM-004)."
+entities:
+  AuthSession:
+    schema_ref: ../../../../../contracts/schemas/identity_access/auth_session.schema.json
+    runtime_entity_ref: ../../../../../src/identity_access/domain/entities.py#AuthSession
+    docs_refs:
+    - ../DOMAIN_RULES_IDENTITY_ACCESS.md
+    - ../INVARIANTS_IDENTITY_ACCESS.md
+    - ../PERMISSIONS_IDENTITY_ACCESS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-IAM-001: obrigat\xF3rio"
+    - name: principalUserId
+      runtime_name: principal_user_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-IAM-001: obrigat\xF3rio"
+      - "DR-IAM-002: refer\xEAncia ao m\xF3dulo users \u2014 identity_access n\xE3\
+        o duplica perfil esportivo"
+      - 'boundary: reference to users module'
+    - name: sessionScopeLabel
+      runtime_name: session_scope_label
+      required: true
+      type: string
+      constraints:
+      - "INV-IAM-001: obrigat\xF3rio"
+      - "DR-IAM-003: contexto t\xE9cnico de autoriza\xE7\xE3o \u2014 nunca derivado\
+        \ de posi\xE7\xE3o esportiva"
+      - 'maxLength: 80'
+    - name: roleLabels
+      runtime_name: role_labels
+      required: false
+      type: array_of_string
+      constraints:
+      - 'INV-IAM-002: sem duplicatas (uniqueItems)'
+      - "DR-IAM-003: roleLabels \xE9 contexto t\xE9cnico (admin|coordinator|coach|athlete|member)"
+      - 'nullable: true (default: [])'
+    - name: authMethodLabel
+      runtime_name: auth_method_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+      - 'exemplo: ''password'', ''oauth2'', ''saml'''
+    - name: mfaRequired
+      runtime_name: mfa_required
+      required: false
+      type: boolean
+      constraints:
+      - 'nullable: true'
+      - "DR-IAM-004: ciclo de vida da sess\xE3o rastre\xE1vel"
+    - name: mfaSatisfied
+      runtime_name: mfa_satisfied
+      required: false
+      type: boolean
+      constraints:
+      - 'nullable: true'
+      - "DR-IAM-004: somente v\xE1lido se mfaRequired=true"
+    - name: issuedAt
+      runtime_name: issued_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - 'INV-IAM-003: issuedAt < expiresAt quando ambos presentes'
+    - name: expiresAt
+      runtime_name: expires_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - 'INV-IAM-003: expiresAt > issuedAt'
+    - name: revokedAt
+      runtime_name: revoked_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - 'INV-IAM-003: revokedAt >= issuedAt quando presente'
+      - "DR-IAM-005: revoga\xE7\xE3o somente via identity_access"
+    runtime_extension_fields: []
+endpoints:
+- operation_id: authLogin
+  method: POST
+  path: /auth/login
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1login/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_login
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#LoginUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 429
+  - 500
+- operation_id: authLogout
+  method: POST
+  path: /auth/logout
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1logout/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_logout
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#LogoutUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  response_codes:
+  - 204
+  - 401
+  - 500
+- operation_id: authRefreshToken
+  method: POST
+  path: /auth/refresh
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1refresh/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_refresh
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RefreshTokenUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 500
+- operation_id: authGetCurrentSession
+  method: GET
+  path: /auth/me
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1me/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_me
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#GetCurrentSessionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 401
+  - 500
+- operation_id: listActiveSessions
+  method: GET
+  path: /auth/sessions
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#list_active_sessions
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#ListActiveSessionsUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: revokeSession
+  method: DELETE
+  path: /auth/sessions/{sessionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions~1{sessionId}/delete
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#revoke_session
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: listUserRoles
+  method: GET
+  path: /auth/users/{userId}/roles
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#list_user_roles
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#ListUserRolesUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: assignRole
+  method: POST
+  path: /auth/users/{userId}/roles
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#assign_role
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#AssignRoleUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: revokeRole
+  method: DELETE
+  path: /auth/users/{userId}/roles/{roleLabel}
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles~1{roleLabel}/delete
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#revoke_role
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeRoleUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-IAM-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/identity_access/domain/rules.py#AuthError
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+- id: ERR-IAM-401-INVALID-CREDENTIALS
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#AuthError
+  operations:
+  - authLogin
+  - authRefreshToken
+  notes: "Credenciais inv\xE1lidas ou refresh token expirado/revogado"
+- id: ERR-IAM-401-SESSION-REVOKED
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#SessionRevoked
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "INV-IAM-003: sess\xE3o revogada (revokedAt preenchido)"
+- id: ERR-IAM-401-SESSION-EXPIRED
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#SessionExpired
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "INV-IAM-003: sess\xE3o expirada (expiresAt no passado)"
+- id: ERR-IAM-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "DR-IAM-001: opera\xE7\xF5es de gest\xE3o de sess\xF5es e roles requerem\
+    \ role admin"
+- id: ERR-IAM-400-INVALID-ROLE
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#InvalidRole
+  operations:
+  - assignRole
+  - revokeRole
+  notes: "DR-IAM-003: roleLabel n\xE3o \xE9 can\xF4nico (admin|coordinator|coach|athlete|member)"
+- id: ERR-IAM-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/identity_access/domain/entities.py#validate_invariants
+  operations:
+  - authLogin
+  - authRefreshToken
+  - assignRole
+  notes: "INV-IAM-001: campos obrigat\xF3rios ausentes; INV-IAM-002: roleLabels com\
+    \ duplicatas"
+- id: ERR-IAM-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  source_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase
+  operations:
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "Sess\xE3o ou usu\xE1rio n\xE3o encontrado"
+- id: ERR-IAM-409-LAST-ADMIN
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#LastAdminProtection
+  operations:
+  - revokeRole
+  notes: "DR-IAM-005: o \xFAltimo admin da plataforma n\xE3o pode ter role revogado"
+- id: ERR-IAM-429-RATE-LIMIT
+  kind: transport
+  http_status: 429
+  source_ref: ../../../../../src/identity_access/api.py#auth_login
+  operations:
+  - authLogin
+  notes: "OWASP API4:2023 \u2014 rate limiting obrigat\xF3rio em endpoint de autentica\xE7\
+    \xE3o"
+- id: ERR-IAM-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/identity_access/api.py#auth_login
+  operations:
+  - authLogin
+  - authLogout
+  - authRefreshToken
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+test_obligations:
+- id: IAM-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/identity_access/auth_session.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: IAM-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/identity_access.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: IAM-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/identity_access/tests/
+  covers:
+  - INV-IAM-001
+  - INV-IAM-002
+  - INV-IAM-003
+  - INV-IAM-004
+  - DR-IAM-001
+  - DR-IAM-002
+  - DR-IAM-003
+  - DR-IAM-004
+  - DR-IAM-005
+  verification: Domain unit and integration tests enforcing invariants, session lifecycle,
+    role bindings, OWASP API boundary and privilege checks
+  evidence_refs:
+  - ../../../../../src/identity_access/tests/
+- id: IAM-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_identity_access_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_identity_access_source_graph_integrity.py

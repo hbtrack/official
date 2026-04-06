@@ -25,7 +25,7 @@ inputs:
 - relpath: docs/_canon/graph/lifecycle.yaml
   sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
 - relpath: docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md
-  sha256: 4643556fc9f8b06f5fd398da311971901ff291947fedf54ab7747914fd5cfe52
+  sha256: 277d60585d3b8b003a83a292b1fdbd66061435ec0d1e1ffc29acbf9b4069f2df
 - relpath: docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md
   sha256: 3031a7846e0f99ed3fd77341e6ea6ed8a36dbff0c6ff61606fcd1369011eb0a6
 - relpath: docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md
@@ -33,9 +33,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md
   sha256: 03a536cb78e91e25b728cefa06c5eac0d231af424f827c437258d3e7e6ae450c
 - relpath: docs/hbtrack/modulos/wellness/README.md
-  sha256: 0bd018d9933b05b373cbb0ac685baa93990875f103b1a03ea76ad04c58435357
+  sha256: 5d0b49e49ea78780bdf313fea6f94f626ca5e9d8f69459600bd12883fa07cabf
 - relpath: docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md
-  sha256: 99df868f484d9cebc927c1131bdb7af785cbcacb56068874dc06b2820dfb721a
+  sha256: 94fa820a49931b143845800f42f584cab6938b883d2889d5a74f301b0cbacb69
 - relpath: docs/hbtrack/modulos/wellness/graph/endpoints.yaml
   sha256: c5b7c4530aea634639411326a2f2e109c443e1bc5270f5d1e76f92dbce88ddd5
 - relpath: docs/hbtrack/modulos/wellness/graph/entity_graph.yaml

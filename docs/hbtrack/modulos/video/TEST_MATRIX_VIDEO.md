@@ -76,3 +76,7 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 - **Distribuição:** Clip entregue a CDN com auditoria registrada
 - **Retenção:** Padrão de 7 dias aplicado; expiração testada
 
+## Obrigações estruturadas
+- O conjunto mínimo compilável do módulo está em `docs/hbtrack/modulos/video/graph/test_obligations.yaml`.
+- O pipeline deve manter `test_obligations.yaml` coerente com `contracts/`, `src/video/tests/` e `_reports/contract_gates/latest.json`.
+

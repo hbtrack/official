@@ -66,7 +66,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
-      "sha256": "71189b3dd2f6f2bf5ec04a1e84b913d809beb652dfa0323d4246696385511afb"
+      "sha256": "014efa17191147d54a62442972b5e8c7800967091e95e545eb8b518e304b9bec"
     },
     {
       "relpath": "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
@@ -82,11 +82,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/reports/README.md",
-      "sha256": "5feae3bbb494e61fcef880ee9ca87382d6c564296a3006a462d158406f3b0b63"
+      "sha256": "32ea8d9ac8e165ea4913f52c075d1778b752844a9a40142a14b27e0cfd38da78"
     },
     {
       "relpath": "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
-      "sha256": "e43f9dd49fb8ab8e82e19e75cf96437a1ddfdd22951ca30638bdd101c52a52b5"
+      "sha256": "e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412"
     },
     {
       "relpath": "docs/hbtrack/modulos/reports/graph/endpoints.yaml",
@@ -143,5 +143,5 @@
     "generated/source_graph/reports/reports.openapi_contract_view.yaml",
     "generated/source_graph/reports/impact_report.json"
   ],
-  "source_fingerprint": "8b42fcc813f412dd1a18d55cdeba4e9f6d581361ee2e030db8beac86ea9f3a81"
+  "source_fingerprint": "ea15b13ce47f46a39460800d4eaf598225bd8ba641cb872c4be12f6572fcae6d"
 }
