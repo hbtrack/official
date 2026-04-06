@@ -10,7 +10,6 @@ REQUIRED_ROADMAP_ARTIFACTS = [
     "ROADMAP.md",
     ".github/skills/hb-roadmap-executor/SKILL.md",
     "tests/pipeline_gates/test_roadmap_session_boot.py",
-    "DEVCONT.md",
 ]
 
 

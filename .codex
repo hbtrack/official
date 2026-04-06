@@ -1,6 +1,6 @@
-# HB TRACK — Claude Instructions
+# HB TRACK — Codex Instructions
 
-> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este arquivo é uma ponte operacional para o agente Claude. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este arquivo.
+> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este arquivo é uma ponte operacional para o agente Codex. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este arquivo.
 
 > Instruções canônicas em `docs/_canon/AGENT_INSTRUCTIONS.md` — ler esse arquivo primeiro.
 
@@ -35,11 +35,12 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - Fase atual do projeto: verificar `SESSION_HANDOFF.md` + seção "Estado atual" do `ROADMAP.md`
 
 ### Modo PR_FIX (correção de CI)
+Tarefas de identificação e correção de checks falhos em PR aberto.
 - Ponto de entrada: task_type `pr_fix` → worker `.contract_driven/agent_prompts/pr_fix.prompt.md`
-- **Primeiro passo:** lookup em `merge-readiness.json` pelo `context` do check falho
-- **Proibido:** inferir `local_equivalent`; alterar governance sem falha explícita de gate
-- Executor: `python3 scripts/hb ci --profile pr`
-- Incompatível com pipeline CDD
+- **Primeiro passo obrigatório:** lookup em `merge-readiness.json` pelo `context` exato do check falho — antes de ler código, antes de rodar qualquer comando
+- **Proibido:** inferir `local_equivalent`; alterar governance sem falha explícita de gate de governança
+- Executor canônico: `python3 scripts/hb ci --profile pr`
+- Não rotear por `pre_contract_orchestrator` — modo PR_FIX é incompatível com pipeline CDD
 
 ### Regras transversais (valem nos dois modos)
 - Nunca inventar módulos fora dos 17 canônicos do `MODULE_REGISTRY.yaml`
@@ -47,3 +48,15 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - `schema.d.ts` **NUNCA** é editado manualmente — apenas regenerar com `npm run api:generate`
 - Deploy de produção **requer aprovação humana explícita** — nunca executar autonomamente
 - Waivers ativos: verificar `.contract_driven/waivers.json` antes de iniciar qualquer pipeline
+
+## Regras de ouro para Codex
+
+- Nunca pular `hb verify` antes de authoring
+- Nunca criar artefato fora de path canônico
+- Sempre registrar artefato com `hb artifact`
+- Sempre atualizar `SESSION_HANDOFF.md` ao fechar a sessão
+- Nunca reescrever a força dos gates por conveniência
+- Nunca usar comandos destrutivos de git (`reset`, `rebase`, `commit --amend`) para mascarar estado
+- Nunca iniciar fase N sem confirmar Critério de Done da fase N-1
+- Nunca editar `frontend/src/api/schema.d.ts` manualmente — regenerar com `npm run api:generate`
+- Nunca executar deploy de produção autonomamente (fases 6, 9, 12 — requer aprovação humana)

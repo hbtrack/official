@@ -1,0 +1,7 @@
+{
+  "session_id": "test-enforce-00000001",
+  "task_type": "new_contract",
+  "module": "training",
+  "stage": 0,
+  "stage0_exit_code": 1
+}

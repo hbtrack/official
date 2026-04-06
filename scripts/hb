@@ -223,18 +223,61 @@ class HBCLIv2:
         normalized = raw_path[2:] if raw_path.startswith("./") else raw_path
         return self.root / normalized
 
+    # Marcadores mínimos de conteúdo para arquivos críticos de boot.
+    # Se o arquivo estiver em load_sequence e tiver entry aqui,
+    # pelo menos um dos marcadores deve aparecer no conteúdo.
+    _BOOT_CONTENT_MARKERS: dict[str, list[str]] = {
+        "docs/_canon/AGENT_INSTRUCTIONS.md": ["§0", "## 0", "# 0"],
+        "ROADMAP.md": ["## Fase", "## FASE", "## Phase", "# Fase"],
+        "SESSION_HANDOFF.md": ["---", "modo_operacao"],
+        "docs/_canon/CONTRACT_PIPELINE.md": ["§1", "## 1", "FASE"],
+        ".contract_driven/CONTRACT_SYSTEM_RULES.md": ["§", "##"],
+    }
+
     def _validate_boot_profile_structure(self, profile_id: str) -> tuple[bool, bool]:
-        """Garantir que o profile referencie apenas paths válidos e resolvíveis."""
+        """Garantir que o profile referencie apenas paths válidos e resolvíveis,
+        e que arquivos de load_sequence tenham conteúdo significativo."""
         profiles = self.boot_profiles.get("profiles", {})
         profile = profiles.get(profile_id, {})
         paths_ok = True
         sections_ok = True
 
         for raw_path in profile.get("load_sequence", []):
-            path = self._resolve_profile_path(str(raw_path))
+            raw_str = str(raw_path)
+            path = self._resolve_profile_path(raw_str)
             if not path.exists():
+                # SESSION_HANDOFF.md é opcional (boot inicial pode não ter)
+                if raw_str == "SESSION_HANDOFF.md":
+                    continue
                 print(
                     f"❌ load_sequence inválido em BOOT_PROFILES.yaml: '{raw_path}' não existe",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+                continue
+
+            # A4-FIX: Validar conteúdo além de existência
+            try:
+                content = path.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue  # Erros de leitura capturados por ouro layer
+
+            if not content.strip():
+                print(
+                    f"❌ load_sequence: '{raw_str}' existe mas está vazio — boot sem conteúdo.",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+                continue
+
+            # Verificar marcadores de conteúdo para arquivos críticos
+            # Normalizar raw_str removendo ./ para lookup
+            lookup_key = raw_str[2:] if raw_str.startswith("./") else raw_str
+            markers = self._BOOT_CONTENT_MARKERS.get(lookup_key)
+            if markers and not any(m in content for m in markers):
+                print(
+                    f"❌ load_sequence: '{raw_str}' não contém marcadores esperados "
+                    f"({markers[0]!r}, ...). Arquivo pode estar corrompido ou truncado.",
                     file=sys.stderr,
                 )
                 paths_ok = False
@@ -656,12 +699,23 @@ class HBCLIv2:
         FASE 1: PRE_AUTHORING
         
         Validar readiness do módulo.
+        Requer sessão inicializada com stage0_exit_code == 0 (hb verify PASS).
         """
         print("\n══ FASE 1: PRE_AUTHORING ══")
         
         # Validar que sessão foi inicializada
         if "task_type" not in self.session or "session_id" not in self.session:
             print("❌ Sessão não inicializada. Execute 'hb verify --task-type <task> --module <mod>' primeiro", file=sys.stderr)
+            return 1
+
+        # Validar que stage0_exit_code == 0
+        stage0_exit = self.session.get("stage0_exit_code")
+        if stage0_exit is None or stage0_exit != 0:
+            print(
+                f"❌ stage0_exit_code={stage0_exit} (esperado: 0). "
+                "Fase 0 (hb verify) não passou — corrija antes de avançar para Fase 1.",
+                file=sys.stderr,
+            )
             return 1
         
         # Validar que module corresponde
@@ -697,8 +751,34 @@ class HBCLIv2:
         FASE 2: PER_ARTIFACT
         
         Validar artefato. Fazer upsert com hash SHA-256.
+        Requer sessão inicializada com stage0_exit_code == 0 (hb verify PASS).
         """
         print(f"\n══ FASE 2: PER_ARTIFACT | {artifact_path} ══")
+
+        # Gate: sessão deve existir (hb verify executado)
+        if "session_id" not in self.session or "task_type" not in self.session:
+            print(
+                "❌ Sessão não inicializada. Execute 'hb verify --task-type <task> --module <mod>' primeiro.",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Gate: stage0_exit_code deve ser 0 (hb verify PASS)
+        stage0_exit = self.session.get("stage0_exit_code")
+        if stage0_exit is None:
+            print(
+                "❌ stage0_exit_code ausente em session_start.json. "
+                "Execute 'hb verify' antes de registrar artefatos.",
+                file=sys.stderr,
+            )
+            return 1
+        if stage0_exit != 0:
+            print(
+                f"❌ stage0_exit_code={stage0_exit} (esperado: 0). "
+                "Fase 0 (hb verify) não passou — corrija antes de registrar artefatos.",
+                file=sys.stderr,
+            )
+            return 1
 
         # Validação informativa de stage_allowed para stage 2
         task_type_a = self.session.get("task_type", "")

@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-06T10:45:00Z",
+  "timestamp_utc": "2026-04-06T14:47:08Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "3815ef16",
+    "git_commit": "9b395e25",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "PASS",
+  "overall_status": "FAIL",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260406T104500_0cdd91"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260406T144708_1e87a3"
   },
   "status_detail": {
-    "active_gates_passed": 50,
+    "active_gates_passed": 51,
     "skip_count": 3,
     "critical_gates": [
       {
@@ -167,7 +167,7 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "PASS"
+        "status": "FAIL"
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
@@ -204,10 +204,18 @@
       {
         "gate_id": "LEGACY_CRITICAL_PATH_GATE",
         "status": "PASS"
+      },
+      {
+        "gate_id": "SCOPE_BOUNDARY_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+        "status": "PASS"
       }
     ]
   },
-  "exit_code": 0,
+  "exit_code": 2,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +237,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 86
       }
     },
     {
@@ -254,7 +262,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 573
+        "duration_ms": 2831
       }
     },
     {
@@ -459,7 +467,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 19
       }
     },
     {
@@ -589,7 +597,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 116
+        "duration_ms": 257
       }
     },
     {
@@ -642,7 +650,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 6
       }
     },
     {
@@ -663,7 +671,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 89
       }
     },
     {
@@ -684,7 +692,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 66
       }
     },
     {
@@ -705,7 +713,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 30
       }
     },
     {
@@ -726,7 +734,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 76
+        "duration_ms": 166
       }
     },
     {
@@ -747,7 +755,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 128
       }
     },
     {
@@ -768,7 +776,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 123
       }
     },
     {
@@ -789,7 +797,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 299
+        "duration_ms": 667
       }
     },
     {
@@ -810,7 +818,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 72
       }
     },
     {
@@ -869,7 +877,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 23
       }
     },
     {
@@ -883,14 +891,8 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/hbtrack/decisoes",
         "/home/davis/HB-TRACK/docs/guias",
-        "/home/davis/HB-TRACK/.agents.md",
-        "/home/davis/HB-TRACK/ADVERSARIAL.md",
-        "/home/davis/HB-TRACK/ANALISEARQUITETURA.md",
+        "/home/davis/HB-TRACK/AGENTS.md",
         "/home/davis/HB-TRACK/CLAUDE.md",
-        "/home/davis/HB-TRACK/DEVCONT.md",
-        "/home/davis/HB-TRACK/PR_SEQUENCE_PARIDADE.md",
-        "/home/davis/HB-TRACK/compilance.md",
-        "/home/davis/HB-TRACK/reviwer.md",
         "/home/davis/HB-TRACK/docs/guias/AUDIT_INTEGRATION_SUMMARY.md",
         "/home/davis/HB-TRACK/docs/guias/CI_CD_AUDIT_PIPELINE.md",
         "/home/davis/HB-TRACK/docs/guias/CI_CD_DOMAIN_COMPLETENESS_INTEGRATION.md",
@@ -930,7 +932,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 55
       }
     },
     {
@@ -957,7 +959,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 120
+        "duration_ms": 325
       }
     },
     {
@@ -1058,7 +1060,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 9
       }
     },
     {
@@ -1430,7 +1432,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 102
       }
     },
     {
@@ -1516,7 +1518,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 730
+        "duration_ms": 1831
       }
     },
     {
@@ -1539,7 +1541,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1272
+        "duration_ms": 2364
       }
     },
     {
@@ -1561,7 +1563,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1344
+        "duration_ms": 2434
       }
     },
     {
@@ -1600,7 +1602,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 606
+        "duration_ms": 1308
       }
     },
     {
@@ -4511,7 +4513,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 2189
+        "duration_ms": 4843
       }
     },
     {
@@ -4579,7 +4581,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 4
       }
     },
     {
@@ -5177,7 +5179,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1992
+        "duration_ms": 4232
       }
     },
     {
@@ -5201,7 +5203,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1840
+        "duration_ms": 4085
       }
     },
     {
@@ -5221,7 +5223,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 9
       }
     },
     {
@@ -5261,7 +5263,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1803
+        "duration_ms": 5884
       }
     },
     {
@@ -5304,7 +5306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 68
+        "duration_ms": 182
       }
     },
     {
@@ -5326,7 +5328,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1419
+        "duration_ms": 3695
       }
     },
     {
@@ -5382,7 +5384,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 206
       }
     },
     {
@@ -5402,27 +5404,268 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 24
       }
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
-      "inputs": [],
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_TRACEABILITY_MANIFEST_INVALID",
+      "summary": "Manifests de rastreabilidade inválidos: 30 erro(s).",
+      "inputs": [
+        "generated/manifests/ai_ingestion.event.traceability.yaml",
+        "generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "generated/manifests/analytics.sync.traceability.yaml",
+        "generated/manifests/audit.event.traceability.yaml",
+        "generated/manifests/audit.sync.traceability.yaml",
+        "generated/manifests/competitions.event.traceability.yaml",
+        "generated/manifests/competitions.sync.traceability.yaml",
+        "generated/manifests/exercises.sync.traceability.yaml",
+        "generated/manifests/identity_access.event.traceability.yaml",
+        "generated/manifests/identity_access.sync.traceability.yaml",
+        "generated/manifests/matches.event.traceability.yaml",
+        "generated/manifests/matches.sync.traceability.yaml",
+        "generated/manifests/medical.sync.traceability.yaml",
+        "generated/manifests/notifications.event.traceability.yaml",
+        "generated/manifests/notifications.sync.traceability.yaml",
+        "generated/manifests/reports.sync.traceability.yaml",
+        "generated/manifests/scout.event.traceability.yaml",
+        "generated/manifests/scout.sync.traceability.yaml",
+        "generated/manifests/seasons.event.traceability.yaml",
+        "generated/manifests/seasons.sync.traceability.yaml",
+        "generated/manifests/teams.event.traceability.yaml",
+        "generated/manifests/teams.sync.traceability.yaml",
+        "generated/manifests/training.event.traceability.yaml",
+        "generated/manifests/training.sync.traceability.yaml",
+        "generated/manifests/users.event.traceability.yaml",
+        "generated/manifests/users.sync.traceability.yaml",
+        "generated/manifests/video.event.traceability.yaml",
+        "generated/manifests/video.sync.traceability.yaml",
+        "generated/manifests/wellness.event.traceability.yaml",
+        "generated/manifests/wellness.sync.traceability.yaml"
+      ],
       "artifacts_checked": [
-        "/home/davis/HB-TRACK/generated"
+        "generated/manifests/ai_ingestion.event.traceability.yaml",
+        "generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "generated/manifests/analytics.sync.traceability.yaml",
+        "generated/manifests/audit.event.traceability.yaml",
+        "generated/manifests/audit.sync.traceability.yaml",
+        "generated/manifests/competitions.event.traceability.yaml",
+        "generated/manifests/competitions.sync.traceability.yaml",
+        "generated/manifests/exercises.sync.traceability.yaml",
+        "generated/manifests/identity_access.event.traceability.yaml",
+        "generated/manifests/identity_access.sync.traceability.yaml",
+        "generated/manifests/matches.event.traceability.yaml",
+        "generated/manifests/matches.sync.traceability.yaml",
+        "generated/manifests/medical.sync.traceability.yaml",
+        "generated/manifests/notifications.event.traceability.yaml",
+        "generated/manifests/notifications.sync.traceability.yaml",
+        "generated/manifests/reports.sync.traceability.yaml",
+        "generated/manifests/scout.event.traceability.yaml",
+        "generated/manifests/scout.sync.traceability.yaml",
+        "generated/manifests/seasons.event.traceability.yaml",
+        "generated/manifests/seasons.sync.traceability.yaml",
+        "generated/manifests/teams.event.traceability.yaml",
+        "generated/manifests/teams.sync.traceability.yaml",
+        "generated/manifests/training.event.traceability.yaml",
+        "generated/manifests/training.sync.traceability.yaml",
+        "generated/manifests/users.event.traceability.yaml",
+        "generated/manifests/users.sync.traceability.yaml",
+        "generated/manifests/video.event.traceability.yaml",
+        "generated/manifests/video.sync.traceability.yaml",
+        "generated/manifests/wellness.event.traceability.yaml",
+        "generated/manifests/wellness.sync.traceability.yaml"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b, atual=39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5).",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 30,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 42191
+        "violations": 30,
+        "duration_ms": 7266
       }
     },
     {
@@ -5458,7 +5701,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 22
       }
     },
     {
@@ -5478,7 +5721,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 49
       }
     },
     {
@@ -5556,7 +5799,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 20
       }
     },
     {
@@ -5697,7 +5940,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 31
       }
     },
     {
@@ -5719,7 +5962,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 178
+        "duration_ms": 480
       }
     },
     {
@@ -5741,7 +5984,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 19
       }
     },
     {
@@ -5763,7 +6006,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 53
       }
     },
     {
@@ -6127,7 +6370,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 977
+        "duration_ms": 2171
       }
     },
     {
@@ -6151,7 +6394,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 17
       }
     },
     {
@@ -6173,7 +6416,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 48
       }
     },
     {
@@ -6191,7 +6434,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 22
       }
     },
     {
@@ -6212,7 +6455,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 65
       }
     },
     {
@@ -6235,16 +6478,129 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 15
       }
     },
     {
-      "gate_id": "READINESS_SUMMARY_GATE",
+      "gate_id": "SCOPE_BOUNDARY_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Scope boundary OK: 91 artefatos verificados sem violações.",
+      "inputs": [
+        "/home/davis/HB-TRACK/scripts/gates/check_scope_boundary.py"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/scripts/gates/check_scope_boundary.py",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/users.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/teams.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/reports.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+        "/home/davis/HB-TRACK/contracts/schemas/users/user_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/identity_access/auth_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/matches/match.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_relation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_acl.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_version.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion_approval.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/attention_queue_item.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_ineligibility_declaration.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_block.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/recommendation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/feedback_thread.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_message.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_objective.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/execution_record.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/load_chart.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/distribution_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/clip_definition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/match_media_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/media_segment.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/notifications/notification_delivery.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/toolchain.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 7848
+      }
+    },
+    {
+      "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Todos os workers consistentes com TASK_CATALOG e SOURCE_AUTHORITY_GRAPH.",
+      "inputs": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 112
+      }
+    },
+    {
+      "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
       "status": "PASS",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 49 PASS, 3 SKIP.",
+      "summary": "DOMAIN_GLOSSARY.md conforme: 48 termos canônicos extraídos.",
+      "inputs": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/DOMAIN_GLOSSARY.md"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 9
+      }
+    },
+    {
+      "gate_id": "READINESS_SUMMARY_GATE",
+      "status": "FAIL",
+      "blocking": false,
+      "exit_code": 2,
+      "blocking_code": null,
+      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -6253,7 +6609,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     }
   ]

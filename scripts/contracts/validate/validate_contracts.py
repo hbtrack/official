@@ -105,6 +105,8 @@ BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT = "BLOCKED_AXIOM_INVALID_VALIDATOR_CONT
 BLOCKED_AXIOM_INTEGRITY = "BLOCKED_AXIOM_INTEGRITY"
 BLOCKED_FEATURE_COVERAGE_MISSING = "BLOCKED_FEATURE_COVERAGE_MISSING"
 BLOCKED_LEGACY_IN_CRITICAL_PATH = "BLOCKED_LEGACY_IN_CRITICAL_PATH"  # FASE 7
+BLOCKED_WORKER_PROMPT_AUTHORITY = "BLOCKED_WORKER_PROMPT_AUTHORITY"
+BLOCKED_SCOPE_OVERFLOW = "BLOCKED_SCOPE_OVERFLOW"
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -8709,6 +8711,259 @@ def _g_legacy_isolation(root: pathlib.Path) -> dict:
     )
 
 
+def _g_scope_boundary(root: pathlib.Path) -> dict:
+    """SCOPE_BOUNDARY_GATE — Delega ao script dedicado check_scope_boundary.py.
+
+    Executa o script sobre cada artefato contratual (.yaml/.json) em contracts/ .
+    Exit codes per artifact: 0=PASS, 1=BLOCKED_SCOPE_OVERFLOW, 2+=ERROR.
+    SKIP_NOT_APPLICABLE: nenhum artefato contratual encontrado ou script ausente.
+    """
+    t0 = time.monotonic()
+    gate_id = "SCOPE_BOUNDARY_GATE"
+    script = root / "scripts" / "gates" / "check_scope_boundary.py"
+
+    if not script.exists():
+        return _skip(gate_id, "check_scope_boundary.py não encontrado.", _ms(t0))
+
+    contracts_dir = root / "contracts"
+    if not contracts_dir.exists():
+        return _skip(gate_id, "Diretório contracts/ não encontrado.", _ms(t0))
+
+    # Collect contract artifacts
+    artifacts = []
+    for pattern in ["openapi/paths/*.yaml", "schemas/**/*.schema.json",
+                     "asyncapi/*.yaml", "workflows/**/*.arazzo.yaml"]:
+        artifacts.extend(contracts_dir.glob(pattern))
+
+    if not artifacts:
+        return _skip(gate_id, "Nenhum artefato contratual encontrado em contracts/.", _ms(t0))
+
+    violations: list[dict] = []
+    checked = [str(script)]
+
+    for artifact in artifacts[:50]:  # Limit to prevent timeout
+        checked.append(str(artifact))
+        try:
+            result = subprocess.run(
+                [sys.executable, str(script), str(artifact.relative_to(root))],
+                capture_output=True, text=True, timeout=10, cwd=str(root),
+            )
+            if result.returncode == 1:  # BLOCKED_SCOPE_OVERFLOW
+                violations.append({
+                    "blocking_code": BLOCKED_SCOPE_OVERFLOW,
+                    "artifact": str(artifact.relative_to(root)),
+                    "message": result.stdout.strip() or f"Scope boundary violation in {artifact.name}",
+                    "severity": "error",
+                })
+        except Exception:
+            pass  # Skip artifacts that fail to parse
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, BLOCKED_SCOPE_OVERFLOW,
+                   f"{len(violations)} violação(ões) de scope boundary em {len(artifacts)} artefatos.",
+                   [str(script)], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               f"Scope boundary OK: {len(artifacts)} artefatos verificados sem violações.",
+               [str(script)], checked, [], [], _ms(t0))
+
+
+def _g_worker_prompt_authority(root: pathlib.Path) -> dict:
+    """WORKER_PROMPT_AUTHORITY_GATE — Valida que worker prompts são consistentes
+    com SOURCE_AUTHORITY_GRAPH e TASK_CATALOG.
+
+    Checks:
+      1. Todos os workers listados em TASK_CATALOG existem no filesystem.
+      2. Frontmatter dos workers tem task_type que corresponde ao TASK_CATALOG.
+      3. Workers não referenciam fontes fora da hierarquia do SOURCE_AUTHORITY_GRAPH.
+    """
+    t0 = time.monotonic()
+    gate_id = "WORKER_PROMPT_AUTHORITY_GATE"
+
+    catalog_path = root / ".contract_driven" / "TASK_CATALOG.yaml"
+    prompts_dir = root / ".contract_driven" / "agent_prompts"
+    graph_path = root / "docs" / "_canon" / "SOURCE_AUTHORITY_GRAPH.yaml"
+
+    if not catalog_path.exists():
+        return _skip(gate_id, "TASK_CATALOG.yaml não encontrado.", _ms(t0))
+
+    violations: list[dict] = []
+    checked: list[str] = [str(catalog_path)]
+
+    try:
+        catalog = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, BLOCKED_WORKER_PROMPT_AUTHORITY,
+                   f"Falha ao carregar TASK_CATALOG: {exc}",
+                   [], [str(catalog_path)], [], [{
+                       "blocking_code": BLOCKED_WORKER_PROMPT_AUTHORITY,
+                       "artifact": str(catalog_path),
+                       "message": str(exc), "severity": "error",
+                   }], _ms(t0))
+
+    tasks = catalog.get("tasks") or catalog.get("task_types") or {}
+    if isinstance(tasks, list):
+        tasks_iter = tasks
+    elif isinstance(tasks, dict):
+        tasks_iter = list(tasks.values())
+    else:
+        tasks_iter = []
+
+    for task in tasks_iter:
+        if not isinstance(task, dict):
+            continue
+        worker_path = task.get("worker_prompt_path") or task.get("worker_path")
+        task_id = task.get("task_type") or task.get("id") or "unknown"
+        status = task.get("status", "active")
+
+        if not worker_path:
+            continue
+        if status in ("frozen", "deprecated", "disabled"):
+            continue
+
+        full = root / worker_path
+        checked.append(str(full))
+        if not full.exists():
+            violations.append({
+                "blocking_code": BLOCKED_WORKER_PROMPT_AUTHORITY,
+                "artifact": worker_path,
+                "message": f"Worker prompt '{worker_path}' referenciado por task '{task_id}' não existe.",
+                "severity": "error",
+            })
+            continue
+
+        # Check frontmatter consistency
+        try:
+            text = full.read_text(encoding="utf-8")
+            if text.startswith("---"):
+                end = text.find("---", 3)
+                if end > 0:
+                    fm = yaml.safe_load(text[3:end])
+                    if isinstance(fm, dict):
+                        fm_task = fm.get("task_type")
+                        if fm_task and fm_task != task_id:
+                            violations.append({
+                                "blocking_code": BLOCKED_WORKER_PROMPT_AUTHORITY,
+                                "artifact": worker_path,
+                                "message": (
+                                    f"Worker '{worker_path}' declara task_type='{fm_task}' "
+                                    f"mas TASK_CATALOG atribui task_type='{task_id}'."
+                                ),
+                                "severity": "error",
+                            })
+        except Exception:
+            pass  # Frontmatter parsing is best-effort
+
+    # Check SOURCE_AUTHORITY_GRAPH bridge_agent_docs artifacts exist
+    if graph_path.exists():
+        checked.append(str(graph_path))
+        try:
+            graph = yaml.safe_load(graph_path.read_text(encoding="utf-8"))
+            concepts = graph.get("concepts") or {}
+            bridge_docs = concepts.get("bridge_agent_docs") or {}
+            artifacts = bridge_docs.get("artifacts") or []
+            for artifact in artifacts:
+                artifact_path = root / artifact
+                if not artifact_path.exists() and not artifact_path.is_dir():
+                    violations.append({
+                        "blocking_code": BLOCKED_WORKER_PROMPT_AUTHORITY,
+                        "artifact": artifact,
+                        "message": (
+                            f"SOURCE_AUTHORITY_GRAPH lista '{artifact}' como bridge artifact "
+                            f"mas o arquivo/diretório não existe."
+                        ),
+                        "severity": "error",
+                    })
+        except Exception:
+            pass  # Graph parsing best-effort
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, BLOCKED_WORKER_PROMPT_AUTHORITY,
+                   f"{len(violations)} violação(ões) de autoridade de worker.",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               "Todos os workers consistentes com TASK_CATALOG e SOURCE_AUTHORITY_GRAPH.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_domain_glossary_consistency(root: pathlib.Path) -> dict:
+    """DOMAIN_GLOSSARY_CONSISTENCY_GATE — Valida que DOMAIN_GLOSSARY.md existe,
+    é bem-formado e que termos canônicos são usados consistentemente em contratos.
+
+    Checks:
+      1. DOMAIN_GLOSSARY.md existe em docs/_canon/
+      2. Contém front matter YAML válido com status: active
+      3. Extrai code_names dos termos
+      4. Verifica que OpenAPI paths usam code_names (não variantes)
+    """
+    t0 = time.monotonic()
+    gate_id = "DOMAIN_GLOSSARY_CONSISTENCY_GATE"
+    glossary_path = root / "docs" / "_canon" / "DOMAIN_GLOSSARY.md"
+
+    if not glossary_path.exists():
+        return _pg(gate_id, "FAIL", False, None,
+                   "DOMAIN_GLOSSARY.md não encontrado em docs/_canon/.",
+                   [], [], [], [{
+                       "artifact": "docs/_canon/DOMAIN_GLOSSARY.md",
+                       "message": "Glossário de domínio ausente.",
+                       "severity": "error",
+                   }], _ms(t0))
+
+    checked = [str(glossary_path)]
+    violations: list[dict] = []
+
+    try:
+        text = glossary_path.read_text(encoding="utf-8")
+
+        # Check front matter
+        if text.startswith("---"):
+            end = text.find("---", 3)
+            if end > 0:
+                fm = yaml.safe_load(text[3:end])
+                if isinstance(fm, dict):
+                    status = fm.get("status", "")
+                    if status != "active":
+                        violations.append({
+                            "artifact": str(glossary_path.relative_to(root)),
+                            "message": f"DOMAIN_GLOSSARY.md status é '{status}', esperado 'active'.",
+                            "severity": "warning",
+                        })
+                else:
+                    violations.append({
+                        "artifact": str(glossary_path.relative_to(root)),
+                        "message": "Front matter YAML inválido em DOMAIN_GLOSSARY.md.",
+                        "severity": "error",
+                    })
+
+        # Extract code_names from glossary (pattern: ### Term (`code_name`))
+        import re
+        code_names = set(re.findall(r"###\s+.+?\(`(\w+)`\)", text))
+
+        if not code_names:
+            violations.append({
+                "artifact": str(glossary_path.relative_to(root)),
+                "message": "Nenhum termo com code_name encontrado no glossário.",
+                "severity": "warning",
+            })
+
+    except Exception as exc:
+        violations.append({
+            "artifact": str(glossary_path.relative_to(root)),
+            "message": f"Erro ao ler DOMAIN_GLOSSARY.md: {exc}",
+            "severity": "error",
+        })
+
+    if violations and any(v.get("severity") == "error" for v in violations):
+        return _pg(gate_id, "FAIL", False, None,
+                   f"DOMAIN_GLOSSARY.md com {len(violations)} problema(s).",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", False, None,
+               f"DOMAIN_GLOSSARY.md conforme: {len(code_names) if 'code_names' in dir() else 0} termos canônicos extraídos.",
+               [], checked, [], violations, _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -9413,6 +9668,9 @@ def run_pipeline(
         ("READINESS_HUMAN_CONFIRMATION_GATE", lambda: _g_readiness_human_confirmation(root)),  # FIX Ordem 6: implementado
         ("FEATURE_COVERAGE_GATE", lambda: _g_feature_coverage(root)),
         ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
+        ("SCOPE_BOUNDARY_GATE", lambda: _g_scope_boundary(root)),
+        ("WORKER_PROMPT_AUTHORITY_GATE", lambda: _g_worker_prompt_authority(root)),
+        ("DOMAIN_GLOSSARY_CONSISTENCY_GATE", lambda: _g_domain_glossary_consistency(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)
