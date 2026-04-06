@@ -39,7 +39,7 @@
     },
     {
       "relpath": "contracts/schemas/video/distribution_profile.schema.json",
-      "sha256": "82370533bd6c885f1a4e2cd8724d086390df7038f28098f58ecf1d393471684e"
+      "sha256": "e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6"
     },
     {
       "relpath": "contracts/schemas/video/match_media_session.schema.json",
@@ -163,5 +163,5 @@
     "generated/source_graph/video/video.openapi_contract_view.yaml",
     "generated/source_graph/video/impact_report.json"
   ],
-  "source_fingerprint": "0e7d81d1727c3ab9ae31dcbea7043076bba6b49e4d1f6b5b924583819130ed5b"
+  "source_fingerprint": "ab9d82ce46289362fcb30359068ac5afdfdde694bd3a71a41baf4f66693b59b6"
 }

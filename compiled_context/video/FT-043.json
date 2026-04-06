@@ -84,7 +84,7 @@
     },
     {
       "relpath": "generated/source_graph/video/video.bundle.yaml",
-      "sha256": "cbe509ace4beb32a3d966ac0cf3c0fe8f5b2c00381c81255c0ca88fb740c2ddf"
+      "sha256": "d609f456d8c95b0eb62aff4a4ef13ce032445360a3ee75a5954f7a9bbf9c0bd0"
     },
     {
       "relpath": "generated/source_graph/video/video.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/video/impact_report.json",
-      "sha256": "4011cca33d338e83236d5e910d4bb6390ec2da36477491c119ee5c7e873d169d"
+      "sha256": "b03af469a7589c0ace73f09da844a7a5e44ece0613bae825a35a92a676e14575"
     }
   ],
   "module": "video",
@@ -130,7 +130,7 @@
     "state_machine": "src/video/domain/state_machine.py",
     "use_cases": "src/video/application/use_cases.py"
   },
-  "source_fingerprint": "a9684c152377be675ffebdd66038ac785e37ca839701291d842b60b25b85c552",
+  "source_fingerprint": "417debc861a07379931ee66f7062f5459e0273657694934dd7591bb1fa416f9d",
   "source_graph": {
     "entities": {
       "ClipDefinition": {
@@ -738,7 +738,7 @@
         "Edge nodes são entidades de infraestrutura; não modelados como entidades de domínio soberanas nesta fase.",
         "patchSession cobre múltiplas transições de estado (DR-VID-002, INV-VID-002) — transições validadas por state_machine.py."
       ],
-      "source_fingerprint": "0e7d81d1727c3ab9ae31dcbea7043076bba6b49e4d1f6b5b924583819130ed5b"
+      "source_fingerprint": "ab9d82ce46289362fcb30359068ac5afdfdde694bd3a71a41baf4f66693b59b6"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

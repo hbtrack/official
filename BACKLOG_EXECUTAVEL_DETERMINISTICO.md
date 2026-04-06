@@ -2399,6 +2399,22 @@ Evidencia implementada e validada no sistema atual:
 - `python3 scripts/compile/compile_context_bundle.py --all` em `PASS` apos a entrada de `competitions`
 - survival-suite: `104 passed` apos a entrada de `competitions`
 - proximo modulo obrigatorio da fila: `users`
+- PR #XX (users, matches, scout) — `docs/hbtrack/modulos/{users,matches,scout}/graph/*.yaml` criados, testes PASS
+- PR #XX (video, identity_access) — `docs/hbtrack/modulos/{video,identity_access}/graph/*.yaml` criados, testes PASS, commit `2ab9bb61` em `feat/b10-001-users`
+- `docs/hbtrack/modulos/video/graph/*.yaml` criados, entity_graph corrigido (16 campos MatchMediaSession), distribution_profile.schema.json atualizado
+- `docs/hbtrack/modulos/identity_access/graph/*.yaml` criados, UserRoleBinding removido, openapi_projection adicionado
+- `src/video/domain/entities.py`: 7 campos opcionais adicionados em MatchMediaSession
+- `tests/pipeline_gates/test_video_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `tests/pipeline_gates/test_identity_access_source_graph_integrity.py` em `PASS` (`7 passed`)
+- `compiled_context/video/FT-043.json` gerado deterministicamente
+- `compiled_context/identity_access/FT-011.json`, `FT-012.json`, `FT-013.json` gerados deterministicamente
+- SYNC_MANIFEST: VIDEO_SOURCE_GRAPH_SYNC e IDENTITY_ACCESS_SOURCE_GRAPH_SYNC adicionados
+- DOC_USAGE_MANIFEST: HBTRACK_VIDEO_GRAPH e HBTRACK_IDENTITY_ACCESS_GRAPH adicionados
+- `.spectral.yaml`: extends spectral:oas ativado, oas3-schema downgraded para warn (falso-positivo com fragment refs), mode/range examples corrigidos em load_chart.yaml
+- `python3 scripts/compile/compile_source_graph.py --all --check` em `PASS` — **17/17 modulos** (2026-04-05)
+- `python3 scripts/compile/compile_context_bundle.py --all` em `PASS` — **17/17 modulos** (2026-04-05)
+- `python3 scripts/contracts/validate/validate_contracts.py --profile ci` em `PASS` (2026-04-05)
+- CRITERIO DE SAIDA ATINGIDO: todos os 17 modulos estao no source graph soberano
 
 Criterio de saida:
 
@@ -2784,7 +2800,7 @@ Ordem remanescente obrigatoria a partir do estado atual:
 33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
 35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
-36. B10-001 — IN_PROGRESS (`reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical`, `ai_ingestion`, `audit`, `seasons` e `teams` concluidos; proximo `competitions`)
+36. ~~B10-001~~ — DONE (2026-04-05, commit 2ab9bb61 em feat/b10-001-users) — 17/17 modulos com source graph PASS
 37. B10-002
 38. B10-003
 39. B11-001
