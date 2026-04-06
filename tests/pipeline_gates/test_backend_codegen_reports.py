@@ -82,7 +82,7 @@ def test_generated_reports_contract_smoke_test_passes():
 
 def test_backend_codegen_reports_rejects_unsupported_modules():
     result = subprocess.run(
-        [str(PYTHON), str(GENERATOR), "--module", "matches", "--format", "json"],
+        [str(PYTHON), str(GENERATOR), "--module", "nonexistent_module", "--format", "json"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,

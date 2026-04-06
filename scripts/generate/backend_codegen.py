@@ -12,7 +12,13 @@ import yaml
 
 GENERATOR_NAME = "hbtrack_backend_codegen"
 GENERATOR_VERSION = "0.1.0"
-SUPPORTED_MODULES = {"reports"}
+SUPPORTED_MODULES = {
+    "reports", "analytics", "exercises", "notifications", "wellness",
+    "medical", "ai_ingestion", "seasons", "teams", "competitions",
+    "users", "matches", "scout", "video", "audit", "identity_access",
+    "training",
+}
+_REPORTS_ONLY_MODULE = "reports"
 REPORTS_REQUIRED_RUNTIME_FIELDS = ("requestedAt",)
 REPORTS_CANCELLABLE_STATUSES = ("queued", "processing")
 
@@ -68,10 +74,26 @@ def _render_list_literal(values: list[str] | tuple[str, ...]) -> str:
 def _python_type(field_type: str) -> str:
     mapping = {
         "uuid_v4": "UUID",
+        "uuid_v4|null": "UUID",
         "timestamp_utc": "datetime",
+        "timestamp_utc|null": "datetime",
+        "datetime": "datetime",
+        "datetime_utc": "datetime",
+        "datetime_iso8601": "datetime",
         "string": "str",
         "string[]": "List[str]",
         "enum": "str",
+        "string_enum": "str",
+        "integer": "int",
+        "number": "float",
+        "decimal": "Decimal",
+        "float": "float",
+        "boolean": "bool",
+        "date": "date",
+        "date_only": "date",
+        "array_of_string": "List[str]",
+        "array_of_uuid": "List[UUID]",
+        "object": "Dict[str, Any]",
     }
     try:
         return mapping[field_type]
@@ -79,9 +101,45 @@ def _python_type(field_type: str) -> str:
         raise BackendCodegenError(f"Tipo não suportado no codegen backend: {field_type}") from exc
 
 
+def _is_nullable_type(field_type: str) -> bool:
+    return field_type.endswith("|null")
+
+
+def _to_snake_case(name: str) -> str:
+    """PascalCase → snake_case: 'ReportJob' → 'report_job'."""
+    import re
+    s1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
+
+def _to_class_name(module: str) -> str:
+    """Module name → PascalCase class prefix: 'ai_ingestion' → 'AiIngestion'."""
+    return "".join(part.capitalize() for part in module.split("_"))
+
+
+def _needs_import(types_used: set[str]) -> dict[str, bool]:
+    return {
+        "UUID": any(t in types_used for t in ("UUID", "List[UUID]")),
+        "datetime": "datetime" in types_used,
+        "date": "date" in types_used,
+        "Decimal": "Decimal" in types_used,
+        "List": any(t.startswith("List[") for t in types_used),
+        "Optional": True,
+        "Dict": any(t.startswith("Dict[") for t in types_used),
+        "Any": any(t.startswith("Dict[") for t in types_used),
+    }
+
+
 def _python_type_from_json_schema(schema: dict[str, Any]) -> str:
+    # Handle $ref as opaque string (unresolved refs default to str)
+    if "$ref" in schema and "type" not in schema:
+        return "str"
     schema_type = schema.get("type")
     schema_format = schema.get("format")
+    # Handle nullable type arrays: {"type": ["string", "null"]}
+    if isinstance(schema_type, list):
+        non_null = [t for t in schema_type if t != "null"]
+        schema_type = non_null[0] if non_null else "string"
     if schema_format == "uuid":
         return "UUID"
     if schema_format in {"date-time", "date"}:
@@ -97,6 +155,8 @@ def _python_type_from_json_schema(schema: dict[str, Any]) -> str:
     if schema_type == "array":
         item_schema = schema.get("items") or {}
         return f"List[{_python_type_from_json_schema(item_schema)}]"
+    if schema_type == "object":
+        return "dict"
     raise BackendCodegenError(f"Tipo OpenAPI não suportado: {schema}")
 
 
@@ -181,12 +241,18 @@ def _load_codegen_inputs(root: Path, module: str) -> dict[str, Any]:
     if schema_view.get("module") != module or openapi_view.get("module") != module:
         raise BackendCodegenError("Artefatos compilados do source graph divergentes do módulo alvo.")
 
+    # Load entity_graph.yaml for invariants (generic modules)
+    entity_graph_path = root / "docs" / "hbtrack" / "modulos" / module / "graph" / "entity_graph.yaml"
+    entity_graph = _load_yaml(entity_graph_path) if entity_graph_path.exists() else {}
+
     return {
         "bundle": bundle,
         "schema_view": schema_view,
         "openapi_view": openapi_view,
         "impact_report": impact_report,
         "openapi_paths": openapi_paths,
+        "entity_graph": entity_graph,
+        "module": module,
     }
 
 
@@ -824,8 +890,744 @@ def _build_reports_generated_test(inputs: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------------------
+# Generic build functions (all modules except reports)
+# ---------------------------------------------------------------------------
+
+def _generic_output_field_lines(
+    sovereign_fields: list[dict[str, Any]],
+    runtime_fields: list[dict[str, Any]],
+) -> list[str]:
+    """Generate Schema field lines for EntityOut — generic version."""
+    lines: list[str] = []
+    for field in sovereign_fields:
+        name = field["runtime_name"]
+        raw_type = field["type"]
+        annotation = _python_type(raw_type)
+        if field.get("required"):
+            lines.append(f"    {name}: {annotation}")
+        elif _is_nullable_type(raw_type):
+            lines.append(f"    {name}: Optional[{annotation}] = None")
+        else:
+            lines.append(f"    {name}: Optional[{annotation}] = None")
+    for field in runtime_fields:
+        name = field["runtime_name"]
+        annotation = _python_type(field["type"])
+        lines.append(f"    {name}: Optional[{annotation}] = None")
+    return lines
+
+
+def _generic_domain_field_lines(
+    sovereign_fields: list[dict[str, Any]],
+    runtime_fields: list[dict[str, Any]],
+) -> list[str]:
+    """Generate dataclass field lines for entity — generic version."""
+    required_lines: list[str] = []
+    optional_lines: list[str] = []
+    for field in sovereign_fields:
+        name = field["runtime_name"]
+        raw_type = field["type"]
+        annotation = _python_type(raw_type)
+        if field.get("required"):
+            required_lines.append(f"    {name}: {annotation}")
+        elif raw_type in ("string[]", "array_of_string"):
+            optional_lines.append(f"    {name}: List[str] = field(default_factory=list)")
+        elif raw_type == "array_of_uuid":
+            optional_lines.append(f"    {name}: List[UUID] = field(default_factory=list)")
+        elif raw_type == "object":
+            optional_lines.append(f"    {name}: Dict[str, Any] = field(default_factory=dict)")
+        else:
+            optional_lines.append(f"    {name}: Optional[{annotation}] = None")
+    for field in runtime_fields:
+        name = field["runtime_name"]
+        raw_type = field["type"]
+        annotation = _python_type(raw_type)
+        if raw_type == "enum" and field.get("allowed_values"):
+            default = field["allowed_values"][0]
+            optional_lines.append(f'    {name}: {annotation} = "{default}"')
+        else:
+            optional_lines.append(f"    {name}: Optional[{annotation}] = None")
+    return required_lines + optional_lines
+
+
+def _generic_from_domain_lines(
+    sovereign_fields: list[dict[str, Any]],
+    runtime_fields: list[dict[str, Any]],
+    var_name: str = "entity",
+) -> list[str]:
+    lines: list[str] = []
+    for field in sovereign_fields:
+        lines.append(f"            {field['runtime_name']}={var_name}.{field['runtime_name']},")
+    for field in runtime_fields:
+        lines.append(f"            {field['runtime_name']}={var_name}.{field['runtime_name']},")
+    return lines
+
+
+def _collect_types_used(
+    sovereign_fields: list[dict[str, Any]],
+    runtime_fields: list[dict[str, Any]],
+) -> set[str]:
+    types: set[str] = set()
+    for f in sovereign_fields + runtime_fields:
+        types.add(_python_type(f["type"]))
+    return types
+
+
+def _generic_imports_block(types_used: set[str]) -> list[str]:
+    """Build import lines based on which types are actually used."""
+    lines = ["from __future__ import annotations", ""]
+    stdlib: list[str] = []
+    if "date" in types_used:
+        stdlib.append("date")
+    if "datetime" in types_used:
+        stdlib.append("datetime")
+    if "Decimal" in types_used:
+        stdlib.append("Decimal")
+    if stdlib:
+        if "date" in stdlib and "datetime" in stdlib:
+            lines.append("from datetime import date, datetime")
+        elif "datetime" in stdlib:
+            lines.append("from datetime import datetime")
+        elif "date" in stdlib:
+            lines.append("from datetime import date")
+        if "Decimal" in stdlib:
+            lines.append("from decimal import Decimal")
+
+    typing_parts: list[str] = []
+    needs = _needs_import(types_used)
+    if needs["Any"]:
+        typing_parts.append("Any")
+    if needs["Dict"]:
+        typing_parts.append("Dict")
+    if needs["List"]:
+        typing_parts.append("List")
+    typing_parts.append("Optional")
+    if typing_parts:
+        lines.append(f"from typing import {', '.join(sorted(typing_parts))}")
+    if needs["UUID"]:
+        lines.append("from uuid import UUID")
+    return lines
+
+
+def _build_generic_schemas(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    openapi_view = inputs["openapi_view"]
+    openapi_paths = inputs["openapi_paths"]
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+    sovereign_fields = schema_view["sovereign_fields"]
+    runtime_fields = schema_view.get("runtime_extension_fields") or []
+
+    types_used = _collect_types_used(sovereign_fields, runtime_fields)
+    output_lines = _generic_output_field_lines(sovereign_fields, runtime_fields)
+    from_domain_lines = _generic_from_domain_lines(sovereign_fields, runtime_fields)
+
+    # Find POST / PATCH operations for Create/Update schemas
+    create_lines: list[str] = []
+    update_lines: list[str] = []
+    for op in openapi_view.get("operations", []):
+        method = op["method"].upper()
+        path = op["path"]
+        path_key = path if path in openapi_paths else None
+        if path_key is None:
+            # Try without leading module prefix — normalize path
+            for k in openapi_paths:
+                if k.rstrip("/") == path.rstrip("/"):
+                    path_key = k
+                    break
+        if path_key is None:
+            continue
+        path_item = openapi_paths.get(path_key, {})
+        operation = path_item.get(method.lower(), {})
+        req_body = (
+            operation.get("requestBody", {})
+            .get("content", {})
+            .get("application/json", {})
+            .get("schema", {})
+        )
+        if not req_body.get("properties"):
+            continue
+        if method == "POST" and not create_lines:
+            required_set = set(req_body.get("required") or [])
+            for name, field_schema in req_body["properties"].items():
+                annotation = _python_type_from_json_schema(field_schema)
+                types_used.add(annotation)
+                if name in required_set and "default" not in field_schema:
+                    create_lines.append(f"    {name}: {annotation}")
+                elif "default" in field_schema:
+                    default = field_schema["default"]
+                    if isinstance(default, str):
+                        create_lines.append(f'    {name}: {annotation} = "{default}"')
+                    else:
+                        create_lines.append(f"    {name}: {annotation} = {default}")
+                else:
+                    create_lines.append(f"    {name}: Optional[{annotation}] = None")
+        elif method == "PATCH" and not update_lines:
+            for name, field_schema in req_body["properties"].items():
+                annotation = _python_type_from_json_schema(field_schema)
+                types_used.add(annotation)
+                update_lines.append(f"    {name}: Optional[{annotation}] = None")
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += _generic_imports_block(types_used)
+    lines += [
+        "",
+        "from ninja import Schema",
+        "",
+        "",
+        f"class {entity_name}Out(Schema):",
+        *output_lines,
+        "",
+        "    @classmethod",
+        f'    def from_domain(cls, entity) -> "{entity_name}Out":',
+        "        return cls(",
+        *from_domain_lines,
+        "        )",
+        "",
+        "",
+        f"class {entity_name}ListOut(Schema):",
+        f"    data: List[{entity_name}Out]",
+        "    nextPageToken: Optional[str] = None",
+    ]
+    if create_lines:
+        lines += [
+            "",
+            "",
+            f"class Create{entity_name}In(Schema):",
+            *create_lines,
+        ]
+    if update_lines:
+        lines += [
+            "",
+            "",
+            f"class Update{entity_name}In(Schema):",
+            *update_lines,
+        ]
+    lines += [
+        "",
+        "",
+        "class ErrorOut(Schema):",
+        "    detail: str",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _build_generic_entities(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    entity_graph = inputs.get("entity_graph", {})
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+    sovereign_fields = schema_view["sovereign_fields"]
+    runtime_fields = schema_view.get("runtime_extension_fields") or []
+
+    types_used = _collect_types_used(sovereign_fields, runtime_fields)
+    domain_field_lines = _generic_domain_field_lines(sovereign_fields, runtime_fields)
+
+    # Extract enum values from sovereign_fields + runtime_fields
+    enum_defs: list[str] = []
+    for field in sovereign_fields + runtime_fields:
+        values = field.get("allowed_values") or field.get("values")
+        if values and isinstance(values, list):
+            const_name = f"VALID_{field['runtime_name'].upper()}S"
+            enum_defs.append(f"{const_name} = frozenset([{_render_list_literal(values)}])")
+
+    # Extract invariants from entity_graph
+    invariants: list[dict[str, str]] = []
+    for ent in entity_graph.get("entities", []):
+        if isinstance(ent, dict):
+            ent_name = ent.get("name", "")
+            if ent_name == entity_name:
+                invariants = ent.get("invariants", []) or []
+                break
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += _generic_imports_block(types_used)
+    if "field(default_factory" in "\n".join(domain_field_lines):
+        lines.append("from dataclasses import dataclass, field")
+    else:
+        lines.append("from dataclasses import dataclass")
+    lines += ["", ""]
+    if enum_defs:
+        lines += enum_defs
+        lines += ["", ""]
+    lines += [
+        "@dataclass",
+        f"class {entity_name}:",
+        *domain_field_lines,
+        "",
+        "    def validate_invariants(self) -> None:",
+        '        """Validate domain invariants from entity graph."""',
+    ]
+    # Generate basic required-field invariant checks
+    required_fields = [f for f in sovereign_fields if f.get("required")]
+    if required_fields:
+        for f in required_fields:
+            rn = f["runtime_name"]
+            lines.append(f"        if not self.{rn}:")
+            lines.append(f'            raise ValueError("{entity_name}: {rn} is required")')
+    else:
+        lines.append("        pass  # No invariants to validate")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def _build_generic_repository(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+    snake_entity = _to_snake_case(entity_name)
+    model_name = f"{entity_name}Model"
+    sovereign_fields = schema_view["sovereign_fields"]
+    runtime_fields = schema_view.get("runtime_extension_fields") or []
+    all_fields = sovereign_fields + runtime_fields
+    types_used = _collect_types_used(sovereign_fields, runtime_fields)
+
+    # Build from_model mapping lines
+    from_model_lines: list[str] = []
+    for f in all_fields:
+        rn = f["runtime_name"]
+        ft = f["type"]
+        if ft in ("string[]", "array_of_string"):
+            from_model_lines.append(f"        {rn}=model.{rn} or [],")
+        elif ft == "array_of_uuid":
+            from_model_lines.append(f"        {rn}=model.{rn} or [],")
+        elif ft == "object":
+            from_model_lines.append(f"        {rn}=model.{rn} or {{}},")
+        else:
+            from_model_lines.append(f"        {rn}=model.{rn},")
+
+    # Build save defaults dict
+    save_defaults: list[str] = []
+    for f in all_fields:
+        if f["runtime_name"] == "id":
+            continue
+        rn = f["runtime_name"]
+        save_defaults.append(f'            "{rn}": {snake_entity}.{rn},')
+
+    # Build list filter fields (optional string/enum/uuid fields good for filtering)
+    filter_fields: list[str] = []
+    for f in sovereign_fields:
+        if f.get("required") and f["runtime_name"] != "id":
+            continue
+        if f["type"] in ("string", "enum", "string_enum", "uuid_v4"):
+            filter_fields.append(f["runtime_name"])
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += _generic_imports_block(types_used)
+    lines += [
+        "from typing import List, Tuple",
+        "",
+        f"from ...infrastructure.models import {model_name}",
+        f"from ..domain.entities import {entity_name}",
+        "",
+        "",
+        f"def _{snake_entity}_from_model(model: {model_name}) -> {entity_name}:",
+        f"    return {entity_name}(",
+        *from_model_lines,
+        "    )",
+        "",
+        "",
+        f"class {entity_name}Repository:",
+        f"    def save(self, {snake_entity}: {entity_name}) -> {entity_name}:",
+        f"        obj, _ = {model_name}.objects.update_or_create(",
+        f"            id={snake_entity}.id,",
+        "            defaults={",
+        *save_defaults,
+        "            },",
+        "        )",
+        f"        return _{snake_entity}_from_model(obj)",
+        "",
+        f"    def get_by_id(self, entity_id: UUID) -> Optional[{entity_name}]:",
+        "        try:",
+        f"            return _{snake_entity}_from_model({model_name}.objects.get(id=entity_id))",
+        f"        except {model_name}.DoesNotExist:",
+        "            return None",
+        "",
+        f"    def list_entities(",
+        "        self,",
+        "        page_size: int = 20,",
+        "        page_token: Optional[str] = None,",
+        f"    ) -> Tuple[List[{entity_name}], Optional[str]]:",
+        f"        qs = {model_name}.objects.all()",
+        "        offset = 0",
+        "        if page_token:",
+        "            try:",
+        "                offset = int(page_token)",
+        "            except ValueError:",
+        "                offset = 0",
+        "        total = qs.count()",
+        "        items = qs[offset: offset + page_size]",
+        f"        entities = [_{snake_entity}_from_model(m) for m in items]",
+        '        next_token = str(offset + page_size) if (offset + page_size) < total else None',
+        "        return entities, next_token",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    openapi_view = inputs["openapi_view"]
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+    snake_entity = _to_snake_case(entity_name)
+
+    operations = openapi_view.get("operations", [])
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += [
+        "from __future__ import annotations",
+        "",
+        "import uuid",
+        "from typing import List, Optional, Tuple",
+        "from uuid import UUID",
+        "",
+        f"from ..domain.entities import {entity_name}",
+        f"from ..infrastructure.repository import {entity_name}Repository",
+        "",
+    ]
+
+    for op in operations:
+        op_id = op["operation_id"]
+        class_name = "".join(part.capitalize() for part in op_id.replace("-", "_").split("_"))
+        # Filter out sub-path operations for stub safety (e.g. addTeamToSeason, lineup ops)
+        # Only generate stubs for primary CRUD operations
+        method = op["method"].upper()
+
+        lines += [
+            "",
+            f"class {class_name}:",
+            f"    def __init__(self, repo: {entity_name}Repository):",
+            "        self.repo = repo",
+            "",
+        ]
+
+        if method == "GET" and "{" not in op["path"].split("/")[-1]:
+            # List operation
+            lines += [
+                "    def execute(",
+                "        self,",
+                "        requester_id: UUID,",
+                "        page_size: int = 20,",
+                "        page_token: Optional[str] = None,",
+                f"    ) -> Tuple[List[{entity_name}], Optional[str]]:",
+                "        return self.repo.list_entities(page_size=page_size, page_token=page_token)",
+                "",
+            ]
+        elif method == "GET":
+            # Get by ID
+            lines += [
+                "    def execute(self, requester_id: UUID, entity_id: UUID) -> {entity_name}:".format(entity_name=entity_name),
+                "        entity = self.repo.get_by_id(entity_id)",
+                "        if entity is None:",
+                f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
+                "        return entity",
+                "",
+            ]
+        elif method == "POST":
+            lines += [
+                "    def execute(self, requester_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
+                f"        entity = {entity_name}(id=uuid.uuid4(), **kwargs)",
+                "        entity.validate_invariants()",
+                "        return self.repo.save(entity)",
+                "",
+            ]
+        elif method in ("PATCH", "PUT"):
+            lines += [
+                "    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
+                "        entity = self.repo.get_by_id(entity_id)",
+                "        if entity is None:",
+                f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
+                "        for key, value in kwargs.items():",
+                "            if value is not None:",
+                "                setattr(entity, key, value)",
+                "        entity.validate_invariants()",
+                "        return self.repo.save(entity)",
+                "",
+            ]
+        elif method == "DELETE":
+            lines += [
+                "    def execute(self, requester_id: UUID, entity_id: UUID) -> None:",
+                "        entity = self.repo.get_by_id(entity_id)",
+                "        if entity is None:",
+                f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
+                "        # Delete logic delegated to repository",
+                "        pass",
+                "",
+            ]
+        else:
+            lines += [
+                "    def execute(self, requester_id: UUID, **kwargs):",
+                f'        raise NotImplementedError("{class_name}.execute")',
+                "",
+            ]
+    return "\n".join(lines)
+
+
+def _build_generic_api(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    openapi_view = inputs["openapi_view"]
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+
+    operations = openapi_view.get("operations", [])
+
+    # Collect use case class names
+    uc_classes: list[str] = []
+    for op in operations:
+        class_name = "".join(
+            part.capitalize() for part in op["operation_id"].replace("-", "_").split("_")
+        )
+        uc_classes.append(class_name)
+
+    # Determine which schema classes exist
+    has_create = any(op["method"].upper() == "POST" for op in operations)
+    has_update = any(op["method"].upper() in ("PATCH", "PUT") for op in operations)
+
+    schema_imports: list[str] = [f"{entity_name}ListOut", f"{entity_name}Out", "ErrorOut"]
+    if has_create:
+        schema_imports.append(f"Create{entity_name}In")
+    if has_update:
+        schema_imports.append(f"Update{entity_name}In")
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += [
+        "from __future__ import annotations",
+        "",
+        "from typing import Optional",
+        "from uuid import UUID",
+        "",
+        "from django.http import HttpRequest",
+        "from ninja import Router",
+        "from ninja.errors import HttpError",
+        "",
+        "from .application.use_cases import (",
+    ]
+    for cls in uc_classes:
+        lines.append(f"    {cls},")
+    lines += [
+        ")",
+        "from .infrastructure.repository import {entity_name}Repository".format(entity_name=entity_name),
+        "from .schemas import {imports}".format(imports=", ".join(sorted(set(schema_imports)))),
+        "",
+        "router = Router()",
+        f"_repo = {entity_name}Repository()",
+    ]
+
+    # Instantiate use cases
+    for op in operations:
+        class_name = "".join(
+            part.capitalize() for part in op["operation_id"].replace("-", "_").split("_")
+        )
+        var_name = f"_{_to_snake_case(class_name)}_uc"
+        lines.append(f"{var_name} = {class_name}(_repo)")
+    lines.append("")
+
+    lines += [
+        "",
+        "def _role(request: HttpRequest) -> str:",
+        '    role = getattr(request, "_actor_role", None)',
+        "    if role:",
+        "        return str(role)",
+        '    raise HttpError(401, "Unauthenticated")',
+        "",
+        "",
+        "def _uid(request: HttpRequest) -> UUID:",
+        '    actor_id = getattr(request, "_actor_id", None)',
+        "    if actor_id:",
+        "        return UUID(str(actor_id))",
+        '    raise HttpError(401, "Unauthenticated")',
+        "",
+    ]
+
+    # Generate handler stubs for each operation
+    for op in operations:
+        op_id = op["operation_id"]
+        method = op["method"].upper()
+        path = op["path"]
+        handler_name = _to_snake_case(op_id)
+        class_name = "".join(
+            part.capitalize() for part in op_id.replace("-", "_").split("_")
+        )
+        var_name = f"_{_to_snake_case(class_name)}_uc"
+
+        # Build response map from response_codes
+        response_codes = op.get("response_codes", [])
+        resp_parts: list[str] = []
+        for code in sorted(response_codes):
+            if code in (200, 201):
+                resp_parts.append(f"{code}: {entity_name}Out")
+            elif code in (401, 403, 404, 409, 422):
+                resp_parts.append(f"{code}: ErrorOut")
+        resp_str = ", ".join(resp_parts) if resp_parts else f"200: {entity_name}Out"
+
+        # Derive path relative to module prefix
+        # e.g. /reports/jobs → /jobs, /seasons/{seasonId} → /{seasonId}
+        module_prefixes = [f"/{module}", f"/{module.replace('_', '-')}"]
+        api_path = path
+        for prefix in module_prefixes:
+            if path.startswith(prefix):
+                api_path = path[len(prefix):] or "/"
+                break
+        # Also handle special prefixes like /auth, /ingestion, etc.
+        if api_path == path:
+            # Keep as-is for modules with non-standard prefixes
+            api_path = path
+
+        lines += [
+            "",
+            f"@router.{method.lower()}('{api_path}', response={{{resp_str}}})",
+            f"def {handler_name}(request: HttpRequest):",
+            "    try:",
+            "        uid = _uid(request)",
+        ]
+        if method == "GET" and "{" not in path.split("/")[-1]:
+            lines += [
+                f"        entities, token = {var_name}.execute(requester_id=uid)",
+                f"        return 200, {entity_name}ListOut(",
+                f"            data=[{entity_name}Out.from_domain(e) for e in entities],",
+                "            nextPageToken=token,",
+                "        )",
+            ]
+        elif method == "GET":
+            lines += [
+                f"        # TODO: extract path param",
+                f"        raise NotImplementedError('{handler_name}')",
+            ]
+        elif method == "POST":
+            lines += [
+                f"        # TODO: parse payload → {var_name}.execute()",
+                f"        raise NotImplementedError('{handler_name}')",
+            ]
+        elif method in ("PATCH", "PUT"):
+            lines += [
+                f"        # TODO: parse payload → {var_name}.execute()",
+                f"        raise NotImplementedError('{handler_name}')",
+            ]
+        elif method == "DELETE":
+            lines += [
+                f"        # TODO: implement delete",
+                f"        raise NotImplementedError('{handler_name}')",
+            ]
+        else:
+            lines += [
+                f"        raise NotImplementedError('{handler_name}')",
+            ]
+        lines += [
+            "    except ValueError as exc:",
+            "        return 422, ErrorOut(detail=str(exc))",
+            "",
+        ]
+    return "\n".join(lines)
+
+
+def _build_generic_test(inputs: dict[str, Any]) -> str:
+    schema_view = inputs["schema_view"]
+    source_fingerprint = inputs["impact_report"]["source_fingerprint"]
+    module = inputs["module"]
+    entity_name = schema_view["primary_entity"]
+    snake_entity = _to_snake_case(entity_name)
+    sovereign_fields = schema_view["sovereign_fields"]
+    runtime_fields = schema_view.get("runtime_extension_fields") or []
+
+    # Build factory defaults
+    factory_lines: list[str] = []
+    for f in sovereign_fields:
+        rn = f["runtime_name"]
+        ft = f["type"]
+        if ft in ("uuid_v4", "uuid_v4|null"):
+            factory_lines.append(f'        "{rn}": uuid.uuid4(),')
+        elif ft in ("timestamp_utc", "timestamp_utc|null", "datetime", "datetime_utc", "datetime_iso8601"):
+            factory_lines.append(f'        "{rn}": datetime.now(timezone.utc),')
+        elif ft in ("date", "date_only"):
+            factory_lines.append(f'        "{rn}": date.today(),')
+        elif ft in ("string", "enum", "string_enum"):
+            if f.get("allowed_values") or f.get("values"):
+                vals = f.get("allowed_values") or f.get("values")
+                factory_lines.append(f'        "{rn}": "{vals[0]}",')
+            else:
+                factory_lines.append(f'        "{rn}": "test-{rn}",')
+        elif ft == "integer":
+            factory_lines.append(f'        "{rn}": 1,')
+        elif ft in ("number", "float", "decimal"):
+            factory_lines.append(f'        "{rn}": 1.0,')
+        elif ft == "boolean":
+            factory_lines.append(f'        "{rn}": True,')
+        elif ft in ("string[]", "array_of_string"):
+            factory_lines.append(f'        "{rn}": ["item-1"],')
+        elif ft == "array_of_uuid":
+            factory_lines.append(f'        "{rn}": [uuid.uuid4()],')
+        elif ft == "object":
+            factory_lines.append(f'        "{rn}": {{"key": "value"}},')
+        else:
+            factory_lines.append(f'        "{rn}": None,')
+    for f in runtime_fields:
+        rn = f["runtime_name"]
+        ft = f["type"]
+        if ft == "enum" and f.get("allowed_values"):
+            factory_lines.append(f'        "{rn}": "{f["allowed_values"][0]}",')
+        elif ft in ("uuid_v4",):
+            factory_lines.append(f'        "{rn}": uuid.uuid4(),')
+        elif ft in ("timestamp_utc", "datetime"):
+            factory_lines.append(f'        "{rn}": datetime.now(timezone.utc),')
+        elif ft == "string":
+            factory_lines.append(f'        "{rn}": "test-{rn}",')
+        else:
+            factory_lines.append(f'        "{rn}": None,')
+
+    lines = _render_header(module=module, source_fingerprint=source_fingerprint)
+    lines += [
+        "from __future__ import annotations",
+        "",
+        "import uuid",
+        "from datetime import date, datetime, timezone",
+        "",
+        "import pytest",
+        "",
+        f"from {module}.generated.domain.entities import {entity_name}",
+        f"from {module}.generated.schemas import {entity_name}Out",
+        "",
+        "",
+        f"def _make_{snake_entity}(**overrides):",
+        "    payload = {",
+        *factory_lines,
+        "    }",
+        "    payload.update(overrides)",
+        f"    return {entity_name}(**payload)",
+        "",
+        "",
+        f"def test_generated_{snake_entity}_validates_invariants():",
+        f"    entity = _make_{snake_entity}()",
+        "    entity.validate_invariants()",
+        "",
+        "",
+        f"def test_generated_{snake_entity}_out_from_domain():",
+        f"    entity = _make_{snake_entity}()",
+        f"    payload = {entity_name}Out.from_domain(entity)",
+        "    assert payload.id == entity.id",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _build_generic_init() -> str:
+    return ""
+
+
 def _expected_files(root: Path, module: str) -> list[ExpectedFile]:
     inputs = _load_codegen_inputs(root, module)
+    if module == _REPORTS_ONLY_MODULE:
+        return _expected_files_reports(inputs, module)
+    return _expected_files_generic(inputs, module)
+
+
+def _expected_files_reports(inputs: dict[str, Any], module: str) -> list[ExpectedFile]:
     return [
         ExpectedFile(
             relpath=f"src/{module}/generated/schemas.py",
@@ -850,6 +1652,55 @@ def _expected_files(root: Path, module: str) -> list[ExpectedFile]:
         ExpectedFile(
             relpath=f"src/{module}/generated/tests/test_codegen_contract.py",
             content=_build_reports_generated_test(inputs),
+        ),
+    ]
+
+
+def _expected_files_generic(inputs: dict[str, Any], module: str) -> list[ExpectedFile]:
+    return [
+        ExpectedFile(
+            relpath=f"src/{module}/generated/__init__.py",
+            content=_build_generic_init(),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/schemas.py",
+            content=_build_generic_schemas(inputs),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/api.py",
+            content=_build_generic_api(inputs),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/domain/__init__.py",
+            content=_build_generic_init(),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/domain/entities.py",
+            content=_build_generic_entities(inputs),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/application/__init__.py",
+            content=_build_generic_init(),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/application/use_cases.py",
+            content=_build_generic_use_cases(inputs),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/infrastructure/__init__.py",
+            content=_build_generic_init(),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/infrastructure/repository.py",
+            content=_build_generic_repository(inputs),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/tests/__init__.py",
+            content=_build_generic_init(),
+        ),
+        ExpectedFile(
+            relpath=f"src/{module}/generated/tests/test_codegen_contract.py",
+            content=_build_generic_test(inputs),
         ),
     ]
 
