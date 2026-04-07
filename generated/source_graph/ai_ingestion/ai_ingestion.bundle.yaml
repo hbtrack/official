@@ -5,13 +5,13 @@ module: ai_ingestion
 graph_root: docs/hbtrack/modulos/ai_ingestion/graph
 inputs:
 - relpath: contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
-  sha256: f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30
+  sha256: 24ada9cde50e90478847ddde3d1d2f534e502173bb6370cbf270bfca8548182f
 - relpath: contracts/openapi/paths/ai_ingestion.yaml
   sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
 - relpath: contracts/schemas/ai_ingestion/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/ai_ingestion/ingestion_job.schema.json
-  sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+  sha256: 3d3530940eeb4132dd000475f4aadbb93399d1c63b1e92230d5c9ab50d17706d
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
   sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
@@ -39,11 +39,11 @@ inputs:
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml
   sha256: d80f32b4a2eb1c0a24011a92c52495a5e2e9b25b7a3a315f3c3e2e2784be3057
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml
-  sha256: b9c243cbb0846d848a2154510480db3649091ebb6f9388cacf8ada30bf46b879
+  sha256: 042218c1a2c5a45a7cb0624a12cb1634e798df221b5075cddec38ec5301f564e
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml
   sha256: 91905c155019a00e8c79b557bbeb2b85726ffea1e549da03727f88c8497e3a3f
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml
-  sha256: c97cddc8f7cc9b56a44ac79bb84c6198007a207a361070ce2dd73558e2207489
+  sha256: e71fbb667f91b10473aa3fbd4fae31307f3a913c1d0495ea7916be62f677debc
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml
   sha256: 537c53130e975e5ba10219a83f91e58ed4a6c457102ce8ef074e49d276ef19b4
 - relpath: src/ai_ingestion/api.py
@@ -60,7 +60,7 @@ module_manifest:
   version: 1.0.0
   status: active
   module: ai_ingestion
-  phase: source_graph_rollout
+  phase: contract_stable
   global_refs:
     source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
     global_rules: ../../../../_canon/graph/global_rules.yaml
@@ -80,6 +80,22 @@ module_manifest:
     sovereign_schema_dir: ../../../../../contracts/schemas/ai_ingestion/
     primary_schema: ../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json
     openapi_projection: ../../../../../contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
+  event_surfaces:
+    asyncapi_channels:
+    - ../../../../../contracts/asyncapi/channels/ai_ingestion_job_queued.yaml
+    - ../../../../../contracts/asyncapi/channels/ai_ingestion_job_completed.yaml
+    - ../../../../../contracts/asyncapi/channels/ai_ingestion_job_failed.yaml
+    asyncapi_messages:
+    - ../../../../../contracts/asyncapi/messages/ai_ingestion_job_queued.yaml
+    - ../../../../../contracts/asyncapi/messages/ai_ingestion_job_completed.yaml
+    - ../../../../../contracts/asyncapi/messages/ai_ingestion_job_failed.yaml
+    asyncapi_schemas:
+    - ../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml
+    - ../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml
+    - ../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml
+  workflow_surfaces:
+    arazzo_workflows:
+    - ../../../../../contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml
   runtime_surfaces:
     api_router: ../../../../../src/ai_ingestion/api.py
     domain_entity: ../../../../../src/ai_ingestion/domain/entities.py
@@ -91,13 +107,7 @@ module_manifest:
     endpoints: ./endpoints.yaml
     errors: ./errors.yaml
     test_obligations: ./test_obligations.yaml
-  known_gaps:
-  - "A projection OpenAPI ingestion_job.yaml ainda exp\xF5e jobId/status/createdAt\
-    \ em vez da forma soberana do schema ingestion_job.schema.json."
-  - "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema\
-    \ soberano local; esses campos seguem como extens\xF5es de execu\xE7\xE3o."
-  - "AsyncAPI e Arazzo do m\xF3dulo existem, mas permanecem fora do source graph local\
-    \ nesta fase e seguem governan\xE7a separada."
+  known_gaps: []
 entities:
   IngestionJob:
     schema_ref: ../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json
@@ -143,15 +153,17 @@ entities:
       runtime_name: completed_at
       required: false
       type: timestamp_utc
-    runtime_extension_fields:
     - name: statusLabel
       runtime_name: status_label
+      required: false
       type: string
     - name: errorMessage
       runtime_name: error_message
+      required: false
       type: string
     - name: originJobId
       runtime_name: origin_job_id
+      required: false
       type: uuid_v4
 endpoints:
 - operation_id: listIngestionJobs

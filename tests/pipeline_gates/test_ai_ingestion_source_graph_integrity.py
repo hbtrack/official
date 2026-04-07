@@ -63,8 +63,8 @@ def test_ai_ingestion_module_manifest_refs_resolve():
         for ref in manifest[section].values():
             _resolve(ref)
 
-    assert manifest["phase"] == "source_graph_rollout"
-    assert manifest["known_gaps"]
+    assert manifest["phase"] == "contract_stable"
+    assert manifest["known_gaps"] == []
 
 
 def test_ai_ingestion_entities_graph_matches_schema_and_runtime():

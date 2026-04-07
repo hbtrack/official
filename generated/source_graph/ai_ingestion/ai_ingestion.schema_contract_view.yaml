@@ -48,19 +48,22 @@ sovereign_fields: &id002
   runtime_name: completed_at
   required: false
   type: timestamp_utc
-runtime_extension_fields: &id003
 - name: statusLabel
   runtime_name: status_label
+  required: false
   type: string
 - name: errorMessage
   runtime_name: error_message
+  required: false
   type: string
 - name: originJobId
   runtime_name: origin_job_id
+  required: false
   type: uuid_v4
+runtime_extension_fields: []
 entities:
   IngestionJob:
     schema_ref: contracts/schemas/ai_ingestion/ingestion_job.schema.json
     required: *id001
     sovereign_fields: *id002
-    runtime_extension_fields: *id003
+    runtime_extension_fields: []

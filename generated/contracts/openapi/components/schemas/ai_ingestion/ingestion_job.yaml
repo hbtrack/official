@@ -1,30 +1,59 @@
 type: object
 title: Ingestion Job
-description: Job for ingestingexternal data
+description: External data ingestion execution shape for the ai_ingestion module.
 properties:
-  jobId:
+  id:
     type: string
     format: uuid
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     x-semantic-id: ai_ingestion.job.id.v1
-  status:
+  sourceLabel:
     type: string
-    enum:
-    - PENDING
-    - RUNNING
-    - COMPLETED
-    - FAILED
-    x-domain-enum-ref: ai_ingestion_job_status
-  createdAt:
+    minLength: 1
+    maxLength: 120
+  ingestionMode:
     type: string
-    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    minLength: 1
+    maxLength: 40
+    description: "Examples: batch, webhook, file-drop."
+  receivedAt:
+    type: string
     format: date-time
-  updatedAt:
-    type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  completedAt:
+    type: ["string", "null"]
     format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  payloadSchemaRef:
+    type: string
+    maxLength: 255
+  mappingProfile:
+    type: string
+    maxLength: 120
+  idempotencyKey:
+    type: string
+    maxLength: 120
+  executionBindingLabel:
+    type: string
+    maxLength: 80
+  statusLabel:
+    type: string
+    minLength: 1
+    maxLength: 80
+    description: "Human-readable status of the ingestion job (e.g. queued, processing, completed, failed)."
+  errorMessage:
+    type: ["string", "null"]
+    maxLength: 500
+    description: Error message if the job failed; null otherwise.
+  originJobId:
+    type: ["string", "null"]
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: Reference to the original job when this is a retry.
 required:
-- jobId
-- status
-- createdAt
+  - id
+  - sourceLabel
+  - ingestionMode
+  - receivedAt
+  - statusLabel
 additionalProperties: false

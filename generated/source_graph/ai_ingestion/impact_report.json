@@ -26,7 +26,7 @@
   "inputs": [
     {
       "relpath": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
-      "sha256": "f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30"
+      "sha256": "24ada9cde50e90478847ddde3d1d2f534e502173bb6370cbf270bfca8548182f"
     },
     {
       "relpath": "contracts/openapi/paths/ai_ingestion.yaml",
@@ -38,7 +38,7 @@
     },
     {
       "relpath": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
-      "sha256": "255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3"
+      "sha256": "3d3530940eeb4132dd000475f4aadbb93399d1c63b1e92230d5c9ab50d17706d"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -94,7 +94,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml",
-      "sha256": "b9c243cbb0846d848a2154510480db3649091ebb6f9388cacf8ada30bf46b879"
+      "sha256": "042218c1a2c5a45a7cb0624a12cb1634e798df221b5075cddec38ec5301f564e"
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
@@ -102,7 +102,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
-      "sha256": "c97cddc8f7cc9b56a44ac79bb84c6198007a207a361070ce2dd73558e2207489"
+      "sha256": "e71fbb667f91b10473aa3fbd4fae31307f3a913c1d0495ea7916be62f677debc"
     },
     {
       "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
@@ -129,11 +129,7 @@
       "sha256": "629db8116c6e526fd179273a704700f4109acfe3ad7d232f69607992a27f98e0"
     }
   ],
-  "known_gaps": [
-    "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json.",
-    "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
-    "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
-  ],
+  "known_gaps": [],
   "module": "ai_ingestion",
   "next_stage_targets": [
     "B3-001",
@@ -145,5 +141,5 @@
     "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
     "generated/source_graph/ai_ingestion/impact_report.json"
   ],
-  "source_fingerprint": "c138957aa99991725b701334ad6cc622623f89eda991bad4b4432661ec07dbef"
+  "source_fingerprint": "d1e48e3fd883963067063529a19973923c32d9b8a66ffde51c718dd1f25ae38a"
 }

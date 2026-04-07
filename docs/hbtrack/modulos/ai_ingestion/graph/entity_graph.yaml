@@ -47,13 +47,15 @@ entities:
         runtime_name: completed_at
         required: false
         type: timestamp_utc
-    runtime_extension_fields:
       - name: statusLabel
         runtime_name: status_label
+        required: false
         type: string
       - name: errorMessage
         runtime_name: error_message
+        required: false
         type: string
       - name: originJobId
         runtime_name: origin_job_id
+        required: false
         type: uuid_v4

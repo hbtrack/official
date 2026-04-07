@@ -1,7 +1,7 @@
 {
-  "_legacy": true,
-  "_legacy_notice": "Este arquivo pertencia ao fluxo de boot resolution pré-CDD. O mecanismo foi substituído pelo pipeline CDD canônico (hb verify + validate_contracts.py). Mantido apenas para referência histórica — não utilizar em fluxos ativos.",
-  "status": "LEGACY",
-  "created_at": "2026-04-07",
-  "note": "Artefato de legado preservado para compatibilidade retroativa dos testes de gate."
+    "_legacy": true,
+    "_legacy_notice": "Este arquivo pertencia ao fluxo de boot resolution pré-CDD. O mecanismo foi substituído pelo pipeline CDD canônico (hb verify + validate_contracts.py). Mantido apenas para referência histórica — não utilizar em fluxos ativos.",
+    "status": "LEGACY",
+    "created_at": "2026-04-07",
+    "note": "Artefato de legado preservado para compatibilidade retroativa dos testes de gate."
 }

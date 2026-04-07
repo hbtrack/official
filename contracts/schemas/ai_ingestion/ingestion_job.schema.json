@@ -6,26 +6,84 @@
   "description": "External data ingestion execution shape for the ai_ingestion module.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "sourceLabel", "ingestionMode", "receivedAt"],
+  "required": [
+    "id",
+    "sourceLabel",
+    "ingestionMode",
+    "receivedAt"
+  ],
   "properties": {
-    "id": { "$ref": "#/definitions/uuid_v4" },
-    "sourceLabel": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "id": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "sourceLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
     "ingestionMode": {
       "type": "string",
       "minLength": 1,
       "maxLength": 40,
       "description": "Examples: batch, webhook, file-drop."
     },
-    "payloadSchemaRef": { "type": "string", "maxLength": 255 },
-    "mappingProfile": { "type": "string", "maxLength": 120 },
-    "idempotencyKey": { "type": "string", "maxLength": 120 },
-    "executionBindingLabel": { "type": "string", "maxLength": 80 },
-    "receivedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "payloadSchemaRef": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "mappingProfile": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "executionBindingLabel": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "receivedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
     "completedAt": {
       "anyOf": [
-        { "$ref": "#/definitions/timestamp_utc" },
-        { "type": "null" }
+        {
+          "$ref": "#/definitions/timestamp_utc"
+        },
+        {
+          "type": "null"
+        }
       ]
+    },
+    "statusLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Human-readable status of the ingestion job (e.g. queued, processing, completed, failed)."
+    },
+    "errorMessage": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Error message if the job failed; null otherwise."
+    },
+    "originJobId": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/uuid_v4"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Reference to the original job when this is a retry."
     }
   },
   "definitions": {

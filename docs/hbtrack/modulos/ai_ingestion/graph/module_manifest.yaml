@@ -1,7 +1,7 @@
 version: "1.0.0"
 status: active
 module: ai_ingestion
-phase: source_graph_rollout
+phase: contract_stable
 
 global_refs:
   source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
@@ -25,6 +25,24 @@ contract_surfaces:
   primary_schema: "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json"
   openapi_projection: "../../../../../contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml"
 
+event_surfaces:
+  asyncapi_channels:
+    - "../../../../../contracts/asyncapi/channels/ai_ingestion_job_queued.yaml"
+    - "../../../../../contracts/asyncapi/channels/ai_ingestion_job_completed.yaml"
+    - "../../../../../contracts/asyncapi/channels/ai_ingestion_job_failed.yaml"
+  asyncapi_messages:
+    - "../../../../../contracts/asyncapi/messages/ai_ingestion_job_queued.yaml"
+    - "../../../../../contracts/asyncapi/messages/ai_ingestion_job_completed.yaml"
+    - "../../../../../contracts/asyncapi/messages/ai_ingestion_job_failed.yaml"
+  asyncapi_schemas:
+    - "../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml"
+    - "../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml"
+    - "../../../../../contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml"
+
+workflow_surfaces:
+  arazzo_workflows:
+    - "../../../../../contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml"
+
 runtime_surfaces:
   api_router: "../../../../../src/ai_ingestion/api.py"
   domain_entity: "../../../../../src/ai_ingestion/domain/entities.py"
@@ -38,7 +56,4 @@ structured_ir:
   errors: "./errors.yaml"
   test_obligations: "./test_obligations.yaml"
 
-known_gaps:
-  - "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json."
-  - "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução."
-  - "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
+known_gaps: []

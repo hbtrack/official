@@ -84,11 +84,11 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
-      "sha256": "00713f902b377874da986831d2e5eca782dbf39b3858516fb0eec77a64df7fff"
+      "sha256": "7c897a53cd32f6397bc9d2c5fb355ba48ae440d02c503002965aa8b475fcccaa"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
-      "sha256": "6eef399b2d5888365f0fe7df55d3833f7f1c653e36fb3f8211785c0fb9770d59"
+      "sha256": "3997b50a62bad9a8560c2b6ce0c9e25a3081dae81bcb2126f42a9dd433fd69a6"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
-      "sha256": "20f276c0bbe17125afce365844bcfc587ef258eac26450110ef7c7ae1cf9e97a"
+      "sha256": "e0e741482fc58925f325bb67ccf1068d0ab6217da480c17e90763f1736019aec"
     }
   ],
   "module": "ai_ingestion",
@@ -127,7 +127,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "4d23d8979c0de38183c9ba55df3adde84e3c65697fecb6f82e18245f3073af6e",
+  "source_fingerprint": "a4304ad9619e8628d35f4a83f21a103aacb5f58ca1ffccc8b22b62fe942e866f",
   "source_graph": {
     "entities": {
       "IngestionJob": {
@@ -137,23 +137,6 @@
           "../PERMISSIONS_AI_INGESTION.md"
         ],
         "runtime_entity_ref": "../../../../../src/ai_ingestion/domain/entities.py#IngestionJob",
-        "runtime_extension_fields": [
-          {
-            "name": "statusLabel",
-            "runtime_name": "status_label",
-            "type": "string"
-          },
-          {
-            "name": "errorMessage",
-            "runtime_name": "error_message",
-            "type": "string"
-          },
-          {
-            "name": "originJobId",
-            "runtime_name": "origin_job_id",
-            "type": "uuid_v4"
-          }
-        ],
         "schema_ref": "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json",
         "sovereign_fields": [
           {
@@ -209,6 +192,24 @@
             "required": false,
             "runtime_name": "completed_at",
             "type": "timestamp_utc"
+          },
+          {
+            "name": "statusLabel",
+            "required": false,
+            "runtime_name": "status_label",
+            "type": "string"
+          },
+          {
+            "name": "errorMessage",
+            "required": false,
+            "runtime_name": "error_message",
+            "type": "string"
+          },
+          {
+            "name": "originJobId",
+            "required": false,
+            "runtime_name": "origin_job_id",
+            "type": "uuid_v4"
           }
         ]
       }
@@ -290,12 +291,8 @@
         "src/ai_ingestion/application/use_cases.py",
         "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
       ],
-      "known_gaps": [
-        "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json.",
-        "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
-        "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
-      ],
-      "source_fingerprint": "c138957aa99991725b701334ad6cc622623f89eda991bad4b4432661ec07dbef"
+      "known_gaps": [],
+      "source_fingerprint": "d1e48e3fd883963067063529a19973923c32d9b8a66ffde51c718dd1f25ae38a"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -579,23 +576,7 @@
             "ingestionMode",
             "receivedAt"
           ],
-          "runtime_extension_fields": [
-            {
-              "name": "statusLabel",
-              "runtime_name": "status_label",
-              "type": "string"
-            },
-            {
-              "name": "errorMessage",
-              "runtime_name": "error_message",
-              "type": "string"
-            },
-            {
-              "name": "originJobId",
-              "runtime_name": "origin_job_id",
-              "type": "uuid_v4"
-            }
-          ],
+          "runtime_extension_fields": [],
           "schema_ref": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
           "sovereign_fields": [
             {
@@ -651,6 +632,24 @@
               "required": false,
               "runtime_name": "completed_at",
               "type": "timestamp_utc"
+            },
+            {
+              "name": "statusLabel",
+              "required": false,
+              "runtime_name": "status_label",
+              "type": "string"
+            },
+            {
+              "name": "errorMessage",
+              "required": false,
+              "runtime_name": "error_message",
+              "type": "string"
+            },
+            {
+              "name": "originJobId",
+              "required": false,
+              "runtime_name": "origin_job_id",
+              "type": "uuid_v4"
             }
           ]
         }
@@ -666,23 +665,7 @@
         "ingestionMode",
         "receivedAt"
       ],
-      "runtime_extension_fields": [
-        {
-          "name": "statusLabel",
-          "runtime_name": "status_label",
-          "type": "string"
-        },
-        {
-          "name": "errorMessage",
-          "runtime_name": "error_message",
-          "type": "string"
-        },
-        {
-          "name": "originJobId",
-          "runtime_name": "origin_job_id",
-          "type": "uuid_v4"
-        }
-      ],
+      "runtime_extension_fields": [],
       "sovereign_fields": [
         {
           "name": "id",
@@ -737,6 +720,24 @@
           "required": false,
           "runtime_name": "completed_at",
           "type": "timestamp_utc"
+        },
+        {
+          "name": "statusLabel",
+          "required": false,
+          "runtime_name": "status_label",
+          "type": "string"
+        },
+        {
+          "name": "errorMessage",
+          "required": false,
+          "runtime_name": "error_message",
+          "type": "string"
+        },
+        {
+          "name": "originJobId",
+          "required": false,
+          "runtime_name": "origin_job_id",
+          "type": "uuid_v4"
         }
       ]
     },
