@@ -27,7 +27,11 @@
             "task_type"
         ]
     },
-    "then": {},
+    "then": {
+        "required": [
+            "roadmap_phase"
+        ]
+    },
     "else": {
         "required": [
             "module"
