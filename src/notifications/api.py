@@ -6,12 +6,18 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from notifications.application.use_cases import (
     CreateNotificationIntent,
     ListDeliveries,
     GetDelivery,
     GetUserNotificationPreferences,
     UpdateUserNotificationPreferences,
+
 )
 from notifications.infrastructure.repository import NotificationRepository
 from notifications.domain.rules import (
@@ -29,7 +35,6 @@ from notifications.schemas import (
 
 router = Router(tags=["notifications"])
 
-
 def _get_role(request: HttpRequest) -> str:
     """Extrai role do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -37,14 +42,12 @@ def _get_role(request: HttpRequest) -> str:
         return role
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_user_id(request: HttpRequest) -> UUID:
     """Extrai user_id do JWT validado."""
     user_id = getattr(request, "_actor_id", None)
     if user_id:
         return UUID(str(user_id))
     raise HttpError(401, "Unauthenticated")
-
 
 @router.post(
     "/intents",
@@ -67,7 +70,6 @@ def create_notification_intent(request: HttpRequest, payload: CreateNotification
         return 403, ErrorOut(detail=str(e))
     except ValueError as e:
         return 400, ErrorOut(detail=str(e))
-
 
 @router.get(
     "/deliveries",
@@ -107,7 +109,6 @@ def list_deliveries(
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
 
-
 @router.get(
     "/deliveries/{delivery_id}",
     response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
@@ -128,7 +129,6 @@ def get_delivery(request: HttpRequest, delivery_id: UUID):
     except NotificationDeliveryNotFound as e:
         return 404, ErrorOut(detail=str(e))
 
-
 @router.get(
     "/users/{user_id}/preferences",
     response={200: UserNotificationPreferencesOut, 401: ErrorOut, 403: ErrorOut},
@@ -146,7 +146,6 @@ def get_user_notification_preferences(request: HttpRequest, user_id: UUID):
         return 200, UserNotificationPreferencesOut.from_domain(prefs)
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
-
 
 @router.patch(
     "/users/{user_id}/preferences",

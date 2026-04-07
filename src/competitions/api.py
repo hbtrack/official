@@ -1,3 +1,9 @@
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Router HTTP — módulo competitions (Django Ninja).
 Fonte: contracts/openapi/paths/competitions.yaml
@@ -44,7 +50,6 @@ from competitions.schemas import (
 router = Router(tags=["competitions"])
 _repo = CompetitionRepository()
 
-
 def _role(request) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -54,7 +59,6 @@ def _role(request) -> RoleLabel:
         except ValueError:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
-
 
 # ---------------------------------------------------------------------------
 # GET /competitions
@@ -95,7 +99,6 @@ def list_competitions(
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 # ---------------------------------------------------------------------------
 # POST /competitions
 # ---------------------------------------------------------------------------
@@ -129,7 +132,6 @@ def create_competition(request, payload: CreateCompetitionIn):
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 # ---------------------------------------------------------------------------
 # GET /competitions/{competitionId}
 # ---------------------------------------------------------------------------
@@ -151,7 +153,6 @@ def get_competition(request, competition_id: uuid.UUID):
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 # ---------------------------------------------------------------------------
 # PATCH /competitions/{competitionId}
@@ -188,7 +189,6 @@ def patch_competition(request, competition_id: uuid.UUID, payload: PatchCompetit
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 # ---------------------------------------------------------------------------
 # POST /competitions/{competitionId}/teams/{teamId}
 # ---------------------------------------------------------------------------
@@ -213,7 +213,6 @@ def register_team(request, competition_id: uuid.UUID, team_id: uuid.UUID):
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 # ---------------------------------------------------------------------------
 # DELETE /competitions/{competitionId}/teams/{teamId}

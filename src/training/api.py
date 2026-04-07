@@ -1,3 +1,9 @@
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Router django-ninja — módulo training.
 Implementa endpoints do contrato contracts/openapi/paths/training.yaml.
@@ -100,7 +106,6 @@ from .schemas import (
 
 router = Router(tags=["training"])
 
-
 # ---------------------------------------------------------------------------
 # Auth stubs — substituir por integração real com identity_access
 # ---------------------------------------------------------------------------
@@ -115,13 +120,11 @@ def _get_actor_role(request) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_actor_id(request) -> uuid.UUID:
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return uuid.UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
-
 
 # ---------------------------------------------------------------------------
 # Helpers de conversão
@@ -164,7 +167,6 @@ def _session_to_out(s) -> TrainingSessionOut:
         phase_focus_transition_defense=s.phase_focus_transition_defense,
     )
 
-
 def _block_to_out(b) -> SessionBlockOut:
     return SessionBlockOut(
         id=b.id,
@@ -181,7 +183,6 @@ def _block_to_out(b) -> SessionBlockOut:
         created_at=b.created_at,
         updated_at=b.updated_at,
     )
-
 
 # ---------------------------------------------------------------------------
 # GET /training-sessions — listTrainingSessions
@@ -219,7 +220,6 @@ def list_training_sessions(
         items=[_session_to_out(s) for s in result.items],
         next_page_token=result.next_page_token,
     )
-
 
 # ---------------------------------------------------------------------------
 # POST /training-sessions — createTrainingSession
@@ -273,7 +273,6 @@ def create_training_session(request, body: CreateTrainingSessionIn):
         raise HttpError(422, f"Dados inválidos: violação de restrição do banco — {exc}")
     return 201, _session_to_out(session)
 
-
 # ---------------------------------------------------------------------------
 # GET /training-sessions/{id} — getTrainingSessionById
 # ---------------------------------------------------------------------------
@@ -298,7 +297,6 @@ def get_training_session(request, id: uuid.UUID):
         raise HttpError(403, str(exc))
     return 200, _session_to_out(session)
 
-
 # ---------------------------------------------------------------------------
 # Session state transitions
 # ---------------------------------------------------------------------------
@@ -322,36 +320,29 @@ def _do_transition(request, id: uuid.UUID, target_status: TrainingSessionStatus)
         raise HttpError(422, str(exc))
     return TransitionOut(id=session.id, status=session.status.value, updated_at=session.updated_at)
 
-
 @router.post("/training-sessions/{id}/publish", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def publish_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.PUBLISHED)
-
 
 @router.post("/training-sessions/{id}/unpublish", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def unpublish_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.SCHEDULED)
 
-
 @router.post("/training-sessions/{id}/start", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def start_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.IN_PROGRESS)
-
 
 @router.post("/training-sessions/{id}/complete", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def complete_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.COMPLETED)
 
-
 @router.post("/training-sessions/{id}/cancel", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def cancel_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.CANCELLED)
 
-
 @router.post("/training-sessions/{id}/archive", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def archive_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.ARCHIVED)
-
 
 # ---------------------------------------------------------------------------
 # Session Blocks
@@ -377,7 +368,6 @@ def list_session_blocks(request, id: uuid.UUID):
     except InsufficientPrivilege as exc:
         raise HttpError(403, str(exc))
     return 200, SessionBlockListOut(data=[_block_to_out(b) for b in blocks])
-
 
 @router.post(
     "/training-sessions/{id}/blocks",
@@ -415,7 +405,6 @@ def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
         raise HttpError(422, str(exc))
     return 201, _block_to_out(block)
 
-
 @router.get(
     "/training-sessions/{id}/blocks/{block_id}",
     response={200: SessionBlockOut, 403: ErrorOut, 404: ErrorOut},
@@ -426,7 +415,6 @@ def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
     if not block or block.session_id != id:
         raise HttpError(404, "Bloco não encontrado")
     return 200, _block_to_out(block)
-
 
 @router.patch(
     "/training-sessions/{id}/blocks/{block_id}",
@@ -459,7 +447,6 @@ def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: Upda
         raise HttpError(422, str(exc))
     return 200, _block_to_out(block)
 
-
 @router.delete(
     "/training-sessions/{id}/blocks/{block_id}",
     response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
@@ -482,7 +469,6 @@ def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
     except SessionNotMutable as exc:
         raise HttpError(422, str(exc))
     return 204, None
-
 
 # ---------------------------------------------------------------------------
 # Wellness Pre
@@ -532,7 +518,6 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
         updated_at=wellness.updated_at,
     )
 
-
 # ---------------------------------------------------------------------------
 # Wellness Post
 # ---------------------------------------------------------------------------
@@ -575,7 +560,6 @@ def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
         updated_at=wellness.updated_at,
     )
 
-
 # ---------------------------------------------------------------------------
 # Execution Records
 # ---------------------------------------------------------------------------
@@ -610,7 +594,6 @@ def list_execution_records(request, id: uuid.UUID):
             notes=r.notes,
         ) for r in records]
     )
-
 
 @router.post(
     "/training-sessions/{id}/execution-records",
@@ -661,7 +644,6 @@ def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordI
         notes=record.notes,
     )
 
-
 # ---------------------------------------------------------------------------
 # Session Objectives
 # ---------------------------------------------------------------------------
@@ -690,7 +672,6 @@ def list_session_objectives(request, id: uuid.UUID):
             updated_at=o.updated_at,
         ) for o in objs]
     )
-
 
 @router.post(
     "/training-sessions/{id}/objectives",
@@ -729,7 +710,6 @@ def create_session_objective(request, id: uuid.UUID, body: CreateSessionObjectiv
         updated_at=obj.updated_at,
     )
 
-
 # ---------------------------------------------------------------------------
 # Mesocycles
 # ---------------------------------------------------------------------------
@@ -753,7 +733,6 @@ def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
             notes=m.notes,
         ) for m in items
     ])
-
 
 @router.post("/mesocycles", response={201: MesocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_mesocycle(request, body: CreateMesocycleIn):
@@ -792,7 +771,6 @@ def create_mesocycle(request, body: CreateMesocycleIn):
         notes=meso.notes,
     )
 
-
 @router.get("/mesocycles/{id}", response={200: MesocycleOut, 404: ErrorOut})
 def get_mesocycle(request, id: uuid.UUID):
     repo = MesocycleRepository()
@@ -812,7 +790,6 @@ def get_mesocycle(request, id: uuid.UUID):
         objective=meso.objective,
         notes=meso.notes,
     )
-
 
 # ---------------------------------------------------------------------------
 # Microcycles
@@ -843,7 +820,6 @@ def list_microcycles(
             notes=m.notes,
         ) for m in items
     ])
-
 
 @router.post("/microcycles", response={201: MicrocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_microcycle(request, body: CreateMicrocycleIn):
@@ -892,7 +868,6 @@ def create_microcycle(request, body: CreateMicrocycleIn):
         notes=micro.notes,
     )
 
-
 @router.get("/microcycles/{id}", response={200: MicrocycleOut, 404: ErrorOut})
 def get_microcycle(request, id: uuid.UUID):
     repo = MicrocycleRepository()
@@ -915,7 +890,6 @@ def get_microcycle(request, id: uuid.UUID):
         notes=micro.notes,
     )
 
-
 # ---------------------------------------------------------------------------
 # Stubs de contrato — B10-001 source graph integrity
 # Implementação pendente (known_gaps). raise NotImplementedError até fase de implementação.
@@ -924,106 +898,80 @@ def get_microcycle(request, id: uuid.UUID):
 def update_training_session(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def delete_training_session(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def reorder_session_blocks(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def list_session_attendance(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def record_session_attendance(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def get_wellness_pre(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def update_wellness_pre(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def get_wellness_post(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def update_wellness_post(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def update_mesocycle(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
-
 
 def update_microcycle(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def get_execution_record(request, id, record_id):
     raise NotImplementedError("stub — B10-001")
-
 
 def list_feedback_threads(request, id):
     raise NotImplementedError("stub — B10-001")
 
-
 def create_feedback_thread(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
-
 
 def close_feedback_thread(request, id, thread_id):
     raise NotImplementedError("stub — B10-001")
 
-
 def list_attention_queue_items(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def resolve_attention_queue_item(request, id, item_id, body=None):
     raise NotImplementedError("stub — B10-001")
 
-
 def dismiss_attention_queue_item(request, id, item_id):
     raise NotImplementedError("stub — B10-001")
-
 
 def escalate_attention_queue_item(request, id, item_id):
     raise NotImplementedError("stub — B10-001")
 
-
 def list_recommendations(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def accept_recommendation(request, id, rec_id):
     raise NotImplementedError("stub — B10-001")
 
-
 def dismiss_recommendation(request, id, rec_id):
     raise NotImplementedError("stub — B10-001")
-
 
 def get_ineligibility_status(request, id):
     raise NotImplementedError("stub — B10-001")
 
-
 def submit_ineligibility_declaration(request, id, body=None):
     raise NotImplementedError("stub — B10-001")
-
 
 def get_load_chart(request, id):
     raise NotImplementedError("stub — B10-001")
 
-
 def list_chat_messages(request, id):
     raise NotImplementedError("stub — B10-001")
-
 
 def submit_training_suggestion(request, id, body=None):
     raise NotImplementedError("stub — B10-001")

@@ -4,6 +4,9 @@ from uuid import UUID
 from datetime import datetime
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class ReportJobOut(Schema):
     id: UUID
@@ -36,11 +39,9 @@ class ReportJobOut(Schema):
             error_message=job.error_message,
         )
 
-
 class ReportJobListOut(Schema):
     data: List[ReportJobOut]
     nextPageToken: Optional[str] = None
-
 
 class CreateReportJobIn(Schema):
     reportType: str
@@ -49,11 +50,9 @@ class CreateReportJobIn(Schema):
     sourceMetricNames: Optional[List[str]] = None
     retentionLabel: str = "90-days"
 
-
 class UpdateReportJobIn(Schema):
     statusLabel: Optional[str] = None
     retentionLabel: Optional[str] = None
-
 
 class ErrorOut(Schema):
     detail: str

@@ -1,3 +1,8 @@
+
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
+
 """
 Pydantic schemas (django-ninja) — módulo seasons.
 Mapeiam contratos OpenAPI → domain entities.
@@ -10,7 +15,6 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
-
 
 class SeasonOut(Schema):
     """Resposta canônica de Season (season.schema.json)."""
@@ -31,14 +35,12 @@ class SeasonOut(Schema):
         # Mapeia atributos snake_case da entidade para camelCase no JSON
         populate_by_name = True
 
-
 class SeasonListOut(Schema):
     """Resposta paginada de listSeasons."""
     data: list[SeasonOut]
     page: int
     page_size: int
     total: int
-
 
 class CreateSeasonIn(Schema):
     """Payload de createSeason (POST /seasons)."""
@@ -48,7 +50,6 @@ class CreateSeasonIn(Schema):
     sport_cycle_label: Optional[str] = None
     phase_labels: list[str] = []
     organization_id: Optional[UUID] = None
-
 
 class PatchSeasonIn(Schema):
     """Payload de patchSeason (PATCH /seasons/{seasonId})."""

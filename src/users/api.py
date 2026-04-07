@@ -1,3 +1,9 @@
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Django Ninja Router — módulo users.
 Implementa EXATAMENTE o contrato: contracts/openapi/paths/users.yaml
@@ -40,7 +46,6 @@ from .schemas import (
 
 router = Router(tags=["users"])
 
-
 # ---------------------------------------------------------------------------
 # Helpers JWT (stubs — substituir por integração real com identity_access)
 # ---------------------------------------------------------------------------
@@ -52,7 +57,6 @@ def _get_actor_id(request) -> UUID:
         return UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_actor_role(request) -> RoleLabel:
     """Extrai role do JWT claims."""
     role = getattr(request, "_actor_role", None)
@@ -60,12 +64,10 @@ def _get_actor_role(request) -> RoleLabel:
         return RoleLabel(role)
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_actor_team_ids(request) -> list[UUID]:
     """Extrai teamIds do JWT claims (DR-USR-003)."""
     raw = getattr(request, "_actor_team_ids", [])
     return [UUID(str(t)) for t in (raw or [])]
-
 
 def _profile_to_out(p: UserProfile) -> UserProfileOut:
     return UserProfileOut(
@@ -82,7 +84,6 @@ def _profile_to_out(p: UserProfile) -> UserProfileOut:
         teamIds=p.team_ids,
         seasonIds=p.season_ids,
     )
-
 
 # ---------------------------------------------------------------------------
 # GET /users — listUsers (FT-014)
@@ -133,7 +134,6 @@ def list_users(
     except InsufficientPrivilege as e:
         raise HttpError(403, str(e))
 
-
 # ---------------------------------------------------------------------------
 # POST /users — createUser (FT-015)
 # ---------------------------------------------------------------------------
@@ -176,7 +176,6 @@ def create_user(request, body: CreateUserIn):
     except ValueError as e:
         raise HttpError(400, str(e))
 
-
 # ---------------------------------------------------------------------------
 # GET /users/{userId} — getUser (FT-016)
 # ---------------------------------------------------------------------------
@@ -206,7 +205,6 @@ def get_user(request, userId: UUID):
         raise HttpError(404, str(e))
     except InsufficientPrivilege as e:
         raise HttpError(403, str(e))
-
 
 # ---------------------------------------------------------------------------
 # PATCH /users/{userId} — patchUser (FT-017)

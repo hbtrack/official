@@ -1,3 +1,8 @@
+
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
+
 """
 Schemas de entrada/saída — módulo training.
 Alinhados com contratos OpenAPI e JSON Schemas.
@@ -11,7 +16,6 @@ from typing import Annotated, List, Optional
 
 from ninja import Schema
 from pydantic import Field
-
 
 # ---------------------------------------------------------------------------
 # TrainingSession schemas
@@ -52,11 +56,9 @@ class TrainingSessionOut(Schema):
     phase_focus_transition_offense: Optional[bool] = None
     phase_focus_transition_defense: Optional[bool] = None
 
-
 class TrainingSessionListOut(Schema):
     items: List[TrainingSessionOut]
     next_page_token: Optional[str] = None
-
 
 class CreateTrainingSessionIn(Schema):
     organization_id: uuid.UUID
@@ -85,7 +87,6 @@ class CreateTrainingSessionIn(Schema):
     phase_focus_transition_offense: Optional[bool] = None
     phase_focus_transition_defense: Optional[bool] = None
 
-
 # ---------------------------------------------------------------------------
 # SessionBlock schemas
 # ---------------------------------------------------------------------------
@@ -105,10 +106,8 @@ class SessionBlockOut(Schema):
     exercise_version_id: Optional[uuid.UUID] = None
     notes: Optional[str] = None
 
-
 class SessionBlockListOut(Schema):
     data: List[SessionBlockOut]
-
 
 class AddSessionBlockIn(Schema):
     phase: str
@@ -121,7 +120,6 @@ class AddSessionBlockIn(Schema):
     exercise_version_id: Optional[uuid.UUID] = None
     notes: Optional[str] = None
 
-
 class UpdateSessionBlockIn(Schema):
     phase: Optional[str] = None
     duration_minutes: Optional[int] = None
@@ -131,7 +129,6 @@ class UpdateSessionBlockIn(Schema):
     exercise_id: Optional[uuid.UUID] = None
     exercise_version_id: Optional[uuid.UUID] = None
     notes: Optional[str] = None
-
 
 # ---------------------------------------------------------------------------
 # Wellness schemas
@@ -150,7 +147,6 @@ class WellnessPreOut(Schema):
     muscle_soreness: Optional[int] = None
     notes: Optional[str] = None
 
-
 class SubmitWellnessPreIn(Schema):
     athlete_id: uuid.UUID
     readiness: Optional[int] = None
@@ -159,7 +155,6 @@ class SubmitWellnessPreIn(Schema):
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
     notes: Optional[str] = None
-
 
 class WellnessPostOut(Schema):
     id: uuid.UUID
@@ -172,14 +167,12 @@ class WellnessPostOut(Schema):
     technical_learning: Optional[int] = None
     notes: Optional[str] = None
 
-
 class SubmitWellnessPostIn(Schema):
     athlete_id: uuid.UUID
     perceived_exertion: Optional[int] = None
     enjoyment: Optional[int] = None
     technical_learning: Optional[int] = None
     notes: Optional[str] = None
-
 
 # ---------------------------------------------------------------------------
 # Execution Record schemas
@@ -202,10 +195,8 @@ class ExecutionRecordOut(Schema):
     coach_rationale: Optional[str] = None
     notes: Optional[str] = None
 
-
 class ExecutionRecordListOut(Schema):
     data: List[ExecutionRecordOut]
-
 
 class CreateExecutionRecordIn(Schema):
     execution_type: str
@@ -218,7 +209,6 @@ class CreateExecutionRecordIn(Schema):
     adjustment_reason_type: Optional[str] = None
     coach_rationale: Optional[str] = None
     notes: Optional[str] = None
-
 
 # ---------------------------------------------------------------------------
 # Session Objective schemas
@@ -235,10 +225,8 @@ class SessionObjectiveOut(Schema):
     origin_notes: Optional[str] = None
     priority: Optional[int] = None
 
-
 class SessionObjectiveListOut(Schema):
     data: List[SessionObjectiveOut]
-
 
 class CreateSessionObjectiveIn(Schema):
     origin: str
@@ -246,7 +234,6 @@ class CreateSessionObjectiveIn(Schema):
     description: str
     origin_notes: Optional[str] = None
     priority: Optional[int] = None
-
 
 # ---------------------------------------------------------------------------
 # Mesocycle schemas
@@ -265,10 +252,8 @@ class MesocycleOut(Schema):
     objective: Optional[str] = None
     notes: Optional[str] = None
 
-
 class MesocycleListOut(Schema):
     items: List[MesocycleOut]
-
 
 class CreateMesocycleIn(Schema):
     organization_id: uuid.UUID
@@ -280,7 +265,6 @@ class CreateMesocycleIn(Schema):
     objective: Optional[str] = None
     notes: Optional[str] = None
 
-
 # ---------------------------------------------------------------------------
 # Microcycle schemas
 # ---------------------------------------------------------------------------
@@ -289,7 +273,6 @@ class CreateMesocycleIn(Schema):
 _WeekNumber = Annotated[int, Field(ge=1, le=32767)]
 # SmallIntegerField range for planned_sessions_count (nullable)
 _PlannedCount = Annotated[int, Field(ge=0, le=32767)]
-
 
 class MicrocycleOut(Schema):
     id: uuid.UUID
@@ -306,10 +289,8 @@ class MicrocycleOut(Schema):
     planned_sessions_count: Optional[_PlannedCount] = None
     notes: Optional[str] = None
 
-
 class MicrocycleListOut(Schema):
     items: List[MicrocycleOut]
-
 
 class CreateMicrocycleIn(Schema):
     organization_id: uuid.UUID
@@ -323,7 +304,6 @@ class CreateMicrocycleIn(Schema):
     planned_sessions_count: Optional[_PlannedCount] = None
     notes: Optional[str] = None
 
-
 # ---------------------------------------------------------------------------
 # Transition (state actions) schemas
 # ---------------------------------------------------------------------------
@@ -332,7 +312,6 @@ class TransitionOut(Schema):
     id: uuid.UUID
     status: str
     updated_at: datetime
-
 
 class ErrorOut(Schema):
     detail: str

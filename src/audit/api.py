@@ -6,11 +6,17 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from audit.application.use_cases import (
     ListAuditEntries,
     CreateAuditEntry,
     GetAuditEntry,
     ExportAuditEntries,
+
 )
 from audit.infrastructure.repository import AuditEntryRepository
 from audit.domain.rules import (
@@ -27,14 +33,12 @@ from audit.schemas import (
 
 router = Router(tags=["audit"])
 
-
 def _get_role(request: HttpRequest) -> str:
     """Extrai role do JWT validado."""
     role = getattr(request, "_actor_role", None)
     if role:
         return role
     raise HttpError(401, "Unauthenticated")
-
 
 @router.get("/entries", response={200: AuditEntryListOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def list_audit_entries(
@@ -77,7 +81,6 @@ def list_audit_entries(
     except ValueError as e:
         return 400, ErrorOut(detail=str(e))
 
-
 @router.post("/entries", response={201: AuditEntryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def create_audit_entry(request: HttpRequest, payload: CreateAuditEntryIn):
     role = _get_role(request)
@@ -101,7 +104,6 @@ def create_audit_entry(request: HttpRequest, payload: CreateAuditEntryIn):
         return 403, ErrorOut(detail=str(e))
     except ValueError as e:
         return 400, ErrorOut(detail=str(e))
-
 
 @router.get("/entries/export", response={200: ExportOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def export_audit_entries(
@@ -133,7 +135,6 @@ def export_audit_entries(
         return 403, ErrorOut(detail=str(e))
     except ValueError as e:
         return 400, ErrorOut(detail=str(e))
-
 
 @router.get("/entries/{entry_id}", response={200: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_audit_entry(request: HttpRequest, entry_id: UUID):

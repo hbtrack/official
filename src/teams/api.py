@@ -1,3 +1,9 @@
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Router django-ninja — módulo teams.
 8 endpoints correspondentes aos 8 operationIds do contrato.
@@ -45,7 +51,6 @@ from .schemas import (
 
 router = Router(tags=["teams"])
 
-
 def _get_actor_role(request) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -56,14 +61,12 @@ def _get_actor_role(request) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_actor_team_ids(request) -> list[UUID]:
     """
     Stub: retorna lista de team_ids do actor (coach/athlete).
     Substituir por integração real com identity_access.
     """
     return getattr(request, "_actor_team_ids", [])
-
 
 def _team_to_out(team) -> TeamOut:
     return TeamOut(
@@ -80,7 +83,6 @@ def _team_to_out(team) -> TeamOut:
         created_at=team.created_at,
         updated_at=team.updated_at,
     )
-
 
 # ---------------------------------------------------------------------------
 # GET /teams — listTeams (FT-024)
@@ -120,7 +122,6 @@ def list_teams(
         total=result.total,
     )
 
-
 # ---------------------------------------------------------------------------
 # POST /teams — createTeam (FT-025)
 # ---------------------------------------------------------------------------
@@ -148,7 +149,6 @@ def create_team(request, payload: CreateTeamIn):
         raise HttpError(422, str(exc))
     return 201, _team_to_out(team)
 
-
 # ---------------------------------------------------------------------------
 # GET /teams/{teamId} — getTeam (FT-026)
 # ---------------------------------------------------------------------------
@@ -170,7 +170,6 @@ def get_team(request, team_id: UUID):
     except TeamNotFound as exc:
         raise HttpError(404, str(exc))
     return 200, _team_to_out(team)
-
 
 # ---------------------------------------------------------------------------
 # PATCH /teams/{teamId} — patchTeam (FT-027)
@@ -202,7 +201,6 @@ def patch_team(request, team_id: UUID, payload: PatchTeamIn):
         raise HttpError(422, str(exc))
     return 200, _team_to_out(team)
 
-
 # ---------------------------------------------------------------------------
 # POST /teams/{teamId}/athletes/{athleteUserId} — addAthleteToTeam (FT-028)
 # Idempotente; retorna 200 com Team body (não 204).
@@ -226,7 +224,6 @@ def add_athlete_to_team(request, team_id: UUID, athlete_user_id: UUID):
     except TeamNotFound as exc:
         raise HttpError(404, str(exc))
     return 200, _team_to_out(team)
-
 
 # ---------------------------------------------------------------------------
 # DELETE /teams/{teamId}/athletes/{athleteUserId} — removeAthleteFromTeam (FT-029)
@@ -252,7 +249,6 @@ def remove_athlete_from_team(request, team_id: UUID, athlete_user_id: UUID):
         raise HttpError(404, str(exc))
     return 200, _team_to_out(team)
 
-
 # ---------------------------------------------------------------------------
 # POST /teams/{teamId}/staff/{staffUserId} — addStaffToTeam (FT-030)
 # Idempotente; retorna 200 com Team body (não 204).
@@ -274,7 +270,6 @@ def add_staff_to_team(request, team_id: UUID, staff_user_id: UUID):
     except TeamNotFound as exc:
         raise HttpError(404, str(exc))
     return 200, _team_to_out(team)
-
 
 # ---------------------------------------------------------------------------
 # DELETE /teams/{teamId}/staff/{staffUserId} — removeStaffFromTeam (FT-031)

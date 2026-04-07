@@ -1,3 +1,9 @@
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Django Ninja Router do módulo identity_access.
 Implementa EXATAMENTE os endpoints de contracts/openapi/paths/identity_access.yaml.
@@ -56,11 +62,9 @@ from .schemas import (
 
 router = Router(tags=["identity_access"])
 
-
 def _get_repo() -> IdentityAccessRepository:
     from .infrastructure.jwt_adapter import JWTAdapter
     return IdentityAccessRepository(jwt_port=JWTAdapter())
-
 
 def _session_to_out(s) -> dict:
     return {
@@ -76,10 +80,8 @@ def _session_to_out(s) -> dict:
         "revokedAt": s.revoked_at,
     }
 
-
 def _problem(status: int, title: str, detail: str = "") -> dict:
     return {"type": "about:blank", "title": title, "status": status, "detail": detail or None}
-
 
 # ── FT-011: Autenticação ──────────────────────────────────────────────────────
 
@@ -107,7 +109,6 @@ def auth_login(request, body: LoginIn):
         "session": _session_to_out(session),
     }
 
-
 @router.post(
     "/logout",
     response={204: None, 401: ProblemOut, 500: ProblemOut},
@@ -124,7 +125,6 @@ def auth_logout(request):
     except Exception as exc:
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 204, None
-
 
 @router.post(
     "/refresh",
@@ -144,7 +144,6 @@ def auth_refresh(request, body: RefreshIn):
     except (ValueError, SessionRevoked, SessionExpired) as exc:
         return 401, _problem(401, "Unauthorized", str(exc))
     return 200, {"accessToken": access_token, "refreshToken": refresh_token}
-
 
 # ── FT-012: Gestão de Sessões ─────────────────────────────────────────────────
 
@@ -166,7 +165,6 @@ def auth_me(request):
     except Exception as exc:
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 200, _session_to_out(session)
-
 
 @router.get(
     "/sessions",
@@ -200,7 +198,6 @@ def list_active_sessions(
         "nextPageToken": next_token,
     }
 
-
 @router.delete(
     "/sessions/{session_id}",
     response={204: None, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut, 500: ProblemOut},
@@ -226,7 +223,6 @@ def revoke_session(request, session_id: UUID):
     except Exception as exc:
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 204, None
-
 
 # ── FT-013: Gestão de Roles RBAC ─────────────────────────────────────────────
 
@@ -255,7 +251,6 @@ def list_user_roles(request, user_id: UUID):
     except Exception as exc:
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 200, {"userId": user_id, "roles": roles}
-
 
 @router.post(
     "/users/{user_id}/roles",
@@ -287,7 +282,6 @@ def assign_role(request, user_id: UUID, body: AssignRoleIn):
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 200, {"userId": user_id, "roles": roles}
 
-
 @router.delete(
     "/users/{user_id}/roles/{role_label}",
     response={204: None, 400: ProblemOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut, 500: ProblemOut},
@@ -315,7 +309,6 @@ def revoke_role(request, user_id: UUID, role_label: str):
         return 500, _problem(500, "Internal Server Error", str(exc))
     return 204, None
 
-
 # ── Helpers de extração de claims do JWT ─────────────────────────────────────
 # Stubs — serão substituídos pela integração real com JwtPort (ADR-007).
 # Em produção: extrair sub e roleLabels do JWT RS256 decodificado no request.
@@ -327,14 +320,12 @@ def _extract_session_id(request) -> Optional[UUID]:
         return session_id
     return None
 
-
 def _extract_user_id(request) -> Optional[UUID]:
     """Extrai sub (principalUserId) do JWT Bearer."""
     user_id = getattr(request, "_principal_user_id", None)
     if user_id:
         return user_id
     return None
-
 
 def _extract_roles(request) -> list[str]:
     """Extrai roleLabels do JWT Bearer."""

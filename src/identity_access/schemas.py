@@ -1,3 +1,8 @@
+
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
+
 """
 Pydantic schemas (Django Ninja) do módulo identity_access.
 Derivados do contrato: contracts/openapi/paths/identity_access.yaml
@@ -12,7 +17,6 @@ from typing import List, Optional
 from uuid import UUID
 
 from ninja import Schema
-
 
 # ── AuthSession (contrato: auth_session.schema.json) ─────────────────────────
 
@@ -29,11 +33,9 @@ class AuthSessionOut(Schema):
     expiresAt: Optional[datetime] = None
     revokedAt: Optional[datetime] = None
 
-
 class PaginatedSessionsOut(Schema):
     items: List[AuthSessionOut]
     nextPageToken: Optional[str] = None
-
 
 # ── Login ─────────────────────────────────────────────────────────────────────
 
@@ -42,13 +44,11 @@ class LoginIn(Schema):
     email: str
     password: str  # writeOnly — nunca retornado em nenhum schema de saída
 
-
 class LoginOut(Schema):
     """200 em POST /auth/login."""
     accessToken: str
     refreshToken: str
     session: AuthSessionOut
-
 
 # ── Refresh ───────────────────────────────────────────────────────────────────
 
@@ -56,12 +56,10 @@ class RefreshIn(Schema):
     """POST /auth/refresh."""
     refreshToken: str
 
-
 class RefreshOut(Schema):
     """200 em POST /auth/refresh."""
     accessToken: str
     refreshToken: str
-
 
 # ── Role management ───────────────────────────────────────────────────────────
 
@@ -70,11 +68,9 @@ class UserRolesOut(Schema):
     userId: UUID
     roles: List[str]
 
-
 class AssignRoleIn(Schema):
     """POST /auth/users/{userId}/roles."""
     roleLabel: str
-
 
 # ── Erro (application/problem+json) ──────────────────────────────────────────
 

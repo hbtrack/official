@@ -8,11 +8,17 @@ from typing import Optional
 from ninja import Router
 from ninja.errors import HttpError
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from wellness.application.use_cases import (
     CreateWellnessEntry, CreateWellnessEntryInput,
     GetWellnessEntry, ListWellnessEntries, ListWellnessEntriesInput,
     ListAthleteWellnessEntries, ListAthleteWellnessEntriesInput,
     GetAthleteWellnessSummary,
+
 )
 from wellness.domain.rules import (
     RoleLabel, WellnessEntryNotFound, InsufficientPrivilege,
@@ -26,7 +32,6 @@ from wellness.schemas import (
 router = Router(tags=["wellness"])
 _repo = WellnessEntryRepository()
 
-
 def _role(request) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -37,14 +42,12 @@ def _role(request) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _actor_id(request) -> uuid.UUID:
     """Extrai actor_id do JWT validado."""
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return uuid.UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
-
 
 # POST /wellness/entries
 @router.post(
@@ -77,7 +80,6 @@ def create_wellness_entry(request, payload: CreateWellnessEntryIn):
         raise HttpError(HTTPStatus.BAD_REQUEST, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 # GET /wellness/entries
 @router.get(
@@ -120,7 +122,6 @@ def list_wellness_entries(
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 # GET /wellness/entries/{entryId}
 @router.get(
     "/entries/{entry_id}",
@@ -139,7 +140,6 @@ def get_wellness_entry(request, entry_id: uuid.UUID):
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 # GET /wellness/athletes/{athleteUserId}/entries
 @router.get(
@@ -179,7 +179,6 @@ def list_athlete_wellness_entries(
         raise HttpError(HTTPStatus.FORBIDDEN, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 # GET /wellness/athletes/{athleteUserId}/summary
 @router.get(

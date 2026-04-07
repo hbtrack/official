@@ -5,6 +5,9 @@ from datetime import datetime
 
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class SnapshotOut(Schema):
     id: UUID
@@ -33,11 +36,9 @@ class SnapshotOut(Schema):
             created_by_user_id=snapshot.created_by_user_id,
         )
 
-
 class SnapshotListOut(Schema):
     data: List[SnapshotOut]
     nextPageToken: Optional[str] = None
-
 
 class CreateSnapshotIn(Schema):
     metricKey: str
@@ -47,7 +48,6 @@ class CreateSnapshotIn(Schema):
     refreshModeLabel: str
     filterSummary: Optional[str] = None
     projectionKey: Optional[str] = None
-
 
 class DashboardOut(Schema):
     projectionKey: str
@@ -66,16 +66,13 @@ class DashboardOut(Schema):
             sourceModuleLabels=d.source_module_labels,
         )
 
-
 class DashboardListOut(Schema):
     data: List[DashboardOut]
     nextPageToken: Optional[str] = None
 
-
 class QueryFiltersIn(Schema):
     teamIds: Optional[List[UUID]] = None
     athleteIds: Optional[List[UUID]] = None
-
 
 class QueryRequestIn(Schema):
     scope: str
@@ -86,7 +83,6 @@ class QueryRequestIn(Schema):
     filters: QueryFiltersIn
     dateFrom: Optional[str] = None
     dateTo: Optional[str] = None
-
 
 class QueryRowOut(Schema):
     metricKey: str
@@ -100,12 +96,10 @@ class QueryRowOut(Schema):
     sourceModuleLabels: List[str]
     computedAt: str
 
-
 class QueryResponseOut(Schema):
     data: List[QueryRowOut]
     resultCount: int
     computedAt: str
-
 
 class ErrorOut(Schema):
     detail: str
