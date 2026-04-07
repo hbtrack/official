@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -10,7 +11,6 @@ Implementa EXATAMENTE o contrato: contracts/openapi/paths/users.yaml
 4 operações: listUsers, createUser, getUser, patchUser
 Segurança: HTTPBearer (JWT stub — integração real via identity_access)
 """
-from __future__ import annotations
 
 from typing import Optional
 from uuid import UUID

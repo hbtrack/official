@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -10,7 +11,6 @@ Router django-ninja — módulo seasons.
 Contrato: contracts/openapi/paths/seasons.yaml
 ADR-007 (JWT), ADR-008 (RBAC), ADR-031 (Django).
 """
-from __future__ import annotations
 
 from http import HTTPStatus
 from uuid import UUID

@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -10,7 +11,6 @@ Implementa EXATAMENTE os endpoints de contracts/openapi/paths/video.yaml.
 PERMISSIONS_VIDEO.md governa RBAC por operação.
 BOLA (INV-VID-006): acesso scopado ao nível de MatchMediaSession.
 """
-from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 from uuid import UUID

@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -21,7 +22,6 @@ OWASP API Security Top 10 (2023):
   API4/Resource Consumption: pageSize máximo 100
   API5/BFLA: role verificado server-side em cada operação sensível
 """
-from __future__ import annotations
 
 from typing import Optional
 from uuid import UUID

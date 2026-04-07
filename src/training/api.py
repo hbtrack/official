@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -10,7 +11,6 @@ Implementa endpoints do contrato contracts/openapi/paths/training.yaml.
 ADR-007 (JWT), ADR-008 (RBAC), ADR-031 (Django).
 OWASP API1/2/3/5 enforcement via domain rules.
 """
-from __future__ import annotations
 
 import uuid
 from datetime import datetime

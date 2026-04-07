@@ -105,6 +105,8 @@ class TestSessionStartSchemaV13:
                 "required_sections_resolvable": True,
             },
         }
+        if roadmap:
+            data["roadmap_phase"] = 0
         if module is not None:
             data["module"] = module
         return data

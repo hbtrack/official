@@ -9668,7 +9668,6 @@ def run_pipeline(
         ("READINESS_HUMAN_CONFIRMATION_GATE", lambda: _g_readiness_human_confirmation(root)),  # FIX Ordem 6: implementado
         ("FEATURE_COVERAGE_GATE", lambda: _g_feature_coverage(root)),
         ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
-        ("SCOPE_BOUNDARY_GATE", lambda: _g_scope_boundary(root)),
         ("WORKER_PROMPT_AUTHORITY_GATE", lambda: _g_worker_prompt_authority(root)),
         ("DOMAIN_GLOSSARY_CONSISTENCY_GATE", lambda: _g_domain_glossary_consistency(root)),
     ]

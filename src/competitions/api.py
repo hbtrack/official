@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
 from .generated.application import use_cases as _gen_use_cases  # noqa: F401
@@ -10,7 +11,6 @@ Fonte: contracts/openapi/paths/competitions.yaml
 RBAC: PERMISSIONS_COMPETITIONS.md
 ADR-007 (JWT RS256), ADR-008 (RBAC 5 roles), ADR-031 (Django Ninja)
 """
-from __future__ import annotations
 
 import uuid
 from http import HTTPStatus
