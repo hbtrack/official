@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from exercises.generated.domain.entities import Exercise
 from exercises.generated.schemas import ExerciseOut
-from exercises.generated.application.use_cases import Listexercises, Createexercise, Getexercise
+from exercises.generated.application.use_cases import ListExercises, CreateExercise, GetExercise
 
 
 def _make_entity(**overrides):
@@ -75,7 +75,8 @@ def test_exercises_api_route_coverage():
 def test_exercises_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createexercise(repo).execute(
+    entity = CreateExercise(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         scope="test-value",
         name="test-value",
@@ -99,9 +100,9 @@ def test_exercises_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getexercise(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetExercise(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listexercises(repo).execute(uuid.uuid4())
+    entities, _ = ListExercises(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

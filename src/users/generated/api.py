@@ -14,20 +14,20 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listusers,
-    Createuser,
-    Getuser,
-    Patchuser,
+    ListUsers,
+    CreateUser,
+    GetUser,
+    PatchUser,
 )
 from .infrastructure.repository import UserProfileRepository
 from .schemas import CreateUserProfileIn, ErrorOut, UpdateUserProfileIn, UserProfileListOut, UserProfileOut
 
 router = Router()
 _repo = UserProfileRepository()
-_listusers_uc = Listusers(_repo)
-_createuser_uc = Createuser(_repo)
-_getuser_uc = Getuser(_repo)
-_patchuser_uc = Patchuser(_repo)
+_list_users_uc = ListUsers(_repo)
+_create_user_uc = CreateUser(_repo)
+_get_user_uc = GetUser(_repo)
+_patch_user_uc = PatchUser(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -47,8 +47,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: UserProfileOut, 401: ErrorOut, 403: ErrorOut})
 def list_users(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listusers_uc.execute(requester_id=uid)
+        entities, token = _list_users_uc.execute(role=role, requester_id=uid)
         return 200, UserProfileListOut(
             data=[UserProfileOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -60,8 +61,9 @@ def list_users(request: HttpRequest):
 @router.post('/', response={201: UserProfileOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut})
 def create_user(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createuser_uc.execute()
+        # TODO: parse payload → _create_user_uc.execute(role=role, ...)
         raise NotImplementedError('create_user')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -70,6 +72,7 @@ def create_user(request: HttpRequest):
 @router.get('/{userId}', response={200: UserProfileOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_user(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_user')
@@ -80,8 +83,9 @@ def get_user(request: HttpRequest):
 @router.patch('/{userId}', response={200: UserProfileOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def patch_user(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchuser_uc.execute()
+        # TODO: parse payload → _patch_user_uc.execute(role=role, ...)
         raise NotImplementedError('patch_user')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

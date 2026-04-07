@@ -14,20 +14,20 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listauditentries,
-    Createauditentry,
-    Getauditentry,
-    Exportauditentries,
+    ListAuditEntries,
+    CreateAuditEntry,
+    GetAuditEntry,
+    ExportAuditEntries,
 )
 from .infrastructure.repository import AuditEntryRepository
 from .schemas import AuditEntryListOut, AuditEntryOut, CreateAuditEntryIn, ErrorOut
 
 router = Router()
 _repo = AuditEntryRepository()
-_listauditentries_uc = Listauditentries(_repo)
-_createauditentry_uc = Createauditentry(_repo)
-_getauditentry_uc = Getauditentry(_repo)
-_exportauditentries_uc = Exportauditentries(_repo)
+_list_audit_entries_uc = ListAuditEntries(_repo)
+_create_audit_entry_uc = CreateAuditEntry(_repo)
+_get_audit_entry_uc = GetAuditEntry(_repo)
+_export_audit_entries_uc = ExportAuditEntries(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -47,8 +47,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/entries', response={200: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def list_audit_entries(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listauditentries_uc.execute(requester_id=uid)
+        entities, token = _list_audit_entries_uc.execute(role=role, requester_id=uid)
         return 200, AuditEntryListOut(
             data=[AuditEntryOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -60,8 +61,9 @@ def list_audit_entries(request: HttpRequest):
 @router.post('/entries', response={201: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_audit_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createauditentry_uc.execute()
+        # TODO: parse payload → _create_audit_entry_uc.execute(role=role, ...)
         raise NotImplementedError('create_audit_entry')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -70,6 +72,7 @@ def create_audit_entry(request: HttpRequest):
 @router.get('/entries/{entryId}', response={200: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_audit_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_audit_entry')
@@ -80,8 +83,9 @@ def get_audit_entry(request: HttpRequest):
 @router.get('/entries/export', response={200: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def export_audit_entries(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _exportauditentries_uc.execute(requester_id=uid)
+        entities, token = _export_audit_entries_uc.execute(role=role, requester_id=uid)
         return 200, AuditEntryListOut(
             data=[AuditEntryOut.from_domain(e) for e in entities],
             nextPageToken=token,

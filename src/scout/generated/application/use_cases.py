@@ -14,12 +14,13 @@ from ..domain.entities import ScoutEvent
 from ..infrastructure.repository import ScoutEventRepository
 
 
-class Listscoutevents:
+class ListScoutEvents:
     def __init__(self, repo: ScoutEventRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,33 +28,34 @@ class Listscoutevents:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createscoutevent:
+class CreateScoutEvent:
     def __init__(self, repo: ScoutEventRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> ScoutEvent:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> ScoutEvent:
         entity = ScoutEvent(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getscoutevent:
+class GetScoutEvent:
     def __init__(self, repo: ScoutEventRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> ScoutEvent:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> ScoutEvent:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"ScoutEvent {entity_id} not found")
         return entity
 
 
-class Getscoutaggregations:
+class GetScoutAggregations:
     def __init__(self, repo: ScoutEventRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -61,11 +63,11 @@ class Getscoutaggregations:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Completescoutsession:
+class CompleteScoutSession:
     def __init__(self, repo: ScoutEventRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> ScoutEvent:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> ScoutEvent:
         entity = ScoutEvent(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)

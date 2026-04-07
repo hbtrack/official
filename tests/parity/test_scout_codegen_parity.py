@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from scout.generated.domain.entities import ScoutEvent
 from scout.generated.schemas import ScoutEventOut
-from scout.generated.application.use_cases import Listscoutevents, Createscoutevent, Getscoutevent
+from scout.generated.application.use_cases import ListScoutEvents, CreateScoutEvent, GetScoutEvent
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_scout_api_route_coverage():
 def test_scout_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createscoutevent(repo).execute(
+    entity = CreateScoutEvent(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         match_id=uuid.uuid4(),
         event_label="test-value",
@@ -69,9 +70,9 @@ def test_scout_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getscoutevent(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetScoutEvent(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listscoutevents(repo).execute(uuid.uuid4())
+    entities, _ = ListScoutEvents(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

@@ -14,24 +14,24 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listcompetitions,
-    Createcompetition,
-    Getcompetition,
-    Patchcompetition,
-    Registerteamincompetition,
-    Unregisterteamfromcompetition,
+    ListCompetitions,
+    CreateCompetition,
+    GetCompetition,
+    PatchCompetition,
+    RegisterTeamInCompetition,
+    UnregisterTeamFromCompetition,
 )
 from .infrastructure.repository import CompetitionRepository
 from .schemas import CompetitionListOut, CompetitionOut, CreateCompetitionIn, ErrorOut, UpdateCompetitionIn
 
 router = Router()
 _repo = CompetitionRepository()
-_listcompetitions_uc = Listcompetitions(_repo)
-_createcompetition_uc = Createcompetition(_repo)
-_getcompetition_uc = Getcompetition(_repo)
-_patchcompetition_uc = Patchcompetition(_repo)
-_registerteamincompetition_uc = Registerteamincompetition(_repo)
-_unregisterteamfromcompetition_uc = Unregisterteamfromcompetition(_repo)
+_list_competitions_uc = ListCompetitions(_repo)
+_create_competition_uc = CreateCompetition(_repo)
+_get_competition_uc = GetCompetition(_repo)
+_patch_competition_uc = PatchCompetition(_repo)
+_register_team_in_competition_uc = RegisterTeamInCompetition(_repo)
+_unregister_team_from_competition_uc = UnregisterTeamFromCompetition(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -51,8 +51,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut})
 def list_competitions(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listcompetitions_uc.execute(requester_id=uid)
+        entities, token = _list_competitions_uc.execute(role=role, requester_id=uid)
         return 200, CompetitionListOut(
             data=[CompetitionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -64,8 +65,9 @@ def list_competitions(request: HttpRequest):
 @router.post('/', response={201: CompetitionOut, 401: ErrorOut, 403: ErrorOut})
 def create_competition(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createcompetition_uc.execute()
+        # TODO: parse payload → _create_competition_uc.execute(role=role, ...)
         raise NotImplementedError('create_competition')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -74,6 +76,7 @@ def create_competition(request: HttpRequest):
 @router.get('/{competitionId}', response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_competition(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_competition')
@@ -84,8 +87,9 @@ def get_competition(request: HttpRequest):
 @router.patch('/{competitionId}', response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def patch_competition(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchcompetition_uc.execute()
+        # TODO: parse payload → _patch_competition_uc.execute(role=role, ...)
         raise NotImplementedError('patch_competition')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -94,8 +98,9 @@ def patch_competition(request: HttpRequest):
 @router.post('/{competitionId}/teams/{teamId}', response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def register_team_in_competition(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _registerteamincompetition_uc.execute()
+        # TODO: parse payload → _register_team_in_competition_uc.execute(role=role, ...)
         raise NotImplementedError('register_team_in_competition')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -104,6 +109,7 @@ def register_team_in_competition(request: HttpRequest):
 @router.delete('/{competitionId}/teams/{teamId}', response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def unregister_team_from_competition(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('unregister_team_from_competition')

@@ -14,22 +14,22 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listanalyticssnapshots,
-    Createanalyticssnapshot,
-    Getanalyticssnapshot,
-    Listanalyticsdashboards,
-    Queryanalyticsdata,
+    ListAnalyticsSnapshots,
+    CreateAnalyticsSnapshot,
+    GetAnalyticsSnapshot,
+    ListAnalyticsDashboards,
+    QueryAnalyticsData,
 )
 from .infrastructure.repository import AnalyticsSnapshotRepository
 from .schemas import AnalyticsSnapshotListOut, AnalyticsSnapshotOut, CreateAnalyticsSnapshotIn, ErrorOut
 
 router = Router()
 _repo = AnalyticsSnapshotRepository()
-_listanalyticssnapshots_uc = Listanalyticssnapshots(_repo)
-_createanalyticssnapshot_uc = Createanalyticssnapshot(_repo)
-_getanalyticssnapshot_uc = Getanalyticssnapshot(_repo)
-_listanalyticsdashboards_uc = Listanalyticsdashboards(_repo)
-_queryanalyticsdata_uc = Queryanalyticsdata(_repo)
+_list_analytics_snapshots_uc = ListAnalyticsSnapshots(_repo)
+_create_analytics_snapshot_uc = CreateAnalyticsSnapshot(_repo)
+_get_analytics_snapshot_uc = GetAnalyticsSnapshot(_repo)
+_list_analytics_dashboards_uc = ListAnalyticsDashboards(_repo)
+_query_analytics_data_uc = QueryAnalyticsData(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -49,8 +49,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/snapshots', response={200: AnalyticsSnapshotOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def list_analytics_snapshots(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listanalyticssnapshots_uc.execute(requester_id=uid)
+        entities, token = _list_analytics_snapshots_uc.execute(role=role, requester_id=uid)
         return 200, AnalyticsSnapshotListOut(
             data=[AnalyticsSnapshotOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -62,8 +63,9 @@ def list_analytics_snapshots(request: HttpRequest):
 @router.post('/snapshots', response={201: AnalyticsSnapshotOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_analytics_snapshot(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createanalyticssnapshot_uc.execute()
+        # TODO: parse payload → _create_analytics_snapshot_uc.execute(role=role, ...)
         raise NotImplementedError('create_analytics_snapshot')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -72,6 +74,7 @@ def create_analytics_snapshot(request: HttpRequest):
 @router.get('/snapshots/{snapshotId}', response={200: AnalyticsSnapshotOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_analytics_snapshot(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_analytics_snapshot')
@@ -82,8 +85,9 @@ def get_analytics_snapshot(request: HttpRequest):
 @router.get('/dashboards', response={200: AnalyticsSnapshotOut, 401: ErrorOut, 403: ErrorOut})
 def list_analytics_dashboards(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listanalyticsdashboards_uc.execute(requester_id=uid)
+        entities, token = _list_analytics_dashboards_uc.execute(role=role, requester_id=uid)
         return 200, AnalyticsSnapshotListOut(
             data=[AnalyticsSnapshotOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -95,8 +99,9 @@ def list_analytics_dashboards(request: HttpRequest):
 @router.post('/query', response={200: AnalyticsSnapshotOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def query_analytics_data(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _queryanalyticsdata_uc.execute()
+        # TODO: parse payload → _query_analytics_data_uc.execute(role=role, ...)
         raise NotImplementedError('query_analytics_data')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

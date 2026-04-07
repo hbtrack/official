@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from video.generated.domain.entities import MatchMediaSession
 from video.generated.schemas import MatchMediaSessionOut
-from video.generated.application.use_cases import Listsessions, Createsession, Getsession
+from video.generated.application.use_cases import ListSessions, CreateSession, GetSession
 
 
 def _make_entity(**overrides):
@@ -63,7 +63,8 @@ def test_video_api_route_coverage():
 def test_video_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createsession(repo).execute(
+    entity = CreateSession(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         match_id=uuid.uuid4(),
         state="test-value",
@@ -75,9 +76,9 @@ def test_video_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getsession(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetSession(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listsessions(repo).execute(uuid.uuid4())
+    entities, _ = ListSessions(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

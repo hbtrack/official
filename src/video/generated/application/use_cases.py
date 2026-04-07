@@ -14,22 +14,23 @@ from ..domain.entities import MatchMediaSession
 from ..infrastructure.repository import MatchMediaSessionRepository
 
 
-class Createsession:
+class CreateSession:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> MatchMediaSession:
         entity = MatchMediaSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listsessions:
+class ListSessions:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -37,22 +38,22 @@ class Listsessions:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Getsession:
+class GetSession:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> MatchMediaSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"MatchMediaSession {entity_id} not found")
         return entity
 
 
-class Patchsession:
+class PatchSession:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> MatchMediaSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"MatchMediaSession {entity_id} not found")
@@ -63,22 +64,23 @@ class Patchsession:
         return self.repo.save(entity)
 
 
-class Createsegment:
+class CreateSegment:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> MatchMediaSession:
         entity = MatchMediaSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listsegments:
+class ListSegments:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -86,22 +88,23 @@ class Listsegments:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createclip:
+class CreateClip:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> MatchMediaSession:
         entity = MatchMediaSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listclips:
+class ListClips:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -109,11 +112,11 @@ class Listclips:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Publishdistribution:
+class PublishDistribution:
     def __init__(self, repo: MatchMediaSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> MatchMediaSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> MatchMediaSession:
         entity = MatchMediaSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)

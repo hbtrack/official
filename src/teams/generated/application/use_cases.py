@@ -14,12 +14,13 @@ from ..domain.entities import Team
 from ..infrastructure.repository import TeamRepository
 
 
-class Listteams:
+class ListTeams:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listteams:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createteam:
+class CreateTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Team:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Team:
         entity = Team(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getteam:
+class GetTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Team:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Team:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Team {entity_id} not found")
         return entity
 
 
-class Patchteam:
+class PatchTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Team:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Team:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Team {entity_id} not found")
@@ -63,21 +64,21 @@ class Patchteam:
         return self.repo.save(entity)
 
 
-class Addathletetoteam:
+class AddAthleteToTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Team:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Team:
         entity = Team(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Removeathletefromteam:
+class RemoveAthleteFromTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Team {entity_id} not found")
@@ -85,21 +86,21 @@ class Removeathletefromteam:
         pass
 
 
-class Addstafftoteam:
+class AddStaffToTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Team:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Team:
         entity = Team(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Removestafffromteam:
+class RemoveStaffFromTeam:
     def __init__(self, repo: TeamRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Team {entity_id} not found")

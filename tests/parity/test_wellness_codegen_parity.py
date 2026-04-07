@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from wellness.generated.domain.entities import WellnessEntry
 from wellness.generated.schemas import WellnessEntryOut
-from wellness.generated.application.use_cases import Listwellnessentries, Createwellnessentry, Getwellnessentry
+from wellness.generated.application.use_cases import ListWellnessEntries, CreateWellnessEntry, GetWellnessEntry
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_wellness_api_route_coverage():
 def test_wellness_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createwellnessentry(repo).execute(
+    entity = CreateWellnessEntry(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         athlete_user_id=uuid.uuid4(),
         questionnaire_date=date(2026, 3, 31),
@@ -69,9 +70,9 @@ def test_wellness_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getwellnessentry(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetWellnessEntry(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listwellnessentries(repo).execute(uuid.uuid4())
+    entities, _ = ListWellnessEntries(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

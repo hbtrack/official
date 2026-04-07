@@ -14,12 +14,13 @@ from ..domain.entities import AuditEntry
 from ..infrastructure.repository import AuditEntryRepository
 
 
-class Listauditentries:
+class ListAuditEntries:
     def __init__(self, repo: AuditEntryRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,33 +28,34 @@ class Listauditentries:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createauditentry:
+class CreateAuditEntry:
     def __init__(self, repo: AuditEntryRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> AuditEntry:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AuditEntry:
         entity = AuditEntry(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getauditentry:
+class GetAuditEntry:
     def __init__(self, repo: AuditEntryRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> AuditEntry:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> AuditEntry:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"AuditEntry {entity_id} not found")
         return entity
 
 
-class Exportauditentries:
+class ExportAuditEntries:
     def __init__(self, repo: AuditEntryRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,

@@ -10,7 +10,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from teams.generated.domain.entities import Team
 from teams.generated.schemas import TeamOut
-from teams.generated.application.use_cases import Listteams, Createteam, Getteam
+from teams.generated.application.use_cases import ListTeams, CreateTeam, GetTeam
 
 
 def _make_entity(**overrides):
@@ -59,7 +59,8 @@ def test_teams_api_route_coverage():
 def test_teams_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createteam(repo).execute(
+    entity = CreateTeam(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         organization_id=uuid.uuid4(),
         name="test-value",
@@ -68,9 +69,9 @@ def test_teams_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getteam(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetTeam(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listteams(repo).execute(uuid.uuid4())
+    entities, _ = ListTeams(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

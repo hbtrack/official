@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from training.generated.domain.entities import TrainingSession
 from training.generated.schemas import TrainingSessionOut
-from training.generated.application.use_cases import Listtrainingsessions, Createtrainingsession, Gettrainingsessionbyid
+from training.generated.application.use_cases import ListTrainingSessions, CreateTrainingSession, GetTrainingSessionById
 
 
 def _make_entity(**overrides):
@@ -64,7 +64,8 @@ def test_training_api_route_coverage():
 def test_training_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createtrainingsession(repo).execute(
+    entity = CreateTrainingSession(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         organization_id=uuid.uuid4(),
         session_at=datetime(2026, 3, 31, 15, 0, tzinfo=timezone.utc),
@@ -77,9 +78,9 @@ def test_training_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Gettrainingsessionbyid(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetTrainingSessionById(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listtrainingsessions(repo).execute(uuid.uuid4())
+    entities, _ = ListTrainingSessions(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

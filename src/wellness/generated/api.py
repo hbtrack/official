@@ -14,22 +14,22 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Createwellnessentry,
-    Listwellnessentries,
-    Getwellnessentry,
-    Listathletewellnessentries,
-    Getathletewellnesssummary,
+    CreateWellnessEntry,
+    ListWellnessEntries,
+    GetWellnessEntry,
+    ListAthleteWellnessEntries,
+    GetAthleteWellnessSummary,
 )
 from .infrastructure.repository import WellnessEntryRepository
 from .schemas import CreateWellnessEntryIn, ErrorOut, WellnessEntryListOut, WellnessEntryOut
 
 router = Router()
 _repo = WellnessEntryRepository()
-_createwellnessentry_uc = Createwellnessentry(_repo)
-_listwellnessentries_uc = Listwellnessentries(_repo)
-_getwellnessentry_uc = Getwellnessentry(_repo)
-_listathletewellnessentries_uc = Listathletewellnessentries(_repo)
-_getathletewellnesssummary_uc = Getathletewellnesssummary(_repo)
+_create_wellness_entry_uc = CreateWellnessEntry(_repo)
+_list_wellness_entries_uc = ListWellnessEntries(_repo)
+_get_wellness_entry_uc = GetWellnessEntry(_repo)
+_list_athlete_wellness_entries_uc = ListAthleteWellnessEntries(_repo)
+_get_athlete_wellness_summary_uc = GetAthleteWellnessSummary(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -49,8 +49,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.post('/entries', response={201: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_wellness_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createwellnessentry_uc.execute()
+        # TODO: parse payload → _create_wellness_entry_uc.execute(role=role, ...)
         raise NotImplementedError('create_wellness_entry')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -59,8 +60,9 @@ def create_wellness_entry(request: HttpRequest):
 @router.get('/entries', response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut})
 def list_wellness_entries(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listwellnessentries_uc.execute(requester_id=uid)
+        entities, token = _list_wellness_entries_uc.execute(role=role, requester_id=uid)
         return 200, WellnessEntryListOut(
             data=[WellnessEntryOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -72,6 +74,7 @@ def list_wellness_entries(request: HttpRequest):
 @router.get('/entries/{entryId}', response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_wellness_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_wellness_entry')
@@ -82,8 +85,9 @@ def get_wellness_entry(request: HttpRequest):
 @router.get('/athletes/{athleteUserId}/entries', response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_athlete_wellness_entries(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listathletewellnessentries_uc.execute(requester_id=uid)
+        entities, token = _list_athlete_wellness_entries_uc.execute(role=role, requester_id=uid)
         return 200, WellnessEntryListOut(
             data=[WellnessEntryOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -95,8 +99,9 @@ def list_athlete_wellness_entries(request: HttpRequest):
 @router.get('/athletes/{athleteUserId}/summary', response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_athlete_wellness_summary(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getathletewellnesssummary_uc.execute(requester_id=uid)
+        entities, token = _get_athlete_wellness_summary_uc.execute(role=role, requester_id=uid)
         return 200, WellnessEntryListOut(
             data=[WellnessEntryOut.from_domain(e) for e in entities],
             nextPageToken=token,

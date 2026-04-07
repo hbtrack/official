@@ -14,12 +14,13 @@ from ..domain.entities import Season
 from ..infrastructure.repository import SeasonRepository
 
 
-class Listseasons:
+class ListSeasons:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listseasons:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createseason:
+class CreateSeason:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Season:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Season:
         entity = Season(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getseason:
+class GetSeason:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Season:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Season:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Season {entity_id} not found")
         return entity
 
 
-class Patchseason:
+class PatchSeason:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Season:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Season:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Season {entity_id} not found")
@@ -63,21 +64,21 @@ class Patchseason:
         return self.repo.save(entity)
 
 
-class Addteamtoseason:
+class AddTeamToSeason:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Season:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Season:
         entity = Season(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Removeteamfromseason:
+class RemoveTeamFromSeason:
     def __init__(self, repo: SeasonRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Season {entity_id} not found")

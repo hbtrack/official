@@ -14,118 +14,118 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listtrainingsessions,
-    Createtrainingsession,
-    Gettrainingsessionbyid,
-    Updatetrainingsession,
-    Deletetrainingsession,
-    Publishtrainingsession,
-    Unpublishtrainingsession,
-    Starttrainingsession,
-    Completetrainingsession,
-    Canceltrainingsession,
-    Archivetrainingsession,
-    Listsessionblocks,
-    Addsessionblock,
-    Getsessionblock,
-    Updatesessionblock,
-    Deletesessionblock,
-    Reordersessionblocks,
-    Listsessionattendance,
-    Recordsessionattendance,
-    Submitwellnesspre,
-    Getwellnesspre,
-    Updatewellnesspre,
-    Submitwellnesspost,
-    Getwellnesspost,
-    Updatewellnesspost,
-    Listmesocycles,
-    Createmesocycle,
-    Getmesocyclebyid,
-    Updatemesocycle,
-    Listmicrocycles,
-    Createmicrocycle,
-    Getmicrocyclebyid,
-    Updatemicrocycle,
-    Listexecutionrecords,
-    Createexecutionrecord,
-    Getexecutionrecord,
-    Listfeedbackthreads,
-    Createfeedbackthread,
-    Closefeedbackthread,
-    Listsessionobjectives,
-    Createsessionobjective,
-    Listattentionqueueitems,
-    Resolveattentionqueueitem,
-    Dismissattentionqueueitem,
-    Escalateattentionqueueitem,
-    Listrecommendations,
-    Acceptrecommendation,
-    Dismissrecommendation,
-    Getineligibilitystatus,
-    Submitineligibilitydeclaration,
-    Getloadchart,
-    Listchatmessages,
-    Submittrainingsuggestion,
+    ListTrainingSessions,
+    CreateTrainingSession,
+    GetTrainingSessionById,
+    UpdateTrainingSession,
+    DeleteTrainingSession,
+    PublishTrainingSession,
+    UnpublishTrainingSession,
+    StartTrainingSession,
+    CompleteTrainingSession,
+    CancelTrainingSession,
+    ArchiveTrainingSession,
+    ListSessionBlocks,
+    AddSessionBlock,
+    GetSessionBlock,
+    UpdateSessionBlock,
+    DeleteSessionBlock,
+    ReorderSessionBlocks,
+    ListSessionAttendance,
+    RecordSessionAttendance,
+    SubmitWellnessPre,
+    GetWellnessPre,
+    UpdateWellnessPre,
+    SubmitWellnessPost,
+    GetWellnessPost,
+    UpdateWellnessPost,
+    ListMesocycles,
+    CreateMesocycle,
+    GetMesocycleById,
+    UpdateMesocycle,
+    ListMicrocycles,
+    CreateMicrocycle,
+    GetMicrocycleById,
+    UpdateMicrocycle,
+    ListExecutionRecords,
+    CreateExecutionRecord,
+    GetExecutionRecord,
+    ListFeedbackThreads,
+    CreateFeedbackThread,
+    CloseFeedbackThread,
+    ListSessionObjectives,
+    CreateSessionObjective,
+    ListAttentionQueueItems,
+    ResolveAttentionQueueItem,
+    DismissAttentionQueueItem,
+    EscalateAttentionQueueItem,
+    ListRecommendations,
+    AcceptRecommendation,
+    DismissRecommendation,
+    GetIneligibilityStatus,
+    SubmitIneligibilityDeclaration,
+    GetLoadChart,
+    ListChatMessages,
+    SubmitTrainingSuggestion,
 )
 from .infrastructure.repository import TrainingSessionRepository
 from .schemas import CreateTrainingSessionIn, ErrorOut, TrainingSessionListOut, TrainingSessionOut, UpdateTrainingSessionIn
 
 router = Router()
 _repo = TrainingSessionRepository()
-_listtrainingsessions_uc = Listtrainingsessions(_repo)
-_createtrainingsession_uc = Createtrainingsession(_repo)
-_gettrainingsessionbyid_uc = Gettrainingsessionbyid(_repo)
-_updatetrainingsession_uc = Updatetrainingsession(_repo)
-_deletetrainingsession_uc = Deletetrainingsession(_repo)
-_publishtrainingsession_uc = Publishtrainingsession(_repo)
-_unpublishtrainingsession_uc = Unpublishtrainingsession(_repo)
-_starttrainingsession_uc = Starttrainingsession(_repo)
-_completetrainingsession_uc = Completetrainingsession(_repo)
-_canceltrainingsession_uc = Canceltrainingsession(_repo)
-_archivetrainingsession_uc = Archivetrainingsession(_repo)
-_listsessionblocks_uc = Listsessionblocks(_repo)
-_addsessionblock_uc = Addsessionblock(_repo)
-_getsessionblock_uc = Getsessionblock(_repo)
-_updatesessionblock_uc = Updatesessionblock(_repo)
-_deletesessionblock_uc = Deletesessionblock(_repo)
-_reordersessionblocks_uc = Reordersessionblocks(_repo)
-_listsessionattendance_uc = Listsessionattendance(_repo)
-_recordsessionattendance_uc = Recordsessionattendance(_repo)
-_submitwellnesspre_uc = Submitwellnesspre(_repo)
-_getwellnesspre_uc = Getwellnesspre(_repo)
-_updatewellnesspre_uc = Updatewellnesspre(_repo)
-_submitwellnesspost_uc = Submitwellnesspost(_repo)
-_getwellnesspost_uc = Getwellnesspost(_repo)
-_updatewellnesspost_uc = Updatewellnesspost(_repo)
-_listmesocycles_uc = Listmesocycles(_repo)
-_createmesocycle_uc = Createmesocycle(_repo)
-_getmesocyclebyid_uc = Getmesocyclebyid(_repo)
-_updatemesocycle_uc = Updatemesocycle(_repo)
-_listmicrocycles_uc = Listmicrocycles(_repo)
-_createmicrocycle_uc = Createmicrocycle(_repo)
-_getmicrocyclebyid_uc = Getmicrocyclebyid(_repo)
-_updatemicrocycle_uc = Updatemicrocycle(_repo)
-_listexecutionrecords_uc = Listexecutionrecords(_repo)
-_createexecutionrecord_uc = Createexecutionrecord(_repo)
-_getexecutionrecord_uc = Getexecutionrecord(_repo)
-_listfeedbackthreads_uc = Listfeedbackthreads(_repo)
-_createfeedbackthread_uc = Createfeedbackthread(_repo)
-_closefeedbackthread_uc = Closefeedbackthread(_repo)
-_listsessionobjectives_uc = Listsessionobjectives(_repo)
-_createsessionobjective_uc = Createsessionobjective(_repo)
-_listattentionqueueitems_uc = Listattentionqueueitems(_repo)
-_resolveattentionqueueitem_uc = Resolveattentionqueueitem(_repo)
-_dismissattentionqueueitem_uc = Dismissattentionqueueitem(_repo)
-_escalateattentionqueueitem_uc = Escalateattentionqueueitem(_repo)
-_listrecommendations_uc = Listrecommendations(_repo)
-_acceptrecommendation_uc = Acceptrecommendation(_repo)
-_dismissrecommendation_uc = Dismissrecommendation(_repo)
-_getineligibilitystatus_uc = Getineligibilitystatus(_repo)
-_submitineligibilitydeclaration_uc = Submitineligibilitydeclaration(_repo)
-_getloadchart_uc = Getloadchart(_repo)
-_listchatmessages_uc = Listchatmessages(_repo)
-_submittrainingsuggestion_uc = Submittrainingsuggestion(_repo)
+_list_training_sessions_uc = ListTrainingSessions(_repo)
+_create_training_session_uc = CreateTrainingSession(_repo)
+_get_training_session_by_id_uc = GetTrainingSessionById(_repo)
+_update_training_session_uc = UpdateTrainingSession(_repo)
+_delete_training_session_uc = DeleteTrainingSession(_repo)
+_publish_training_session_uc = PublishTrainingSession(_repo)
+_unpublish_training_session_uc = UnpublishTrainingSession(_repo)
+_start_training_session_uc = StartTrainingSession(_repo)
+_complete_training_session_uc = CompleteTrainingSession(_repo)
+_cancel_training_session_uc = CancelTrainingSession(_repo)
+_archive_training_session_uc = ArchiveTrainingSession(_repo)
+_list_session_blocks_uc = ListSessionBlocks(_repo)
+_add_session_block_uc = AddSessionBlock(_repo)
+_get_session_block_uc = GetSessionBlock(_repo)
+_update_session_block_uc = UpdateSessionBlock(_repo)
+_delete_session_block_uc = DeleteSessionBlock(_repo)
+_reorder_session_blocks_uc = ReorderSessionBlocks(_repo)
+_list_session_attendance_uc = ListSessionAttendance(_repo)
+_record_session_attendance_uc = RecordSessionAttendance(_repo)
+_submit_wellness_pre_uc = SubmitWellnessPre(_repo)
+_get_wellness_pre_uc = GetWellnessPre(_repo)
+_update_wellness_pre_uc = UpdateWellnessPre(_repo)
+_submit_wellness_post_uc = SubmitWellnessPost(_repo)
+_get_wellness_post_uc = GetWellnessPost(_repo)
+_update_wellness_post_uc = UpdateWellnessPost(_repo)
+_list_mesocycles_uc = ListMesocycles(_repo)
+_create_mesocycle_uc = CreateMesocycle(_repo)
+_get_mesocycle_by_id_uc = GetMesocycleById(_repo)
+_update_mesocycle_uc = UpdateMesocycle(_repo)
+_list_microcycles_uc = ListMicrocycles(_repo)
+_create_microcycle_uc = CreateMicrocycle(_repo)
+_get_microcycle_by_id_uc = GetMicrocycleById(_repo)
+_update_microcycle_uc = UpdateMicrocycle(_repo)
+_list_execution_records_uc = ListExecutionRecords(_repo)
+_create_execution_record_uc = CreateExecutionRecord(_repo)
+_get_execution_record_uc = GetExecutionRecord(_repo)
+_list_feedback_threads_uc = ListFeedbackThreads(_repo)
+_create_feedback_thread_uc = CreateFeedbackThread(_repo)
+_close_feedback_thread_uc = CloseFeedbackThread(_repo)
+_list_session_objectives_uc = ListSessionObjectives(_repo)
+_create_session_objective_uc = CreateSessionObjective(_repo)
+_list_attention_queue_items_uc = ListAttentionQueueItems(_repo)
+_resolve_attention_queue_item_uc = ResolveAttentionQueueItem(_repo)
+_dismiss_attention_queue_item_uc = DismissAttentionQueueItem(_repo)
+_escalate_attention_queue_item_uc = EscalateAttentionQueueItem(_repo)
+_list_recommendations_uc = ListRecommendations(_repo)
+_accept_recommendation_uc = AcceptRecommendation(_repo)
+_dismiss_recommendation_uc = DismissRecommendation(_repo)
+_get_ineligibility_status_uc = GetIneligibilityStatus(_repo)
+_submit_ineligibility_declaration_uc = SubmitIneligibilityDeclaration(_repo)
+_get_load_chart_uc = GetLoadChart(_repo)
+_list_chat_messages_uc = ListChatMessages(_repo)
+_submit_training_suggestion_uc = SubmitTrainingSuggestion(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -145,8 +145,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('-sessions', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut})
 def list_training_sessions(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listtrainingsessions_uc.execute(requester_id=uid)
+        entities, token = _list_training_sessions_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -158,8 +159,9 @@ def list_training_sessions(request: HttpRequest):
 @router.post('-sessions', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createtrainingsession_uc.execute()
+        # TODO: parse payload → _create_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('create_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -168,6 +170,7 @@ def create_training_session(request: HttpRequest):
 @router.get('-sessions/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_training_session_by_id(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_training_session_by_id')
@@ -178,8 +181,9 @@ def get_training_session_by_id(request: HttpRequest):
 @router.patch('-sessions/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def update_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatetrainingsession_uc.execute()
+        # TODO: parse payload → _update_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('update_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -188,6 +192,7 @@ def update_training_session(request: HttpRequest):
 @router.delete('-sessions/{id}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def delete_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('delete_training_session')
@@ -198,8 +203,9 @@ def delete_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/publish', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def publish_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _publishtrainingsession_uc.execute()
+        # TODO: parse payload → _publish_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('publish_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -208,8 +214,9 @@ def publish_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/unpublish', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def unpublish_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _unpublishtrainingsession_uc.execute()
+        # TODO: parse payload → _unpublish_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('unpublish_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -218,8 +225,9 @@ def unpublish_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/start', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def start_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _starttrainingsession_uc.execute()
+        # TODO: parse payload → _start_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('start_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -228,8 +236,9 @@ def start_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/complete', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def complete_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _completetrainingsession_uc.execute()
+        # TODO: parse payload → _complete_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('complete_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -238,8 +247,9 @@ def complete_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/cancel', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def cancel_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _canceltrainingsession_uc.execute()
+        # TODO: parse payload → _cancel_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('cancel_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -248,8 +258,9 @@ def cancel_training_session(request: HttpRequest):
 @router.post('-sessions/{id}/archive', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def archive_training_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _archivetrainingsession_uc.execute()
+        # TODO: parse payload → _archive_training_session_uc.execute(role=role, ...)
         raise NotImplementedError('archive_training_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -258,8 +269,9 @@ def archive_training_session(request: HttpRequest):
 @router.get('-sessions/{id}/blocks', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_session_blocks(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listsessionblocks_uc.execute(requester_id=uid)
+        entities, token = _list_session_blocks_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -271,8 +283,9 @@ def list_session_blocks(request: HttpRequest):
 @router.post('-sessions/{id}/blocks', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def add_session_block(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addsessionblock_uc.execute()
+        # TODO: parse payload → _add_session_block_uc.execute(role=role, ...)
         raise NotImplementedError('add_session_block')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -281,6 +294,7 @@ def add_session_block(request: HttpRequest):
 @router.get('-sessions/{id}/blocks/{blockId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_session_block(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_session_block')
@@ -291,8 +305,9 @@ def get_session_block(request: HttpRequest):
 @router.patch('-sessions/{id}/blocks/{blockId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def update_session_block(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatesessionblock_uc.execute()
+        # TODO: parse payload → _update_session_block_uc.execute(role=role, ...)
         raise NotImplementedError('update_session_block')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -301,6 +316,7 @@ def update_session_block(request: HttpRequest):
 @router.delete('-sessions/{id}/blocks/{blockId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def delete_session_block(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('delete_session_block')
@@ -311,8 +327,9 @@ def delete_session_block(request: HttpRequest):
 @router.post('-sessions/{id}/blocks/reorder', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def reorder_session_blocks(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _reordersessionblocks_uc.execute()
+        # TODO: parse payload → _reorder_session_blocks_uc.execute(role=role, ...)
         raise NotImplementedError('reorder_session_blocks')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -321,8 +338,9 @@ def reorder_session_blocks(request: HttpRequest):
 @router.get('-sessions/{id}/attendance', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_session_attendance(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listsessionattendance_uc.execute(requester_id=uid)
+        entities, token = _list_session_attendance_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -334,8 +352,9 @@ def list_session_attendance(request: HttpRequest):
 @router.post('-sessions/{id}/attendance', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def record_session_attendance(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _recordsessionattendance_uc.execute()
+        # TODO: parse payload → _record_session_attendance_uc.execute(role=role, ...)
         raise NotImplementedError('record_session_attendance')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -344,8 +363,9 @@ def record_session_attendance(request: HttpRequest):
 @router.post('-sessions/{id}/wellness-pre', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def submit_wellness_pre(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _submitwellnesspre_uc.execute()
+        # TODO: parse payload → _submit_wellness_pre_uc.execute(role=role, ...)
         raise NotImplementedError('submit_wellness_pre')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -354,6 +374,7 @@ def submit_wellness_pre(request: HttpRequest):
 @router.get('-sessions/{id}/wellness-pre/{athleteId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_wellness_pre(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_wellness_pre')
@@ -364,8 +385,9 @@ def get_wellness_pre(request: HttpRequest):
 @router.patch('-sessions/{id}/wellness-pre/{athleteId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def update_wellness_pre(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatewellnesspre_uc.execute()
+        # TODO: parse payload → _update_wellness_pre_uc.execute(role=role, ...)
         raise NotImplementedError('update_wellness_pre')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -374,8 +396,9 @@ def update_wellness_pre(request: HttpRequest):
 @router.post('-sessions/{id}/wellness-post', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def submit_wellness_post(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _submitwellnesspost_uc.execute()
+        # TODO: parse payload → _submit_wellness_post_uc.execute(role=role, ...)
         raise NotImplementedError('submit_wellness_post')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -384,6 +407,7 @@ def submit_wellness_post(request: HttpRequest):
 @router.get('-sessions/{id}/wellness-post/{athleteId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_wellness_post(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_wellness_post')
@@ -394,8 +418,9 @@ def get_wellness_post(request: HttpRequest):
 @router.patch('-sessions/{id}/wellness-post/{athleteId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def update_wellness_post(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatewellnesspost_uc.execute()
+        # TODO: parse payload → _update_wellness_post_uc.execute(role=role, ...)
         raise NotImplementedError('update_wellness_post')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -404,8 +429,9 @@ def update_wellness_post(request: HttpRequest):
 @router.get('/mesocycles', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut})
 def list_mesocycles(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listmesocycles_uc.execute(requester_id=uid)
+        entities, token = _list_mesocycles_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -417,8 +443,9 @@ def list_mesocycles(request: HttpRequest):
 @router.post('/mesocycles', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_mesocycle(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createmesocycle_uc.execute()
+        # TODO: parse payload → _create_mesocycle_uc.execute(role=role, ...)
         raise NotImplementedError('create_mesocycle')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -427,6 +454,7 @@ def create_mesocycle(request: HttpRequest):
 @router.get('/mesocycles/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_mesocycle_by_id(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_mesocycle_by_id')
@@ -437,8 +465,9 @@ def get_mesocycle_by_id(request: HttpRequest):
 @router.patch('/mesocycles/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def update_mesocycle(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatemesocycle_uc.execute()
+        # TODO: parse payload → _update_mesocycle_uc.execute(role=role, ...)
         raise NotImplementedError('update_mesocycle')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -447,8 +476,9 @@ def update_mesocycle(request: HttpRequest):
 @router.get('/microcycles', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut})
 def list_microcycles(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listmicrocycles_uc.execute(requester_id=uid)
+        entities, token = _list_microcycles_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -460,8 +490,9 @@ def list_microcycles(request: HttpRequest):
 @router.post('/microcycles', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_microcycle(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createmicrocycle_uc.execute()
+        # TODO: parse payload → _create_microcycle_uc.execute(role=role, ...)
         raise NotImplementedError('create_microcycle')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -470,6 +501,7 @@ def create_microcycle(request: HttpRequest):
 @router.get('/microcycles/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_microcycle_by_id(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_microcycle_by_id')
@@ -480,8 +512,9 @@ def get_microcycle_by_id(request: HttpRequest):
 @router.patch('/microcycles/{id}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def update_microcycle(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatemicrocycle_uc.execute()
+        # TODO: parse payload → _update_microcycle_uc.execute(role=role, ...)
         raise NotImplementedError('update_microcycle')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -490,8 +523,9 @@ def update_microcycle(request: HttpRequest):
 @router.get('-sessions/{id}/execution-records', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_execution_records(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listexecutionrecords_uc.execute(requester_id=uid)
+        entities, token = _list_execution_records_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -503,8 +537,9 @@ def list_execution_records(request: HttpRequest):
 @router.post('-sessions/{id}/execution-records', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def create_execution_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createexecutionrecord_uc.execute()
+        # TODO: parse payload → _create_execution_record_uc.execute(role=role, ...)
         raise NotImplementedError('create_execution_record')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -513,6 +548,7 @@ def create_execution_record(request: HttpRequest):
 @router.get('-sessions/{id}/execution-records/{recordId}', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_execution_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_execution_record')
@@ -523,8 +559,9 @@ def get_execution_record(request: HttpRequest):
 @router.get('-sessions/{id}/feedback-threads', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_feedback_threads(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listfeedbackthreads_uc.execute(requester_id=uid)
+        entities, token = _list_feedback_threads_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -536,8 +573,9 @@ def list_feedback_threads(request: HttpRequest):
 @router.post('-sessions/{id}/feedback-threads', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def create_feedback_thread(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createfeedbackthread_uc.execute()
+        # TODO: parse payload → _create_feedback_thread_uc.execute(role=role, ...)
         raise NotImplementedError('create_feedback_thread')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -546,8 +584,9 @@ def create_feedback_thread(request: HttpRequest):
 @router.post('-sessions/{id}/feedback-threads/{threadId}/close', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def close_feedback_thread(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _closefeedbackthread_uc.execute()
+        # TODO: parse payload → _close_feedback_thread_uc.execute(role=role, ...)
         raise NotImplementedError('close_feedback_thread')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -556,8 +595,9 @@ def close_feedback_thread(request: HttpRequest):
 @router.get('-sessions/{id}/objectives', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_session_objectives(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listsessionobjectives_uc.execute(requester_id=uid)
+        entities, token = _list_session_objectives_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -569,8 +609,9 @@ def list_session_objectives(request: HttpRequest):
 @router.post('-sessions/{id}/objectives', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def create_session_objective(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createsessionobjective_uc.execute()
+        # TODO: parse payload → _create_session_objective_uc.execute(role=role, ...)
         raise NotImplementedError('create_session_objective')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -579,8 +620,9 @@ def create_session_objective(request: HttpRequest):
 @router.get('-sessions/{id}/attention-queue', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_attention_queue_items(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listattentionqueueitems_uc.execute(requester_id=uid)
+        entities, token = _list_attention_queue_items_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -592,8 +634,9 @@ def list_attention_queue_items(request: HttpRequest):
 @router.post('-sessions/{id}/attention-queue/{itemId}/resolve', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def resolve_attention_queue_item(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _resolveattentionqueueitem_uc.execute()
+        # TODO: parse payload → _resolve_attention_queue_item_uc.execute(role=role, ...)
         raise NotImplementedError('resolve_attention_queue_item')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -602,8 +645,9 @@ def resolve_attention_queue_item(request: HttpRequest):
 @router.post('-sessions/{id}/attention-queue/{itemId}/dismiss', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def dismiss_attention_queue_item(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _dismissattentionqueueitem_uc.execute()
+        # TODO: parse payload → _dismiss_attention_queue_item_uc.execute(role=role, ...)
         raise NotImplementedError('dismiss_attention_queue_item')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -612,8 +656,9 @@ def dismiss_attention_queue_item(request: HttpRequest):
 @router.post('-sessions/{id}/attention-queue/{itemId}/escalate', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def escalate_attention_queue_item(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _escalateattentionqueueitem_uc.execute()
+        # TODO: parse payload → _escalate_attention_queue_item_uc.execute(role=role, ...)
         raise NotImplementedError('escalate_attention_queue_item')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -622,8 +667,9 @@ def escalate_attention_queue_item(request: HttpRequest):
 @router.get('-sessions/{id}/recommendations', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_recommendations(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listrecommendations_uc.execute(requester_id=uid)
+        entities, token = _list_recommendations_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -635,8 +681,9 @@ def list_recommendations(request: HttpRequest):
 @router.post('-sessions/{id}/recommendations/{recommendationId}/accept', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def accept_recommendation(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _acceptrecommendation_uc.execute()
+        # TODO: parse payload → _accept_recommendation_uc.execute(role=role, ...)
         raise NotImplementedError('accept_recommendation')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -645,8 +692,9 @@ def accept_recommendation(request: HttpRequest):
 @router.post('-sessions/{id}/recommendations/{recommendationId}/dismiss', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def dismiss_recommendation(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _dismissrecommendation_uc.execute()
+        # TODO: parse payload → _dismiss_recommendation_uc.execute(role=role, ...)
         raise NotImplementedError('dismiss_recommendation')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -655,8 +703,9 @@ def dismiss_recommendation(request: HttpRequest):
 @router.get('-sessions/{id}/ineligibility', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_ineligibility_status(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getineligibilitystatus_uc.execute(requester_id=uid)
+        entities, token = _get_ineligibility_status_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -668,8 +717,9 @@ def get_ineligibility_status(request: HttpRequest):
 @router.post('-sessions/{id}/ineligibility', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def submit_ineligibility_declaration(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _submitineligibilitydeclaration_uc.execute()
+        # TODO: parse payload → _submit_ineligibility_declaration_uc.execute(role=role, ...)
         raise NotImplementedError('submit_ineligibility_declaration')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -678,8 +728,9 @@ def submit_ineligibility_declaration(request: HttpRequest):
 @router.get('/load-chart', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut})
 def get_load_chart(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getloadchart_uc.execute(requester_id=uid)
+        entities, token = _get_load_chart_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -691,8 +742,9 @@ def get_load_chart(request: HttpRequest):
 @router.get('/hb-pro-coach/conversations/{conversationId}/messages', response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_chat_messages(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listchatmessages_uc.execute(requester_id=uid)
+        entities, token = _list_chat_messages_uc.execute(role=role, requester_id=uid)
         return 200, TrainingSessionListOut(
             data=[TrainingSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -704,8 +756,9 @@ def list_chat_messages(request: HttpRequest):
 @router.post('/hb-pro-coach/training-suggestions', response={201: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut})
 def submit_training_suggestion(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _submittrainingsuggestion_uc.execute()
+        # TODO: parse payload → _submit_training_suggestion_uc.execute(role=role, ...)
         raise NotImplementedError('submit_training_suggestion')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

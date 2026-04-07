@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from audit.generated.domain.entities import AuditEntry
 from audit.generated.schemas import AuditEntryOut
-from audit.generated.application.use_cases import Listauditentries, Createauditentry, Getauditentry
+from audit.generated.application.use_cases import ListAuditEntries, CreateAuditEntry, GetAuditEntry
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_audit_api_route_coverage():
 def test_audit_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createauditentry(repo).execute(
+    entity = CreateAuditEntry(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         actor_user_id=uuid.uuid4(),
         action="test-value",
@@ -69,9 +70,9 @@ def test_audit_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getauditentry(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetAuditEntry(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listauditentries(repo).execute(uuid.uuid4())
+    entities, _ = ListAuditEntries(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

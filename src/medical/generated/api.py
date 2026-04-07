@@ -14,22 +14,22 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listmedicalrecords,
-    Createmedicalrecord,
-    Getmedicalrecord,
-    Updatemedicalrecord,
-    Deletemedicalrecord,
+    ListMedicalRecords,
+    CreateMedicalRecord,
+    GetMedicalRecord,
+    UpdateMedicalRecord,
+    DeleteMedicalRecord,
 )
 from .infrastructure.repository import MedicalRecordRepository
 from .schemas import CreateMedicalRecordIn, ErrorOut, MedicalRecordListOut, MedicalRecordOut, UpdateMedicalRecordIn
 
 router = Router()
 _repo = MedicalRecordRepository()
-_listmedicalrecords_uc = Listmedicalrecords(_repo)
-_createmedicalrecord_uc = Createmedicalrecord(_repo)
-_getmedicalrecord_uc = Getmedicalrecord(_repo)
-_updatemedicalrecord_uc = Updatemedicalrecord(_repo)
-_deletemedicalrecord_uc = Deletemedicalrecord(_repo)
+_list_medical_records_uc = ListMedicalRecords(_repo)
+_create_medical_record_uc = CreateMedicalRecord(_repo)
+_get_medical_record_uc = GetMedicalRecord(_repo)
+_update_medical_record_uc = UpdateMedicalRecord(_repo)
+_delete_medical_record_uc = DeleteMedicalRecord(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -49,8 +49,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/records', response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def list_medical_records(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listmedicalrecords_uc.execute(requester_id=uid)
+        entities, token = _list_medical_records_uc.execute(role=role, requester_id=uid)
         return 200, MedicalRecordListOut(
             data=[MedicalRecordOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -62,8 +63,9 @@ def list_medical_records(request: HttpRequest):
 @router.post('/records', response={201: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_medical_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createmedicalrecord_uc.execute()
+        # TODO: parse payload → _create_medical_record_uc.execute(role=role, ...)
         raise NotImplementedError('create_medical_record')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -72,6 +74,7 @@ def create_medical_record(request: HttpRequest):
 @router.get('/records/{recordId}', response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_medical_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_medical_record')
@@ -82,8 +85,9 @@ def get_medical_record(request: HttpRequest):
 @router.patch('/records/{recordId}', response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def update_medical_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updatemedicalrecord_uc.execute()
+        # TODO: parse payload → _update_medical_record_uc.execute(role=role, ...)
         raise NotImplementedError('update_medical_record')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -92,6 +96,7 @@ def update_medical_record(request: HttpRequest):
 @router.delete('/records/{recordId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def delete_medical_record(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('delete_medical_record')

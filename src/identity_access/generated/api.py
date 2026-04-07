@@ -14,30 +14,30 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Authlogin,
-    Authlogout,
-    Authrefreshtoken,
-    Authgetcurrentsession,
-    Listactivesessions,
-    Revokesession,
-    Listuserroles,
-    Assignrole,
-    Revokerole,
+    AuthLogin,
+    AuthLogout,
+    AuthRefreshToken,
+    AuthGetCurrentSession,
+    ListActiveSessions,
+    RevokeSession,
+    ListUserRoles,
+    AssignRole,
+    RevokeRole,
 )
 from .infrastructure.repository import AuthSessionRepository
 from .schemas import AuthSessionListOut, AuthSessionOut, CreateAuthSessionIn, ErrorOut
 
 router = Router()
 _repo = AuthSessionRepository()
-_authlogin_uc = Authlogin(_repo)
-_authlogout_uc = Authlogout(_repo)
-_authrefreshtoken_uc = Authrefreshtoken(_repo)
-_authgetcurrentsession_uc = Authgetcurrentsession(_repo)
-_listactivesessions_uc = Listactivesessions(_repo)
-_revokesession_uc = Revokesession(_repo)
-_listuserroles_uc = Listuserroles(_repo)
-_assignrole_uc = Assignrole(_repo)
-_revokerole_uc = Revokerole(_repo)
+_auth_login_uc = AuthLogin(_repo)
+_auth_logout_uc = AuthLogout(_repo)
+_auth_refresh_token_uc = AuthRefreshToken(_repo)
+_auth_get_current_session_uc = AuthGetCurrentSession(_repo)
+_list_active_sessions_uc = ListActiveSessions(_repo)
+_revoke_session_uc = RevokeSession(_repo)
+_list_user_roles_uc = ListUserRoles(_repo)
+_assign_role_uc = AssignRole(_repo)
+_revoke_role_uc = RevokeRole(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -57,8 +57,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.post('/auth/login', response={200: AuthSessionOut, 401: ErrorOut})
 def auth_login(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _authlogin_uc.execute()
+        # TODO: parse payload → _auth_login_uc.execute(role=role, ...)
         raise NotImplementedError('auth_login')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -67,8 +68,9 @@ def auth_login(request: HttpRequest):
 @router.post('/auth/logout', response={401: ErrorOut})
 def auth_logout(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _authlogout_uc.execute()
+        # TODO: parse payload → _auth_logout_uc.execute(role=role, ...)
         raise NotImplementedError('auth_logout')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -77,8 +79,9 @@ def auth_logout(request: HttpRequest):
 @router.post('/auth/refresh', response={200: AuthSessionOut, 401: ErrorOut})
 def auth_refresh_token(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _authrefreshtoken_uc.execute()
+        # TODO: parse payload → _auth_refresh_token_uc.execute(role=role, ...)
         raise NotImplementedError('auth_refresh_token')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -87,8 +90,9 @@ def auth_refresh_token(request: HttpRequest):
 @router.get('/auth/me', response={200: AuthSessionOut, 401: ErrorOut})
 def auth_get_current_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _authgetcurrentsession_uc.execute(requester_id=uid)
+        entities, token = _auth_get_current_session_uc.execute(role=role, requester_id=uid)
         return 200, AuthSessionListOut(
             data=[AuthSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -100,8 +104,9 @@ def auth_get_current_session(request: HttpRequest):
 @router.get('/auth/sessions', response={200: AuthSessionOut, 401: ErrorOut, 403: ErrorOut})
 def list_active_sessions(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listactivesessions_uc.execute(requester_id=uid)
+        entities, token = _list_active_sessions_uc.execute(role=role, requester_id=uid)
         return 200, AuthSessionListOut(
             data=[AuthSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -113,6 +118,7 @@ def list_active_sessions(request: HttpRequest):
 @router.delete('/auth/sessions/{sessionId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def revoke_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('revoke_session')
@@ -123,8 +129,9 @@ def revoke_session(request: HttpRequest):
 @router.get('/auth/users/{userId}/roles', response={200: AuthSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_user_roles(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listuserroles_uc.execute(requester_id=uid)
+        entities, token = _list_user_roles_uc.execute(role=role, requester_id=uid)
         return 200, AuthSessionListOut(
             data=[AuthSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -136,8 +143,9 @@ def list_user_roles(request: HttpRequest):
 @router.post('/auth/users/{userId}/roles', response={201: AuthSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def assign_role(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _assignrole_uc.execute()
+        # TODO: parse payload → _assign_role_uc.execute(role=role, ...)
         raise NotImplementedError('assign_role')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -146,6 +154,7 @@ def assign_role(request: HttpRequest):
 @router.delete('/auth/users/{userId}/roles/{roleLabel}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def revoke_role(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('revoke_role')

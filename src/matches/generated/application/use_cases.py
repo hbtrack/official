@@ -14,12 +14,13 @@ from ..domain.entities import Match
 from ..infrastructure.repository import MatchRepository
 
 
-class Listmatches:
+class ListMatches:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listmatches:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Creatematch:
+class CreateMatch:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Match:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Match:
         entity = Match(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getmatch:
+class GetMatch:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Match:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Match:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Match {entity_id} not found")
         return entity
 
 
-class Patchmatch:
+class PatchMatch:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Match:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Match:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Match {entity_id} not found")
@@ -63,11 +64,11 @@ class Patchmatch:
         return self.repo.save(entity)
 
 
-class Addplayertolineup:
+class AddPlayerToLineup:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Match:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Match:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Match {entity_id} not found")
@@ -78,11 +79,11 @@ class Addplayertolineup:
         return self.repo.save(entity)
 
 
-class Removeplayerfromlineup:
+class RemovePlayerFromLineup:
     def __init__(self, repo: MatchRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Match {entity_id} not found")

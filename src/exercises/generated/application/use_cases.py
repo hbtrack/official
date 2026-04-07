@@ -14,12 +14,13 @@ from ..domain.entities import Exercise
 from ..infrastructure.repository import ExerciseRepository
 
 
-class Listexercises:
+class ListExercises:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listexercises:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createexercise:
+class CreateExercise:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Exercise:
         entity = Exercise(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getexercise:
+class GetExercise:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Exercise:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")
         return entity
 
 
-class Updateexercise:
+class UpdateExercise:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Exercise:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")
@@ -63,11 +64,11 @@ class Updateexercise:
         return self.repo.save(entity)
 
 
-class Deleteexercise:
+class DeleteExercise:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")
@@ -75,22 +76,23 @@ class Deleteexercise:
         pass
 
 
-class Copyexercisetoorg:
+class CopyExerciseToOrg:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Exercise:
         entity = Exercise(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listexerciseversions:
+class ListExerciseVersions:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -98,23 +100,24 @@ class Listexerciseversions:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Getexerciseversion:
+class GetExerciseVersion:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Exercise:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")
         return entity
 
 
-class Listexerciserelations:
+class ListExerciseRelations:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -122,21 +125,21 @@ class Listexerciserelations:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Addexerciserelation:
+class AddExerciseRelation:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Exercise:
         entity = Exercise(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Deleteexerciserelation:
+class DeleteExerciseRelation:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")
@@ -144,12 +147,13 @@ class Deleteexerciserelation:
         pass
 
 
-class Getexerciseacl:
+class GetExerciseAcl:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -157,21 +161,21 @@ class Getexerciseacl:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Addexerciseaclentry:
+class AddExerciseAclEntry:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Exercise:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Exercise:
         entity = Exercise(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Removeexerciseaclentry:
+class RemoveExerciseAclEntry:
     def __init__(self, repo: ExerciseRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Exercise {entity_id} not found")

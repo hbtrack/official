@@ -14,20 +14,20 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listingestionjobs,
-    Createingestionjob,
-    Getingestionjob,
-    Retryingestionjob,
+    ListIngestionJobs,
+    CreateIngestionJob,
+    GetIngestionJob,
+    RetryIngestionJob,
 )
 from .infrastructure.repository import IngestionJobRepository
 from .schemas import CreateIngestionJobIn, ErrorOut, IngestionJobListOut, IngestionJobOut
 
 router = Router()
 _repo = IngestionJobRepository()
-_listingestionjobs_uc = Listingestionjobs(_repo)
-_createingestionjob_uc = Createingestionjob(_repo)
-_getingestionjob_uc = Getingestionjob(_repo)
-_retryingestionjob_uc = Retryingestionjob(_repo)
+_list_ingestion_jobs_uc = ListIngestionJobs(_repo)
+_create_ingestion_job_uc = CreateIngestionJob(_repo)
+_get_ingestion_job_uc = GetIngestionJob(_repo)
+_retry_ingestion_job_uc = RetryIngestionJob(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -47,8 +47,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/ingestion/jobs', response={200: IngestionJobOut, 401: ErrorOut, 403: ErrorOut})
 def list_ingestion_jobs(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listingestionjobs_uc.execute(requester_id=uid)
+        entities, token = _list_ingestion_jobs_uc.execute(role=role, requester_id=uid)
         return 200, IngestionJobListOut(
             data=[IngestionJobOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -60,8 +61,9 @@ def list_ingestion_jobs(request: HttpRequest):
 @router.post('/ingestion/jobs', response={401: ErrorOut, 403: ErrorOut, 409: ErrorOut})
 def create_ingestion_job(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createingestionjob_uc.execute()
+        # TODO: parse payload → _create_ingestion_job_uc.execute(role=role, ...)
         raise NotImplementedError('create_ingestion_job')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -70,6 +72,7 @@ def create_ingestion_job(request: HttpRequest):
 @router.get('/ingestion/jobs/{jobId}', response={200: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_ingestion_job(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_ingestion_job')
@@ -80,8 +83,9 @@ def get_ingestion_job(request: HttpRequest):
 @router.post('/ingestion/jobs/{jobId}/retry', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def retry_ingestion_job(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _retryingestionjob_uc.execute()
+        # TODO: parse payload → _retry_ingestion_job_uc.execute(role=role, ...)
         raise NotImplementedError('retry_ingestion_job')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

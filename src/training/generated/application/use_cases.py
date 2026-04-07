@@ -14,12 +14,13 @@ from ..domain.entities import TrainingSession
 from ..infrastructure.repository import TrainingSessionRepository
 
 
-class Listtrainingsessions:
+class ListTrainingSessions:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listtrainingsessions:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createtrainingsession:
+class CreateTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Gettrainingsessionbyid:
+class GetTrainingSessionById:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatetrainingsession:
+class UpdateTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -63,11 +64,11 @@ class Updatetrainingsession:
         return self.repo.save(entity)
 
 
-class Deletetrainingsession:
+class DeleteTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -75,72 +76,73 @@ class Deletetrainingsession:
         pass
 
 
-class Publishtrainingsession:
+class PublishTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Unpublishtrainingsession:
+class UnpublishTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Starttrainingsession:
+class StartTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Completetrainingsession:
+class CompleteTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Canceltrainingsession:
+class CancelTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Archivetrainingsession:
+class ArchiveTrainingSession:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listsessionblocks:
+class ListSessionBlocks:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -148,32 +150,32 @@ class Listsessionblocks:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Addsessionblock:
+class AddSessionBlock:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getsessionblock:
+class GetSessionBlock:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatesessionblock:
+class UpdateSessionBlock:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -184,11 +186,11 @@ class Updatesessionblock:
         return self.repo.save(entity)
 
 
-class Deletesessionblock:
+class DeleteSessionBlock:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -196,22 +198,23 @@ class Deletesessionblock:
         pass
 
 
-class Reordersessionblocks:
+class ReorderSessionBlocks:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listsessionattendance:
+class ListSessionAttendance:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -219,42 +222,42 @@ class Listsessionattendance:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Recordsessionattendance:
+class RecordSessionAttendance:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Submitwellnesspre:
+class SubmitWellnessPre:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getwellnesspre:
+class GetWellnessPre:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatewellnesspre:
+class UpdateWellnessPre:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -265,32 +268,32 @@ class Updatewellnesspre:
         return self.repo.save(entity)
 
 
-class Submitwellnesspost:
+class SubmitWellnessPost:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getwellnesspost:
+class GetWellnessPost:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatewellnesspost:
+class UpdateWellnessPost:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -301,12 +304,13 @@ class Updatewellnesspost:
         return self.repo.save(entity)
 
 
-class Listmesocycles:
+class ListMesocycles:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -314,32 +318,32 @@ class Listmesocycles:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createmesocycle:
+class CreateMesocycle:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getmesocyclebyid:
+class GetMesocycleById:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatemesocycle:
+class UpdateMesocycle:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -350,12 +354,13 @@ class Updatemesocycle:
         return self.repo.save(entity)
 
 
-class Listmicrocycles:
+class ListMicrocycles:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -363,32 +368,32 @@ class Listmicrocycles:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createmicrocycle:
+class CreateMicrocycle:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getmicrocyclebyid:
+class GetMicrocycleById:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Updatemicrocycle:
+class UpdateMicrocycle:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
@@ -399,12 +404,13 @@ class Updatemicrocycle:
         return self.repo.save(entity)
 
 
-class Listexecutionrecords:
+class ListExecutionRecords:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -412,33 +418,34 @@ class Listexecutionrecords:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createexecutionrecord:
+class CreateExecutionRecord:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getexecutionrecord:
+class GetExecutionRecord:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> TrainingSession:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"TrainingSession {entity_id} not found")
         return entity
 
 
-class Listfeedbackthreads:
+class ListFeedbackThreads:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -446,32 +453,33 @@ class Listfeedbackthreads:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createfeedbackthread:
+class CreateFeedbackThread:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Closefeedbackthread:
+class CloseFeedbackThread:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listsessionobjectives:
+class ListSessionObjectives:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -479,22 +487,23 @@ class Listsessionobjectives:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createsessionobjective:
+class CreateSessionObjective:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listattentionqueueitems:
+class ListAttentionQueueItems:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -502,42 +511,43 @@ class Listattentionqueueitems:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Resolveattentionqueueitem:
+class ResolveAttentionQueueItem:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Dismissattentionqueueitem:
+class DismissAttentionQueueItem:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Escalateattentionqueueitem:
+class EscalateAttentionQueueItem:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listrecommendations:
+class ListRecommendations:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -545,32 +555,33 @@ class Listrecommendations:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Acceptrecommendation:
+class AcceptRecommendation:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Dismissrecommendation:
+class DismissRecommendation:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getineligibilitystatus:
+class GetIneligibilityStatus:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -578,22 +589,23 @@ class Getineligibilitystatus:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Submitineligibilitydeclaration:
+class SubmitIneligibilityDeclaration:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getloadchart:
+class GetLoadChart:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -601,12 +613,13 @@ class Getloadchart:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Listchatmessages:
+class ListChatMessages:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -614,11 +627,11 @@ class Listchatmessages:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Submittrainingsuggestion:
+class SubmitTrainingSuggestion:
     def __init__(self, repo: TrainingSessionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> TrainingSession:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> TrainingSession:
         entity = TrainingSession(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)

@@ -14,22 +14,22 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listscoutevents,
-    Createscoutevent,
-    Getscoutevent,
-    Getscoutaggregations,
-    Completescoutsession,
+    ListScoutEvents,
+    CreateScoutEvent,
+    GetScoutEvent,
+    GetScoutAggregations,
+    CompleteScoutSession,
 )
 from .infrastructure.repository import ScoutEventRepository
 from .schemas import CreateScoutEventIn, ErrorOut, ScoutEventListOut, ScoutEventOut
 
 router = Router()
 _repo = ScoutEventRepository()
-_listscoutevents_uc = Listscoutevents(_repo)
-_createscoutevent_uc = Createscoutevent(_repo)
-_getscoutevent_uc = Getscoutevent(_repo)
-_getscoutaggregations_uc = Getscoutaggregations(_repo)
-_completescoutsession_uc = Completescoutsession(_repo)
+_list_scout_events_uc = ListScoutEvents(_repo)
+_create_scout_event_uc = CreateScoutEvent(_repo)
+_get_scout_event_uc = GetScoutEvent(_repo)
+_get_scout_aggregations_uc = GetScoutAggregations(_repo)
+_complete_scout_session_uc = CompleteScoutSession(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -49,8 +49,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/events', response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut})
 def list_scout_events(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listscoutevents_uc.execute(requester_id=uid)
+        entities, token = _list_scout_events_uc.execute(role=role, requester_id=uid)
         return 200, ScoutEventListOut(
             data=[ScoutEventOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -62,8 +63,9 @@ def list_scout_events(request: HttpRequest):
 @router.post('/events', response={201: ScoutEventOut, 401: ErrorOut, 403: ErrorOut})
 def create_scout_event(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createscoutevent_uc.execute()
+        # TODO: parse payload → _create_scout_event_uc.execute(role=role, ...)
         raise NotImplementedError('create_scout_event')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -72,6 +74,7 @@ def create_scout_event(request: HttpRequest):
 @router.get('/events/{eventId}', response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_scout_event(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_scout_event')
@@ -82,8 +85,9 @@ def get_scout_event(request: HttpRequest):
 @router.get('/events/aggregations', response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut})
 def get_scout_aggregations(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getscoutaggregations_uc.execute(requester_id=uid)
+        entities, token = _get_scout_aggregations_uc.execute(role=role, requester_id=uid)
         return 200, ScoutEventListOut(
             data=[ScoutEventOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -95,8 +99,9 @@ def get_scout_aggregations(request: HttpRequest):
 @router.post('/sessions/{matchId}/complete', response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def complete_scout_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _completescoutsession_uc.execute()
+        # TODO: parse payload → _complete_scout_session_uc.execute(role=role, ...)
         raise NotImplementedError('complete_scout_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

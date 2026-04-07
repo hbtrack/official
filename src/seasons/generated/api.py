@@ -14,24 +14,24 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listseasons,
-    Createseason,
-    Getseason,
-    Patchseason,
-    Addteamtoseason,
-    Removeteamfromseason,
+    ListSeasons,
+    CreateSeason,
+    GetSeason,
+    PatchSeason,
+    AddTeamToSeason,
+    RemoveTeamFromSeason,
 )
 from .infrastructure.repository import SeasonRepository
 from .schemas import CreateSeasonIn, ErrorOut, SeasonListOut, SeasonOut, UpdateSeasonIn
 
 router = Router()
 _repo = SeasonRepository()
-_listseasons_uc = Listseasons(_repo)
-_createseason_uc = Createseason(_repo)
-_getseason_uc = Getseason(_repo)
-_patchseason_uc = Patchseason(_repo)
-_addteamtoseason_uc = Addteamtoseason(_repo)
-_removeteamfromseason_uc = Removeteamfromseason(_repo)
+_list_seasons_uc = ListSeasons(_repo)
+_create_season_uc = CreateSeason(_repo)
+_get_season_uc = GetSeason(_repo)
+_patch_season_uc = PatchSeason(_repo)
+_add_team_to_season_uc = AddTeamToSeason(_repo)
+_remove_team_from_season_uc = RemoveTeamFromSeason(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -51,8 +51,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: SeasonOut, 401: ErrorOut, 403: ErrorOut})
 def list_seasons(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listseasons_uc.execute(requester_id=uid)
+        entities, token = _list_seasons_uc.execute(role=role, requester_id=uid)
         return 200, SeasonListOut(
             data=[SeasonOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -64,8 +65,9 @@ def list_seasons(request: HttpRequest):
 @router.post('/', response={201: SeasonOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut})
 def create_season(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createseason_uc.execute()
+        # TODO: parse payload → _create_season_uc.execute(role=role, ...)
         raise NotImplementedError('create_season')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -74,6 +76,7 @@ def create_season(request: HttpRequest):
 @router.get('/{seasonId}', response={200: SeasonOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_season(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_season')
@@ -84,8 +87,9 @@ def get_season(request: HttpRequest):
 @router.patch('/{seasonId}', response={200: SeasonOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def patch_season(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchseason_uc.execute()
+        # TODO: parse payload → _patch_season_uc.execute(role=role, ...)
         raise NotImplementedError('patch_season')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -94,8 +98,9 @@ def patch_season(request: HttpRequest):
 @router.post('/{seasonId}/teams/{teamId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def add_team_to_season(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addteamtoseason_uc.execute()
+        # TODO: parse payload → _add_team_to_season_uc.execute(role=role, ...)
         raise NotImplementedError('add_team_to_season')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -104,6 +109,7 @@ def add_team_to_season(request: HttpRequest):
 @router.delete('/{seasonId}/teams/{teamId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def remove_team_from_season(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('remove_team_from_season')

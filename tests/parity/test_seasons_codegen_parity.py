@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from seasons.generated.domain.entities import Season
 from seasons.generated.schemas import SeasonOut
-from seasons.generated.application.use_cases import Listseasons, Createseason, Getseason
+from seasons.generated.application.use_cases import ListSeasons, CreateSeason, GetSeason
 
 
 def _make_entity(**overrides):
@@ -64,7 +64,8 @@ def test_seasons_api_route_coverage():
 def test_seasons_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createseason(repo).execute(
+    entity = CreateSeason(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         name="test-value",
         status_label="test-value",
@@ -77,9 +78,9 @@ def test_seasons_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getseason(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetSeason(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listseasons(repo).execute(uuid.uuid4())
+    entities, _ = ListSeasons(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

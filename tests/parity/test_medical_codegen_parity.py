@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from medical.generated.domain.entities import MedicalRecord
 from medical.generated.schemas import MedicalRecordOut
-from medical.generated.application.use_cases import Listmedicalrecords, Createmedicalrecord, Getmedicalrecord
+from medical.generated.application.use_cases import ListMedicalRecords, CreateMedicalRecord, GetMedicalRecord
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_medical_api_route_coverage():
 def test_medical_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createmedicalrecord(repo).execute(
+    entity = CreateMedicalRecord(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         athlete_user_id=uuid.uuid4(),
         record_date=date(2026, 3, 31),
@@ -69,9 +70,9 @@ def test_medical_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getmedicalrecord(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetMedicalRecord(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listmedicalrecords(repo).execute(uuid.uuid4())
+    entities, _ = ListMedicalRecords(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

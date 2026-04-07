@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from matches.generated.domain.entities import Match
 from matches.generated.schemas import MatchOut
-from matches.generated.application.use_cases import Listmatches, Creatematch, Getmatch
+from matches.generated.application.use_cases import ListMatches, CreateMatch, GetMatch
 
 
 def _make_entity(**overrides):
@@ -67,7 +67,8 @@ def test_matches_api_route_coverage():
 def test_matches_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Creatematch(repo).execute(
+    entity = CreateMatch(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         competition_id=uuid.uuid4(),
         home_team_id=uuid.uuid4(),
@@ -83,9 +84,9 @@ def test_matches_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getmatch(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetMatch(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listmatches(repo).execute(uuid.uuid4())
+    entities, _ = ListMatches(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

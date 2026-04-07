@@ -14,24 +14,24 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listmatches,
-    Creatematch,
-    Getmatch,
-    Patchmatch,
-    Addplayertolineup,
-    Removeplayerfromlineup,
+    ListMatches,
+    CreateMatch,
+    GetMatch,
+    PatchMatch,
+    AddPlayerToLineup,
+    RemovePlayerFromLineup,
 )
 from .infrastructure.repository import MatchRepository
 from .schemas import CreateMatchIn, ErrorOut, MatchListOut, MatchOut, UpdateMatchIn
 
 router = Router()
 _repo = MatchRepository()
-_listmatches_uc = Listmatches(_repo)
-_creatematch_uc = Creatematch(_repo)
-_getmatch_uc = Getmatch(_repo)
-_patchmatch_uc = Patchmatch(_repo)
-_addplayertolineup_uc = Addplayertolineup(_repo)
-_removeplayerfromlineup_uc = Removeplayerfromlineup(_repo)
+_list_matches_uc = ListMatches(_repo)
+_create_match_uc = CreateMatch(_repo)
+_get_match_uc = GetMatch(_repo)
+_patch_match_uc = PatchMatch(_repo)
+_add_player_to_lineup_uc = AddPlayerToLineup(_repo)
+_remove_player_from_lineup_uc = RemovePlayerFromLineup(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -51,8 +51,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: MatchOut, 401: ErrorOut, 403: ErrorOut})
 def list_matches(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listmatches_uc.execute(requester_id=uid)
+        entities, token = _list_matches_uc.execute(role=role, requester_id=uid)
         return 200, MatchListOut(
             data=[MatchOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -64,8 +65,9 @@ def list_matches(request: HttpRequest):
 @router.post('/', response={201: MatchOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut})
 def create_match(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _creatematch_uc.execute()
+        # TODO: parse payload → _create_match_uc.execute(role=role, ...)
         raise NotImplementedError('create_match')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -74,6 +76,7 @@ def create_match(request: HttpRequest):
 @router.get('/{matchId}', response={200: MatchOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_match(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_match')
@@ -84,8 +87,9 @@ def get_match(request: HttpRequest):
 @router.patch('/{matchId}', response={200: MatchOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def patch_match(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchmatch_uc.execute()
+        # TODO: parse payload → _patch_match_uc.execute(role=role, ...)
         raise NotImplementedError('patch_match')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -94,8 +98,9 @@ def patch_match(request: HttpRequest):
 @router.put('/{matchId}/lineup/{userId}', response={200: MatchOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def add_player_to_lineup(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addplayertolineup_uc.execute()
+        # TODO: parse payload → _add_player_to_lineup_uc.execute(role=role, ...)
         raise NotImplementedError('add_player_to_lineup')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -104,6 +109,7 @@ def add_player_to_lineup(request: HttpRequest):
 @router.delete('/{matchId}/lineup/{userId}', response={200: MatchOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def remove_player_from_lineup(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('remove_player_from_lineup')

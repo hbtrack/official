@@ -10,7 +10,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from users.generated.domain.entities import UserProfile
 from users.generated.schemas import UserProfileOut
-from users.generated.application.use_cases import Listusers, Createuser, Getuser
+from users.generated.application.use_cases import ListUsers, CreateUser, GetUser
 
 
 def _make_entity(**overrides):
@@ -58,7 +58,8 @@ def test_users_api_route_coverage():
 def test_users_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createuser(repo).execute(
+    entity = CreateUser(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         display_name="test-value",
         role_label="test-value",
@@ -66,9 +67,9 @@ def test_users_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getuser(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetUser(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listusers(repo).execute(uuid.uuid4())
+    entities, _ = ListUsers(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

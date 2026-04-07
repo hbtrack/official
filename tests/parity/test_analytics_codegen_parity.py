@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from analytics.generated.domain.entities import AnalyticsSnapshot
 from analytics.generated.schemas import AnalyticsSnapshotOut
-from analytics.generated.application.use_cases import Listanalyticssnapshots, Createanalyticssnapshot, Getanalyticssnapshot
+from analytics.generated.application.use_cases import ListAnalyticsSnapshots, CreateAnalyticsSnapshot, GetAnalyticsSnapshot
 
 
 def _make_entity(**overrides):
@@ -59,7 +59,8 @@ def test_analytics_api_route_coverage():
 def test_analytics_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createanalyticssnapshot(repo).execute(
+    entity = CreateAnalyticsSnapshot(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         metric_key="test-value",
         computed_at=datetime(2026, 3, 31, 15, 0, tzinfo=timezone.utc),
@@ -67,9 +68,9 @@ def test_analytics_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getanalyticssnapshot(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetAnalyticsSnapshot(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listanalyticssnapshots(repo).execute(uuid.uuid4())
+    entities, _ = ListAnalyticsSnapshots(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

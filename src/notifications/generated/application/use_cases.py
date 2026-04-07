@@ -14,22 +14,23 @@ from ..domain.entities import NotificationDelivery
 from ..infrastructure.repository import NotificationDeliveryRepository
 
 
-class Createnotificationintent:
+class CreateNotificationIntent:
     def __init__(self, repo: NotificationDeliveryRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> NotificationDelivery:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> NotificationDelivery:
         entity = NotificationDelivery(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Listdeliveries:
+class ListDeliveries:
     def __init__(self, repo: NotificationDeliveryRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -37,23 +38,24 @@ class Listdeliveries:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Getdelivery:
+class GetDelivery:
     def __init__(self, repo: NotificationDeliveryRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> NotificationDelivery:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> NotificationDelivery:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"NotificationDelivery {entity_id} not found")
         return entity
 
 
-class Getusernotificationpreferences:
+class GetUserNotificationPreferences:
     def __init__(self, repo: NotificationDeliveryRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -61,11 +63,11 @@ class Getusernotificationpreferences:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Updateusernotificationpreferences:
+class UpdateUserNotificationPreferences:
     def __init__(self, repo: NotificationDeliveryRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> NotificationDelivery:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> NotificationDelivery:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"NotificationDelivery {entity_id} not found")

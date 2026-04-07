@@ -14,30 +14,30 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Createsession,
-    Listsessions,
-    Getsession,
-    Patchsession,
-    Createsegment,
-    Listsegments,
-    Createclip,
-    Listclips,
-    Publishdistribution,
+    CreateSession,
+    ListSessions,
+    GetSession,
+    PatchSession,
+    CreateSegment,
+    ListSegments,
+    CreateClip,
+    ListClips,
+    PublishDistribution,
 )
 from .infrastructure.repository import MatchMediaSessionRepository
 from .schemas import CreateMatchMediaSessionIn, ErrorOut, MatchMediaSessionListOut, MatchMediaSessionOut, UpdateMatchMediaSessionIn
 
 router = Router()
 _repo = MatchMediaSessionRepository()
-_createsession_uc = Createsession(_repo)
-_listsessions_uc = Listsessions(_repo)
-_getsession_uc = Getsession(_repo)
-_patchsession_uc = Patchsession(_repo)
-_createsegment_uc = Createsegment(_repo)
-_listsegments_uc = Listsegments(_repo)
-_createclip_uc = Createclip(_repo)
-_listclips_uc = Listclips(_repo)
-_publishdistribution_uc = Publishdistribution(_repo)
+_create_session_uc = CreateSession(_repo)
+_list_sessions_uc = ListSessions(_repo)
+_get_session_uc = GetSession(_repo)
+_patch_session_uc = PatchSession(_repo)
+_create_segment_uc = CreateSegment(_repo)
+_list_segments_uc = ListSegments(_repo)
+_create_clip_uc = CreateClip(_repo)
+_list_clips_uc = ListClips(_repo)
+_publish_distribution_uc = PublishDistribution(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -57,8 +57,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.post('/sessions', response={201: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut})
 def create_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createsession_uc.execute()
+        # TODO: parse payload → _create_session_uc.execute(role=role, ...)
         raise NotImplementedError('create_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -67,8 +68,9 @@ def create_session(request: HttpRequest):
 @router.get('/sessions', response={200: MatchMediaSessionOut, 401: ErrorOut})
 def list_sessions(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listsessions_uc.execute(requester_id=uid)
+        entities, token = _list_sessions_uc.execute(role=role, requester_id=uid)
         return 200, MatchMediaSessionListOut(
             data=[MatchMediaSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -80,6 +82,7 @@ def list_sessions(request: HttpRequest):
 @router.get('/sessions/{sessionId}', response={200: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_session')
@@ -90,8 +93,9 @@ def get_session(request: HttpRequest):
 @router.patch('/sessions/{sessionId}', response={200: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def patch_session(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchsession_uc.execute()
+        # TODO: parse payload → _patch_session_uc.execute(role=role, ...)
         raise NotImplementedError('patch_session')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -100,8 +104,9 @@ def patch_session(request: HttpRequest):
 @router.post('/segments', response={201: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def create_segment(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createsegment_uc.execute()
+        # TODO: parse payload → _create_segment_uc.execute(role=role, ...)
         raise NotImplementedError('create_segment')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -110,8 +115,9 @@ def create_segment(request: HttpRequest):
 @router.get('/segments', response={200: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut})
 def list_segments(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listsegments_uc.execute(requester_id=uid)
+        entities, token = _list_segments_uc.execute(role=role, requester_id=uid)
         return 200, MatchMediaSessionListOut(
             data=[MatchMediaSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -123,8 +129,9 @@ def list_segments(request: HttpRequest):
 @router.post('/clips', response={201: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def create_clip(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createclip_uc.execute()
+        # TODO: parse payload → _create_clip_uc.execute(role=role, ...)
         raise NotImplementedError('create_clip')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -133,8 +140,9 @@ def create_clip(request: HttpRequest):
 @router.get('/clips', response={200: MatchMediaSessionOut, 401: ErrorOut})
 def list_clips(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listclips_uc.execute(requester_id=uid)
+        entities, token = _list_clips_uc.execute(role=role, requester_id=uid)
         return 200, MatchMediaSessionListOut(
             data=[MatchMediaSessionOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -146,8 +154,9 @@ def list_clips(request: HttpRequest):
 @router.post('/distribution', response={201: MatchMediaSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def publish_distribution(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _publishdistribution_uc.execute()
+        # TODO: parse payload → _publish_distribution_uc.execute(role=role, ...)
         raise NotImplementedError('publish_distribution')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

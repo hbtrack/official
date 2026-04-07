@@ -14,12 +14,13 @@ from ..domain.entities import AnalyticsSnapshot
 from ..infrastructure.repository import AnalyticsSnapshotRepository
 
 
-class Listanalyticssnapshots:
+class ListAnalyticsSnapshots:
     def __init__(self, repo: AnalyticsSnapshotRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,33 +28,34 @@ class Listanalyticssnapshots:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createanalyticssnapshot:
+class CreateAnalyticsSnapshot:
     def __init__(self, repo: AnalyticsSnapshotRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> AnalyticsSnapshot:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AnalyticsSnapshot:
         entity = AnalyticsSnapshot(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getanalyticssnapshot:
+class GetAnalyticsSnapshot:
     def __init__(self, repo: AnalyticsSnapshotRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> AnalyticsSnapshot:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> AnalyticsSnapshot:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"AnalyticsSnapshot {entity_id} not found")
         return entity
 
 
-class Listanalyticsdashboards:
+class ListAnalyticsDashboards:
     def __init__(self, repo: AnalyticsSnapshotRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -61,11 +63,11 @@ class Listanalyticsdashboards:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Queryanalyticsdata:
+class QueryAnalyticsData:
     def __init__(self, repo: AnalyticsSnapshotRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> AnalyticsSnapshot:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AnalyticsSnapshot:
         entity = AnalyticsSnapshot(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)

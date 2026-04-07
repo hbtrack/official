@@ -14,12 +14,13 @@ from ..domain.entities import UserProfile
 from ..infrastructure.repository import UserProfileRepository
 
 
-class Listusers:
+class ListUsers:
     def __init__(self, repo: UserProfileRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listusers:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createuser:
+class CreateUser:
     def __init__(self, repo: UserProfileRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> UserProfile:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> UserProfile:
         entity = UserProfile(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getuser:
+class GetUser:
     def __init__(self, repo: UserProfileRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> UserProfile:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> UserProfile:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"UserProfile {entity_id} not found")
         return entity
 
 
-class Patchuser:
+class PatchUser:
     def __init__(self, repo: UserProfileRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> UserProfile:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> UserProfile:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"UserProfile {entity_id} not found")

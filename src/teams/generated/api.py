@@ -14,28 +14,28 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listteams,
-    Createteam,
-    Getteam,
-    Patchteam,
-    Addathletetoteam,
-    Removeathletefromteam,
-    Addstafftoteam,
-    Removestafffromteam,
+    ListTeams,
+    CreateTeam,
+    GetTeam,
+    PatchTeam,
+    AddAthleteToTeam,
+    RemoveAthleteFromTeam,
+    AddStaffToTeam,
+    RemoveStaffFromTeam,
 )
 from .infrastructure.repository import TeamRepository
 from .schemas import CreateTeamIn, ErrorOut, TeamListOut, TeamOut, UpdateTeamIn
 
 router = Router()
 _repo = TeamRepository()
-_listteams_uc = Listteams(_repo)
-_createteam_uc = Createteam(_repo)
-_getteam_uc = Getteam(_repo)
-_patchteam_uc = Patchteam(_repo)
-_addathletetoteam_uc = Addathletetoteam(_repo)
-_removeathletefromteam_uc = Removeathletefromteam(_repo)
-_addstafftoteam_uc = Addstafftoteam(_repo)
-_removestafffromteam_uc = Removestafffromteam(_repo)
+_list_teams_uc = ListTeams(_repo)
+_create_team_uc = CreateTeam(_repo)
+_get_team_uc = GetTeam(_repo)
+_patch_team_uc = PatchTeam(_repo)
+_add_athlete_to_team_uc = AddAthleteToTeam(_repo)
+_remove_athlete_from_team_uc = RemoveAthleteFromTeam(_repo)
+_add_staff_to_team_uc = AddStaffToTeam(_repo)
+_remove_staff_from_team_uc = RemoveStaffFromTeam(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -55,8 +55,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut})
 def list_teams(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listteams_uc.execute(requester_id=uid)
+        entities, token = _list_teams_uc.execute(role=role, requester_id=uid)
         return 200, TeamListOut(
             data=[TeamOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -68,8 +69,9 @@ def list_teams(request: HttpRequest):
 @router.post('/', response={201: TeamOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createteam_uc.execute()
+        # TODO: parse payload → _create_team_uc.execute(role=role, ...)
         raise NotImplementedError('create_team')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -78,6 +80,7 @@ def create_team(request: HttpRequest):
 @router.get('/{teamId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_team')
@@ -88,8 +91,9 @@ def get_team(request: HttpRequest):
 @router.patch('/{teamId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def patch_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _patchteam_uc.execute()
+        # TODO: parse payload → _patch_team_uc.execute(role=role, ...)
         raise NotImplementedError('patch_team')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -98,8 +102,9 @@ def patch_team(request: HttpRequest):
 @router.post('/{teamId}/athletes/{athleteUserId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def add_athlete_to_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addathletetoteam_uc.execute()
+        # TODO: parse payload → _add_athlete_to_team_uc.execute(role=role, ...)
         raise NotImplementedError('add_athlete_to_team')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -108,6 +113,7 @@ def add_athlete_to_team(request: HttpRequest):
 @router.delete('/{teamId}/athletes/{athleteUserId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def remove_athlete_from_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('remove_athlete_from_team')
@@ -118,8 +124,9 @@ def remove_athlete_from_team(request: HttpRequest):
 @router.post('/{teamId}/staff/{staffUserId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def add_staff_to_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addstafftoteam_uc.execute()
+        # TODO: parse payload → _add_staff_to_team_uc.execute(role=role, ...)
         raise NotImplementedError('add_staff_to_team')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -128,6 +135,7 @@ def add_staff_to_team(request: HttpRequest):
 @router.delete('/{teamId}/staff/{staffUserId}', response={200: TeamOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def remove_staff_from_team(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('remove_staff_from_team')

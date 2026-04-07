@@ -117,6 +117,13 @@ def _to_class_name(module: str) -> str:
     return "".join(part.capitalize() for part in module.split("_"))
 
 
+def _op_class_name(op_id: str) -> str:
+    """operation_id → PascalCase class: 'listAnalyticsSnapshots' → 'ListAnalyticsSnapshots'."""
+    return "".join(
+        p[0].upper() + p[1:] for p in op_id.replace("-", "_").split("_") if p
+    )
+
+
 def _needs_import(types_used: set[str]) -> dict[str, bool]:
     return {
         "UUID": any(t in types_used for t in ("UUID", "List[UUID]")),
@@ -1294,7 +1301,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
 
     for op in operations:
         op_id = op["operation_id"]
-        class_name = "".join(part.capitalize() for part in op_id.replace("-", "_").split("_"))
+        class_name = _op_class_name(op_id)
         # Filter out sub-path operations for stub safety (e.g. addTeamToSeason, lineup ops)
         # Only generate stubs for primary CRUD operations
         method = op["method"].upper()
@@ -1312,6 +1319,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
             lines += [
                 "    def execute(",
                 "        self,",
+                "        role: str,",
                 "        requester_id: UUID,",
                 "        page_size: int = 20,",
                 "        page_token: Optional[str] = None,",
@@ -1322,7 +1330,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
         elif method == "GET":
             # Get by ID
             lines += [
-                "    def execute(self, requester_id: UUID, entity_id: UUID) -> {entity_name}:".format(entity_name=entity_name),
+                "    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> {entity_name}:".format(entity_name=entity_name),
                 "        entity = self.repo.get_by_id(entity_id)",
                 "        if entity is None:",
                 f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
@@ -1331,7 +1339,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
             ]
         elif method == "POST":
             lines += [
-                "    def execute(self, requester_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
+                "    def execute(self, role: str, requester_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
                 f"        entity = {entity_name}(id=uuid.uuid4(), **kwargs)",
                 "        entity.validate_invariants()",
                 "        return self.repo.save(entity)",
@@ -1339,7 +1347,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
             ]
         elif method in ("PATCH", "PUT"):
             lines += [
-                "    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
+                "    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> {entity_name}:".format(entity_name=entity_name),
                 "        entity = self.repo.get_by_id(entity_id)",
                 "        if entity is None:",
                 f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
@@ -1352,7 +1360,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
             ]
         elif method == "DELETE":
             lines += [
-                "    def execute(self, requester_id: UUID, entity_id: UUID) -> None:",
+                "    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:",
                 "        entity = self.repo.get_by_id(entity_id)",
                 "        if entity is None:",
                 f'            raise ValueError(f"{entity_name} {{entity_id}} not found")',
@@ -1362,7 +1370,7 @@ def _build_generic_use_cases(inputs: dict[str, Any]) -> str:
             ]
         else:
             lines += [
-                "    def execute(self, requester_id: UUID, **kwargs):",
+                "    def execute(self, role: str, requester_id: UUID, **kwargs):",
                 f'        raise NotImplementedError("{class_name}.execute")',
                 "",
             ]
@@ -1381,9 +1389,7 @@ def _build_generic_api(inputs: dict[str, Any]) -> str:
     # Collect use case class names
     uc_classes: list[str] = []
     for op in operations:
-        class_name = "".join(
-            part.capitalize() for part in op["operation_id"].replace("-", "_").split("_")
-        )
+        class_name = _op_class_name(op["operation_id"])
         uc_classes.append(class_name)
 
     # Determine which schema classes exist
@@ -1422,9 +1428,7 @@ def _build_generic_api(inputs: dict[str, Any]) -> str:
 
     # Instantiate use cases
     for op in operations:
-        class_name = "".join(
-            part.capitalize() for part in op["operation_id"].replace("-", "_").split("_")
-        )
+        class_name = _op_class_name(op["operation_id"])
         var_name = f"_{_to_snake_case(class_name)}_uc"
         lines.append(f"{var_name} = {class_name}(_repo)")
     lines.append("")
@@ -1452,9 +1456,7 @@ def _build_generic_api(inputs: dict[str, Any]) -> str:
         method = op["method"].upper()
         path = op["path"]
         handler_name = _to_snake_case(op_id)
-        class_name = "".join(
-            part.capitalize() for part in op_id.replace("-", "_").split("_")
-        )
+        class_name = _op_class_name(op_id)
         var_name = f"_{_to_snake_case(class_name)}_uc"
 
         # Build response map from response_codes
@@ -1485,11 +1487,12 @@ def _build_generic_api(inputs: dict[str, Any]) -> str:
             f"@router.{method.lower()}('{api_path}', response={{{resp_str}}})",
             f"def {handler_name}(request: HttpRequest):",
             "    try:",
+            "        role = _role(request)",
             "        uid = _uid(request)",
         ]
         if method == "GET" and "{" not in path.split("/")[-1]:
             lines += [
-                f"        entities, token = {var_name}.execute(requester_id=uid)",
+                f"        entities, token = {var_name}.execute(role=role, requester_id=uid)",
                 f"        return 200, {entity_name}ListOut(",
                 f"            data=[{entity_name}Out.from_domain(e) for e in entities],",
                 "            nextPageToken=token,",
@@ -1502,12 +1505,12 @@ def _build_generic_api(inputs: dict[str, Any]) -> str:
             ]
         elif method == "POST":
             lines += [
-                f"        # TODO: parse payload → {var_name}.execute()",
+                f"        # TODO: parse payload → {var_name}.execute(role=role, ...)",
                 f"        raise NotImplementedError('{handler_name}')",
             ]
         elif method in ("PATCH", "PUT"):
             lines += [
-                f"        # TODO: parse payload → {var_name}.execute()",
+                f"        # TODO: parse payload → {var_name}.execute(role=role, ...)",
                 f"        raise NotImplementedError('{handler_name}')",
             ]
         elif method == "DELETE":

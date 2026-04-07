@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from competitions.generated.domain.entities import Competition
 from competitions.generated.schemas import CompetitionOut
-from competitions.generated.application.use_cases import Listcompetitions, Createcompetition, Getcompetition
+from competitions.generated.application.use_cases import ListCompetitions, CreateCompetition, GetCompetition
 
 
 def _make_entity(**overrides):
@@ -64,7 +64,8 @@ def test_competitions_api_route_coverage():
 def test_competitions_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createcompetition(repo).execute(
+    entity = CreateCompetition(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         season_id=uuid.uuid4(),
         name="test-value",
@@ -77,9 +78,9 @@ def test_competitions_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getcompetition(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetCompetition(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listcompetitions(repo).execute(uuid.uuid4())
+    entities, _ = ListCompetitions(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

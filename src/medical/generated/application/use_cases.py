@@ -14,12 +14,13 @@ from ..domain.entities import MedicalRecord
 from ..infrastructure.repository import MedicalRecordRepository
 
 
-class Listmedicalrecords:
+class ListMedicalRecords:
     def __init__(self, repo: MedicalRecordRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listmedicalrecords:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createmedicalrecord:
+class CreateMedicalRecord:
     def __init__(self, repo: MedicalRecordRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> MedicalRecord:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> MedicalRecord:
         entity = MedicalRecord(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getmedicalrecord:
+class GetMedicalRecord:
     def __init__(self, repo: MedicalRecordRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> MedicalRecord:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> MedicalRecord:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"MedicalRecord {entity_id} not found")
         return entity
 
 
-class Updatemedicalrecord:
+class UpdateMedicalRecord:
     def __init__(self, repo: MedicalRecordRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> MedicalRecord:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> MedicalRecord:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"MedicalRecord {entity_id} not found")
@@ -63,11 +64,11 @@ class Updatemedicalrecord:
         return self.repo.save(entity)
 
 
-class Deletemedicalrecord:
+class DeleteMedicalRecord:
     def __init__(self, repo: MedicalRecordRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"MedicalRecord {entity_id} not found")

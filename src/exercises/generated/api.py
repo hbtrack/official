@@ -14,40 +14,40 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Listexercises,
-    Createexercise,
-    Getexercise,
-    Updateexercise,
-    Deleteexercise,
-    Copyexercisetoorg,
-    Listexerciseversions,
-    Getexerciseversion,
-    Listexerciserelations,
-    Addexerciserelation,
-    Deleteexerciserelation,
-    Getexerciseacl,
-    Addexerciseaclentry,
-    Removeexerciseaclentry,
+    ListExercises,
+    CreateExercise,
+    GetExercise,
+    UpdateExercise,
+    DeleteExercise,
+    CopyExerciseToOrg,
+    ListExerciseVersions,
+    GetExerciseVersion,
+    ListExerciseRelations,
+    AddExerciseRelation,
+    DeleteExerciseRelation,
+    GetExerciseAcl,
+    AddExerciseAclEntry,
+    RemoveExerciseAclEntry,
 )
 from .infrastructure.repository import ExerciseRepository
 from .schemas import CreateExerciseIn, ErrorOut, ExerciseListOut, ExerciseOut, UpdateExerciseIn
 
 router = Router()
 _repo = ExerciseRepository()
-_listexercises_uc = Listexercises(_repo)
-_createexercise_uc = Createexercise(_repo)
-_getexercise_uc = Getexercise(_repo)
-_updateexercise_uc = Updateexercise(_repo)
-_deleteexercise_uc = Deleteexercise(_repo)
-_copyexercisetoorg_uc = Copyexercisetoorg(_repo)
-_listexerciseversions_uc = Listexerciseversions(_repo)
-_getexerciseversion_uc = Getexerciseversion(_repo)
-_listexerciserelations_uc = Listexerciserelations(_repo)
-_addexerciserelation_uc = Addexerciserelation(_repo)
-_deleteexerciserelation_uc = Deleteexerciserelation(_repo)
-_getexerciseacl_uc = Getexerciseacl(_repo)
-_addexerciseaclentry_uc = Addexerciseaclentry(_repo)
-_removeexerciseaclentry_uc = Removeexerciseaclentry(_repo)
+_list_exercises_uc = ListExercises(_repo)
+_create_exercise_uc = CreateExercise(_repo)
+_get_exercise_uc = GetExercise(_repo)
+_update_exercise_uc = UpdateExercise(_repo)
+_delete_exercise_uc = DeleteExercise(_repo)
+_copy_exercise_to_org_uc = CopyExerciseToOrg(_repo)
+_list_exercise_versions_uc = ListExerciseVersions(_repo)
+_get_exercise_version_uc = GetExerciseVersion(_repo)
+_list_exercise_relations_uc = ListExerciseRelations(_repo)
+_add_exercise_relation_uc = AddExerciseRelation(_repo)
+_delete_exercise_relation_uc = DeleteExerciseRelation(_repo)
+_get_exercise_acl_uc = GetExerciseAcl(_repo)
+_add_exercise_acl_entry_uc = AddExerciseAclEntry(_repo)
+_remove_exercise_acl_entry_uc = RemoveExerciseAclEntry(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -67,8 +67,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.get('/', response={200: ExerciseOut, 401: ErrorOut, 422: ErrorOut})
 def list_exercises(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listexercises_uc.execute(requester_id=uid)
+        entities, token = _list_exercises_uc.execute(role=role, requester_id=uid)
         return 200, ExerciseListOut(
             data=[ExerciseOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -80,8 +81,9 @@ def list_exercises(request: HttpRequest):
 @router.post('/', response={201: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_exercise(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createexercise_uc.execute()
+        # TODO: parse payload → _create_exercise_uc.execute(role=role, ...)
         raise NotImplementedError('create_exercise')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -90,6 +92,7 @@ def create_exercise(request: HttpRequest):
 @router.get('/{id}', response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_exercise')
@@ -100,8 +103,9 @@ def get_exercise(request: HttpRequest):
 @router.patch('/{id}', response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def update_exercise(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updateexercise_uc.execute()
+        # TODO: parse payload → _update_exercise_uc.execute(role=role, ...)
         raise NotImplementedError('update_exercise')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -110,6 +114,7 @@ def update_exercise(request: HttpRequest):
 @router.delete('/{id}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def delete_exercise(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('delete_exercise')
@@ -120,8 +125,9 @@ def delete_exercise(request: HttpRequest):
 @router.post('/{id}/copy', response={201: ExerciseOut, 401: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def copy_exercise_to_org(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _copyexercisetoorg_uc.execute()
+        # TODO: parse payload → _copy_exercise_to_org_uc.execute(role=role, ...)
         raise NotImplementedError('copy_exercise_to_org')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -130,8 +136,9 @@ def copy_exercise_to_org(request: HttpRequest):
 @router.get('/{id}/versions', response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_exercise_versions(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listexerciseversions_uc.execute(requester_id=uid)
+        entities, token = _list_exercise_versions_uc.execute(role=role, requester_id=uid)
         return 200, ExerciseListOut(
             data=[ExerciseOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -143,6 +150,7 @@ def list_exercise_versions(request: HttpRequest):
 @router.get('/{id}/versions/{versionId}', response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise_version(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_exercise_version')
@@ -153,8 +161,9 @@ def get_exercise_version(request: HttpRequest):
 @router.get('/{id}/relations', response={200: ExerciseOut, 401: ErrorOut, 404: ErrorOut})
 def list_exercise_relations(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listexerciserelations_uc.execute(requester_id=uid)
+        entities, token = _list_exercise_relations_uc.execute(role=role, requester_id=uid)
         return 200, ExerciseListOut(
             data=[ExerciseOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -166,8 +175,9 @@ def list_exercise_relations(request: HttpRequest):
 @router.post('/{id}/relations', response={201: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def add_exercise_relation(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addexerciserelation_uc.execute()
+        # TODO: parse payload → _add_exercise_relation_uc.execute(role=role, ...)
         raise NotImplementedError('add_exercise_relation')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -176,6 +186,7 @@ def add_exercise_relation(request: HttpRequest):
 @router.delete('/{id}/relations/{relationId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def delete_exercise_relation(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('delete_exercise_relation')
@@ -186,8 +197,9 @@ def delete_exercise_relation(request: HttpRequest):
 @router.get('/{id}/acl', response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise_acl(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getexerciseacl_uc.execute(requester_id=uid)
+        entities, token = _get_exercise_acl_uc.execute(role=role, requester_id=uid)
         return 200, ExerciseListOut(
             data=[ExerciseOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -199,8 +211,9 @@ def get_exercise_acl(request: HttpRequest):
 @router.post('/{id}/acl', response={201: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def add_exercise_acl_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _addexerciseaclentry_uc.execute()
+        # TODO: parse payload → _add_exercise_acl_entry_uc.execute(role=role, ...)
         raise NotImplementedError('add_exercise_acl_entry')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -209,6 +222,7 @@ def add_exercise_acl_entry(request: HttpRequest):
 @router.delete('/{id}/acl/{userId}', response={401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def remove_exercise_acl_entry(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: implement delete
         raise NotImplementedError('remove_exercise_acl_entry')

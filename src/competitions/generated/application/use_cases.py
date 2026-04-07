@@ -14,12 +14,13 @@ from ..domain.entities import Competition
 from ..infrastructure.repository import CompetitionRepository
 
 
-class Listcompetitions:
+class ListCompetitions:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
     def execute(
         self,
+        role: str,
         requester_id: UUID,
         page_size: int = 20,
         page_token: Optional[str] = None,
@@ -27,32 +28,32 @@ class Listcompetitions:
         return self.repo.list_entities(page_size=page_size, page_token=page_token)
 
 
-class Createcompetition:
+class CreateCompetition:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Competition:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Competition:
         entity = Competition(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Getcompetition:
+class GetCompetition:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> Competition:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> Competition:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Competition {entity_id} not found")
         return entity
 
 
-class Patchcompetition:
+class PatchCompetition:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID, **kwargs) -> Competition:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID, **kwargs) -> Competition:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Competition {entity_id} not found")
@@ -63,21 +64,21 @@ class Patchcompetition:
         return self.repo.save(entity)
 
 
-class Registerteamincompetition:
+class RegisterTeamInCompetition:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, **kwargs) -> Competition:
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> Competition:
         entity = Competition(id=uuid.uuid4(), **kwargs)
         entity.validate_invariants()
         return self.repo.save(entity)
 
 
-class Unregisterteamfromcompetition:
+class UnregisterTeamFromCompetition:
     def __init__(self, repo: CompetitionRepository):
         self.repo = repo
 
-    def execute(self, requester_id: UUID, entity_id: UUID) -> None:
+    def execute(self, role: str, requester_id: UUID, entity_id: UUID) -> None:
         entity = self.repo.get_by_id(entity_id)
         if entity is None:
             raise ValueError(f"Competition {entity_id} not found")

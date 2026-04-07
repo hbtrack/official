@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from ai_ingestion.generated.domain.entities import IngestionJob
 from ai_ingestion.generated.schemas import IngestionJobOut
-from ai_ingestion.generated.application.use_cases import Listingestionjobs, Createingestionjob, Getingestionjob
+from ai_ingestion.generated.application.use_cases import ListIngestionJobs, CreateIngestionJob, GetIngestionJob
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_ai_ingestion_api_route_coverage():
 def test_ai_ingestion_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createingestionjob(repo).execute(
+    entity = CreateIngestionJob(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         source_label="test-value",
         ingestion_mode="test-value",
@@ -69,9 +70,9 @@ def test_ai_ingestion_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getingestionjob(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetIngestionJob(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listingestionjobs(repo).execute(uuid.uuid4())
+    entities, _ = ListIngestionJobs(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

@@ -11,7 +11,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from notifications.generated.domain.entities import NotificationDelivery
 from notifications.generated.schemas import NotificationDeliveryOut
-from notifications.generated.application.use_cases import Listdeliveries, Createnotificationintent, Getdelivery
+from notifications.generated.application.use_cases import ListDeliveries, CreateNotificationIntent, GetDelivery
 
 
 def _make_entity(**overrides):
@@ -60,7 +60,8 @@ def test_notifications_api_route_coverage():
 def test_notifications_use_cases_crud():
     repo = InMemoryRepo()
     # Create
-    entity = Createnotificationintent(repo).execute(
+    entity = CreateNotificationIntent(repo).execute(
+        role="admin",
         requester_id=uuid.uuid4(),
         recipient_user_id=uuid.uuid4(),
         channel_label="test-value",
@@ -69,9 +70,9 @@ def test_notifications_use_cases_crud():
     assert entity.id is not None
 
     # Get
-    retrieved = Getdelivery(repo).execute(uuid.uuid4(), entity.id)
+    retrieved = GetDelivery(repo).execute(role="admin", requester_id=uuid.uuid4(), entity_id=entity.id)
     assert retrieved.id == entity.id
 
     # List
-    entities, _ = Listdeliveries(repo).execute(uuid.uuid4())
+    entities, _ = ListDeliveries(repo).execute(role="admin", requester_id=uuid.uuid4())
     assert len(entities) >= 1

@@ -14,22 +14,22 @@ from ninja import Router
 from ninja.errors import HttpError
 
 from .application.use_cases import (
-    Createnotificationintent,
-    Listdeliveries,
-    Getdelivery,
-    Getusernotificationpreferences,
-    Updateusernotificationpreferences,
+    CreateNotificationIntent,
+    ListDeliveries,
+    GetDelivery,
+    GetUserNotificationPreferences,
+    UpdateUserNotificationPreferences,
 )
 from .infrastructure.repository import NotificationDeliveryRepository
 from .schemas import CreateNotificationDeliveryIn, ErrorOut, NotificationDeliveryListOut, NotificationDeliveryOut, UpdateNotificationDeliveryIn
 
 router = Router()
 _repo = NotificationDeliveryRepository()
-_createnotificationintent_uc = Createnotificationintent(_repo)
-_listdeliveries_uc = Listdeliveries(_repo)
-_getdelivery_uc = Getdelivery(_repo)
-_getusernotificationpreferences_uc = Getusernotificationpreferences(_repo)
-_updateusernotificationpreferences_uc = Updateusernotificationpreferences(_repo)
+_create_notification_intent_uc = CreateNotificationIntent(_repo)
+_list_deliveries_uc = ListDeliveries(_repo)
+_get_delivery_uc = GetDelivery(_repo)
+_get_user_notification_preferences_uc = GetUserNotificationPreferences(_repo)
+_update_user_notification_preferences_uc = UpdateUserNotificationPreferences(_repo)
 
 
 def _role(request: HttpRequest) -> str:
@@ -49,8 +49,9 @@ def _uid(request: HttpRequest) -> UUID:
 @router.post('/intents', response={401: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def create_notification_intent(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _createnotificationintent_uc.execute()
+        # TODO: parse payload → _create_notification_intent_uc.execute(role=role, ...)
         raise NotImplementedError('create_notification_intent')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
@@ -59,8 +60,9 @@ def create_notification_intent(request: HttpRequest):
 @router.get('/deliveries', response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut})
 def list_deliveries(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _listdeliveries_uc.execute(requester_id=uid)
+        entities, token = _list_deliveries_uc.execute(role=role, requester_id=uid)
         return 200, NotificationDeliveryListOut(
             data=[NotificationDeliveryOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -72,6 +74,7 @@ def list_deliveries(request: HttpRequest):
 @router.get('/deliveries/{deliveryId}', response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_delivery(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
         # TODO: extract path param
         raise NotImplementedError('get_delivery')
@@ -82,8 +85,9 @@ def get_delivery(request: HttpRequest):
 @router.get('/users/{userId}/preferences', response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_user_notification_preferences(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        entities, token = _getusernotificationpreferences_uc.execute(requester_id=uid)
+        entities, token = _get_user_notification_preferences_uc.execute(role=role, requester_id=uid)
         return 200, NotificationDeliveryListOut(
             data=[NotificationDeliveryOut.from_domain(e) for e in entities],
             nextPageToken=token,
@@ -95,8 +99,9 @@ def get_user_notification_preferences(request: HttpRequest):
 @router.patch('/users/{userId}/preferences', response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def update_user_notification_preferences(request: HttpRequest):
     try:
+        role = _role(request)
         uid = _uid(request)
-        # TODO: parse payload → _updateusernotificationpreferences_uc.execute()
+        # TODO: parse payload → _update_user_notification_preferences_uc.execute(role=role, ...)
         raise NotImplementedError('update_user_notification_preferences')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))

@@ -10,7 +10,7 @@ from tests.parity._parity_helpers import InMemoryRepo, REPO_ROOT, FROZEN_ID, rou
 
 from identity_access.generated.domain.entities import AuthSession
 from identity_access.generated.schemas import AuthSessionOut
-from identity_access.generated.application.use_cases import Listactivesessions
+from identity_access.generated.application.use_cases import ListActiveSessions
 
 
 def _make_entity(**overrides):
