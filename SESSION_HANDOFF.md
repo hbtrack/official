@@ -9,10 +9,11 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-002
 resultado: PENDENTE
-proxima_acao_permitida: "B10-002 Fase 2: criar parity tests para 16 módulos, cutover api.py/schemas.py, commit por módulo."
+proxima_acao_permitida: "B10-002 Fase 2b: cutover api.py/schemas.py para 17 módulos, depois Fase 3 validação final."
 bloqueios_ativos: []
 evidence_paths:
   - scripts/generate/backend_codegen.py
+  - tests/parity/_parity_helpers.py
   - tests/parity/test_reports_codegen_parity.py
   - tests/pipeline_gates/test_backend_codegen_reports.py
 ---
@@ -21,30 +22,34 @@ evidence_paths:
 
 ## Estado Geral
 **Data:** 2026-04-06 | **Branch:** feat/b10-001-users | **CI:** UNKNOWN
-**Modo:** ROADMAP | **Fase:** 5 | **Resultado:** PENDENTE — B10-002 Fase 2 pendente
+**Modo:** ROADMAP | **Fase:** 5 | **Resultado:** PENDENTE — B10-002 Fase 2b (cutover) pendente
 
 ## Commits desta sessão
 1. `8ca8e727` — chore: compliance audit (archive, gates, enforcement, agent docs)
 2. `09306134` — feat(b10-002): Fase 1 — genericizar backend_codegen.py + gerar 16 módulos
+3. `dd845109` — chore: SESSION_HANDOFF atualizado
+4. `f39979e7` — feat(b10-002): Fase 2a — parity tests 16 módulos (68/68 PASS)
 
 ## O que foi feito
 1. **Compliance audit** — archive 12+ legacy files, 2 novos gates, enforcement hb artifact/check, AGENTS.md, .codex, instructions
 2. **B10-002 Fase 1** — backend_codegen.py genericizado (925→1776 linhas), 17/17 modules PASS, 35 contract tests PASS, reports SHA preservado
-3. **SESSION_HANDOFF atualizado** — front matter + seções obrigatórias alinhados
+3. **B10-002 Fase 2a** — 16 parity tests criados + _parity_helpers.py (InMemoryRepo, route_surface, source_graph_methods). 68/68 PASS.
 
 ## B10-002 — Estado do plano
 - **Fase 0** DONE — commit `9b395e25` (recuperar piloto reports)
-- **Fase 1** DONE — commit `09306134` (genericizar codegen, 17/17 PASS, 35 contract tests PASS)
-- **Fase 2** NÃO INICIADA — parity tests (0/16), cutover (0/17)
+- **Fase 1** DONE — commit `09306134` (genericizar codegen, 17/17 PASS)
+- **Fase 2a** DONE — commit `f39979e7` (parity tests 16/16, 68/68 PASS)
+- **Fase 2b** NÃO INICIADA — cutover api.py/schemas.py (0/17)
 - **Fase 3** NÃO INICIADA — validação final
 
 ## Evidências
 - `scripts/generate/backend_codegen.py` — 1776 linhas, 17 módulos suportados
-- `tests/parity/test_reports_codegen_parity.py` — 5 PASS (template parity)
+- `tests/parity/_parity_helpers.py` — helper compartilhado
+- `tests/parity/test_*_codegen_parity.py` — 17 arquivos, 68 testes PASS
 - `tests/pipeline_gates/test_backend_codegen_reports.py` — 3 PASS
 
 ## Próxima ação permitida
-B10-002 Fase 2: criar parity tests para 16 módulos na ordem FIFO (analytics → exercises → notifications → wellness → medical → ai_ingestion → seasons → teams → competitions → users → matches → scout → video → audit → identity_access → training), cutover api.py/schemas.py, commit por módulo.
+B10-002 Fase 2b: cutover api.py/schemas.py para 17 módulos (importar schemas/entities/repository gerados como base, manter lógica de negócio manual). Depois Fase 3: validação final.
 
 ## Bloqueios ativos
 Nenhum.
