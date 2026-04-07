@@ -18,6 +18,7 @@ def test_session_start_schema_accepts_roadmap_execution():
         "stage": 0,
         "write_scope": "roadmap",
         "worker_id": "execute_roadmap_phase",
+        "roadmap_phase": 0,
     }
 
     jsonschema.validate(valid_session, schema)

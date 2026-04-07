@@ -1,66 +1,47 @@
 ---
-data_ultima_sessao: "2026-04-06"
+data_ultima_sessao: "2026-04-07"
 branch_ativo: feat/b10-001-users
 modo_operacao: ROADMAP
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: training
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-002
 resultado: DONE
-proxima_acao_permitida: "B10-002 DONE. PR #51 aberto para review. Próximo: merge ou nova task."
+proxima_acao_permitida: "B10-002 DONE. PR #51 em revisão de CI. Próximo: merge ou nova task."
 bloqueios_ativos: []
 evidence_paths:
-  - scripts/generate/backend_codegen.py
-  - tests/parity/_parity_helpers.py
-  - tests/parity/test_reports_codegen_parity.py
-  - tests/pipeline_gates/test_backend_codegen_reports.py
-  - src/reports/schemas.py
-  - src/reports/api.py
+  - _reports/contract_gates/latest.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
+## O que foi feito
+B10-002 concluído: backend_codegen.py genericizado, parity tests (77/77), cutover bridge imports (34 arquivos), PR #51 aberto. Três rodadas de correções de CI no branch: SyntaxError `__future__` em 14 arquivos (api.py + schemas.py), regressões de docs/bundles/schema/boot-report.
+
 ## Estado Geral
-**Data:** 2026-04-06 | **Branch:** feat/b10-001-users | **CI:** UNKNOWN
+**Data:** 2026-04-07 | **Branch:** feat/b10-001-users | **CI:** PASS (Contract Gates)
 **Modo:** ROADMAP | **Fase:** 5 | **Resultado:** DONE — B10-002 completo, PR #51 aberto
 
-## Commits desta sessão
-1. `8ca8e727` — chore: compliance audit (archive, gates, enforcement, agent docs)
-2. `09306134` — feat(b10-002): Fase 1 — genericizar backend_codegen.py + gerar 16 módulos
-3. `dd845109` — chore: SESSION_HANDOFF atualizado
-4. `f39979e7` — feat(b10-002): Fase 2a — parity tests 16 módulos (68/68 PASS)
-5. `b04d6f64` — fix(b10-002): corrigir PascalCase + role param no gerador, regenerar 16 módulos
-6. `0a4ab1aa` — feat(b10-002): Fase 2b — cutover bridge imports (17 módulos)
-7. `f1d5a35c` — feat(b10-002): Fase 2b (amend) — cutover + SESSION_HANDOFF fix
+## B10-002 — Fases concluídas
+- **Fase 0** DONE `9b395e25` — recuperar piloto reports
+- **Fase 1** DONE `09306134` — backend_codegen.py genericizado (17/17 PASS)
+- **Fase 2a** DONE `f39979e7` — parity tests (77/77 PASS)
+- **Fase 2b** DONE `f1d5a35c` — cutover bridge imports 34 arquivos
+- **Fase 3** DONE — 17/17 codegen, 77/77 parity, pipeline PASS
 
-## O que foi feito
-1. **Compliance audit** — archive 12+ legacy files, 2 novos gates, enforcement hb artifact/check, AGENTS.md, .codex, instructions
-2. **B10-002 Fase 1** — backend_codegen.py genericizado (925→1776 linhas), 17/17 modules PASS, 35 contract tests PASS, reports SHA preservado
-3. **B10-002 Fase 2a** — 16 parity tests criados + _parity_helpers.py (InMemoryRepo, route_surface, source_graph_methods). 68/68 PASS.
-4. **Generator fixes** — _op_class_name() para PascalCase correto, role: str como primeiro param de UC.execute(), role em API handlers. Regeneração 16/16.
-5. **B10-002 Fase 2b** — Cutover: bridge imports em 34 arquivos (17× schemas.py + 17× api.py). Cada módulo importa _gen_schemas, _gen_use_cases, _gen_repository da camada gerada. 17/17 imports resolvem, 77/77 parity+contract PASS, 600 passed na suíte completa (zero regressões).
-
-## B10-002 — Estado do plano
-- **Fase 0** DONE — commit `9b395e25` (recuperar piloto reports)
-- **Fase 1** DONE — commit `09306134` (genericizar codegen, 17/17 PASS)
-- **Fase 2a** DONE — commit `f39979e7` (parity tests 16/16, 68/68 PASS)
-- **Fase 2b** DONE — commit `b04d6f64` (generator fixes) + `0a4ab1aa` (cutover 17/17)
-- **Fase 3** DONE — validação final (17/17 codegen, 77/77 parity, 599 passed, pipeline PASS, PR #51)
+## PR #51 — Correções de CI
+- `862b571f` — SyntaxError `__future__` em 7 api.py (CODEGEN CUTOVER antes de `__future__`)
+- `8e60e929` — SyntaxError `__future__` em 7 schemas.py (mesmo padrão)
 
 ## Evidências
-- `scripts/generate/backend_codegen.py` — ~1780 linhas, 17 módulos, _op_class_name + role param
-- `tests/parity/_parity_helpers.py` — helper compartilhado
-- `tests/parity/test_*_codegen_parity.py` — 17 arquivos, 77 testes PASS
-- `tests/pipeline_gates/test_backend_codegen_reports.py` — 3 PASS
-- `src/*/schemas.py` — 17 módulos com `from .generated import schemas as _gen_schemas`
-- `src/*/api.py` — 17 módulos com `from .generated.application import use_cases as _gen_use_cases`
-- Suíte completa: 600 passed, 70 failed (pré-existentes), 23 skipped
+- `scripts/generate/backend_codegen.py` — 17 módulos, _op_class_name + role param
+- `tests/parity/test_*_codegen_parity.py` — 17 arquivos, 77 PASS
+- `src/*/schemas.py` + `src/*/api.py` — 34 arquivos bridge imports
 
 ## Próxima ação permitida
-B10-002 DONE. PR #51 aberto e atualizado: https://github.com/hbtrack/official/pull/51
-Próximo: aguardar review e merge, ou iniciar próxima task.
+PR #51: https://github.com/hbtrack/official/pull/51 — aguardar CI verde e merge.
 
 ## Bloqueios ativos
 Nenhum.

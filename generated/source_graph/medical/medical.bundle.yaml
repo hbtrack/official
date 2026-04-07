@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/medical/graph/test_obligations.yaml
   sha256: 48eee0ce49b47c51cc6581930f3cb78d1f82339770ea05258985cc511cfb70ff
 - relpath: src/medical/api.py
-  sha256: 329b1ff6aeb6f2586bf7c8d170755dc759b4577528909d8c65ba3e94d2eb208b
+  sha256: 0651271e89da53f8fea656fd4480a7baee027421ca5c3421712261b57fc02927
 - relpath: src/medical/application/use_cases.py
   sha256: 7c7ccbc633fdf4bad918ab93130a0bab9e8819ce19237672cce6dd79c8835ce9
 - relpath: src/medical/domain/entities.py

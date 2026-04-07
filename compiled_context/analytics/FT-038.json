@@ -100,7 +100,7 @@
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.bundle.yaml",
-      "sha256": "368ea27ecedd3af01e33516f6244ad683285fd8ad56c873703d0e7005604105a"
+      "sha256": "caa98892d0fa007ebd35b97a97e98c3dc68d556650015d6d4910c889e7ce92b8"
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
@@ -112,7 +112,7 @@
     },
     {
       "relpath": "generated/source_graph/analytics/impact_report.json",
-      "sha256": "2a983bdbb02157f8c2372410bfd234adc7f203049d8a863365a9a9be00cbab77"
+      "sha256": "7772c6f93c8d858a0dc9599266a30070c58e85a0eeef8a977ddcb60313f89a3b"
     }
   ],
   "module": "analytics",
@@ -142,7 +142,7 @@
     "unit_tests": "src/analytics/tests/unit/test_analytics.py",
     "use_cases": "src/analytics/application/use_cases.py"
   },
-  "source_fingerprint": "fbc9439124e1f719ff0c7ee592b2662d3af2948cbf6afa4c609e405fcc5f1f31",
+  "source_fingerprint": "eadeea58916a3e9318e1914e17016f4df3d2b856af5bf3d8a3a76a1ba404d7de",
   "source_graph": {
     "entities": {
       "AnalyticsQueryRequest": {
@@ -341,7 +341,7 @@
         "AnalyticsDashboard segue descrito inline em contracts/openapi/paths/analytics.yaml; ainda não existe schema soberano dedicado para esse envelope.",
         "AnalyticsQueryResponse permanece como surface de transporte fechada, mas sem entidade runtime dedicada em src/analytics/domain/."
       ],
-      "source_fingerprint": "9ab39092aa289fdce4caaddc393cd10ce981af2bdee441e3f36bd60a36143722"
+      "source_fingerprint": "76d6bbb3692cccc2d7f1753f6d76722e9a1400600b02c55b55b784e44da5ddca"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

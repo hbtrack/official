@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "e27ce9006dd47db91133d0b238892d12092f902ef6e94886e5f5153f2c2ecf43"
+      "sha256": "ebd901466bf73b9824131b37bd9883123e1545d360f411115f45f45a318a9de4"
     },
     {
       "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -109,7 +109,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/impact_report.json",
-      "sha256": "d36b7c49b08a18565576b539fb8a37e6b0ef5409e0b7ccc7809038ddcfdc163f"
+      "sha256": "10fbdffe4102c16d22f4b66df75b228945435abda5945a839f52c025fba3e7c1"
     }
   ],
   "module": "teams",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "fc912f0ce940dfa755b206fd267e8eff4d3a951a188de5702bb596e835519815",
+  "source_fingerprint": "f7d2a1d32d0c19a89f5372c82aa9f7dcac050b82730d29dd424fe840603bf992",
   "source_graph": {
     "entities": {
       "Team": {
@@ -343,7 +343,7 @@
         "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
         "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
       ],
-      "source_fingerprint": "04fc4ef0c30062cbf73c2a7bb9ab73197c6c1082d0f8a75caeddf58f87a99f9f"
+      "source_fingerprint": "f6caf6c9b778979506b51c8b79313667156d7899c5a30d1f016489860bc8bc4a"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -84,7 +84,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
-      "sha256": "b1180aeaf1c3c6d131c12405975f5fc3d89029319b8fdd4071032902ead060da"
+      "sha256": "00713f902b377874da986831d2e5eca782dbf39b3858516fb0eec77a64df7fff"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
-      "sha256": "4d4ab254a69c536d17ae2c0a5b430bba3ed7e1ea6a5823b1665d5d1ae59b71d1"
+      "sha256": "20f276c0bbe17125afce365844bcfc587ef258eac26450110ef7c7ae1cf9e97a"
     }
   ],
   "module": "ai_ingestion",
@@ -127,7 +127,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "0250e90cb71c06ff892f621070cd8e5e90ba9ff1f636b982db6a192ef8b8c134",
+  "source_fingerprint": "4d23d8979c0de38183c9ba55df3adde84e3c65697fecb6f82e18245f3073af6e",
   "source_graph": {
     "entities": {
       "IngestionJob": {
@@ -295,7 +295,7 @@
         "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
         "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
       ],
-      "source_fingerprint": "e64c0ea5c190a6d5ddead900c5d3513b27a8578c4c92c2a377c47a30e9769d6e"
+      "source_fingerprint": "c138957aa99991725b701334ad6cc622623f89eda991bad4b4432661ec07dbef"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

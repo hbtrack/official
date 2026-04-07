@@ -110,7 +110,7 @@
     },
     {
       "relpath": "src/ai_ingestion/api.py",
-      "sha256": "d2d705aa4ab3d6757925ae30ba173b60842a5b0e7bb7dc4423661f2a6f47d253"
+      "sha256": "cbb2611c452e8796ccda492b13782a01cad88dc95e74c5086034635758a9b94d"
     },
     {
       "relpath": "src/ai_ingestion/application/use_cases.py",
@@ -145,5 +145,5 @@
     "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
     "generated/source_graph/ai_ingestion/impact_report.json"
   ],
-  "source_fingerprint": "e64c0ea5c190a6d5ddead900c5d3513b27a8578c4c92c2a377c47a30e9769d6e"
+  "source_fingerprint": "c138957aa99991725b701334ad6cc622623f89eda991bad4b4432661ec07dbef"
 }

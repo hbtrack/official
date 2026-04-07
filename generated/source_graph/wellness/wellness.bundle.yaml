@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/wellness/graph/test_obligations.yaml
   sha256: 0f5fcdbcf49b58f9cb7b2a67b662e383826b408b5da1934a37a79a91a5b4d4f4
 - relpath: src/wellness/api.py
-  sha256: d53a16bcea92d1cef670a7def0ce4def7cc63bda3ca4f7dd11e731a057af8a19
+  sha256: 9c498bf899828917bf4aafdac29f2f01e2215c4ec80c4b0207437acbc439841f
 - relpath: src/wellness/application/use_cases.py
   sha256: 52c9a2d473b3cd4d9eca7cf0576a3e4785fa505e34766490d08a9c59ba546552
 - relpath: src/wellness/domain/entities.py

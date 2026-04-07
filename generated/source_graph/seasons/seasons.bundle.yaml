@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/seasons/graph/test_obligations.yaml
   sha256: 37f2636d94f5f82980d9ea0d491c370c1db9593d582f46fbcf149fd2c3539e2d
 - relpath: src/seasons/api.py
-  sha256: 1ef6bfda01facfdbe749157b2f785a0dd7f6fde9caecf06daf47d9b3c8949236
+  sha256: 174f9a45f8caa01a65ab778540073b2712545ab2606d2b7a8309ac6213d933a3
 - relpath: src/seasons/application/use_cases.py
   sha256: 5ebbec45ed92e98102f30cd8315ce6aae5cadb54c7de740919fdc94d3ea7f992
 - relpath: src/seasons/domain/entities.py

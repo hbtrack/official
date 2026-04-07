@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml
   sha256: 537c53130e975e5ba10219a83f91e58ed4a6c457102ce8ef074e49d276ef19b4
 - relpath: src/ai_ingestion/api.py
-  sha256: d2d705aa4ab3d6757925ae30ba173b60842a5b0e7bb7dc4423661f2a6f47d253
+  sha256: cbb2611c452e8796ccda492b13782a01cad88dc95e74c5086034635758a9b94d
 - relpath: src/ai_ingestion/application/use_cases.py
   sha256: 767a05392f3f43debf5e34663f16bd0a6e74a577e105c275c75c284b0238958f
 - relpath: src/ai_ingestion/domain/entities.py

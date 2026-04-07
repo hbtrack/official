@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml
   sha256: e71485defc0e4f03ba38467ba4d8ceb0165c9588f349143f935b15bb12ca6aec
 - relpath: src/identity_access/api.py
-  sha256: 01c24c207c06a7f0b65f79b08b25077eadcdc42a401a49b0d29d93d960c8754c
+  sha256: 2d9cb2bddf54788cf60300bb703a0b66a02eaa46161c61f15701c7063ca111af
 - relpath: src/identity_access/application/use_cases.py
   sha256: f8cc6906fc536828258094a7ea53a7203112760032f3fd0adfa3b26ad6942bb5
 - relpath: src/identity_access/domain/entities.py

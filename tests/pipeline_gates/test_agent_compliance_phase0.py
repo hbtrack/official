@@ -126,28 +126,36 @@ class TestDerivedDocBanners:
     """Artefatos derivados (root markdowns analíticos) devem ter banner NON-SOVEREIGN."""
 
     def test_devcont_has_non_sovereign_banner(self):
-        path = ROOT / "DEVCONT.md"
+        path = ROOT / "_archive" / "DEVCONT.md"
+        if not path.exists():
+            path = ROOT / "DEVCONT.md"
         assert path.exists()
         assert DERIVED_BANNER_PATTERN.search(path.read_text(encoding="utf-8")), (
             "DEVCONT.md não contém banner NON-SOVEREIGN."
         )
 
     def test_compilance_has_non_sovereign_banner(self):
-        path = ROOT / "compilance.md"
+        path = ROOT / "_archive" / "compilance.md"
+        if not path.exists():
+            path = ROOT / "compilance.md"
         assert path.exists()
         assert DERIVED_BANNER_PATTERN.search(path.read_text(encoding="utf-8")), (
             "compilance.md não contém banner NON-SOVEREIGN."
         )
 
     def test_adversarial_has_non_sovereign_banner(self):
-        path = ROOT / "ADVERSARIAL.md"
+        path = ROOT / "_archive" / "ADVERSARIAL.md"
+        if not path.exists():
+            path = ROOT / "ADVERSARIAL.md"
         assert path.exists()
         assert DERIVED_BANNER_PATTERN.search(path.read_text(encoding="utf-8")), (
             "ADVERSARIAL.md não contém banner NON-SOVEREIGN."
         )
 
     def test_analisearquitetura_has_non_sovereign_banner(self):
-        path = ROOT / "ANALISEARQUITETURA.md"
+        path = ROOT / "_archive" / "ANALISEARQUITETURA.md"
+        if not path.exists():
+            path = ROOT / "ANALISEARQUITETURA.md"
         assert path.exists()
         assert DERIVED_BANNER_PATTERN.search(path.read_text(encoding="utf-8")), (
             "ANALISEARQUITETURA.md não contém banner NON-SOVEREIGN."

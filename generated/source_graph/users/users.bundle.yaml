@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/users/graph/test_obligations.yaml
   sha256: db37ec5e524f7b6c1cfcbdd5f18f3fed860742a0cee7c2e9966c6ae913f0999a
 - relpath: src/users/api.py
-  sha256: dfe6824fd9d1d3722c8a8da8faecabeca2428f4f9bd5d538752358cb649322be
+  sha256: aaf96528dc55930bc400fb74392ca99ab400130a5f072ad501301d835a4fe7a0
 - relpath: src/users/application/use_cases.py
   sha256: a2187cfa853eba3cb16adfc87103e12743a1a0bb44ec345a2d81b1171bd29909
 - relpath: src/users/domain/entities.py

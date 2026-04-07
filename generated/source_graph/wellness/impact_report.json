@@ -110,7 +110,7 @@
     },
     {
       "relpath": "src/wellness/api.py",
-      "sha256": "d53a16bcea92d1cef670a7def0ce4def7cc63bda3ca4f7dd11e731a057af8a19"
+      "sha256": "9c498bf899828917bf4aafdac29f2f01e2215c4ec80c4b0207437acbc439841f"
     },
     {
       "relpath": "src/wellness/application/use_cases.py",
@@ -145,5 +145,5 @@
     "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
     "generated/source_graph/wellness/impact_report.json"
   ],
-  "source_fingerprint": "2923965e6091a98c0ca099ae9c24093df5d7569bbe450d0c46bf91fd0af1e8da"
+  "source_fingerprint": "976cbe130a2110ecca2e7c41ddc396eb34bd99c1106ea9a8f0ced7226e28024c"
 }

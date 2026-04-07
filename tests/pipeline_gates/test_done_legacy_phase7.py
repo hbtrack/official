@@ -28,12 +28,19 @@ BOOT_REPORT = REPO_ROOT / "_reports" / "evidence" / "boot_resolution_report.json
 HBTRACK_LINT_INIT = REPO_ROOT / "scripts" / "hbtrack_lint" / "__init__.py"
 CONTRACT_FS_REF = REPO_ROOT / ".contract_driven" / "CONTRACT_FILESYSTEM_REFERENCE.md"
 
-# Markdowns NON-SOVEREIGN na raiz do repositório
+# Markdowns NON-SOVEREIGN — podem estar na raiz ou em _archive/ (após limpeza de legado)
+def _resolve_md(name: str) -> pathlib.Path:
+    archive = REPO_ROOT / "_archive" / name
+    if archive.exists():
+        return archive
+    return REPO_ROOT / name
+
+
 ROOT_DERIVED_MARKDOWNS = [
-    REPO_ROOT / "DEVCONT.md",
-    REPO_ROOT / "compilance.md",
-    REPO_ROOT / "ADVERSARIAL.md",
-    REPO_ROOT / "ANALISEARQUITETURA.md",
+    _resolve_md("DEVCONT.md"),
+    _resolve_md("compilance.md"),
+    _resolve_md("ADVERSARIAL.md"),
+    _resolve_md("ANALISEARQUITETURA.md"),
 ]
 
 # Padrões de disclaimer não-soberano aceitos

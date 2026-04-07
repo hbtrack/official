@@ -85,7 +85,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.bundle.yaml",
-      "sha256": "b7acd8b98702ea2482f6b9038cd87d2307fe25ea0f71b4ed36d395698fd74939"
+      "sha256": "6392a4627f44e8c7b87473de81264c9ee83b0527bb33ccc6cf1ee8f341b129e3"
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.schema_contract_view.yaml",
@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/impact_report.json",
-      "sha256": "072a13919a62cea32df96462e8f6f65a6fb247d5c353ca9bdd026223afa50044"
+      "sha256": "0469b95e9fd8a5d240f41aed2cf17d602d2023c0704bf96dffaececefa6e47de"
     }
   ],
   "module": "identity_access",
@@ -129,7 +129,7 @@
     "domain_rules": "src/identity_access/domain/rules.py",
     "use_cases": "src/identity_access/application/use_cases.py"
   },
-  "source_fingerprint": "2200fa331f6d85ce7ec4ba3998c697e52cfd780ffa12e8cf1e52b77da242fad1",
+  "source_fingerprint": "2bd5e6dcbe85f8d283b79a4dba26bfef62dec9201ae16e89d0d18fb21afc965a",
   "source_graph": {
     "entities": {
       "AuthSession": {
@@ -370,7 +370,7 @@
         "JWT signing key management é infraestrutura — fora do escopo do source graph de domínio.",
         "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position não aparecem neste módulo (INV-IAM-004)."
       ],
-      "source_fingerprint": "063d6729f6342adb3322a0e588c2441e3408f491ca931a0b14f6cfc80d0b5282"
+      "source_fingerprint": "9622b40b5005c2b99061894a6594c2425ef0c81353e9d1a336320f29a1a74455"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

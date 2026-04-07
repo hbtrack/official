@@ -53,7 +53,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/video/graph/test_obligations.yaml
   sha256: 7b58b4274969817c9c71ad4443b02c7d119f90d8c2d082a0c81b2cf274ea16e1
 - relpath: src/video/api.py
-  sha256: 2a12d7cb5297557aeca921d46cc4802f835a5e72ad43bed7f61ef3873845c223
+  sha256: 9da1646a7645655ccb08958a7e3eaa70b7953a5c4bbadbd84af31c6ceb1fcf84
 - relpath: src/video/application/use_cases.py
   sha256: 6cb1d0940418df44cdc2d0854cfbd22337939a15cf47e071ba642b174a07600d
 - relpath: src/video/domain/entities.py

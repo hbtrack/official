@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/notifications/graph/test_obligations.yaml
   sha256: fedf1a1c68fe7f3bdb7664649935110ef7134263ddc1ade183da0b072e811230
 - relpath: src/notifications/api.py
-  sha256: a8521e885974d147cc42e286150e9a82d08bb29b44fa06d30348340c9817a869
+  sha256: 97d2460e9eae6753b21e75bfe65b0ab0bfbbd8e6f1f34a705c51c76a31fec40c
 - relpath: src/notifications/application/use_cases.py
   sha256: 5552dba8d8baa61a27633337bb34ec8aafe54e5dbca4aef5e37a4bfa75ad4cf1
 - relpath: src/notifications/domain/entities.py

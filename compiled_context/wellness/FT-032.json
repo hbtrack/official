@@ -95,7 +95,7 @@
     },
     {
       "relpath": "generated/source_graph/wellness/wellness.bundle.yaml",
-      "sha256": "b7579af8591779d7cd9a7645e43a450460c7e2924aeab83a4d2f11127105c8e9"
+      "sha256": "e7257603448befbba78004e21dde9dbff7249af049cf6e1698485f1a1d7859c3"
     },
     {
       "relpath": "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/wellness/impact_report.json",
-      "sha256": "7934d6a0a47dcdd13e157a8121f50867c8e34a3bfd05a5fb472baead9588247e"
+      "sha256": "56817ee78eb7855d538a4e96b6e3e0a50848aa5eb558314f6d2ffe85fc52722e"
     }
   ],
   "module": "wellness",
@@ -139,7 +139,7 @@
     "unit_tests": "src/wellness/tests/unit/test_wellness_domain.py",
     "use_cases": "src/wellness/application/use_cases.py"
   },
-  "source_fingerprint": "65d69d808d67a894a0a7f55fffaedf89a3f3b2defd758272f98bf20857a28020",
+  "source_fingerprint": "e58e97b6a65c9a6f9a98d40c7363bb92ce64a721f7aa5fb8698b13c24a93881b",
   "source_graph": {
     "entities": {
       "WellnessEntry": {
@@ -293,7 +293,7 @@
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
         "As rotas de athlete history/summary documentam 404, mas o runtime atual nao materializa AthleteNotFound de forma explicita."
       ],
-      "source_fingerprint": "2923965e6091a98c0ca099ae9c24093df5d7569bbe450d0c46bf91fd0af1e8da"
+      "source_fingerprint": "976cbe130a2110ecca2e7c41ddc396eb34bd99c1106ea9a8f0ced7226e28024c"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -109,7 +109,7 @@
     },
     {
       "relpath": "src/identity_access/api.py",
-      "sha256": "01c24c207c06a7f0b65f79b08b25077eadcdc42a401a49b0d29d93d960c8754c"
+      "sha256": "2d9cb2bddf54788cf60300bb703a0b66a02eaa46161c61f15701c7063ca111af"
     },
     {
       "relpath": "src/identity_access/application/use_cases.py",
@@ -143,5 +143,5 @@
     "generated/source_graph/identity_access/identity_access.openapi_contract_view.yaml",
     "generated/source_graph/identity_access/impact_report.json"
   ],
-  "source_fingerprint": "063d6729f6342adb3322a0e588c2441e3408f491ca931a0b14f6cfc80d0b5282"
+  "source_fingerprint": "9622b40b5005c2b99061894a6594c2425ef0c81353e9d1a336320f29a1a74455"
 }

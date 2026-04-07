@@ -110,7 +110,7 @@
     },
     {
       "relpath": "src/medical/api.py",
-      "sha256": "329b1ff6aeb6f2586bf7c8d170755dc759b4577528909d8c65ba3e94d2eb208b"
+      "sha256": "0651271e89da53f8fea656fd4480a7baee027421ca5c3421712261b57fc02927"
     },
     {
       "relpath": "src/medical/application/use_cases.py",
@@ -145,5 +145,5 @@
     "generated/source_graph/medical/medical.openapi_contract_view.yaml",
     "generated/source_graph/medical/impact_report.json"
   ],
-  "source_fingerprint": "0ca441b290a1871df0f4daa3093237e5355853821432b3548b2f7133962b3448"
+  "source_fingerprint": "5a12e38f2f64d1d7074b349b414746cb10ef817a4b0c91f5e5d5bd7a1accd9c4"
 }

@@ -123,7 +123,7 @@
     },
     {
       "relpath": "src/video/api.py",
-      "sha256": "2a12d7cb5297557aeca921d46cc4802f835a5e72ad43bed7f61ef3873845c223"
+      "sha256": "9da1646a7645655ccb08958a7e3eaa70b7953a5c4bbadbd84af31c6ceb1fcf84"
     },
     {
       "relpath": "src/video/application/use_cases.py",
@@ -163,5 +163,5 @@
     "generated/source_graph/video/video.openapi_contract_view.yaml",
     "generated/source_graph/video/impact_report.json"
   ],
-  "source_fingerprint": "ab9d82ce46289362fcb30359068ac5afdfdde694bd3a71a41baf4f66693b59b6"
+  "source_fingerprint": "503c54032d4ca219784e446e02248709f620f46b66713157b45ebd978b3db695"
 }

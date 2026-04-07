@@ -103,7 +103,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
-      "sha256": "67e53af1ba34876c7f936e5336bc41dbd22c2f7097d38ff181a85e16687a521f"
+      "sha256": "36c740ed3eaaa1bc2ac1547381bb2a5529f364fa7a185b1b613de9aa6c11151e"
     },
     {
       "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
@@ -115,7 +115,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/impact_report.json",
-      "sha256": "f9b9da9677d313aa9df8a240067490f1d6d3668860a3a31ec5d83a111c08b730"
+      "sha256": "33a64c151b2f789d41b1e908a12bfe1fab825f478f506e22435254a15a520e61"
     }
   ],
   "module": "reports",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "8774ce24d90abe550357db336c1304176ee87738704c0fb3d12bd42b918efe05",
+  "source_fingerprint": "0fd2b84c056d49b45e14b528c15d844f9e22213064a4e78160b434ff1c161a8a",
   "source_graph": {
     "entities": {
       "ReportJob": {
@@ -321,7 +321,7 @@
       "known_gaps": [
         "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
       ],
-      "source_fingerprint": "72c4cb9257186ff15cace166a48ff34b91bb34ed9a98b99e1dd844f83bd235a7"
+      "source_fingerprint": "0ea18c2ecf9facc2b9fcbd446d3ba25ac83c12a9b03565cec7d8a1f9ce640b1e"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

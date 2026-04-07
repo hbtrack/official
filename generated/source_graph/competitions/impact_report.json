@@ -109,7 +109,7 @@
     },
     {
       "relpath": "src/competitions/api.py",
-      "sha256": "42bfc2a71a9a9095c66acd35c481ad0c402349898ff9a3e5d1803424d0c23ebc"
+      "sha256": "da109cad37f1d2e6e7a0068e2efc1ada6b563db996651b7a099f86194a013780"
     },
     {
       "relpath": "src/competitions/application/use_cases.py",
@@ -142,5 +142,5 @@
     "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
     "generated/source_graph/competitions/impact_report.json"
   ],
-  "source_fingerprint": "2c4a0de6630def3e14a5a209e2117b5b2f710c564e1f319889906a1348224984"
+  "source_fingerprint": "655fe2150360b6169708774b8da90a50906a0f993848786dcd31a4256c5f7098"
 }

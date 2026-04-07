@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PYTHON = REPO_ROOT / ".venv-contract" / "bin" / "python"
+PYTHON = Path(sys.executable)
 GENERATOR = REPO_ROOT / "scripts" / "generate" / "backend_codegen.py"
 EXPECTED_FILES = [
     REPO_ROOT / "src" / "reports" / "generated" / "schemas.py",
