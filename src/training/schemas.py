@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -7,7 +8,6 @@ from .generated import schemas as _gen_schemas  # noqa: F401
 Schemas de entrada/saída — módulo training.
 Alinhados com contratos OpenAPI e JSON Schemas.
 """
-from __future__ import annotations
 
 import uuid
 from datetime import datetime

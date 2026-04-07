@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -10,7 +11,6 @@ Derivados do contrato: contracts/openapi/paths/identity_access.yaml
 REGRA: Router implementa EXATAMENTE o contrato — sem campos extras, sem omissões.
 OWASP API3:2023: password nunca aparece em schemas de saída.
 """
-from __future__ import annotations
 
 from datetime import datetime
 from typing import List, Optional

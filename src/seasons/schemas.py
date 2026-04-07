@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -8,7 +9,6 @@ Pydantic schemas (django-ninja) — módulo seasons.
 Mapeiam contratos OpenAPI → domain entities.
 Contrato: contracts/openapi/paths/seasons.yaml
 """
-from __future__ import annotations
 
 from datetime import date, datetime
 from typing import Optional

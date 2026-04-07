@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -8,7 +9,6 @@ Pydantic schemas (Django Ninja) do módulo video.
 Derivados dos contratos em contracts/openapi/paths/video.yaml e contracts/schemas/video/.
 REGRA: Router implementa EXATAMENTE o contrato — sem campos extras, sem omissões.
 """
-from __future__ import annotations
 from datetime import datetime
 from enum import StrEnum
 from typing import Optional

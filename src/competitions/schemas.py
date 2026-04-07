@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -7,7 +8,6 @@ from .generated import schemas as _gen_schemas  # noqa: F401
 Schemas I/O — módulo competitions (Django Ninja).
 Fonte: contracts/openapi/paths/competitions.yaml
 """
-from __future__ import annotations
 
 import uuid
 from datetime import date, datetime

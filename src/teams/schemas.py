@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -7,7 +8,6 @@ from .generated import schemas as _gen_schemas  # noqa: F401
 Schemas Pydantic/Ninja — módulo teams.
 Correspondem 1-1 aos componentes do contrato OpenAPI teams.yaml.
 """
-from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional

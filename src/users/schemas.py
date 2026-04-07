@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 # CODEGEN CUTOVER — generated layer linked
 from .generated import schemas as _gen_schemas  # noqa: F401
@@ -8,7 +9,6 @@ Pydantic schemas para Django Ninja — módulo users.
 Derivados de: contracts/schemas/users/user_profile.schema.json
 Alinhados com: contracts/openapi/paths/users.yaml
 """
-from __future__ import annotations
 
 from typing import Optional
 from uuid import UUID
