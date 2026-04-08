@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-08"
-branch_ativo: feat/b11-001-bundle-enforcement
+branch_ativo: feat/b11-002-operability-matrix
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: users
@@ -8,47 +8,52 @@ fase_roadmap: 5
 roadmap_phase: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: B11-001
+task_id: B11-002
 resultado: DONE
-proxima_acao_permitida: "B11-001 implementado — merge PR e iniciar B10-003 ou B11-002"
+proxima_acao_permitida: "B11-002 implementado — próxima: B11-003 (depende de B10-003 + B11-002) ou B10-003 isolado"
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
-  - tests/pipeline_gates/test_bundle_required_for_implementation.py
+  - tests/pipeline_gates/test_agent_operability_matrix.py
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## O que foi feito
-**B11-001 — Bundle compilado obrigatório para tarefas de implementação**
+**B11-002 — Matriz de operabilidade do agente**
 
 ### Implementação
-1. **`.contract_driven/TASK_CATALOG.yaml`**: adicionado `bundle_required: true`, `bundle_path_template` e `bundle_enforcement` em `generate_code` e `execute_roadmap_phase`
-2. **`.contract_driven/agent_prompts/generate_code.prompt.md`**: pré-requisito #7 — bundle compilado fresco obrigatório antes de iniciar; comando de recuperação documentado
-3. **`.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md`**: pré-requisito #6 — idem, com exceção para fases 0–3 (infra pura)
-4. **`tests/pipeline_gates/test_bundle_required_for_implementation.py`**: 11 testes em 3 classes — TASK_CATALOG, cobertura compiled_context/, prompts
+1. **`feature_update`** adicionado ao TASK_CATALOG:
+   - `status: active`, `stage_allowed: [1,2,3]`
+   - `bundle_required: true` + `bundle_path_template` + `bundle_enforcement`
+   - `input_requirements`: module, feature_id, change_type (extend|fix|deprecate|new_endpoint)
+2. **`feature_update.prompt.md`** criado:
+   - 5 fases: FU1 diagnóstico → FU2 contrato → FU3 source graph → FU4 código → FU5 fechamento
+   - bundle obrigatório (B11-001), pré-requisitos explícitos, change_type cobertos
+3. **`test_agent_operability_matrix.py`** criado:
+   - 16 testes em 4 classes (TASK_CATALOG, Prompts, Bundle, WorkerPaths) → 16/16 PASS
 
-### Validação
-- `pytest tests/pipeline_gates/test_bundle_required_for_implementation.py -v` → 11/11 PASS
-- compiled_context/ cobre 17/17 módulos canônicos com ao menos um bundle cada
-
-### Gap documentado (não bloqueia — tratamento separado)
-- `CONTEXT_BUNDLE_FRESHNESS_GATE` removido em commit `2b33fccf` (regressão de B7-002)
-- Enforcement atual: documental via TASK_CATALOG + prompts; gate hard pode ser re-adicionado em task futura
+### Matriz mínima coberta
+| Trabalho | task_type | Status |
+|----------|-----------|--------|
+| Novo módulo | `new_module` | ✅ existia |
+| Nova feature em módulo existente | `feature_update` | ✅ criado neste PR |
+| Revisão de contrato | `contract_revision` | ✅ existia |
+| Código derivado de contrato | `generate_code` | ✅ existia |
 
 ## Estado Geral
-**Data:** 2026-04-08 | **Branch:** feat/b11-001-bundle-enforcement | **CI:** PASS (main pós-PR #51)
-**Modo:** ROADMAP | **Fase:** 5 | **Task:** B11-001 | **Resultado:** DONE
+**Data:** 2026-04-08 | **Branch:** feat/b11-002-operability-matrix | **CI:** pendente
+**Modo:** ROADMAP | **Fase:** 5 | **Task:** B11-002 | **Resultado:** DONE
 
 ## Próxima ação permitida
-B11-001 concluído. Próximas opções (ambas com deps satisfeitas):
-- **B10-003**: Fechar validação de mundo real — datasets de staging + replay por ciclo de negócio
-- **B11-002**: Cobrir `feature_update`, `new_module`, `contract_revision` com prompts + testes de roteamento
+B11-002 concluído. Próximo: **B11-003** — certificação final de compliance do agente.
+B11-003 depende de B9-002 ✅, B11-002 ✅, e B10-003 (staging replay — ainda pendente).
+Opção: iniciar B11-003 com waiver formal para B10-003, ou executar B10-003 primeiro.
 
 ## Bloqueios ativos
 Nenhum.
 
 ## Evidências
-- `pytest tests/pipeline_gates/test_bundle_required_for_implementation.py -v` → 11/11 PASS
-- `.contract_driven/TASK_CATALOG.yaml` — `bundle_required: true` em `generate_code` e `execute_roadmap_phase`
-- `compiled_context/` — 17/17 módulos com bundles presentes
+- `pytest tests/pipeline_gates/test_agent_operability_matrix.py -v` → 16/16 PASS
+- `.contract_driven/TASK_CATALOG.yaml` — `feature_update` ativo com bundle_required
+- `.contract_driven/agent_prompts/feature_update.prompt.md` — 5 fases, change_types cobertos

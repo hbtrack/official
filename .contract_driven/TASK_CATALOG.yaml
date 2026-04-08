@@ -51,6 +51,33 @@ task_catalog:
       - docs/hbtrack/modulos/{module_name}/DOMAIN_RULES_{module_upper}.md
     blocking_gates: []
 
+  feature_update:
+    task_type: feature_update
+    worker_id: feature_update
+    worker_path: .contract_driven/agent_prompts/feature_update.prompt.md
+    status: active
+    description: "Atualizar ou adicionar feature em módulo canônico existente — engloba revisão de contrato + geração de código derivada"
+    profile_id: contract_execution
+    stage_allowed: [1, 2, 3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status>=implementation_ready)
+      - feature_id (string, mapped to FEATURE_REGISTRY.yaml)
+      - change_type (enum: extend|fix|deprecate|new_endpoint)
+    write_scope: backend
+    artifacts_produced:
+      - contracts/openapi/paths/{module}.yaml (modified)
+      - contracts/schemas/{module}/ (if schema changes)
+      - src/{module}/api.py (if code changes)
+      - src/{module}/domain/entities.py (if domain changes)
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - OPENAPI_ROOT_STRUCTURE_GATE
+    bundle_required: true
+    bundle_path_template: "compiled_context/{module}/{feature_id}.json"
+    bundle_enforcement: |
+      Antes de iniciar feature_update, verificar que compiled_context/{module}/{feature_id}.json existe.
+      Bundle ausente bloqueia — executar compile_context_bundle.py --module {module} --feature {feature_id}.
+
   # Grupo: Especificações (Contratos)
   new_contract:
     task_type: new_contract
