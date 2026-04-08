@@ -243,6 +243,11 @@ task_catalog:
       - AXIOM_INTEGRITY_GATE
       - OPENAPI_ROOT_STRUCTURE_GATE
       - ADVERSARIAL_ANALYSIS_GATE
+    bundle_required: true
+    bundle_path_template: "compiled_context/{module}/{feature}.json"
+    bundle_enforcement: |
+      Antes de iniciar generate_code, verificar que compiled_context/{module}/{feature}.json existe.
+      Bundle ausente ou stale bloqueia — executar compile_context_bundle.py --module {module} --feature {feature} para regenerar.
 
   generate_frontend:
     task_type: generate_frontend
@@ -271,6 +276,11 @@ task_catalog:
     write_scope: roadmap
     artifacts_produced: []  # varia por fase — ver ROADMAP.md para paths canônicos
     blocking_gates: []
+    bundle_required: true
+    bundle_path_template: "compiled_context/{module}/"
+    bundle_enforcement: |
+      Antes de iniciar execute_roadmap_phase para um módulo, verificar que compiled_context/{module}/ existe e contém ao menos um bundle.
+      Bundle ausente bloqueia — executar compile_context_bundle.py --module {module} para regenerar.
     pre_contract_exception: "ROADMAP_PHASE: não passa por pre_contract_orchestrator — modo de operação independente"
     notes: |
       Este task_type é o ponto de entrada para execução de todas as 14 fases do ROADMAP.md.

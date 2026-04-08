@@ -23,6 +23,11 @@ Antes de executar qualquer tarefa desta fase:
    - Fases 0–3 (infraestrutura): verificar mas não bloquear se infra ainda ausente
    - Fases 4+: PASS obrigatório antes de continuar
 5. **Waivers ativos?** → verificar `.contract_driven/waivers.json` antes de iniciar pipeline
+6. **Bundle compilado fresco** para o módulo-foco existe em `compiled_context/<module>/`
+   - Verificar: `ls compiled_context/<module>/` retorna ao menos um arquivo `.json`
+   - Se ausente: executar `python3 scripts/compile/compile_context_bundle.py --module <module>` e aguardar PASS
+   - Bundle é a única entrada operacional autorizada para tarefas de implementação e evolução de módulo (B11-001)
+   - Exceção: fases 0–3 (infraestrutura pura, sem módulo-foco) não requerem bundle de módulo
 
 Se qualquer pré-requisito crítico falhar → reportar ao humano e aguardar instrução. Nunca inventar o estado da fase anterior.
 

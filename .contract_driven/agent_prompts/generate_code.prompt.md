@@ -23,6 +23,9 @@ Antes de executar este worker, verificar:
 4. **ADVERSARIAL_ANALYSIS_GATE** PASS para o módulo/recurso alvo
 5. **Contrato OpenAPI** do módulo existe e está validado (gate `OPENAPI_ROOT_MODULE_SYNC_GATE` PASS)
 6. **JSON Schemas** do módulo existem em `contracts/schemas/<module>/`
+7. **Bundle compilado fresco** existe em `compiled_context/<module>/<feature>.json`
+   - Se ausente: executar `python3 scripts/compile/compile_context_bundle.py --module <module> --feature <feature>` e aguardar PASS antes de continuar
+   - Bundle é a única entrada operacional autorizada — não substituir por leitura direta de artefatos raw (B11-001)
 
 Se qualquer pré-requisito estiver ausente → emitir bloqueio correspondente e parar.
 
