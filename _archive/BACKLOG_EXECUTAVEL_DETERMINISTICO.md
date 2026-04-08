@@ -2801,11 +2801,12 @@ Ordem remanescente obrigatoria a partir do estado atual:
 34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
 35. ~~B9-002~~ — DONE (2026-04-03, warnings=failure implementado, PASS_WITH_WARNINGS eliminado)
 36. ~~B10-001~~ — DONE (2026-04-05, commit 2ab9bb61 em feat/b10-001-users) — 17/17 modulos com source graph PASS
-37. B10-002
+37. ~~B10-002~~ — DONE (2026-04-08, PR #51) — 17/17 generated/ + cutover + parity 68/68 PASS
 38. B10-003
-39. B11-001
-40. B11-002
-41. B11-003
+39. ~~B11-001~~ — DONE (2026-04-08, PR #52) — bundle_required TASK_CATALOG + prompts + 11 testes PASS
+40. ~~B11-002~~ — DONE (2026-04-08, PR #53) — feature_update + operability matrix + 16 testes PASS
+41. ~~B11-003~~ — DONE (2026-04-08, PR #54) — certify_agent_operability.py 7 dimensões | resultado PARTIAL (6 PASS + runtime_replay PENDING_B10003)
+42. **B10-003** ← PRÓXIMA AÇÃO (staging datasets + replay packs → libera runtime_replay PENDING → B11-003 PASS total)
 
 Regras de interpretacao desta ordem:
 
