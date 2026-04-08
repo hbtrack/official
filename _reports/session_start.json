@@ -1,13 +1,13 @@
 {
   "session_id": "68be23c1-6c49-4081-9920-cb86d6ef8981",
-  "session_timestamp": "2026-04-08T01:27:45.299230+00:00",
+  "session_timestamp": "2026-04-08T03:35:25.544201+00:00",
   "branch": "feat/b10-001-users",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "new_workflow",
+  "task_type": "contract_revision",
   "stage": 0,
   "write_scope": "contracts",
-  "worker_id": "create_arazzo_workflow",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "operation_mode": "CDD",
@@ -19,12 +19,12 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "ai_ingestion",
-  "module_focus": "ai_ingestion",
+  "module": "video",
+  "module_focus": "video",
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-08T02:35:33.206544+00:00",
+  "hook_validated_at": "2026-04-08T03:33:13.887629+00:00",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
