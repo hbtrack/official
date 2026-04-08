@@ -632,15 +632,25 @@ class TestVideoModuleIntegration:
     Integration tests combining multiple surfaces
     """
 
+    @pytest.mark.slow
     def test_contract_gates_pass(self, repo_root: pathlib.Path):
-        """Contract gates must pass (FASE 3 validation)."""
+        """Contract gates must pass (FASE 3 validation).
+
+        Marcado slow: depende de latest.json de --profile ci.
+        Excluído do CI padrão (-m "not slow") — CI tem job separado contract-gates.yml.
+        """
         report_path = repo_root / "_reports/contract_gates/latest.json"
-        
-        if report_path.exists():
-            report = load_json(report_path)
-            # At least: PASS status and no FAIL gates
-            assert report.get("overall_status") == "PASS", \
-                f"Contract gates failed: {report.get('overall_status')}"
+        if not report_path.exists():
+            pytest.skip("latest.json ausente — executar validate_contracts.py --profile ci antes.")
+        report = load_json(report_path)
+        canonical_scope = report.get("execution_context", {}).get("canonical_scope")
+        if canonical_scope != "full_pipeline":
+            pytest.skip(
+                f"latest.json tem canonical_scope={canonical_scope!r} — "
+                "não é full_pipeline (requer --profile ci)."
+            )
+        assert report.get("overall_status") == "PASS", \
+            f"Contract gates failed: {report.get('overall_status')}"
 
     def test_state_model_consistency(self, state_model_path: pathlib.Path):
         """State model transitions are consistent with domain rules."""

@@ -9,7 +9,7 @@ task_type: new_workflow
 boot_profile_id: contract_execution
 task_id: AI-ING-GAP-CLOSE-001
 resultado: DONE
-proxima_acao_permitida: "Sessão concluída. Próxima: commit e push para PR."
+proxima_acao_permitida: "Branch atualizada. PR #51 pronto para merge."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
@@ -26,6 +26,7 @@ Fechados os 3 known_gaps do módulo ai_ingestion via pipeline CDD completo:
 - `compile_source_graph + compile_context_bundle` regenerados
 - `validate_contracts.py` PASS em todos os gates
 - Testes: 709 passed, 0 failed (`-m "not slow"`)
+- **Test isolation fix**: `restore_shared_artifacts` fixture em `TestStage23ExitCodes`; `test_contract_gates_pass` marcado `@pytest.mark.slow` com guard `canonical_scope`
 
 ## Estado Geral
 **Data:** 2026-04-07 | **Branch:** feat/b10-001-users | **CI:** PASS

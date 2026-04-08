@@ -515,6 +515,27 @@ class TestStage23ExitCodes:
     (todos os 53 gates + tooling externo). Pode levar 2-5 min. Excluído do CI padrão.
     """
 
+    @pytest.fixture(autouse=True)
+    def restore_shared_artifacts(self):
+        """Backup/restore session_start.json e latest.json antes/após cada teste.
+
+        hb stage3 escreve nesses dois arquivos em REPO_ROOT. Sem restauração,
+        um latest.json=FAIL contaminaria test_contract_gates_pass em outra classe.
+        """
+        session_path = REPO_ROOT / "_reports" / "session_start.json"
+        latest_path = REPO_ROOT / "_reports" / "contract_gates" / "latest.json"
+        session_backup = session_path.read_text(encoding="utf-8") if session_path.exists() else None
+        latest_backup = latest_path.read_text(encoding="utf-8") if latest_path.exists() else None
+        yield
+        if session_backup is not None:
+            session_path.write_text(session_backup, encoding="utf-8")
+        elif session_path.exists():
+            session_path.unlink()
+        if latest_backup is not None:
+            latest_path.write_text(latest_backup, encoding="utf-8")
+        elif latest_path.exists():
+            latest_path.unlink()
+
     def test_stage3_command_exists_and_runs(self):
         """hb stage3 deve ser reconhecido e executar validate_contracts completo."""
         result = _run_hb("stage3")
