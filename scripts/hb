@@ -20,6 +20,7 @@ Referência: .dev/planejamento/execut.md (Fase 2 — PR2)
 """
 
 import argparse
+import fnmatch
 import json
 import os
 import pathlib
@@ -897,6 +898,517 @@ class HBCLIv2:
         
         return 0
     
+    # ──────────────────────────────────────────────────────
+    # Helpers de preflight
+    # ──────────────────────────────────────────────────────
+
+    @staticmethod
+    def _match_diff_class(changed_files: list, patterns: list) -> bool:
+        """Retorna True se algum arquivo alterado bate com algum padrão glob da classe."""
+        for f in changed_files:
+            for pattern in patterns:
+                # Normalizar: padrão com /** → prefixo + qualquer profundidade
+                if pattern.endswith("/**"):
+                    prefix = pattern[:-3]  # remove /**
+                    if f == prefix or f.startswith(prefix + "/"):
+                        return True
+                else:
+                    if fnmatch.fnmatch(f, pattern):
+                        return True
+        return False
+
+    def _get_diff_files(self, target_branch: str) -> list:
+        """Retornar lista de arquivos alterados em relação ao target_branch."""
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--name-only", f"{target_branch}...HEAD"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                # Tentar sem ...HEAD (branch sem commits além do base)
+                result = subprocess.run(
+                    ["git", "diff", "--name-only", target_branch],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+            files = [f.strip() for f in result.stdout.splitlines() if f.strip()]
+            # Incluir arquivos modificados/untracked não commitados
+            untracked = subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            for line in untracked.stdout.splitlines():
+                if line and len(line) > 3:
+                    path = line[3:].strip().strip('"')
+                    if path not in files:
+                        files.append(path)
+            return files
+        except Exception as e:
+            print(f"⚠️  Não foi possível calcular diff: {e}", file=sys.stderr)
+            return []
+
+    def _get_commit_count(self, target_branch: str) -> int:
+        """Retornar número de commits na branch atual acima do target_branch."""
+        try:
+            result = subprocess.run(
+                ["git", "rev-list", "--count", f"{target_branch}...HEAD"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                return int(result.stdout.strip() or "0")
+            return 0
+        except Exception:
+            return 0
+
+    # ──────────────────────────────────────────────────────
+    # Detecção semântica — onda 1
+    # ──────────────────────────────────────────────────────
+
+    def _detect_schema_field_removed(self, changed_files: list, target_branch: str) -> bool:
+        """Detecta se algum campo foi removido de um arquivo .schema.json no diff."""
+        import re
+
+        schema_files = [f for f in changed_files if f.endswith(".schema.json")]
+        if not schema_files:
+            return False
+
+        for schema_path in schema_files:
+            abs_path = self.root / schema_path
+            if not abs_path.exists():
+                # Arquivo removido — considerado field removal
+                return True
+            try:
+                current_text = abs_path.read_text()
+                base_result = subprocess.run(
+                    ["git", "show", f"{target_branch}:{schema_path}"],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+                if base_result.returncode != 0:
+                    # Arquivo novo — sem remoção
+                    continue
+                base_text = base_result.stdout
+
+                current_keys = set(re.findall(r'"([^"]+)":\s*\{', current_text))
+                base_keys = set(re.findall(r'"([^"]+)":\s*\{', base_text))
+                removed = base_keys - current_keys
+                if removed:
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_canonical_status_transition(self, changed_files: list, target_branch: str) -> bool:
+        """Detecta mudança de status canônico (ex: DRAFT → ACTIVE) em contratos ou docs."""
+        import re
+
+        status_pattern = re.compile(
+            r'status["\']?\s*:\s*["\']?(DRAFT|ACTIVE|DEPRECATED|FROZEN)',
+            re.IGNORECASE,
+        )
+        for f in changed_files:
+            abs_path = self.root / f
+            if not abs_path.exists() or abs_path.suffix not in {".yaml", ".yml", ".json", ".md"}:
+                continue
+            try:
+                current_text = abs_path.read_text()
+                base_result = subprocess.run(
+                    ["git", "show", f"{target_branch}:{f}"],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+                if base_result.returncode != 0:
+                    continue
+                base_text = base_result.stdout
+
+                current_statuses = set(m.group(1).upper() for m in status_pattern.finditer(current_text))
+                base_statuses = set(m.group(1).upper() for m in status_pattern.finditer(base_text))
+                if current_statuses != base_statuses:
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_bridge_doc_authority_language(self, changed_files: list) -> bool:
+        """Detecta uso de linguagem autoritativa em bridge docs modificados."""
+        import re
+
+        # Bridge docs: arquivos em .github/ que não são workflows ou ações
+        bridge_patterns = [
+            ".github/copilot-instructions.md",
+            ".github/skills/**",
+            ".github/instructions/**",
+            "CLAUDE.md",
+            "AGENTS.md",
+        ]
+        authority_pattern = re.compile(
+            r'\b(SSOT|sovereign|source of truth|defines rules|canonical authority|'
+            r'normative|authoritative|MUST NOT|MUST be|governs)\b',
+            re.IGNORECASE,
+        )
+
+        for f in changed_files:
+            is_bridge = any(
+                fnmatch.fnmatch(f, p) or (p.endswith("/**") and f.startswith(p[:-3] + "/"))
+                for p in bridge_patterns
+            )
+            if not is_bridge:
+                continue
+            abs_path = self.root / f
+            if not abs_path.exists():
+                continue
+            try:
+                text = abs_path.read_text()
+                if authority_pattern.search(text):
+                    # Bridge doc com linguagem autoritativa — verificar se tem disclamer BRIDGE ONLY
+                    if "BRIDGE ONLY" not in text and "NON-SOVEREIGN" not in text:
+                        return True
+            except Exception:
+                continue
+        return False
+
+    # ──────────────────────────────────────────────────────
+    # Detecção semântica — onda 2
+    # ──────────────────────────────────────────────────────
+
+    def _detect_new_cross_module_boundary(self, changed_files: list) -> bool:
+        """Detecta referências cross-módulo introduzidas por arquivos modificados."""
+        import re
+
+        # Módulos canônicos — prefixos de path src/
+        module_dirs = {
+            "users", "teams", "seasons", "competitions", "matches",
+            "training", "medical", "analytics", "reports", "notifications",
+            "scout", "video", "exercises", "wellness", "identity_access",
+            "audit", "ai_ingestion",
+        }
+        cross_ref_pattern = re.compile(
+            r'from\s+src\.(\w+)\.',
+        )
+        for f in changed_files:
+            if not f.startswith("src/"):
+                continue
+            parts = f.split("/")
+            if len(parts) < 2:
+                continue
+            current_module = parts[1]
+            if current_module not in module_dirs:
+                continue
+            abs_path = self.root / f
+            if not abs_path.exists() or abs_path.suffix != ".py":
+                continue
+            try:
+                text = abs_path.read_text()
+                for m in cross_ref_pattern.finditer(text):
+                    ref_module = m.group(1)
+                    if ref_module in module_dirs and ref_module != current_module:
+                        return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_diff_outside_handoff_scope(self, changed_files: list) -> bool:
+        """Detecta se algum arquivo alterado está fora do escopo declarado no SESSION_HANDOFF.md."""
+        import re
+
+        handoff = self.root / "SESSION_HANDOFF.md"
+        if not handoff.exists():
+            return False
+        try:
+            text = handoff.read_text()
+            # Extrair paths/módulos da seção "O que foi feito" ou front matter
+            # Se não há declaração explícita de scope, não bloquear
+            module_match = re.search(r'modulo_foco:\s*(\S+)', text)
+            if not module_match:
+                return False
+            declared_module = module_match.group(1).strip('"\'')
+            # Verificar se há mudanças em paths de outros módulos
+            for f in changed_files:
+                if f.startswith("src/") and declared_module not in f:
+                    parts = f.split("/")
+                    if len(parts) >= 2 and parts[1] != declared_module:
+                        # Verificar se não é infra/config/tests que são transversais
+                        if parts[1] not in {"tests", "config", "migrations", "scripts", "docs"}:
+                            return True
+        except Exception:
+            pass
+        return False
+
+    # ──────────────────────────────────────────────────────
+    # PR fix — classificação de findings
+    # ──────────────────────────────────────────────────────
+
+    @staticmethod
+    def classify_finding(finding_id: str, manifest: dict) -> str:
+        """Mapear finding_id para ação determinística via pr_fix_resolution do manifesto.
+
+        Retorna a ação canônica (ex: 'fix_repository') ou 'unknown' se não mapeado.
+        Leitura dinâmica do manifesto — não hardcoded.
+        """
+        finding_classes = manifest.get("pr_fix_resolution", {}).get("finding_classes", [])
+        for fc in finding_classes:
+            if fc.get("finding_id") == finding_id:
+                return fc.get("action", "unknown")
+        return "unknown"
+
+    # ──────────────────────────────────────────────────────
+    # cmd_preflight — orquestrador real de merge-readiness v2
+    # ──────────────────────────────────────────────────────
+
+    def cmd_preflight(self) -> int:
+        """Rodar preflight completo — orquestrador de merge-readiness v2.
+
+        Nova convenção de exit code (v2 — deliberada, não continuidade da convenção atual
+        de 0=sucesso / !=0=falha usada pelos demais comandos):
+          0 = PASS  — seguro fazer push
+          1 = WARN  — pode fazer push, com risco/documentação pendente não bloqueante
+          2 = BLOCK — não deve fazer push
+
+        Fluxo:
+          1. Ler merge-readiness.json
+          2. Calcular diff vs target_branch
+          3. Classificar diff via diff_classification.classes
+          4. Executar baseline_steps (survival_suite obrigatório)
+          5. Executar checks required (run_all_required)
+          6. Executar checks conditional ativados por diff class
+          7. Verificar semantic_requirements — onda 1 (schema_field_removed,
+             canonical_status_transition, bridge_doc_uses_authority_language)
+             e onda 2 (new_cross_module_boundary, diff_outside_handoff_scope)
+          8. Verificar reviewability (changed_files, commits, cross_domain_areas)
+          9. Calcular final_decision e gravar _reports/preflight/latest.json
+        """
+        print("\n══ PREFLIGHT — merge-readiness v2 ══")
+
+        # 1. Ler manifesto
+        manifest_path = self.root / "merge-readiness.json"
+        if not manifest_path.exists():
+            print("❌ merge-readiness.json não encontrado.", file=sys.stderr)
+            return 2
+        manifest = self._load_json(manifest_path)
+        target_branch = manifest.get("target_branch", "main")
+        decision_policy = manifest.get("execution_plan", {}).get(
+            "decision_policy", "block_on_required_fail"
+        )
+        reviewability = manifest.get("reviewability", {})
+        output_report = manifest.get("execution_plan", {}).get(
+            "output_report", "_reports/preflight/latest.json"
+        )
+
+        print(f"  target_branch : {target_branch}")
+        print(f"  decision_policy: {decision_policy}")
+
+        # 2. Calcular diff
+        changed_files = self._get_diff_files(target_branch)
+        commit_count = self._get_commit_count(target_branch)
+        print(f"\n  Arquivos no diff: {len(changed_files)}")
+        print(f"  Commits acima de {target_branch}: {commit_count}")
+
+        # 3. Classificar diff
+        diff_classes: list = []
+        for cls in manifest.get("diff_classification", {}).get("classes", []):
+            if self._match_diff_class(changed_files, cls.get("paths", [])):
+                diff_classes.append(cls["class_id"])
+        print(f"  Classes de diff ativas: {diff_classes or ['(nenhuma)']}")
+
+        # 4. Baseline: survival suite
+        checks_run = []
+        checks_failed = []
+
+        print("\n── Baseline: survival suite ──")
+        ss_result = self.cmd_survival_suite()
+        checks_run.append({"step": "survival_suite", "result": "PASS" if ss_result == 0 else "FAIL", "exit_code": ss_result})
+        if ss_result != 0:
+            checks_failed.append("survival_suite")
+
+        # 5. Checks required
+        print("\n── Checks required ──")
+        for check in manifest.get("checks", []):
+            if check.get("category") != "required":
+                continue
+            context = check["context"]
+            cmd_str = check.get("local_equivalent", "")
+            if not cmd_str:
+                continue
+            print(f"  Rodando: {context}")
+            rc = subprocess.run(cmd_str, shell=True, cwd=self.root).returncode
+            status = "PASS" if rc == 0 else "FAIL"
+            checks_run.append({"context": context, "category": "required", "result": status, "exit_code": rc})
+            if rc != 0:
+                checks_failed.append(context)
+                print(f"    ❌ FAIL (exit {rc})")
+            else:
+                print(f"    ✅ PASS")
+
+        # 6. Checks conditional — ativar por diff class
+        print("\n── Checks conditional ──")
+        for check in manifest.get("checks", []):
+            if check.get("category") != "conditional":
+                continue
+            condition = check.get("condition", "")
+            context = check["context"]
+            # Avaliar condição: "governance_changed == true" etc.
+            activated = False
+            if "governance_changed" in condition and "governance_changed" in diff_classes:
+                activated = True
+            elif "session_contract_changed" in condition and "session_contract_changed" in diff_classes:
+                activated = True
+            elif "frontend_changed" in condition and "frontend_changed" in diff_classes:
+                activated = True
+            elif "schema_changed" in condition and "schema_changed" in diff_classes:
+                activated = True
+
+            if not activated:
+                print(f"  ⏭  {context} — não ativado (condição: {condition})")
+                continue
+
+            cmd_str = check.get("local_equivalent", "")
+            if not cmd_str:
+                print(f"  ⏭  {context} — sem local_equivalent")
+                continue
+
+            print(f"  Rodando: {context}")
+            rc = subprocess.run(cmd_str, shell=True, cwd=self.root).returncode
+            status = "PASS" if rc == 0 else "FAIL"
+            checks_run.append({"context": context, "category": "conditional", "result": status, "exit_code": rc})
+            if rc != 0:
+                checks_failed.append(context)
+                print(f"    ❌ FAIL (exit {rc})")
+            else:
+                print(f"    ✅ PASS")
+
+        # 7. Semantic requirements
+        print("\n── Semantic requirements ──")
+        semantic_findings = []
+        missing_evidence = []
+
+        semantic_detectors = {
+            "schema_field_removed": lambda: self._detect_schema_field_removed(changed_files, target_branch),
+            "canonical_status_transition": lambda: self._detect_canonical_status_transition(changed_files, target_branch),
+            "bridge_doc_uses_authority_language": lambda: self._detect_bridge_doc_authority_language(changed_files),
+            "new_cross_module_boundary": lambda: self._detect_new_cross_module_boundary(changed_files),
+            "diff_outside_handoff_scope": lambda: self._detect_diff_outside_handoff_scope(changed_files),
+        }
+
+        for rule in manifest.get("semantic_requirements", {}).get("rules", []):
+            when = rule.get("when")
+            block = rule.get("block_if_missing", False)
+            require = rule.get("require", [])
+            detector = semantic_detectors.get(when)
+            triggered = detector() if detector else False
+            finding = {"when": when, "triggered": triggered, "block_if_missing": block, "require": require}
+            semantic_findings.append(finding)
+            if triggered:
+                print(f"  ⚠️  Detectado: {when} — requer: {require}")
+                if block:
+                    missing_evidence.extend(require)
+            else:
+                print(f"  ✅ {when} — não detectado")
+
+        # 8. Reviewability
+        print("\n── Reviewability ──")
+        max_files = reviewability.get("max_changed_files", 150)
+        max_commits = reviewability.get("max_commits", 20)
+        max_domains = reviewability.get("max_cross_domain_areas", 3)
+        split_required = reviewability.get("split_required_when_exceeded", True)
+
+        # Cross-domain: quantos prefixos src/<module> distintos no diff
+        src_modules = set()
+        for f in changed_files:
+            if f.startswith("src/"):
+                parts = f.split("/")
+                if len(parts) >= 2:
+                    src_modules.add(parts[1])
+        cross_domain_count = len(src_modules)
+
+        reviewability_exceeded = (
+            len(changed_files) > max_files
+            or commit_count > max_commits
+            or cross_domain_count > max_domains
+        )
+
+        reviewability_check = {
+            "changed_files": len(changed_files),
+            "max_changed_files": max_files,
+            "commits": commit_count,
+            "max_commits": max_commits,
+            "cross_domain_areas": cross_domain_count,
+            "max_cross_domain_areas": max_domains,
+            "exceeded": reviewability_exceeded,
+            "split_required": split_required and reviewability_exceeded,
+        }
+
+        if reviewability_exceeded:
+            print(f"  ⚠️  Limites excedidos: arquivos={len(changed_files)}/{max_files}, "
+                  f"commits={commit_count}/{max_commits}, domínios={cross_domain_count}/{max_domains}")
+        else:
+            print(f"  ✅ Dentro dos limites de reviewability")
+
+        # 9. Calcular final_decision
+        has_required_fail = bool(checks_failed)
+        has_missing_evidence = bool(missing_evidence)
+
+        if decision_policy == "block_on_required_fail_or_missing_evidence":
+            if has_required_fail or has_missing_evidence:
+                final_decision = "BLOCK"
+            elif reviewability_exceeded and split_required:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+        elif decision_policy == "block_on_required_fail":
+            if has_required_fail:
+                final_decision = "BLOCK"
+            elif has_missing_evidence or reviewability_exceeded:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+        else:  # warn_on_missing_evidence
+            if has_required_fail:
+                final_decision = "BLOCK"
+            elif has_missing_evidence:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+
+        # Gerar report
+        report = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "branch_target": target_branch,
+            "diff_classes": diff_classes,
+            "checks_run": checks_run,
+            "checks_failed": checks_failed,
+            "missing_evidence": missing_evidence,
+            "semantic_findings": semantic_findings,
+            "reviewability_check": reviewability_check,
+            "final_decision": final_decision,
+        }
+
+        report_path = self.root / output_report
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
+
+        # Resumo final
+        decision_icon = {"PASS": "✅", "WARN": "⚠️ ", "BLOCK": "❌"}.get(final_decision, "?")
+        print(f"\n══ PREFLIGHT: {decision_icon} {final_decision} ══")
+        if checks_failed:
+            print(f"  Checks com falha: {checks_failed}")
+        if missing_evidence:
+            print(f"  Evidência ausente: {missing_evidence}")
+        print(f"  Relatório: {output_report}")
+
+        # Exit codes v2 (nova convenção deliberada):
+        #   0 = PASS, 1 = WARN, 2 = BLOCK
+        exit_map = {"PASS": 0, "WARN": 1, "BLOCK": 2}
+        return exit_map.get(final_decision, 2)
+
     def cmd_survival_suite(self) -> int:
         """Rodar suíte de sobrevivência obrigatória.
 
@@ -1164,7 +1676,7 @@ class HBCLIv2:
             elif parsed_args.command == "survival-suite":
                 return self.cmd_survival_suite()
             elif parsed_args.command == "preflight":
-                return self.cmd_survival_suite()
+                return self.cmd_preflight()
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()
             elif parsed_args.command == "validate":
