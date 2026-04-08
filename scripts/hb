@@ -674,6 +674,12 @@ class HBCLIv2:
             session_update["roadmap_task_id"] = roadmap_task_id
 
         self.session.update(session_update)
+
+        # Limpar campos exclusivos de execute_roadmap_phase quando não aplicável,
+        # evitando dados stale que mascariam erros de schema.
+        if task_type != "execute_roadmap_phase":
+            self.session.pop("roadmap_phase", None)
+            self.session.pop("roadmap_task_id", None)
         
         # Validar contra schema
         if not self._validate_session_against_schema():

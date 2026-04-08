@@ -1,11 +1,11 @@
 {
   "session_id": "68be23c1-6c49-4081-9920-cb86d6ef8981",
-  "session_timestamp": "2026-04-08T03:35:25.544201+00:00",
+  "session_timestamp": "2026-04-08T04:11:10.833829+00:00",
   "branch": "feat/b10-001-users",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "contract_revision",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "contracts",
   "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
@@ -21,10 +21,9 @@
   },
   "module": "video",
   "module_focus": "video",
-  "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-08T03:33:13.887629+00:00",
+  "hook_validated_at": "2026-04-08T03:35:59.571293+00:00",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
@@ -610,6 +609,12 @@
       "path": "contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
       "sha256": "cf7901eb6db93f19449d655715b913632c803b4f0d743c0f6314311610d50ff5",
       "created_at": "2026-04-07T21:40:50.257120+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/session_handoff.schema.json",
+      "sha256": "a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681",
+      "created_at": "2026-04-08T04:14:40.220702+00:00",
       "gate_exit_code": 0
     }
   ],

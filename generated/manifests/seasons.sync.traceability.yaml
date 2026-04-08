@@ -266,7 +266,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: generated/contracts/schemas/shared/session_start.schema.json
     sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: generated/contracts/schemas/shared/toolchain.schema.json
@@ -323,7 +323,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: ac3907aca315849fb6361e28a5256feb6fa6ed8366f13fa14095f6aad78566ef
+  generated_tree_sha256: 268450c018475a49c8e605def03d79518a3fb9a5e9a74ae52b2beb18dfe24cb7
   policy_path: generated/resolved_policy/seasons.sync.resolved.yaml
   policy_sha256: b90a7508b2deae2aac07b45443e37e35f02ff7a7d2b6982dba7e1ff4e88ad033
   source_contracts:
@@ -590,7 +590,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: contracts/schemas/shared/session_start.schema.json
     sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: contracts/schemas/shared/toolchain.schema.json
@@ -658,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
-  source_tree_sha256: 81e534e2cedd442342efdc07307c7158babf15eb8178d78f0a09b6ea62d06ff4
+  source_tree_sha256: fd91397e243b71d1240cc7d36821350ad2ad249efc8585fc1d2f98c48d3636ce

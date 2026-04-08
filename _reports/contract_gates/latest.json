@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-08T03:30:38Z",
+  "timestamp_utc": "2026-04-08T04:11:35Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "56457d09",
+    "git_commit": "56f3a3bd",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T033038_b45aba"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T041135_316eb8"
   },
   "status_detail": {
     "active_gates_passed": 52,
@@ -233,7 +233,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 75
       }
     },
     {
@@ -258,7 +258,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9667
+        "duration_ms": 9903
       }
     },
     {
@@ -463,7 +463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 65
       }
     },
     {
@@ -593,7 +593,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 153
+        "duration_ms": 197
       }
     },
     {
@@ -646,7 +646,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 11
       }
     },
     {
@@ -667,7 +667,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 48
       }
     },
     {
@@ -688,7 +688,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 41
       }
     },
     {
@@ -709,7 +709,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 19
       }
     },
     {
@@ -730,7 +730,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 90
+        "duration_ms": 107
       }
     },
     {
@@ -751,7 +751,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 65
       }
     },
     {
@@ -772,7 +772,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 66
       }
     },
     {
@@ -793,7 +793,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 396
+        "duration_ms": 387
       }
     },
     {
@@ -814,7 +814,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 48
       }
     },
     {
@@ -873,7 +873,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 12
       }
     },
     {
@@ -928,7 +928,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 53
       }
     },
     {
@@ -955,7 +955,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 124
+        "duration_ms": 160
       }
     },
     {
@@ -1056,7 +1056,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 4
       }
     },
     {
@@ -1428,7 +1428,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 151
       }
     },
     {
@@ -1514,7 +1514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 760
+        "duration_ms": 881
       }
     },
     {
@@ -1537,7 +1537,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4041
+        "duration_ms": 7422
       }
     },
     {
@@ -1559,7 +1559,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3817
+        "duration_ms": 4869
       }
     },
     {
@@ -1598,7 +1598,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 608
+        "duration_ms": 913
       }
     },
     {
@@ -4509,7 +4509,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 2243
+        "duration_ms": 3347
       }
     },
     {
@@ -4577,7 +4577,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 15
       }
     },
     {
@@ -5175,7 +5175,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1986
+        "duration_ms": 2179
       }
     },
     {
@@ -5199,7 +5199,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1704
+        "duration_ms": 2138
       }
     },
     {
@@ -5219,7 +5219,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 29
       }
     },
     {
@@ -5259,7 +5259,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2312
+        "duration_ms": 4383
       }
     },
     {
@@ -5302,7 +5302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 71
       }
     },
     {
@@ -5324,7 +5324,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1350
+        "duration_ms": 1604
       }
     },
     {
@@ -5380,7 +5380,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 81
       }
     },
     {
@@ -5400,7 +5400,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 6
       }
     },
     {
@@ -5420,7 +5420,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45865
+        "duration_ms": 50649
       }
     },
     {
@@ -5456,7 +5456,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 28
       }
     },
     {
@@ -5476,7 +5476,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 25
       }
     },
     {
@@ -5498,7 +5498,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 3
       }
     },
     {
@@ -5554,7 +5554,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 13
       }
     },
     {
@@ -5576,7 +5576,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 1
       }
     },
     {
@@ -5632,12 +5632,16 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/docs/_canon/SCOPE_BOUNDARY_POLICY.md",
+        "/home/davis/HB-TRACK/scripts/gates/check_scope_boundary.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/docs/_canon/SCOPE_BOUNDARY_POLICY.md",
+        "/home/davis/HB-TRACK/scripts/gates/check_scope_boundary.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5645,7 +5649,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 48
       }
     },
     {
@@ -5667,7 +5671,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 218
+        "duration_ms": 224
       }
     },
     {
@@ -5689,7 +5693,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -5711,7 +5715,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 26
       }
     },
     {
@@ -6075,7 +6079,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 995
+        "duration_ms": 1118
       }
     },
     {
@@ -6099,7 +6103,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 15
       }
     },
     {
@@ -6160,7 +6164,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 32
       }
     },
     {
@@ -6183,7 +6187,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 14
       }
     },
     {
@@ -6204,7 +6208,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 27
       }
     },
     {
@@ -6224,7 +6228,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 2
       }
     },
     {

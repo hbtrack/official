@@ -1,20 +1,20 @@
 ---
-data_ultima_sessao: "2026-04-07"
+data_ultima_sessao: "2026-04-08"
 branch_ativo: feat/b10-001-users
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: video
 fase_roadmap: 5
-task_type: pr_fix
+task_type: contract_revision
 boot_profile_id: contract_execution
-task_id: VIDEO-BOUNDARY-GOVERNANCE-001
+task_id: ROADMAP-PHASE-FIELD-ENFORCEMENT-001
 resultado: DONE
-proxima_acao_permitida: "PR #51 aberto. CI rodando após commit 6b5bcd10. Aguardar PASS para merge."
+proxima_acao_permitida: "PR #51 aberto. Aguardar CI passar após push do commit de enforcement do campo roadmap_phase."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
-  - docs/_canon/SCOPE_BOUNDARY_POLICY.md
-  - scripts/gates/check_scope_boundary.py
+  - contracts/schemas/shared/session_handoff.schema.json
+  - scripts/contracts/validate/validate_contracts.py
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`

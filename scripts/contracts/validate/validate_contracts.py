@@ -7413,6 +7413,7 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
                     })
             sess_phase = session_data.get("roadmap_phase")
             hoff_phase = front_matter.get("fase_roadmap")
+            hoff_roadmap_phase = front_matter.get("roadmap_phase")
             if sess_phase is not None and hoff_phase is not None and sess_phase != hoff_phase:
                 violations.append({
                     "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
@@ -7423,6 +7424,39 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
                     ),
                     "severity": "error",
                 })
+            # Validação direta: SESSION_HANDOFF.roadmap_phase deve estar presente e
+            # coincidir com session_start.roadmap_phase quando task_type=execute_roadmap_phase.
+            if session_data.get("task_type") == "execute_roadmap_phase":
+                if hoff_roadmap_phase is None:
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": (
+                            "Campo 'roadmap_phase' ausente em SESSION_HANDOFF.md. "
+                            "Obrigatório quando task_type=execute_roadmap_phase."
+                        ),
+                        "severity": "error",
+                    })
+                elif sess_phase is not None and hoff_roadmap_phase != sess_phase:
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": (
+                            f"Divergência: SESSION_HANDOFF.roadmap_phase={hoff_roadmap_phase}"
+                            f" != session_start.roadmap_phase={sess_phase}."
+                        ),
+                        "severity": "error",
+                    })
+                elif hoff_phase is not None and hoff_roadmap_phase != hoff_phase:
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": (
+                            f"Inconsistência interna: SESSION_HANDOFF.roadmap_phase={hoff_roadmap_phase}"
+                            f" != SESSION_HANDOFF.fase_roadmap={hoff_phase}. Os dois campos devem ser iguais."
+                        ),
+                        "severity": "error",
+                    })
             sess_tid = session_data.get("roadmap_task_id")
             hoff_tid = front_matter.get("task_id")
             if sess_tid and hoff_tid and sess_tid != hoff_tid:

@@ -208,7 +208,7 @@ class TestHbVerifySessionFields:
 
     def test_verify_roadmap_task_sets_operation_mode_roadmap(self):
         """hb verify com execute_roadmap_phase deve gravar operation_mode='ROADMAP'."""
-        result = _run_hb("verify", "--task-type", "execute_roadmap_phase", "--module", "training")
+        result = _run_hb("verify", "--task-type", "execute_roadmap_phase", "--roadmap-phase", "1", "--module", "training")
         assert result.returncode != 1, (
             f"Boot enforcement bloqueou task válida.\nstdout={result.stdout}\nstderr={result.stderr}"
         )

@@ -502,7 +502,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: generated/contracts/schemas/shared/session_start.schema.json
     sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: generated/contracts/schemas/shared/toolchain.schema.json
@@ -559,7 +559,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: fc21eb72178303bb2bb007b25eda92d5cedbb9e47df08ace8413e085bb59a3d4
+  generated_tree_sha256: 62edf5b078b997e85b5c1fbdcb5c3b4c8a45e581e88d34360d2eabe60e6364d3
   policy_path: generated/resolved_policy/scout.event.resolved.yaml
   policy_sha256: c37759422426321857b5af325c56136dc9da16da121c9a28dafbea0d0efd8792
   source_contracts:
@@ -1062,7 +1062,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: contracts/schemas/shared/session_start.schema.json
     sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: contracts/schemas/shared/toolchain.schema.json
@@ -1130,4 +1130,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
-  source_tree_sha256: 754c2614aed02c27d13ddc4329bb6d7cf41be4650212c88c44e5aba9655b9b74
+  source_tree_sha256: 0ef7395075160223377e75c203a012a4455c6c545b0a8fa8bc9e0d1e5f0f3395

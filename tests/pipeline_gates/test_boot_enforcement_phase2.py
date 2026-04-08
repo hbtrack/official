@@ -391,7 +391,7 @@ class TestHbVerifyIntegration:
         execute_roadmap_phase: profile no TASK_CATALOG coincide com selection_rules
         → não deve aparecer mensagem de divergência de coerência.
         """
-        result = self._run_hb("verify", "--task-type", "execute_roadmap_phase", "--module", "training")
+        result = self._run_hb("verify", "--task-type", "execute_roadmap_phase", "--roadmap-phase", "1", "--module", "training")
         assert "TASK_CATALOG é a fonte de autoridade" not in result.stderr
 
 

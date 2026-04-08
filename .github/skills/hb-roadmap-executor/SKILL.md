@@ -132,6 +132,7 @@ Usar os paths canônicos definidos em `execute_roadmap_phase.prompt.md`. Nunca c
   ci_status: PASS
   modulo_foco: "<módulo ou área principal>"
   fase_roadmap: <N>
+  roadmap_phase: <N>
   task_type: execute_roadmap_phase
   boot_profile_id: roadmap_execution
   task_id: "<task_id ou 'completa'>"
