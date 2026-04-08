@@ -4,6 +4,9 @@ from uuid import UUID
 from datetime import datetime
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class IngestionJobOut(Schema):
     id: UUID
@@ -36,13 +39,11 @@ class IngestionJobOut(Schema):
             origin_job_id=job.origin_job_id,
         )
 
-
 class IngestionJobListOut(Schema):
     data: List[IngestionJobOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateIngestionJobIn(Schema):
     sourceLabel: str
@@ -51,7 +52,6 @@ class CreateIngestionJobIn(Schema):
     mappingProfile: Optional[str] = None
     idempotencyKey: Optional[str] = None
     executionBindingLabel: Optional[str] = None
-
 
 class ErrorOut(Schema):
     detail: str

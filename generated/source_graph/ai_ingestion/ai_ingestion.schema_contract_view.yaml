@@ -1,0 +1,69 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: ai_ingestion
+entity: IngestionJob
+primary_entity: IngestionJob
+primary_schema_ref: contracts/schemas/ai_ingestion/ingestion_job.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
+required: &id001
+- id
+- sourceLabel
+- ingestionMode
+- receivedAt
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: sourceLabel
+  runtime_name: source_label
+  required: true
+  type: string
+- name: ingestionMode
+  runtime_name: ingestion_mode
+  required: true
+  type: string
+- name: payloadSchemaRef
+  runtime_name: payload_schema_ref
+  required: false
+  type: string
+- name: mappingProfile
+  runtime_name: mapping_profile
+  required: false
+  type: string
+- name: idempotencyKey
+  runtime_name: idempotency_key
+  required: false
+  type: string
+- name: executionBindingLabel
+  runtime_name: execution_binding_label
+  required: false
+  type: string
+- name: receivedAt
+  runtime_name: received_at
+  required: true
+  type: timestamp_utc
+- name: completedAt
+  runtime_name: completed_at
+  required: false
+  type: timestamp_utc
+- name: statusLabel
+  runtime_name: status_label
+  required: false
+  type: string
+- name: errorMessage
+  runtime_name: error_message
+  required: false
+  type: string
+- name: originJobId
+  runtime_name: origin_job_id
+  required: false
+  type: uuid_v4
+runtime_extension_fields: []
+entities:
+  IngestionJob:
+    schema_ref: contracts/schemas/ai_ingestion/ingestion_job.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []

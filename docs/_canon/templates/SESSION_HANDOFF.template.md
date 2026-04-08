@@ -7,6 +7,7 @@ modo_operacao: CDD                        # enum: CDD | ROADMAP
 ci_status: PASS                           # enum: PASS | FAIL | UNKNOWN
 modulo_foco: "governance"                 # módulo, trilha ou área principal
 fase_roadmap: 0                           # inteiro >= 0
+roadmap_phase: 0                          # OBRIGATÓRIO quando task_type=execute_roadmap_phase. Mesmo valor de fase_roadmap; alinha com session_start.roadmap_phase
 task_type: "new_contract"                 # task_type canônico do TASK_CATALOG
 boot_profile_id: contract_execution       # enum: default | contract_execution | architecture_decision | diagnostic | roadmap_execution
 task_id: "fase-X-task-Y"                  # identificador da tarefa

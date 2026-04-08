@@ -7,6 +7,9 @@ from ninja import Schema
 
 from scout.domain.entities import ScoutEvent
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class ScoutEventOut(Schema):
     id: UUID
@@ -51,12 +54,10 @@ class ScoutEventOut(Schema):
             updatedAt=e.updated_at,
         )
 
-
 class ScoutEventListOut(Schema):
     items: List[ScoutEventOut]
     nextPageToken: Optional[str] = None
     totalCount: int
-
 
 class CreateScoutEventIn(Schema):
     matchId: UUID
@@ -75,23 +76,19 @@ class CreateScoutEventIn(Schema):
     notes: Optional[str] = None
     metadata: Optional[dict] = None
 
-
 class ScoutAggregationsOut(Schema):
     matchId: UUID
     totalEvents: int
     eventLabelDistribution: List[dict]
     athleteBreakdown: Optional[List[dict]] = []
 
-
 class CompleteSessionIn(Schema):
     notes: Optional[str] = None
-
 
 class CompleteSessionOut(Schema):
     matchId: UUID
     completedAt: str
     totalEvents: int
-
 
 class ErrorOut(Schema):
     detail: str

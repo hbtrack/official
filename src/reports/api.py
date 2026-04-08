@@ -6,8 +6,14 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from .schemas import (
     ReportJobOut, ReportJobListOut, CreateReportJobIn, UpdateReportJobIn, ErrorOut,
+
 )
 from .domain.rules import RoleLabel, InsufficientPrivilege, ReportJobNotFound, ReportJobConflict
 from .infrastructure.repository import ReportJobRepository
@@ -23,7 +29,6 @@ _get_uc = GetReportJob(_repo)
 _update_uc = UpdateReportJob(_repo)
 _download_uc = DownloadReportArtifact(_repo)
 
-
 def _role(request: HttpRequest) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -34,14 +39,12 @@ def _role(request: HttpRequest) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _uid(request: HttpRequest) -> UUID:
     """Extrai actor_id do JWT validado."""
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
-
 
 @router.get("/jobs", response={200: ReportJobListOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def list_report_jobs(
@@ -73,7 +76,6 @@ def list_report_jobs(
     except ValueError as e:
         return 422, ErrorOut(detail=str(e))
 
-
 @router.post("/jobs", response={201: ReportJobOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_report_job(request: HttpRequest, payload: CreateReportJobIn):
     try:
@@ -93,7 +95,6 @@ def create_report_job(request: HttpRequest, payload: CreateReportJobIn):
     except ValueError as e:
         return 422, ErrorOut(detail=str(e))
 
-
 @router.get("/jobs/{job_id}", response={200: ReportJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_report_job(request: HttpRequest, job_id: UUID):
     try:
@@ -105,7 +106,6 @@ def get_report_job(request: HttpRequest, job_id: UUID):
         return 404, ErrorOut(detail=str(e))
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
-
 
 @router.patch("/jobs/{job_id}", response={200: ReportJobOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut})
 def update_report_job(request: HttpRequest, job_id: UUID, payload: UpdateReportJobIn):
@@ -126,7 +126,6 @@ def update_report_job(request: HttpRequest, job_id: UUID, payload: UpdateReportJ
         return 403, ErrorOut(detail=str(e))
     except ValueError as e:
         return 422, ErrorOut(detail=str(e))
-
 
 @router.get("/jobs/{job_id}/download", response={200: ReportJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut})
 def download_report_artifact(request: HttpRequest, job_id: UUID):

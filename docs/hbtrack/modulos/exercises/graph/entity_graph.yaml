@@ -1,0 +1,317 @@
+version: "1.0.0"
+status: active
+module: exercises
+
+entities:
+  Exercise:
+    schema_ref: "../../../../../contracts/schemas/exercises/exercise.schema.json"
+    runtime_entity_ref: "../../../../../src/exercises/domain/entities.py#Exercise"
+    docs_refs:
+      - "../DOMAIN_RULES_EXERCISES.md"
+      - "../INVARIANTS_EXERCISES.md"
+      - "../PERMISSIONS_EXERCISES.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: organizationId
+        runtime_name: organization_id
+        required: false
+        type: uuid_v4|null
+      - name: scope
+        runtime_name: scope
+        required: true
+        type: string
+      - name: visibilityMode
+        runtime_name: visibility_mode
+        required: false
+        type: string
+      - name: name
+        runtime_name: name
+        required: true
+        type: string
+      - name: description
+        runtime_name: description
+        required: false
+        type: string
+      - name: sessionPhase
+        runtime_name: session_phase
+        required: true
+        type: string
+      - name: primaryObjective
+        runtime_name: primary_objective
+        required: true
+        type: string
+      - name: secondaryObjective
+        runtime_name: secondary_objective
+        required: false
+        type: string
+      - name: gamePhases
+        runtime_name: game_phases
+        required: false
+        type: string[]
+      - name: ageCategories
+        runtime_name: age_categories
+        required: true
+        type: string[]
+      - name: skillLevel
+        runtime_name: skill_level
+        required: true
+        type: string
+      - name: complexity
+        runtime_name: complexity
+        required: true
+        type: integer
+      - name: physicalLoad
+        runtime_name: physical_load
+        required: true
+        type: string
+      - name: minAthletes
+        runtime_name: min_athletes
+        required: true
+        type: integer
+      - name: maxAthletes
+        runtime_name: max_athletes
+        required: true
+        type: integer
+      - name: estimatedDurationMinutes
+        runtime_name: estimated_duration_minutes
+        required: true
+        type: integer
+      - name: spaceRequired
+        runtime_name: space_required
+        required: true
+        type: string
+      - name: materials
+        runtime_name: materials
+        required: false
+        type: string[]
+      - name: instructions
+        runtime_name: instructions
+        required: false
+        type: string
+      - name: coachingCues
+        runtime_name: coaching_cues
+        required: false
+        type: string
+      - name: safetyNotes
+        runtime_name: safety_notes
+        required: false
+        type: string
+      - name: thumbnailUrl
+        runtime_name: thumbnail_url
+        required: false
+        type: string
+      - name: editorialStatus
+        runtime_name: editorial_status
+        required: true
+        type: string
+      - name: currentVersionId
+        runtime_name: current_version_id
+        required: true
+        type: uuid_v4
+      - name: currentVersionNumber
+        runtime_name: current_version_number
+        required: true
+        type: integer
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        required: true
+        type: uuid_v4
+      - name: createdAt
+        runtime_name: created_at
+        required: true
+        type: timestamp_utc
+      - name: updatedAt
+        runtime_name: updated_at
+        required: true
+        type: timestamp_utc
+      - name: deletedAt
+        runtime_name: deleted_at
+        required: false
+        type: timestamp_utc|null
+      - name: deletionReason
+        runtime_name: deletion_reason
+        required: false
+        type: string
+    runtime_extension_fields:
+      - name: currentVersion
+        runtime_name: current_version
+        type: object
+      - name: isDeleted
+        runtime_name: is_deleted
+        type: boolean
+  ExerciseVersion:
+    schema_ref: "../../../../../contracts/schemas/exercises/exercise_version.schema.json"
+    runtime_entity_ref: "../../../../../src/exercises/domain/entities.py#ExerciseVersion"
+    docs_refs:
+      - "../DOMAIN_RULES_EXERCISES.md"
+      - "../INVARIANTS_EXERCISES.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: exerciseId
+        runtime_name: exercise_id
+        required: true
+        type: uuid_v4
+      - name: versionNumber
+        runtime_name: version_number
+        required: true
+        type: integer
+      - name: changeReason
+        runtime_name: change_reason
+        required: true
+        type: string
+      - name: name
+        runtime_name: name
+        required: false
+        type: string
+      - name: description
+        runtime_name: description
+        required: false
+        type: string
+      - name: sessionPhase
+        runtime_name: session_phase
+        required: true
+        type: string
+      - name: primaryObjective
+        runtime_name: primary_objective
+        required: true
+        type: string
+      - name: secondaryObjective
+        runtime_name: secondary_objective
+        required: false
+        type: string
+      - name: gamePhases
+        runtime_name: game_phases
+        required: false
+        type: string[]
+      - name: ageCategories
+        runtime_name: age_categories
+        required: true
+        type: string[]
+      - name: skillLevel
+        runtime_name: skill_level
+        required: true
+        type: string
+      - name: complexity
+        runtime_name: complexity
+        required: true
+        type: integer
+      - name: physicalLoad
+        runtime_name: physical_load
+        required: true
+        type: string
+      - name: minAthletes
+        runtime_name: min_athletes
+        required: true
+        type: integer
+      - name: maxAthletes
+        runtime_name: max_athletes
+        required: true
+        type: integer
+      - name: estimatedDurationMinutes
+        runtime_name: estimated_duration_minutes
+        required: true
+        type: integer
+      - name: spaceRequired
+        runtime_name: space_required
+        required: true
+        type: string
+      - name: materials
+        runtime_name: materials
+        required: false
+        type: string[]
+      - name: instructions
+        runtime_name: instructions
+        required: false
+        type: string
+      - name: coachingCues
+        runtime_name: coaching_cues
+        required: false
+        type: string
+      - name: safetyNotes
+        runtime_name: safety_notes
+        required: false
+        type: string
+      - name: thumbnailUrl
+        runtime_name: thumbnail_url
+        required: false
+        type: string
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        required: true
+        type: uuid_v4
+      - name: createdAt
+        runtime_name: created_at
+        required: true
+        type: timestamp_utc
+  ExerciseRelation:
+    schema_ref: "../../../../../contracts/schemas/exercises/exercise_relation.schema.json"
+    runtime_entity_ref: "../../../../../src/exercises/domain/entities.py#ExerciseRelation"
+    docs_refs:
+      - "../DOMAIN_RULES_EXERCISES.md"
+      - "../INVARIANTS_EXERCISES.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: fromExerciseId
+        runtime_name: from_exercise_id
+        required: true
+        type: uuid_v4
+      - name: toExerciseId
+        runtime_name: to_exercise_id
+        required: true
+        type: uuid_v4
+      - name: relationType
+        runtime_name: relation_type
+        required: true
+        type: string
+      - name: notes
+        runtime_name: notes
+        required: false
+        type: string
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        required: true
+        type: uuid_v4
+      - name: createdAt
+        runtime_name: created_at
+        required: true
+        type: timestamp_utc
+  ExerciseAcl:
+    schema_ref: "../../../../../contracts/schemas/exercises/exercise_acl.schema.json"
+    runtime_entity_ref: "../../../../../src/exercises/domain/entities.py#ExerciseACL"
+    docs_refs:
+      - "../PERMISSIONS_EXERCISES.md"
+      - "../INVARIANTS_EXERCISES.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: exerciseId
+        runtime_name: exercise_id
+        required: true
+        type: uuid_v4
+      - name: userId
+        runtime_name: user_id
+        required: true
+        type: uuid_v4
+      - name: organizationId
+        runtime_name: organization_id
+        required: true
+        type: uuid_v4
+      - name: grantedByUserId
+        runtime_name: created_by_user_id
+        required: true
+        type: uuid_v4
+      - name: grantedAt
+        runtime_name: created_at
+        required: true
+        type: timestamp_utc

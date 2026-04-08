@@ -165,6 +165,7 @@ O pipeline CDD valida contratos — a verificação de infra é via health check
 5. Criar ou atualizar `SESSION_HANDOFF.md` na raiz usando o template `docs/_canon/templates/SESSION_HANDOFF.template.md`.
    O front matter YAML é validado pelo `HANDOFF_COHERENCE_GATE` contra `session_handoff.schema.json`. Campos obrigatórios:
    `data_ultima_sessao`, `branch_ativo`, `modo_operacao: ROADMAP`, `ci_status`, `modulo_foco`, `fase_roadmap`,
+   `roadmap_phase` (obrigatório — mesmo valor inteiro de `fase_roadmap`; validado pelo HANDOFF_COHERENCE_GATE contra `session_start.roadmap_phase`),
    `task_type: execute_roadmap_phase`, `boot_profile_id: roadmap_execution`, `task_id`, `resultado`,
    `proxima_acao_permitida` (mín. 10 chars), `bloqueios_ativos`, `evidence_paths` (mín. 1 entrada).
    Seções obrigatórias no corpo: `## Estado Geral`, `## O que foi feito`, `## Evidências`,

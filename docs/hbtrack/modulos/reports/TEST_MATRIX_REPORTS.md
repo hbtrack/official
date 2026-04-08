@@ -19,3 +19,7 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-002 | `contracts/schemas/reports/` | Validação JSON Schema | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | `DOMAIN_RULES_REPORTS.md` | Revisão normativa + testes de regra (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-004 | `INVARIANTS_REPORTS.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
+
+## Obrigações estruturadas
+- O conjunto mínimo compilável do módulo está em `docs/hbtrack/modulos/reports/graph/test_obligations.yaml`.
+- O pipeline deve manter `test_obligations.yaml` coerente com `contracts/`, `src/reports/tests/` e `_reports/contract_gates/latest.json`.

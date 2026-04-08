@@ -1,0 +1,95 @@
+version: "1.0.0"
+status: active
+module: scout
+
+entities:
+  ScoutEvent:
+    schema_ref: "../../../../../contracts/schemas/scout/scout_event.schema.json"
+    runtime_entity_ref: "../../../../../src/scout/domain/entities.py#ScoutEvent"
+    docs_refs:
+      - "../DOMAIN_RULES_SCOUT.md"
+      - "../INVARIANTS_SCOUT.md"
+      - "../PERMISSIONS_SCOUT.md"
+      - "../CANONICAL_EVENT_TAXONOMY_SCOUT.yaml"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-SCOUT-001: obrigatório"
+      - name: matchId
+        runtime_name: match_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "DR-SCOUT-003: todo evento está ancorado a matchId"
+          - "INV-SCOUT-001: obrigatório"
+          - "boundary: reference to matches module"
+      - name: athleteUserId
+        runtime_name: athlete_user_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "DR-SCOUT-003: refina contexto da observação, não muda soberania"
+          - "boundary: reference to identity_access module"
+      - name: teamId
+        runtime_name: team_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "DR-SCOUT-003: refina contexto da observação"
+          - "boundary: reference to teams module"
+      - name: eventLabel
+        runtime_name: event_label
+        required: true
+        type: string
+        constraints:
+          - "DR-SCOUT-002: deve ser da taxonomia canônica CANONICAL_EVENT_TAXONOMY_SCOUT"
+          - "INV-SCOUT-001: obrigatório"
+          - "INV-SCOUT-003: verificável contra taxonomia canônica"
+          - "maxLength: 120"
+      - name: tagLabels
+        runtime_name: tag_labels
+        required: false
+        type: array_of_string
+        constraints:
+          - "DR-SCOUT-002: cada item deve ser da taxonomia canônica"
+          - "INV-SCOUT-002: sem duplicatas"
+          - "nullable: true"
+          - "maxItems: 20"
+      - name: clipAssetRefs
+        runtime_name: clip_asset_refs
+        required: false
+        type: array_of_string
+        constraints:
+          - "DR-SCOUT-004: scout não é dono do storage subjacente"
+          - "INV-SCOUT-002: sem duplicatas"
+          - "nullable: true"
+          - "maxItems: 10"
+      - name: codingSchemaLabel
+        runtime_name: coding_schema_label
+        required: false
+        type: string
+        constraints:
+          - "DR-SCOUT-002: deve ser da taxonomia canônica"
+          - "nullable: true"
+          - "maxLength: 120"
+      - name: tacticalAggregationLabel
+        runtime_name: tactical_aggregation_label
+        required: false
+        type: string
+        constraints:
+          - "DR-SCOUT-002: deve ser da taxonomia canônica"
+          - "DR-SCOUT-005: não redefine estatística oficial sem mapeamento aprovado"
+          - "nullable: true"
+          - "maxLength: 120"
+      - name: recordedAt
+        runtime_name: recorded_at
+        required: true
+        type: datetime_utc
+        constraints:
+          - "INV-SCOUT-001: obrigatório"
+    runtime_extension_fields: []

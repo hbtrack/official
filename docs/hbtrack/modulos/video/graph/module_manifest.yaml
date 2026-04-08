@@ -1,0 +1,50 @@
+version: "1.0.0"
+status: active
+module: video
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_VIDEO.md"
+  domain_rules: "../DOMAIN_RULES_VIDEO.md"
+  invariants: "../INVARIANTS_VIDEO.md"
+  permissions: "../PERMISSIONS_VIDEO.md"
+  test_matrix: "../TEST_MATRIX_VIDEO.md"
+  state_model: "../STATE_MODEL_VIDEO.md"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/video.yaml"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/video/match_media_session.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/video/"
+  primary_schema: "../../../../../contracts/schemas/video/match_media_session.schema.json"
+
+runtime_surfaces:
+  api_router: "../../../../../src/video/api.py"
+  domain_entity: "../../../../../src/video/domain/entities.py"
+  domain_rules: "../../../../../src/video/domain/rules.py"
+  use_cases: "../../../../../src/video/application/use_cases.py"
+  state_machine: "../../../../../src/video/domain/state_machine.py"
+
+structured_ir:
+  entities: "./entity_graph.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph."
+  - "matchId é referência cruzada para módulo matches — boundary explicitado em DR-VID-001."
+  - "scout_event_id em ClipDefinition é referência cruzada para módulo scout — DR-VID-004."
+  - "created_by_user_id em MatchMediaSession referencia identity_access — video não é dono de identidade."
+  - "Perfis de transcodificação (DistributionProfile) são derivados de mezzanine — DR-VID-006."
+  - "STATE_MODEL_VIDEO.md descreve a máquina de estados DRAFT→CAPTURING→SYNCING→TRANSCODING→PUBLISHED."
+  - "Edge nodes são entidades de infraestrutura; não modelados como entidades de domínio soberanas nesta fase."
+  - "patchSession cobre múltiplas transições de estado (DR-VID-002, INV-VID-002) — transições validadas por state_machine.py."

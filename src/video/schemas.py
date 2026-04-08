@@ -1,16 +1,20 @@
+from __future__ import annotations
+
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
+
 """
 Pydantic schemas (Django Ninja) do módulo video.
 Derivados dos contratos em contracts/openapi/paths/video.yaml e contracts/schemas/video/.
 REGRA: Router implementa EXATAMENTE o contrato — sem campos extras, sem omissões.
 """
-from __future__ import annotations
 from datetime import datetime
 from enum import StrEnum
 from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
-
 
 # ── Enums (alinhados com contracts/schemas/video/) ────────────────────────────
 
@@ -21,12 +25,10 @@ class SessionStateSchema(StrEnum):
     TRANSCODING = "TRANSCODING"
     PUBLISHED = "PUBLISHED"
 
-
 class CaptureModeSchema(StrEnum):
     PANORAMIC = "PANORAMIC"
     AUTO_FOLLOW = "AUTO_FOLLOW"
     MULTI_ANGLE = "MULTI_ANGLE"
-
 
 class RetentionPolicySchema(StrEnum):
     KEEP_7_DAYS = "KEEP_7_DAYS"
@@ -35,17 +37,14 @@ class RetentionPolicySchema(StrEnum):
     ARCHIVE_S3 = "ARCHIVE_S3"
     PUBLIC_FOREVER = "PUBLIC_FOREVER"
 
-
 class SegmentStateSchema(StrEnum):
     OPEN = "OPEN"
     FINALIZED = "FINALIZED"
-
 
 class TargetTypeSchema(StrEnum):
     TECHNICAL_INTERNAL = "TECHNICAL_INTERNAL"
     PUBLIC_CDN = "PUBLIC_CDN"
     BROADCAST_PARTNER = "BROADCAST_PARTNER"
-
 
 # ── MatchMediaSession ─────────────────────────────────────────────────────────
 
@@ -55,12 +54,10 @@ class CreateSessionIn(Schema):
     retentionPolicy: RetentionPolicySchema
     technicalContactUserId: Optional[UUID] = None
 
-
 class PatchSessionIn(Schema):
     state: Optional[SessionStateSchema] = None
     retentionPolicy: Optional[RetentionPolicySchema] = None
     technicalContactUserId: Optional[UUID] = None
-
 
 class MatchMediaSessionOut(Schema):
     id: UUID
@@ -73,7 +70,6 @@ class MatchMediaSessionOut(Schema):
     createdAt: datetime
     createdByUserId: UUID
 
-
 # ── MediaSegment ──────────────────────────────────────────────────────────────
 
 class CreateSegmentIn(Schema):
@@ -84,7 +80,6 @@ class CreateSegmentIn(Schema):
     bitrate: Optional[int] = None
     durationMs: Optional[int] = None
     sourceEdgeNodeId: Optional[UUID] = None
-
 
 class MediaSegmentOut(Schema):
     id: UUID
@@ -99,7 +94,6 @@ class MediaSegmentOut(Schema):
     createdAt: Optional[datetime]
     finalizedAt: Optional[datetime]
 
-
 # ── ClipDefinition ────────────────────────────────────────────────────────────
 
 class CreateClipIn(Schema):
@@ -110,7 +104,6 @@ class CreateClipIn(Schema):
     zoneLabel: Optional[str] = None
     athleteIds: Optional[list[UUID]] = None
     contextLabel: Optional[str] = None
-
 
 class ClipDefinitionOut(Schema):
     id: UUID
@@ -124,7 +117,6 @@ class ClipDefinitionOut(Schema):
     createdAt: Optional[datetime]
     createdByUserId: Optional[UUID]
 
-
 # ── DistributionProfile ───────────────────────────────────────────────────────
 
 class PublishDistributionIn(Schema):
@@ -134,7 +126,6 @@ class PublishDistributionIn(Schema):
     profileLabel: str = "default"
     codecLabel: str = "H264"
     bitrate: int = 2500
-
 
 class DistributionProfileOut(Schema):
     id: UUID
@@ -146,7 +137,6 @@ class DistributionProfileOut(Schema):
     publishedAt: Optional[datetime]
     publishedByUserId: Optional[UUID]
 
-
 # ── Paginação (conforme api_rules.yaml) ───────────────────────────────────────
 
 class PaginatedSessionsOut(Schema):
@@ -155,13 +145,11 @@ class PaginatedSessionsOut(Schema):
     page: int
     pageSize: int
 
-
 class PaginatedSegmentsOut(Schema):
     data: list[MediaSegmentOut]
     total: int
     page: int
     pageSize: int
-
 
 class PaginatedClipsOut(Schema):
     data: list[ClipDefinitionOut]
@@ -169,13 +157,11 @@ class PaginatedClipsOut(Schema):
     page: int
     pageSize: int
 
-
 class PaginatedDistributionsOut(Schema):
     data: list[DistributionProfileOut]
     total: int
     page: int
     pageSize: int
-
 
 # ── Error (problem+json conforme api_rules.yaml) ──────────────────────────────
 

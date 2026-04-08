@@ -95,7 +95,7 @@
                     allOf:
                       - $ref: "../components/schemas/reports/report_job.yaml"
                       - type: object
-                        required: [statusLabel, completedAt]
+                        required: [statusLabel]
                         properties:
                           statusLabel:
                             type: string
@@ -263,7 +263,7 @@
               allOf:
                 - $ref: "../components/schemas/reports/report_job.yaml"
                 - type: object
-                  required: [statusLabel, completedAt]
+                  required: [statusLabel]
                   properties:
                     statusLabel:
                       type: string
@@ -347,7 +347,7 @@
               allOf:
                 - $ref: "../components/schemas/reports/report_job.yaml"
                 - type: object
-                  required: [statusLabel, completedAt]
+                  required: [statusLabel]
                   properties:
                     statusLabel:
                       type: string

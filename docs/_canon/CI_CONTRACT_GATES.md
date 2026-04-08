@@ -1556,6 +1556,87 @@ Todos os gates aplicáveis.
 
 ⸻
 
+9.17 WORKER_PROMPT_AUTHORITY_GATE
+
+Objetivo
+
+Validar que worker prompts são consistentes com SOURCE_AUTHORITY_GRAPH e TASK_CATALOG.
+
+Aplica quando
+
+Sempre.
+
+Entradas
+	•	`.contract_driven/TASK_CATALOG.yaml`
+	•	`.contract_driven/agent_prompts/` (todos os workers)
+	•	`docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`
+
+Executor
+
+`scripts/contracts/validate/validate_contracts.py`
+
+PASS
+	•	todos os workers listados em TASK_CATALOG existem no filesystem
+	•	frontmatter dos workers tem task_type correspondente ao TASK_CATALOG
+	•	bridge artifacts listados em SOURCE_AUTHORITY_GRAPH existem
+
+FAIL
+
+Worker listado em TASK_CATALOG não existe, ou frontmatter de worker declara task_type divergente do TASK_CATALOG, ou bridge artifact de SOURCE_AUTHORITY_GRAPH ausente.
+
+Blocking codes
+	•	BLOCKED_WORKER_PROMPT_AUTHORITY
+
+Evidência
+	•	lista de workers verificados
+	•	lista de violações (se houver)
+	•	status final
+
+Dependências
+	•	REQUIRED_ARTIFACT_PRESENCE_GATE
+
+⸻
+
+9.18 DOMAIN_GLOSSARY_CONSISTENCY_GATE
+
+Objetivo
+
+Validar que DOMAIN_GLOSSARY.md existe, é bem-formado e que termos canônicos são usados consistentemente.
+
+Aplica quando
+
+Sempre.
+
+Entradas
+	•	`docs/_canon/DOMAIN_GLOSSARY.md`
+
+Executor
+
+`scripts/contracts/validate/validate_contracts.py`
+
+PASS
+	•	DOMAIN_GLOSSARY.md existe em docs/_canon/
+	•	front matter YAML válido com status: active
+	•	termos com code_names encontrados
+
+FAIL (não bloqueante)
+
+DOMAIN_GLOSSARY.md ausente, front matter inválido, ou nenhum termo com code_name.
+
+Blocking codes
+
+Nenhum (gate não-bloqueante; emite warnings).
+
+Evidência
+	•	path do glossário verificado
+	•	quantidade de termos extraídos
+	•	lista de violações (se houver)
+
+Dependências
+	•	REQUIRED_ARTIFACT_PRESENCE_GATE
+
+⸻
+
 10. Matriz de Aplicabilidade
 
 10.1 Gates sempre aplicáveis
@@ -1721,6 +1802,7 @@ Blocking code:
 	•	BLOCKED_MISSING_GATE_EVIDENCE
 	•	BLOCKED_CONTRACT_NOT_READY
 	•	BLOCKED_MODULE_NOT_READY
+	•	BLOCKED_WORKER_PROMPT_AUTHORITY
 
 ⸻
 

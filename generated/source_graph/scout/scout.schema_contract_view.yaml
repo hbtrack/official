@@ -1,0 +1,101 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: scout
+entity: ScoutEvent
+primary_entity: ScoutEvent
+primary_schema_ref: contracts/schemas/scout/scout_event.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/scout/scout_event.yaml
+required: &id001
+- id
+- matchId
+- eventLabel
+- recordedAt
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "INV-SCOUT-001: obrigat\xF3rio"
+- name: matchId
+  runtime_name: match_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "DR-SCOUT-003: todo evento est\xE1 ancorado a matchId"
+  - "INV-SCOUT-001: obrigat\xF3rio"
+  - 'boundary: reference to matches module'
+- name: athleteUserId
+  runtime_name: athlete_user_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+  - "DR-SCOUT-003: refina contexto da observa\xE7\xE3o, n\xE3o muda soberania"
+  - 'boundary: reference to identity_access module'
+- name: teamId
+  runtime_name: team_id
+  required: false
+  type: uuid_v4
+  constraints:
+  - 'nullable: true'
+  - "DR-SCOUT-003: refina contexto da observa\xE7\xE3o"
+  - 'boundary: reference to teams module'
+- name: eventLabel
+  runtime_name: event_label
+  required: true
+  type: string
+  constraints:
+  - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica CANONICAL_EVENT_TAXONOMY_SCOUT"
+  - "INV-SCOUT-001: obrigat\xF3rio"
+  - "INV-SCOUT-003: verific\xE1vel contra taxonomia can\xF4nica"
+  - 'maxLength: 120'
+- name: tagLabels
+  runtime_name: tag_labels
+  required: false
+  type: array_of_string
+  constraints:
+  - "DR-SCOUT-002: cada item deve ser da taxonomia can\xF4nica"
+  - 'INV-SCOUT-002: sem duplicatas'
+  - 'nullable: true'
+  - 'maxItems: 20'
+- name: clipAssetRefs
+  runtime_name: clip_asset_refs
+  required: false
+  type: array_of_string
+  constraints:
+  - "DR-SCOUT-004: scout n\xE3o \xE9 dono do storage subjacente"
+  - 'INV-SCOUT-002: sem duplicatas'
+  - 'nullable: true'
+  - 'maxItems: 10'
+- name: codingSchemaLabel
+  runtime_name: coding_schema_label
+  required: false
+  type: string
+  constraints:
+  - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica"
+  - 'nullable: true'
+  - 'maxLength: 120'
+- name: tacticalAggregationLabel
+  runtime_name: tactical_aggregation_label
+  required: false
+  type: string
+  constraints:
+  - "DR-SCOUT-002: deve ser da taxonomia can\xF4nica"
+  - "DR-SCOUT-005: n\xE3o redefine estat\xEDstica oficial sem mapeamento aprovado"
+  - 'nullable: true'
+  - 'maxLength: 120'
+- name: recordedAt
+  runtime_name: recorded_at
+  required: true
+  type: datetime_utc
+  constraints:
+  - "INV-SCOUT-001: obrigat\xF3rio"
+runtime_extension_fields: &id003 []
+entities:
+  ScoutEvent:
+    schema_ref: contracts/schemas/scout/scout_event.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: *id003

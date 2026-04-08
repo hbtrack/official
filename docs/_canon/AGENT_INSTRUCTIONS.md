@@ -1,4 +1,3 @@
-< ⚠️  UNDER REVIEW FOR C4 CONSOLIDATION (Sovereign Integrity Audit) -->
 # HB TRACK — AGENT REFERENCE
 > Auto-carregado pelo Claude Code em cada sessão. Não editar sem aprovar ADR.
 
@@ -66,7 +65,7 @@ Em qualquer conflito de regra, schema, gate ou política, a resolução segue es
 2. schemas ativos             contracts/schemas/shared/*.schema.json
 3. canon                      docs/_canon/ + .contract_driven/CONTRACT_SYSTEM_RULES.md
 4. bridge docs                .github/copilot-instructions.md, CLAUDE.md, skills/**
-5. artefatos derivados        DEVCONT.md, compilance.md, ADVERSARIAL.md, ANALISEARQUITETURA.md
+5. artefatos derivados        _archive/DEVCONT.md, _archive/compilance.md, _archive/ADVERSARIAL.md, _archive/ANALISEARQUITETURA.md
 6. legado                     _archive/, _reports/evidence/, docs/guias/
 ```
 

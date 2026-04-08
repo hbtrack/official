@@ -428,7 +428,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/ai_ingestion/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/ai_ingestion/ingestion_job.schema.json
-    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+    sha256: 3d3530940eeb4132dd000475f4aadbb93399d1c63b1e92230d5c9ab50d17706d
   - path: generated/contracts/schemas/analytics/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/analytics/analytics_metric_key.schema.json
@@ -502,9 +502,9 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: generated/contracts/schemas/shared/session_start.schema.json
-    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+    sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: generated/contracts/schemas/shared/toolchain.schema.json
     sha256: 70bba8678d838900d02d089b15011d5e1a05945e23e9292b242ca8f61b0ff97a
   - path: generated/contracts/schemas/shared/waiver.schema.json
@@ -550,7 +550,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/video/clip_definition.schema.json
     sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
   - path: generated/contracts/schemas/video/distribution_profile.schema.json
-    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+    sha256: e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6
   - path: generated/contracts/schemas/video/match_media_session.schema.json
     sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
   - path: generated/contracts/schemas/video/media_segment.schema.json
@@ -559,7 +559,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 980ee1e962bd0015b502591981abe74789c70b5d3c8b7fd15a0eecba0374fbf5
+  generated_tree_sha256: 62edf5b078b997e85b5c1fbdcb5c3b4c8a45e581e88d34360d2eabe60e6364d3
   policy_path: generated/resolved_policy/wellness.event.resolved.yaml
   policy_sha256: 87bd08840d60a361e67888986ce47ae7b761a0fc08ce76b595397204c4f807f9
   source_contracts:
@@ -988,7 +988,7 @@ traceability_manifest:
   - path: contracts/schemas/ai_ingestion/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/schemas/ai_ingestion/ingestion_job.schema.json
-    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+    sha256: 3d3530940eeb4132dd000475f4aadbb93399d1c63b1e92230d5c9ab50d17706d
   - path: contracts/schemas/analytics/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/schemas/analytics/analytics_metric_key.schema.json
@@ -1062,9 +1062,9 @@ traceability_manifest:
   - path: contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: contracts/schemas/shared/session_handoff.schema.json
-    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: contracts/schemas/shared/session_start.schema.json
-    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+    sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
   - path: contracts/schemas/shared/toolchain.schema.json
     sha256: 70bba8678d838900d02d089b15011d5e1a05945e23e9292b242ca8f61b0ff97a
   - path: contracts/schemas/shared/waiver.schema.json
@@ -1110,7 +1110,7 @@ traceability_manifest:
   - path: contracts/schemas/video/clip_definition.schema.json
     sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
   - path: contracts/schemas/video/distribution_profile.schema.json
-    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+    sha256: e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6
   - path: contracts/schemas/video/match_media_session.schema.json
     sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
   - path: contracts/schemas/video/media_segment.schema.json
@@ -1129,5 +1129,5 @@ traceability_manifest:
   - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
-    sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 4b95869ed0a23f1a4a90f125ae9957155eb32b1cfea2a1cce21269c85c9dbda6
+    sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
+  source_tree_sha256: 0ef7395075160223377e75c203a012a4455c6c545b0a8fa8bc9e0d1e5f0f3395

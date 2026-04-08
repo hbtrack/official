@@ -5,10 +5,11 @@
 > Instruções canônicas em `docs/_canon/AGENT_INSTRUCTIONS.md` — ler esse arquivo primeiro.
 
 ## Boot mínimo
-1. Ler `docs/_canon/AGENT_INSTRUCTIONS.md` (este arquivo é apenas um ponteiro)
+1. Ler `docs/_canon/AGENT_INSTRUCTIONS.md` (este arquivo é apenas um ponteiro — **SSOT de regras de boot**)
 2. Se existir `SESSION_HANDOFF.md` na raiz → ler ANTES de qualquer outra coisa
 3. Ler `ROADMAP.md` — fase atual do projeto e estado de implementação
 4. Regras detalhadas: `.contract_driven/CONTRACT_SYSTEM_RULES.md`
+5. Pipeline CDD: `docs/_canon/CONTRACT_PIPELINE.md` (**SSOT de sequência canônica de fases**)
 
 ## Resumo rápido
 - **Produto:** HB Track — plataforma de gestão esportiva para handebol
@@ -34,12 +35,11 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - Fase atual do projeto: verificar `SESSION_HANDOFF.md` + seção "Estado atual" do `ROADMAP.md`
 
 ### Modo PR_FIX (correção de CI)
-Tarefas de identificação e correção de checks falhos em PR aberto.
 - Ponto de entrada: task_type `pr_fix` → worker `.contract_driven/agent_prompts/pr_fix.prompt.md`
-- **Primeiro passo obrigatório:** lookup em `merge-readiness.json` pelo `context` exato do check falho — antes de ler código, antes de rodar qualquer comando
-- **Proibido:** inferir `local_equivalent`; alterar governance sem falha explícita de gate de governança
-- Executor canônico: `python3 scripts/hb ci --profile pr`
-- Não rotear por `pre_contract_orchestrator` — modo PR_FIX é incompatível com pipeline CDD
+- **Primeiro passo:** lookup em `merge-readiness.json` pelo `context` do check falho
+- **Proibido:** inferir `local_equivalent`; alterar governance sem falha explícita de gate
+- Executor: `python3 scripts/hb ci --profile pr`
+- Incompatível com pipeline CDD
 
 ### Regras transversais (valem nos dois modos)
 - Nunca inventar módulos fora dos 17 canônicos do `MODULE_REGISTRY.yaml`

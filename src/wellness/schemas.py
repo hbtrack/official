@@ -5,6 +5,9 @@ from decimal import Decimal
 from typing import List, Optional
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class WellnessEntryOut(Schema):
     entryId: uuid.UUID
@@ -39,13 +42,11 @@ class WellnessEntryOut(Schema):
             updatedAt=e.updated_at,
         )
 
-
 class WellnessEntryListOut(Schema):
     data: List[WellnessEntryOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateWellnessEntryIn(Schema):
     athleteUserId: uuid.UUID
@@ -58,7 +59,6 @@ class CreateWellnessEntryIn(Schema):
     recoveryScore: Optional[int] = None
     sleepHours: Optional[Decimal] = None
     notes: Optional[str] = None
-
 
 class WellnessSummaryOut(Schema):
     athleteUserId: uuid.UUID
@@ -88,7 +88,6 @@ class WellnessSummaryOut(Schema):
             readinessTrend=s.readiness_trend,
             highPainAlert=s.high_pain_alert,
         )
-
 
 class ErrorOut(Schema):
     detail: str

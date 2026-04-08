@@ -391,6 +391,204 @@ class TestHbVerifyIntegration:
         execute_roadmap_phase: profile no TASK_CATALOG coincide com selection_rules
         → não deve aparecer mensagem de divergência de coerência.
         """
-        result = self._run_hb("verify", "--task-type", "execute_roadmap_phase", "--module", "training")
+        result = self._run_hb("verify", "--task-type", "execute_roadmap_phase", "--roadmap-phase", "1", "--module", "training")
         assert "TASK_CATALOG é a fonte de autoridade" not in result.stderr
+
+
+# ===========================================================================
+# 6. Phase sequencing enforcement — hb artifact / hb check require stage0 PASS
+# ===========================================================================
+class TestPhaseSequencingEnforcement:
+    """
+    Valida que hb artifact e hb check bloqueiam quando:
+      - Sessão inexistente (hb verify não executado)
+      - stage0_exit_code != 0
+    """
+
+    def _run_hb(self, *args):
+        import subprocess as sp
+        result = sp.run(
+            [sys.executable, str(HB_SCRIPT)] + list(args),
+            capture_output=True,
+            text=True,
+            cwd=str(REPO_ROOT),
+        )
+        return result
+
+    def test_artifact_without_session_fails(self):
+        """hb artifact sem sessão ativa deve retornar exit != 0."""
+        # Guardar sessão atual
+        import json, shutil, tempfile
+        session_file = REPO_ROOT / "_reports" / "session_start.json"
+        backup = None
+        if session_file.exists():
+            backup = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+            shutil.copy2(session_file, backup.name)
+            # Criar sessão vazia para simular "sem hb verify"
+            session_file.write_text("{}", encoding="utf-8")
+
+        try:
+            result = self._run_hb("artifact", "ROADMAP.md")
+            assert result.returncode != 0, (
+                f"hb artifact deveria falhar sem sessão válida.\n"
+                f"stdout={result.stdout}\nstderr={result.stderr}"
+            )
+            assert "Sessão não inicializada" in result.stderr or "stage0_exit_code" in result.stderr, (
+                f"Mensagem de bloqueio ausente.\nstderr={result.stderr}"
+            )
+        finally:
+            if backup:
+                shutil.copy2(backup.name, session_file)
+                import os
+                os.unlink(backup.name)
+
+    def test_artifact_with_stage0_fail_blocks(self):
+        """hb artifact com stage0_exit_code != 0 deve bloquear."""
+        import json, shutil, tempfile
+        session_file = REPO_ROOT / "_reports" / "session_start.json"
+        backup = None
+        if session_file.exists():
+            backup = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+            shutil.copy2(session_file, backup.name)
+
+        # Criar sessão com stage0 falho (pipeline_version necessário para evitar migração legada)
+        fake_session = {
+            "session_id": "test-enforce-00000000",
+            "pipeline_version": "1.0.0",
+            "task_type": "new_contract",
+            "stage": 0,
+            "stage0_exit_code": 2,
+        }
+        session_file.write_text(json.dumps(fake_session, indent=2), encoding="utf-8")
+
+        try:
+            result = self._run_hb("artifact", "ROADMAP.md")
+            assert result.returncode != 0, (
+                f"hb artifact deveria bloquear com stage0_exit_code=2.\n"
+                f"stdout={result.stdout}\nstderr={result.stderr}"
+            )
+            assert "stage0_exit_code" in result.stderr, (
+                f"Mensagem de stage0 ausente.\nstderr={result.stderr}"
+            )
+        finally:
+            if backup:
+                shutil.copy2(backup.name, session_file)
+                import os
+                os.unlink(backup.name)
+
+    def test_check_with_stage0_fail_blocks(self):
+        """hb check com stage0_exit_code != 0 deve bloquear."""
+        import json, shutil, tempfile
+        session_file = REPO_ROOT / "_reports" / "session_start.json"
+        backup = None
+        if session_file.exists():
+            backup = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+            shutil.copy2(session_file, backup.name)
+
+        fake_session = {
+            "session_id": "test-enforce-00000001",
+            "pipeline_version": "1.0.0",
+            "task_type": "new_contract",
+            "module": "training",
+            "stage": 0,
+            "stage0_exit_code": 1,
+        }
+        session_file.write_text(json.dumps(fake_session, indent=2), encoding="utf-8")
+
+        try:
+            result = self._run_hb("check", "--module", "training")
+            assert result.returncode != 0, (
+                f"hb check deveria bloquear com stage0_exit_code=1.\n"
+                f"stdout={result.stdout}\nstderr={result.stderr}"
+            )
+            assert "stage0_exit_code" in result.stderr, (
+                f"Mensagem de stage0 ausente.\nstderr={result.stderr}"
+            )
+        finally:
+            if backup:
+                shutil.copy2(backup.name, session_file)
+                import os
+                os.unlink(backup.name)
+
+
+# ===========================================================================
+# 7. Load-sequence content validation (A4 fix)
+# ===========================================================================
+class TestLoadSequenceContentValidation:
+    """
+    Valida que _validate_boot_profile_structure rejeita:
+      - Arquivos vazios em load_sequence
+      - Arquivos sem marcadores de conteúdo esperados
+    """
+
+    def test_empty_load_sequence_file_fails(self, cli, tmp_path):
+        """load_sequence com arquivo vazio deve retornar paths_ok=False."""
+        empty_file = tmp_path / "EMPTY_FILE.md"
+        empty_file.write_text("", encoding="utf-8")
+
+        original_profiles = cli.boot_profiles
+        test_profiles = {
+            "profiles": {
+                "test_empty": {
+                    "id": "test_empty",
+                    "load_sequence": [str(empty_file)],
+                    "required_sections": [],
+                }
+            }
+        }
+        cli.boot_profiles = test_profiles
+        stderr_buf = io.StringIO()
+        try:
+            with redirect_stderr(stderr_buf):
+                paths_ok, _ = cli._validate_boot_profile_structure("test_empty")
+            assert not paths_ok, "Arquivo vazio em load_sequence deveria falhar"
+            assert "vazio" in stderr_buf.getvalue().lower()
+        finally:
+            cli.boot_profiles = original_profiles
+
+    def test_missing_content_markers_fails(self, cli, tmp_path):
+        """load_sequence com arquivo sem marcadores esperados deve falhar."""
+        original_profiles = cli.boot_profiles
+        original_root = cli.root
+
+        (tmp_path / "docs" / "_canon").mkdir(parents=True)
+        bad_instructions = tmp_path / "docs" / "_canon" / "AGENT_INSTRUCTIONS.md"
+        bad_instructions.write_text("# Title\nNo section markers here\n", encoding="utf-8")
+
+        test_profiles = {
+            "profiles": {
+                "test_markers": {
+                    "id": "test_markers",
+                    "load_sequence": ["docs/_canon/AGENT_INSTRUCTIONS.md"],
+                    "required_sections": [],
+                }
+            }
+        }
+        cli.boot_profiles = test_profiles
+        cli.root = tmp_path
+        stderr_buf = io.StringIO()
+        try:
+            with redirect_stderr(stderr_buf):
+                paths_ok, _ = cli._validate_boot_profile_structure("test_markers")
+            assert not paths_ok, "Arquivo sem marcadores deveria falhar"
+            assert "marcadores" in stderr_buf.getvalue().lower()
+        finally:
+            cli.boot_profiles = original_profiles
+            cli.root = original_root
+
+    def test_valid_content_passes(self, cli):
+        """Arquivos reais de boot devem passar no profile default."""
+        stderr_buf = io.StringIO()
+        stdout_buf = io.StringIO()
+        with redirect_stderr(stderr_buf), redirect_stdout(stdout_buf):
+            paths_ok, sections_ok = cli._validate_boot_profile_structure("default")
+        assert paths_ok, f"Profile 'default' load_sequence deveria passar.\nstderr={stderr_buf.getvalue()}"
+
+    def test_boot_content_markers_class_attr_exists(self):
+        """_BOOT_CONTENT_MARKERS deve existir e conter arquivos críticos."""
+        markers = HBCLIv2._BOOT_CONTENT_MARKERS
+        assert isinstance(markers, dict)
+        assert "docs/_canon/AGENT_INSTRUCTIONS.md" in markers
+        assert "ROADMAP.md" in markers
+
 

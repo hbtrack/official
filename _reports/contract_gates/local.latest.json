@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-05T01:15:10Z",
+  "timestamp_utc": "2026-04-07T22:26:26Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "59b9a1dd",
+    "git_commit": "b6c60e4d",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260405T011510_df7bf1"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260407T222626_d553aa"
   },
   "status_detail": {
     "active_gates_passed": 25,
-    "skip_count": 26,
+    "skip_count": 28,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -167,11 +167,11 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "PASS"
+        "status": "FAIL"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -204,6 +204,10 @@
       {
         "gate_id": "LEGACY_CRITICAL_PATH_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
@@ -229,7 +233,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 172
       }
     },
     {
@@ -254,7 +258,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 624
+        "duration_ms": 3876
       }
     },
     {
@@ -365,7 +369,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 17
       }
     },
     {
@@ -518,7 +522,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 115
+        "duration_ms": 136
       }
     },
     {
@@ -554,9 +558,6 @@
         "docs/_canon/HANDBALL_RULES_DOMAIN.md",
         "docs/_canon/INTEGRATION_FLOWS.md",
         "docs/_canon/IR_TO_SURFACE_MAPPING.yaml",
-        "docs/_canon/MCP_PREWORK.md",
-        "docs/_canon/MCP_SERVER_ARCHITECTURE.md",
-        "docs/_canon/MCP_TOOL_MANIFEST.yaml",
         "docs/_canon/MODULE_MAP.md",
         "docs/_canon/MODULE_REGISTRY.yaml",
         "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -614,9 +615,6 @@
         "docs/_canon/decisions/ADR-032-training-arch-decisions.md",
         "docs/_canon/decisions/ADR-033-video-module-canonicalization.md",
         "docs/_canon/decisions/ADR-034-scope-boundary-validation.md",
-        "docs/_canon/decisions/ADR-035-agent-identity.md",
-        "docs/_canon/decisions/ADR-036-mcp-security-analysis.md",
-        "docs/_canon/decisions/ADR-037-mcp-runtime-governance.md",
         "docs/_canon/decisions/README.md"
       ],
       "evidence_files": [],
@@ -625,7 +623,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 6
       }
     },
     {
@@ -997,7 +995,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 116
       }
     },
     {
@@ -1083,7 +1081,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 683
+        "duration_ms": 854
       }
     },
     {
@@ -1106,7 +1104,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 988
+        "duration_ms": 4051
       }
     },
     {
@@ -1128,7 +1126,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1214
+        "duration_ms": 1656
       }
     },
     {
@@ -1176,7 +1174,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "spectral: PASS (1 aviso(s)).",
+      "summary": "spectral: PASS (142 aviso(s)).",
       "inputs": [
         "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
       ],
@@ -1201,13 +1199,2884 @@
               "character": 69
             }
           }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1users\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/users"
+          ],
+          "range": {
+            "start": {
+              "line": 41,
+              "character": 9
+            },
+            "end": {
+              "line": 42,
+              "character": 37
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1users~1{userId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/users/{userId}"
+          ],
+          "range": {
+            "start": {
+              "line": 43,
+              "character": 18
+            },
+            "end": {
+              "line": 44,
+              "character": 47
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1seasons\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/seasons"
+          ],
+          "range": {
+            "start": {
+              "line": 46,
+              "character": 11
+            },
+            "end": {
+              "line": 47,
+              "character": 41
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1seasons~1{seasonId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/seasons/{seasonId}"
+          ],
+          "range": {
+            "start": {
+              "line": 48,
+              "character": 22
+            },
+            "end": {
+              "line": 49,
+              "character": 53
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1seasons~1{seasonId}~1teams~1{teamId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/seasons/{seasonId}/teams/{teamId}"
+          ],
+          "range": {
+            "start": {
+              "line": 50,
+              "character": 37
+            },
+            "end": {
+              "line": 51,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1teams\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/teams"
+          ],
+          "range": {
+            "start": {
+              "line": 53,
+              "character": 9
+            },
+            "end": {
+              "line": 54,
+              "character": 37
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1teams~1{teamId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/teams/{teamId}"
+          ],
+          "range": {
+            "start": {
+              "line": 55,
+              "character": 18
+            },
+            "end": {
+              "line": 56,
+              "character": 47
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1teams~1{teamId}~1athletes~1{athleteUserId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/teams/{teamId}/athletes/{athleteUserId}"
+          ],
+          "range": {
+            "start": {
+              "line": 57,
+              "character": 43
+            },
+            "end": {
+              "line": 58,
+              "character": 74
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1teams~1{teamId}~1staff~1{staffUserId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/teams/{teamId}/staff/{staffUserId}"
+          ],
+          "range": {
+            "start": {
+              "line": 59,
+              "character": 38
+            },
+            "end": {
+              "line": 60,
+              "character": 69
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions"
+          ],
+          "range": {
+            "start": {
+              "line": 62,
+              "character": 21
+            },
+            "end": {
+              "line": 63,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}"
+          ],
+          "range": {
+            "start": {
+              "line": 64,
+              "character": 26
+            },
+            "end": {
+              "line": 65,
+              "character": 58
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/blocks"
+          ],
+          "range": {
+            "start": {
+              "line": 66,
+              "character": 33
+            },
+            "end": {
+              "line": 67,
+              "character": 66
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks~1{blockId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/blocks/{blockId}"
+          ],
+          "range": {
+            "start": {
+              "line": 68,
+              "character": 43
+            },
+            "end": {
+              "line": 69,
+              "character": 77
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks~1reorder\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/blocks/reorder"
+          ],
+          "range": {
+            "start": {
+              "line": 70,
+              "character": 41
+            },
+            "end": {
+              "line": 71,
+              "character": 75
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attendance\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/attendance"
+          ],
+          "range": {
+            "start": {
+              "line": 72,
+              "character": 37
+            },
+            "end": {
+              "line": 73,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-pre\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/wellness-pre"
+          ],
+          "range": {
+            "start": {
+              "line": 74,
+              "character": 39
+            },
+            "end": {
+              "line": 75,
+              "character": 72
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-pre~1{athleteId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/wellness-pre/{athleteId}"
+          ],
+          "range": {
+            "start": {
+              "line": 76,
+              "character": 51
+            },
+            "end": {
+              "line": 77,
+              "character": 85
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-post\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/wellness-post"
+          ],
+          "range": {
+            "start": {
+              "line": 78,
+              "character": 40
+            },
+            "end": {
+              "line": 79,
+              "character": 73
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-post~1{athleteId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/wellness-post/{athleteId}"
+          ],
+          "range": {
+            "start": {
+              "line": 80,
+              "character": 52
+            },
+            "end": {
+              "line": 81,
+              "character": 86
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1mesocycles\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/mesocycles"
+          ],
+          "range": {
+            "start": {
+              "line": 82,
+              "character": 14
+            },
+            "end": {
+              "line": 83,
+              "character": 45
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1mesocycles~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/mesocycles/{id}"
+          ],
+          "range": {
+            "start": {
+              "line": 84,
+              "character": 19
+            },
+            "end": {
+              "line": 85,
+              "character": 51
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1microcycles\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/microcycles"
+          ],
+          "range": {
+            "start": {
+              "line": 86,
+              "character": 15
+            },
+            "end": {
+              "line": 87,
+              "character": 46
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1microcycles~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/microcycles/{id}"
+          ],
+          "range": {
+            "start": {
+              "line": 88,
+              "character": 20
+            },
+            "end": {
+              "line": 89,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1start\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/start"
+          ],
+          "range": {
+            "start": {
+              "line": 90,
+              "character": 32
+            },
+            "end": {
+              "line": 91,
+              "character": 65
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1complete\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/complete"
+          ],
+          "range": {
+            "start": {
+              "line": 92,
+              "character": 35
+            },
+            "end": {
+              "line": 93,
+              "character": 68
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1execution-records\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/execution-records"
+          ],
+          "range": {
+            "start": {
+              "line": 94,
+              "character": 44
+            },
+            "end": {
+              "line": 95,
+              "character": 77
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1execution-records~1{recordId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/execution-records/{recordId}"
+          ],
+          "range": {
+            "start": {
+              "line": 96,
+              "character": 55
+            },
+            "end": {
+              "line": 97,
+              "character": 89
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1feedback-threads\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/feedback-threads"
+          ],
+          "range": {
+            "start": {
+              "line": 98,
+              "character": 43
+            },
+            "end": {
+              "line": 99,
+              "character": 76
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1objectives\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/objectives"
+          ],
+          "range": {
+            "start": {
+              "line": 100,
+              "character": 37
+            },
+            "end": {
+              "line": 101,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/attention-queue"
+          ],
+          "range": {
+            "start": {
+              "line": 102,
+              "character": 42
+            },
+            "end": {
+              "line": 103,
+              "character": 75
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1cancel\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/cancel"
+          ],
+          "range": {
+            "start": {
+              "line": 104,
+              "character": 33
+            },
+            "end": {
+              "line": 105,
+              "character": 66
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1publish\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/publish"
+          ],
+          "range": {
+            "start": {
+              "line": 106,
+              "character": 34
+            },
+            "end": {
+              "line": 107,
+              "character": 67
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1unpublish\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/unpublish"
+          ],
+          "range": {
+            "start": {
+              "line": 108,
+              "character": 36
+            },
+            "end": {
+              "line": 109,
+              "character": 69
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1archive\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/archive"
+          ],
+          "range": {
+            "start": {
+              "line": 110,
+              "character": 34
+            },
+            "end": {
+              "line": 111,
+              "character": 67
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/recommendations"
+          ],
+          "range": {
+            "start": {
+              "line": 112,
+              "character": 42
+            },
+            "end": {
+              "line": 113,
+              "character": 75
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/recommendations/{recommendationId}/accept"
+          ],
+          "range": {
+            "start": {
+              "line": 114,
+              "character": 68
+            },
+            "end": {
+              "line": 115,
+              "character": 103
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/recommendations/{recommendationId}/dismiss"
+          ],
+          "range": {
+            "start": {
+              "line": 116,
+              "character": 69
+            },
+            "end": {
+              "line": 117,
+              "character": 104
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1ineligibility\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/ineligibility"
+          ],
+          "range": {
+            "start": {
+              "line": 118,
+              "character": 40
+            },
+            "end": {
+              "line": 119,
+              "character": 73
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/attention-queue/{itemId}/resolve"
+          ],
+          "range": {
+            "start": {
+              "line": 120,
+              "character": 59
+            },
+            "end": {
+              "line": 121,
+              "character": 94
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/attention-queue/{itemId}/dismiss"
+          ],
+          "range": {
+            "start": {
+              "line": 122,
+              "character": 59
+            },
+            "end": {
+              "line": 123,
+              "character": 94
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/attention-queue/{itemId}/escalate"
+          ],
+          "range": {
+            "start": {
+              "line": 124,
+              "character": 60
+            },
+            "end": {
+              "line": 125,
+              "character": 95
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training-sessions/{id}/feedback-threads/{threadId}/close"
+          ],
+          "range": {
+            "start": {
+              "line": 126,
+              "character": 60
+            },
+            "end": {
+              "line": 127,
+              "character": 95
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1load-chart\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/load-chart"
+          ],
+          "range": {
+            "start": {
+              "line": 128,
+              "character": 23
+            },
+            "end": {
+              "line": 129,
+              "character": 55
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1hb-pro-coach~1conversations~1{conversationId}~1messages\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/hb-pro-coach/conversations/{conversationId}/messages"
+          ],
+          "range": {
+            "start": {
+              "line": 130,
+              "character": 56
+            },
+            "end": {
+              "line": 131,
+              "character": 90
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1hb-pro-coach~1training-suggestions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/hb-pro-coach/training-suggestions"
+          ],
+          "range": {
+            "start": {
+              "line": 132,
+              "character": 37
+            },
+            "end": {
+              "line": 133,
+              "character": 69
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1wellness~1entries\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/wellness/entries"
+          ],
+          "range": {
+            "start": {
+              "line": 135,
+              "character": 20
+            },
+            "end": {
+              "line": 136,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1wellness~1entries~1{entryId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/wellness/entries/{entryId}"
+          ],
+          "range": {
+            "start": {
+              "line": 137,
+              "character": 30
+            },
+            "end": {
+              "line": 138,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1wellness~1athletes~1{athleteUserId}~1entries\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/wellness/athletes/{athleteUserId}/entries"
+          ],
+          "range": {
+            "start": {
+              "line": 139,
+              "character": 45
+            },
+            "end": {
+              "line": 140,
+              "character": 79
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1wellness~1athletes~1{athleteUserId}~1summary\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/wellness/athletes/{athleteUserId}/summary"
+          ],
+          "range": {
+            "start": {
+              "line": 141,
+              "character": 45
+            },
+            "end": {
+              "line": 142,
+              "character": 79
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1medical~1records\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/medical/records"
+          ],
+          "range": {
+            "start": {
+              "line": 144,
+              "character": 19
+            },
+            "end": {
+              "line": 145,
+              "character": 50
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1medical~1records~1{recordId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/medical/records/{recordId}"
+          ],
+          "range": {
+            "start": {
+              "line": 146,
+              "character": 30
+            },
+            "end": {
+              "line": 147,
+              "character": 62
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1competitions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/competitions"
+          ],
+          "range": {
+            "start": {
+              "line": 149,
+              "character": 16
+            },
+            "end": {
+              "line": 150,
+              "character": 51
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1competitions~1{competitionId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/competitions/{competitionId}"
+          ],
+          "range": {
+            "start": {
+              "line": 151,
+              "character": 32
+            },
+            "end": {
+              "line": 152,
+              "character": 68
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1competitions~1{competitionId}~1teams~1{teamId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/competitions/{competitionId}/teams/{teamId}"
+          ],
+          "range": {
+            "start": {
+              "line": 153,
+              "character": 47
+            },
+            "end": {
+              "line": 154,
+              "character": 85
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1matches\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/matches"
+          ],
+          "range": {
+            "start": {
+              "line": 156,
+              "character": 11
+            },
+            "end": {
+              "line": 157,
+              "character": 41
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1matches~1{matchId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/matches/{matchId}"
+          ],
+          "range": {
+            "start": {
+              "line": 158,
+              "character": 21
+            },
+            "end": {
+              "line": 159,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1matches~1{matchId}~1lineup~1{userId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/matches/{matchId}/lineup/{userId}"
+          ],
+          "range": {
+            "start": {
+              "line": 160,
+              "character": 37
+            },
+            "end": {
+              "line": 161,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1scout~1events\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/scout/events"
+          ],
+          "range": {
+            "start": {
+              "line": 163,
+              "character": 16
+            },
+            "end": {
+              "line": 164,
+              "character": 45
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1scout~1events~1aggregations\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/scout/events/aggregations"
+          ],
+          "range": {
+            "start": {
+              "line": 165,
+              "character": 29
+            },
+            "end": {
+              "line": 166,
+              "character": 59
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1scout~1events~1{eventId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/scout/events/{eventId}"
+          ],
+          "range": {
+            "start": {
+              "line": 167,
+              "character": 26
+            },
+            "end": {
+              "line": 168,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1scout~1sessions~1{matchId}~1complete\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/scout/sessions/{matchId}/complete"
+          ],
+          "range": {
+            "start": {
+              "line": 169,
+              "character": 37
+            },
+            "end": {
+              "line": 170,
+              "character": 68
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises"
+          ],
+          "range": {
+            "start": {
+              "line": 172,
+              "character": 13
+            },
+            "end": {
+              "line": 173,
+              "character": 45
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}"
+          ],
+          "range": {
+            "start": {
+              "line": 174,
+              "character": 18
+            },
+            "end": {
+              "line": 175,
+              "character": 51
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1copy\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/copy"
+          ],
+          "range": {
+            "start": {
+              "line": 176,
+              "character": 23
+            },
+            "end": {
+              "line": 177,
+              "character": 57
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1versions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/versions"
+          ],
+          "range": {
+            "start": {
+              "line": 178,
+              "character": 27
+            },
+            "end": {
+              "line": 179,
+              "character": 61
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1versions~1{versionId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/versions/{versionId}"
+          ],
+          "range": {
+            "start": {
+              "line": 180,
+              "character": 39
+            },
+            "end": {
+              "line": 181,
+              "character": 74
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1relations\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/relations"
+          ],
+          "range": {
+            "start": {
+              "line": 182,
+              "character": 28
+            },
+            "end": {
+              "line": 183,
+              "character": 62
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1relations~1{relationId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/relations/{relationId}"
+          ],
+          "range": {
+            "start": {
+              "line": 184,
+              "character": 41
+            },
+            "end": {
+              "line": 185,
+              "character": 76
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1acl\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/acl"
+          ],
+          "range": {
+            "start": {
+              "line": 186,
+              "character": 22
+            },
+            "end": {
+              "line": 187,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1exercises~1{id}~1acl~1{userId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/exercises/{id}/acl/{userId}"
+          ],
+          "range": {
+            "start": {
+              "line": 188,
+              "character": 31
+            },
+            "end": {
+              "line": 189,
+              "character": 66
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1analytics~1snapshots\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/analytics/snapshots"
+          ],
+          "range": {
+            "start": {
+              "line": 191,
+              "character": 23
+            },
+            "end": {
+              "line": 192,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1analytics~1snapshots~1{snapshotId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/analytics/snapshots/{snapshotId}"
+          ],
+          "range": {
+            "start": {
+              "line": 193,
+              "character": 36
+            },
+            "end": {
+              "line": 194,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1analytics~1dashboards\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/analytics/dashboards"
+          ],
+          "range": {
+            "start": {
+              "line": 195,
+              "character": 24
+            },
+            "end": {
+              "line": 196,
+              "character": 57
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1analytics~1query\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/analytics/query"
+          ],
+          "range": {
+            "start": {
+              "line": 197,
+              "character": 19
+            },
+            "end": {
+              "line": 198,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1reports~1jobs\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/reports/jobs"
+          ],
+          "range": {
+            "start": {
+              "line": 200,
+              "character": 16
+            },
+            "end": {
+              "line": 201,
+              "character": 47
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1reports~1jobs~1{jobId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/reports/jobs/{jobId}"
+          ],
+          "range": {
+            "start": {
+              "line": 202,
+              "character": 24
+            },
+            "end": {
+              "line": 203,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1reports~1jobs~1{jobId}~1download\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/reports/jobs/{jobId}/download"
+          ],
+          "range": {
+            "start": {
+              "line": 204,
+              "character": 33
+            },
+            "end": {
+              "line": 205,
+              "character": 66
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1ingestion~1jobs\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/ingestion/jobs"
+          ],
+          "range": {
+            "start": {
+              "line": 207,
+              "character": 18
+            },
+            "end": {
+              "line": 208,
+              "character": 54
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1ingestion~1jobs~1{jobId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/ingestion/jobs/{jobId}"
+          ],
+          "range": {
+            "start": {
+              "line": 209,
+              "character": 26
+            },
+            "end": {
+              "line": 210,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1ingestion~1jobs~1{jobId}~1retry\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/ingestion/jobs/{jobId}/retry"
+          ],
+          "range": {
+            "start": {
+              "line": 211,
+              "character": 32
+            },
+            "end": {
+              "line": 212,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1login\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/login"
+          ],
+          "range": {
+            "start": {
+              "line": 214,
+              "character": 14
+            },
+            "end": {
+              "line": 215,
+              "character": 53
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1logout\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/logout"
+          ],
+          "range": {
+            "start": {
+              "line": 216,
+              "character": 15
+            },
+            "end": {
+              "line": 217,
+              "character": 54
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1refresh\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/refresh"
+          ],
+          "range": {
+            "start": {
+              "line": 218,
+              "character": 16
+            },
+            "end": {
+              "line": 219,
+              "character": 55
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1me\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/me"
+          ],
+          "range": {
+            "start": {
+              "line": 220,
+              "character": 11
+            },
+            "end": {
+              "line": 221,
+              "character": 50
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1sessions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/sessions"
+          ],
+          "range": {
+            "start": {
+              "line": 222,
+              "character": 17
+            },
+            "end": {
+              "line": 223,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1sessions~1{sessionId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/sessions/{sessionId}"
+          ],
+          "range": {
+            "start": {
+              "line": 224,
+              "character": 29
+            },
+            "end": {
+              "line": 225,
+              "character": 69
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1users~1{userId}~1roles\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/users/{userId}/roles"
+          ],
+          "range": {
+            "start": {
+              "line": 226,
+              "character": 29
+            },
+            "end": {
+              "line": 227,
+              "character": 70
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1auth~1users~1{userId}~1roles~1{roleLabel}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/auth/users/{userId}/roles/{roleLabel}"
+          ],
+          "range": {
+            "start": {
+              "line": 228,
+              "character": 41
+            },
+            "end": {
+              "line": 229,
+              "character": 83
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1audit~1entries\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/audit/entries"
+          ],
+          "range": {
+            "start": {
+              "line": 231,
+              "character": 17
+            },
+            "end": {
+              "line": 232,
+              "character": 46
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1audit~1entries~1export\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/audit/entries/export"
+          ],
+          "range": {
+            "start": {
+              "line": 233,
+              "character": 24
+            },
+            "end": {
+              "line": 234,
+              "character": 54
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1audit~1entries~1{entryId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/audit/entries/{entryId}"
+          ],
+          "range": {
+            "start": {
+              "line": 235,
+              "character": 27
+            },
+            "end": {
+              "line": 236,
+              "character": 57
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1notifications~1intents\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/notifications/intents"
+          ],
+          "range": {
+            "start": {
+              "line": 238,
+              "character": 25
+            },
+            "end": {
+              "line": 239,
+              "character": 62
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1notifications~1deliveries\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/notifications/deliveries"
+          ],
+          "range": {
+            "start": {
+              "line": 240,
+              "character": 28
+            },
+            "end": {
+              "line": 241,
+              "character": 65
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1notifications~1deliveries~1{deliveryId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/notifications/deliveries/{deliveryId}"
+          ],
+          "range": {
+            "start": {
+              "line": 242,
+              "character": 41
+            },
+            "end": {
+              "line": 243,
+              "character": 79
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1notifications~1users~1{userId}~1preferences\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/notifications/users/{userId}/preferences"
+          ],
+          "range": {
+            "start": {
+              "line": 244,
+              "character": 44
+            },
+            "end": {
+              "line": 245,
+              "character": 83
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1video~1sessions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/video/sessions"
+          ],
+          "range": {
+            "start": {
+              "line": 247,
+              "character": 18
+            },
+            "end": {
+              "line": 248,
+              "character": 47
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1video~1sessions~1{sessionId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/video/sessions/{sessionId}"
+          ],
+          "range": {
+            "start": {
+              "line": 249,
+              "character": 30
+            },
+            "end": {
+              "line": 250,
+              "character": 60
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1video~1segments\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/video/segments"
+          ],
+          "range": {
+            "start": {
+              "line": 251,
+              "character": 18
+            },
+            "end": {
+              "line": 252,
+              "character": 47
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1video~1clips\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/video/clips"
+          ],
+          "range": {
+            "start": {
+              "line": 253,
+              "character": 15
+            },
+            "end": {
+              "line": 254,
+              "character": 44
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1video~1distribution\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/video/distribution"
+          ],
+          "range": {
+            "start": {
+              "line": 255,
+              "character": 22
+            },
+            "end": {
+              "line": 256,
+              "character": 51
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-unused-component] Potentially unused component has been detected.",
+          "severity": "warn",
+          "path": [
+            "components",
+            "parameters",
+            "pageSize"
+          ],
+          "range": {
+            "start": {
+              "line": 259,
+              "character": 13
+            },
+            "end": {
+              "line": 260,
+              "character": 49
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-unused-component] Potentially unused component has been detected.",
+          "severity": "warn",
+          "path": [
+            "components",
+            "parameters",
+            "pageToken"
+          ],
+          "range": {
+            "start": {
+              "line": 261,
+              "character": 14
+            },
+            "end": {
+              "line": 262,
+              "character": 50
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-unused-component] Potentially unused component has been detected.",
+          "severity": "warn",
+          "path": [
+            "components",
+            "schemas",
+            "problem"
+          ],
+          "range": {
+            "start": {
+              "line": 267,
+              "character": 12
+            },
+            "end": {
+              "line": 268,
+              "character": 52
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 9,
+              "character": 6
+            },
+            "end": {
+              "line": 150,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises",
+            "post"
+          ],
+          "range": {
+            "start": {
+              "line": 151,
+              "character": 7
+            },
+            "end": {
+              "line": 302,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 304,
+              "character": 6
+            },
+            "end": {
+              "line": 350,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}",
+            "patch"
+          ],
+          "range": {
+            "start": {
+              "line": 351,
+              "character": 8
+            },
+            "end": {
+              "line": 510,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}",
+            "delete"
+          ],
+          "range": {
+            "start": {
+              "line": 511,
+              "character": 9
+            },
+            "end": {
+              "line": 574,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/copy",
+            "post"
+          ],
+          "range": {
+            "start": {
+              "line": 576,
+              "character": 7
+            },
+            "end": {
+              "line": 624,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/versions",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 626,
+              "character": 6
+            },
+            "end": {
+              "line": 682,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/versions/{versionId}",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 684,
+              "character": 6
+            },
+            "end": {
+              "line": 737,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/relations",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 739,
+              "character": 6
+            },
+            "end": {
+              "line": 791,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/relations",
+            "post"
+          ],
+          "range": {
+            "start": {
+              "line": 792,
+              "character": 7
+            },
+            "end": {
+              "line": 872,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/relations/{relationId}",
+            "delete"
+          ],
+          "range": {
+            "start": {
+              "line": 874,
+              "character": 9
+            },
+            "end": {
+              "line": 927,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/acl",
+            "get"
+          ],
+          "range": {
+            "start": {
+              "line": 929,
+              "character": 6
+            },
+            "end": {
+              "line": 993,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/acl",
+            "post"
+          ],
+          "range": {
+            "start": {
+              "line": 994,
+              "character": 7
+            },
+            "end": {
+              "line": 1064,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
+          "severity": "warn",
+          "path": [
+            "/exercises/{id}/acl/{userId}",
+            "delete"
+          ],
+          "range": {
+            "start": {
+              "line": 1066,
+              "character": 9
+            },
+            "end": {
+              "line": 1119,
+              "character": 63
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/start",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2438,
+              "character": 8
+            },
+            "end": {
+              "line": 2438,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/complete",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2517,
+              "character": 8
+            },
+            "end": {
+              "line": 2517,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/execution-records",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2626,
+              "character": 8
+            },
+            "end": {
+              "line": 2626,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/execution-records",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2703,
+              "character": 8
+            },
+            "end": {
+              "line": 2703,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/execution-records/{recordId}",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2786,
+              "character": 8
+            },
+            "end": {
+              "line": 2786,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/feedback-threads",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2832,
+              "character": 8
+            },
+            "end": {
+              "line": 2832,
+              "character": 24
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/feedback-threads",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2896,
+              "character": 8
+            },
+            "end": {
+              "line": 2896,
+              "character": 24
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/objectives",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 2963,
+              "character": 8
+            },
+            "end": {
+              "line": 2963,
+              "character": 26
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/objectives",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3010,
+              "character": 8
+            },
+            "end": {
+              "line": 3010,
+              "character": 26
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/attention-queue",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3077,
+              "character": 8
+            },
+            "end": {
+              "line": 3077,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/cancel",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3142,
+              "character": 8
+            },
+            "end": {
+              "line": 3142,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/publish",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3223,
+              "character": 8
+            },
+            "end": {
+              "line": 3223,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/unpublish",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3298,
+              "character": 8
+            },
+            "end": {
+              "line": 3298,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/archive",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3376,
+              "character": 8
+            },
+            "end": {
+              "line": 3376,
+              "character": 25
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/recommendations",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3456,
+              "character": 8
+            },
+            "end": {
+              "line": 3456,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/recommendations/{recommendationId}/accept",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3522,
+              "character": 8
+            },
+            "end": {
+              "line": 3522,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/recommendations/{recommendationId}/dismiss",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3603,
+              "character": 8
+            },
+            "end": {
+              "line": 3603,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/ineligibility",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3693,
+              "character": 8
+            },
+            "end": {
+              "line": 3693,
+              "character": 24
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/ineligibility",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3762,
+              "character": 8
+            },
+            "end": {
+              "line": 3762,
+              "character": 24
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/attention-queue/{itemId}/resolve",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3822,
+              "character": 8
+            },
+            "end": {
+              "line": 3822,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/attention-queue/{itemId}/dismiss",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3905,
+              "character": 8
+            },
+            "end": {
+              "line": 3905,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/attention-queue/{itemId}/escalate",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 3988,
+              "character": 8
+            },
+            "end": {
+              "line": 3988,
+              "character": 23
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training-sessions/{id}/feedback-threads/{threadId}/close",
+            "post",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 4085,
+              "character": 8
+            },
+            "end": {
+              "line": 4085,
+              "character": 24
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
+          "severity": "warn",
+          "path": [
+            "/training/load-chart",
+            "get",
+            "tags",
+            "0"
+          ],
+          "range": {
+            "start": {
+              "line": 4175,
+              "character": 8
+            },
+            "end": {
+              "line": 4175,
+              "character": 17
+            }
+          }
         }
       ],
       "metrics": {
         "errors": 0,
-        "warnings": 1,
-        "violations": 1,
-        "duration_ms": 1469
+        "warnings": 142,
+        "violations": 142,
+        "duration_ms": 1855
       }
     },
     {
@@ -1639,6 +4508,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
@@ -1647,6 +4522,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/PERMISSIONS_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/INVARIANTS_AUDIT.md",
@@ -1681,6 +4562,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md",
@@ -1688,6 +4575,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md",
@@ -1709,6 +4602,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/SPORT_SCIENCE_RULES_MEDICAL.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
@@ -1716,6 +4615,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
@@ -1723,6 +4628,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md",
@@ -1731,6 +4642,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/INVARIANTS_SEASONS.md",
@@ -1798,6 +4715,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md",
@@ -1805,7 +4728,13 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/entity_graph.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/test_obligations.yaml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1813,7 +4742,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1625
+        "duration_ms": 1648
       }
     },
     {
@@ -1889,7 +4818,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1405
+        "duration_ms": 1664
       }
     },
     {
@@ -1932,7 +4861,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 55
       }
     },
     {
@@ -1954,7 +4883,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 976
+        "duration_ms": 1271
       }
     },
     {
@@ -2010,7 +4939,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 61
       }
     },
     {
@@ -2030,268 +4959,27 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 13
       }
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_TRACEABILITY_MANIFEST_INVALID",
-      "summary": "Manifests de rastreabilidade inválidos: 30 erro(s).",
-      "inputs": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml"
-      ],
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
+      "inputs": [],
       "artifacts_checked": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml"
+        "/home/davis/HB-TRACK/generated"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/schemas/shared/merge-readiness.schema.json",
-          "message": "Hash sha256 divergente para contracts/schemas/shared/merge-readiness.schema.json (manifest=5f78765132a99c52ce330bf271f5e6ca3757afcb14f80397267e4bfec3614a38, atual=50a956a960d4fd8e0747342c969b0f3a9bdaa27c614303dd0162f239f1ee8256).",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 30,
+        "errors": 0,
         "warnings": 0,
-        "violations": 30,
-        "duration_ms": 2563
+        "violations": 0,
+        "duration_ms": 40345
       }
     },
     {
@@ -2327,7 +5015,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 17
       }
     },
     {
@@ -2347,7 +5035,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 20
       }
     },
     {
@@ -2460,48 +5148,47 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+      "summary": "SESSION_HANDOFF.md com 3 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/matches/FT-035.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/endpoints.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.bundle.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.openapi_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/matches.schema_contract_view.yaml",
-        "/home/davis/HB-TRACK/generated/source_graph/matches/impact_report.json",
-        "/home/davis/HB-TRACK/compiled_context/matches/FT-035.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='ai_ingestion'.",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 3,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 4
+        "violations": 3,
+        "duration_ms": 37
       }
     },
     {
@@ -2523,7 +5210,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 161
+        "duration_ms": 177
       }
     },
     {
@@ -2605,7 +5292,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 13
       }
     },
     {
@@ -2670,6 +5357,42 @@
       "gate_id": "LEGACY_CRITICAL_PATH_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no perfil 'local'.",

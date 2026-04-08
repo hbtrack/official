@@ -89,11 +89,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.bundle.yaml",
-      "sha256": "1e788b60576a4147aadd0617fbfed5d753cd498681f09b2b2c1bc3737184469c"
+      "sha256": "f0b3e65d0fcab2124abed9b78fce8494bdf5c4e9cc08890d8e1f0f9ed989253a"
     },
     {
       "relpath": "generated/source_graph/competitions/competitions.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/competitions/impact_report.json",
-      "sha256": "6c01188368b36e98f3807449a33a4d8c010ca39c4dd87698402159b3b788313a"
+      "sha256": "2ec47dec615baac5e6456247a2160c96287cc88687fffed1b3d0383a1d747bca"
     }
   ],
   "module": "competitions",
@@ -135,7 +135,7 @@
     "domain_rules": "src/competitions/domain/rules.py",
     "use_cases": "src/competitions/application/use_cases.py"
   },
-  "source_fingerprint": "d877af348bc399e7e7cf04086c41558656784a2626bbea8e1d51ac3cbfaa8c51",
+  "source_fingerprint": "67b39862dbc6b32e63ca03b1c25dd3e675208688215a7d497a72695830cd7140",
   "source_graph": {
     "entities": {
       "Competition": {
@@ -389,7 +389,7 @@
         "registrationTeamIds referenciam módulo teams — boundary explicitado em DR-COMP-003.",
         "calendarEntryIds referenciam módulo scheduling — boundary explicitado em module docs."
       ],
-      "source_fingerprint": "2c4a0de6630def3e14a5a209e2117b5b2f710c564e1f319889906a1348224984"
+      "source_fingerprint": "655fe2150360b6169708774b8da90a50906a0f993848786dcd31a4256c5f7098"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

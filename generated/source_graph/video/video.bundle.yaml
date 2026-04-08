@@ -1,0 +1,776 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: video
+graph_root: docs/hbtrack/modulos/video/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/video/match_media_session.yaml
+  sha256: 5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a
+- relpath: contracts/openapi/paths/video.yaml
+  sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+- relpath: contracts/schemas/video/clip_definition.schema.json
+  sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
+- relpath: contracts/schemas/video/distribution_profile.schema.json
+  sha256: e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6
+- relpath: contracts/schemas/video/match_media_session.schema.json
+  sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
+- relpath: contracts/schemas/video/media_segment.schema.json
+  sha256: 3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md
+  sha256: c6fd9993a7ec3672ab64dc4f59ba990eceb98681907416098072fcaa464ed78a
+- relpath: docs/hbtrack/modulos/video/INVARIANTS_VIDEO.md
+  sha256: f5887595f4f49b517acfa76de989e2ab179d9e46fb0e49784ea1059560a5c96c
+- relpath: docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md
+  sha256: e26c831de875eba980d03936f5a676cdf6ea80302fbd39b0ddc8781316b92913
+- relpath: docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md
+  sha256: 4042a6bdf556ad51edc740e7abeec5e7366b04595101e15684b08943d8403836
+- relpath: docs/hbtrack/modulos/video/README.md
+  sha256: b7ce1d3d90fabe42ab4ab9728583c62d90701a6d5b3b969597a7bd910b7f8d45
+- relpath: docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md
+  sha256: ac28af5732e5c93c334dac3af06cb7e665982c9999a03f34961f7dcb1c261b11
+- relpath: docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md
+  sha256: 6c57f0a1a2dee338d5a7073571aeaf72a7f809a9a67cce040b6277c7f196698b
+- relpath: docs/hbtrack/modulos/video/graph/endpoints.yaml
+  sha256: 945be515ef869e0e247fdc1d6069c07b2363df3065b12f89fadc8c5625dcdc0a
+- relpath: docs/hbtrack/modulos/video/graph/entity_graph.yaml
+  sha256: d3a38c427ffb2a7c08cf815ab4995588bc9810c6e6cb9129ec857a8083b50d4f
+- relpath: docs/hbtrack/modulos/video/graph/errors.yaml
+  sha256: 99e4642c747060cc18ae662a6d7dbf1058be7ed74fd26695da97afcedb9cd4e6
+- relpath: docs/hbtrack/modulos/video/graph/module_manifest.yaml
+  sha256: a03604de23478a8b2a6b61da37155f968d2e538d38c837c7f3559efd6d38e787
+- relpath: docs/hbtrack/modulos/video/graph/test_obligations.yaml
+  sha256: 7b58b4274969817c9c71ad4443b02c7d119f90d8c2d082a0c81b2cf274ea16e1
+- relpath: src/video/api.py
+  sha256: 9da1646a7645655ccb08958a7e3eaa70b7953a5c4bbadbd84af31c6ceb1fcf84
+- relpath: src/video/application/use_cases.py
+  sha256: 6cb1d0940418df44cdc2d0854cfbd22337939a15cf47e071ba642b174a07600d
+- relpath: src/video/domain/entities.py
+  sha256: 534682e61dbd27a2f09ec5561bfddc4f9460ba436d27b768c04a5e6e5be6c3ae
+- relpath: src/video/domain/rules.py
+  sha256: b02bacac436ccbf500fd406817f6926fe987dc43756fd976f99665264a3d15fd
+- relpath: src/video/domain/state_machine.py
+  sha256: 6717cdf01e0d26bff84e48c0eb592a3d97141b5ee5cf85ac1074a5fc727abe4a
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: video
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_VIDEO.md
+    domain_rules: ../DOMAIN_RULES_VIDEO.md
+    invariants: ../INVARIANTS_VIDEO.md
+    permissions: ../PERMISSIONS_VIDEO.md
+    test_matrix: ../TEST_MATRIX_VIDEO.md
+    state_model: ../STATE_MODEL_VIDEO.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/video.yaml
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/video/match_media_session.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/video/
+    primary_schema: ../../../../../contracts/schemas/video/match_media_session.schema.json
+  runtime_surfaces:
+    api_router: ../../../../../src/video/api.py
+    domain_entity: ../../../../../src/video/domain/entities.py
+    domain_rules: ../../../../../src/video/domain/rules.py
+    use_cases: ../../../../../src/video/application/use_cases.py
+    state_machine: ../../../../../src/video/domain/state_machine.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "AsyncAPI/Arazzo do m\xF3dulo seguem governan\xE7a separada e n\xE3o est\xE3o\
+    \ inclu\xEDdos nesta fase do source graph."
+  - "matchId \xE9 refer\xEAncia cruzada para m\xF3dulo matches \u2014 boundary explicitado\
+    \ em DR-VID-001."
+  - "scout_event_id em ClipDefinition \xE9 refer\xEAncia cruzada para m\xF3dulo scout\
+    \ \u2014 DR-VID-004."
+  - "created_by_user_id em MatchMediaSession referencia identity_access \u2014 video\
+    \ n\xE3o \xE9 dono de identidade."
+  - "Perfis de transcodifica\xE7\xE3o (DistributionProfile) s\xE3o derivados de mezzanine\
+    \ \u2014 DR-VID-006."
+  - "STATE_MODEL_VIDEO.md descreve a m\xE1quina de estados DRAFT\u2192CAPTURING\u2192\
+    SYNCING\u2192TRANSCODING\u2192PUBLISHED."
+  - "Edge nodes s\xE3o entidades de infraestrutura; n\xE3o modelados como entidades\
+    \ de dom\xEDnio soberanas nesta fase."
+  - "patchSession cobre m\xFAltiplas transi\xE7\xF5es de estado (DR-VID-002, INV-VID-002)\
+    \ \u2014 transi\xE7\xF5es validadas por state_machine.py."
+entities:
+  MatchMediaSession:
+    schema_ref: ../../../../../contracts/schemas/video/match_media_session.schema.json
+    runtime_entity_ref: ../../../../../src/video/domain/entities.py#MatchMediaSession
+    docs_refs:
+    - ../DOMAIN_RULES_VIDEO.md
+    - ../INVARIANTS_VIDEO.md
+    - ../PERMISSIONS_VIDEO.md
+    - ../STATE_MODEL_VIDEO.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-VID-001: obrigat\xF3rio"
+    - name: matchId
+      runtime_name: match_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "DR-VID-001: cada segment deve ter timecode \xFAnico ancorado \xE0 sess\xE3\
+        o"
+      - 'boundary: reference to matches module'
+    - name: state
+      runtime_name: state
+      required: true
+      type: string_enum
+      constraints:
+      - 'STATE_MODEL_VIDEO.md: DRAFT|CAPTURING|SYNCING|TRANSCODING|PUBLISHED'
+      - "INV-VID-002: PUBLISHED \xE9 imut\xE1vel \u2014 DR-VID-005"
+    - name: captureMode
+      runtime_name: capture_mode
+      required: true
+      type: string_enum
+      constraints:
+      - 'enum: PANORAMIC|AUTO_FOLLOW|MULTI_ANGLE'
+    - name: retentionPolicy
+      runtime_name: retention_policy
+      required: true
+      type: string_enum
+      constraints:
+      - "INV-VID-007: retentionPolicy obrigat\xF3ria"
+      - "INV-VID-008: padr\xE3o conservador DELETE_AFTER_7_DAYS se omitido"
+      - "DR-VID-008: sem policy silenciosa de reten\xE7\xE3o indefinida"
+    - name: lastTimecode
+      runtime_name: last_timecode
+      required: false
+      type: integer
+      constraints:
+      - "DR-VID-001: timecode l\xF3gico mon\xF3tono em ms desde in\xEDcio"
+      - 'INV-VID-003: sem gaps entre segments'
+    - name: technicalContactUserId
+      runtime_name: technical_contact_user_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - 'boundary: reference to identity_access module'
+    - name: createdAt
+      runtime_name: created_at
+      required: true
+      type: datetime_utc
+      constraints:
+      - "INV-VID-001: obrigat\xF3rio"
+    - name: createdByUserId
+      runtime_name: created_by_user_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "boundary: reference to identity_access module \u2014 video n\xE3o \xE9 dono\
+        \ de identidade"
+    - name: captureStartedAt
+      runtime_name: capture_started_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - preenchido quando state transita para CAPTURING
+    - name: syncCompletedAt
+      runtime_name: sync_completed_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - "preenchido quando state transita para SYNCING\u2192TRANSCODING"
+    - name: transcodeCompletedAt
+      runtime_name: transcode_completed_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - "preenchido quando state transita para TRANSCODING\u2192PUBLISHED"
+    - name: publishedAt
+      runtime_name: published_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - "DR-VID-009: timestamp da publica\xE7\xE3o registrada"
+    - name: segmentCount
+      runtime_name: segment_count
+      required: false
+      type: integer
+      constraints:
+      - "nullable: true; padr\xE3o: 0"
+      - "contador de MediaSegments linkados a esta sess\xE3o"
+    - name: totalDurationMs
+      runtime_name: total_duration_ms
+      required: false
+      type: integer
+      constraints:
+      - "nullable: true; padr\xE3o: 0; unidade: milissegundos"
+    - name: activeTranscodeJobCount
+      runtime_name: active_transcode_job_count
+      required: false
+      type: integer
+      constraints:
+      - "nullable: true; padr\xE3o: 0"
+      - "jobs de transcodifica\xE7\xE3o ativos no momento"
+    runtime_extension_fields: []
+  MediaSegment:
+    schema_ref: ../../../../../contracts/schemas/video/media_segment.schema.json
+    runtime_entity_ref: ../../../../../src/video/domain/entities.py#MediaSegment
+    docs_refs:
+    - ../DOMAIN_RULES_VIDEO.md
+    - ../INVARIANTS_VIDEO.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-VID-001: obrigat\xF3rio"
+    - name: sessionId
+      runtime_name: session_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - 'boundary: aggregation root = MatchMediaSession'
+    - name: timecodeLogical
+      runtime_name: timecode_logical
+      required: true
+      type: integer
+      constraints:
+      - "DR-VID-001: timecode l\xF3gico \xFAnico por sess\xE3o"
+      - 'INV-VID-003: timecodeLogical >= 0'
+    - name: timecodeLabel
+      runtime_name: timecode_label
+      required: false
+      type: string
+      constraints:
+      - "formato livre para exibi\xE7\xE3o \u2014 ex: '00:05:23'"
+    - name: state
+      runtime_name: state
+      required: true
+      type: string_enum
+      constraints:
+      - 'enum: OPEN|FINALIZED'
+      - "DR-VID-005: imut\xE1vel ap\xF3s FINALIZED"
+    - name: codecLabel
+      runtime_name: codec_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+    - name: bitrate
+      runtime_name: bitrate
+      required: false
+      type: integer
+      constraints:
+      - 'nullable: true'
+      - 'unidade: bps'
+    - name: durationMs
+      runtime_name: duration_ms
+      required: false
+      type: integer
+      constraints:
+      - 'nullable: true'
+      - 'unidade: milissegundos'
+    - name: sourceEdgeNodeId
+      runtime_name: source_edge_node_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - "DR-VID-003: edge-first \u2014 snapshot do edge node que capturou"
+    - name: createdAt
+      runtime_name: created_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+    - name: finalizedAt
+      runtime_name: finalized_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - 'DR-VID-005: preenchido ao finalizar o segment'
+    runtime_extension_fields: []
+  ClipDefinition:
+    schema_ref: ../../../../../contracts/schemas/video/clip_definition.schema.json
+    runtime_entity_ref: ../../../../../src/video/domain/entities.py#ClipDefinition
+    docs_refs:
+    - ../DOMAIN_RULES_VIDEO.md
+    - ../INVARIANTS_VIDEO.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-VID-001: obrigat\xF3rio"
+    - name: sessionId
+      runtime_name: session_id
+      required: true
+      type: uuid_v4
+      constraints:
+      - 'boundary: aggregation root = MatchMediaSession'
+    - name: fromTimecode
+      runtime_name: from_timecode
+      required: true
+      type: integer
+      constraints:
+      - "fromTimecode < toTimecode \u2014 validado em validate_invariants"
+    - name: toTimecode
+      runtime_name: to_timecode
+      required: true
+      type: integer
+      constraints:
+      - fromTimecode < toTimecode
+    - name: scoutEventId
+      runtime_name: scout_event_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - "DR-VID-004: clipping sem\xE2ntico \u2014 refer\xEAncia ao m\xF3dulo scout"
+      - "INV-VID-005: ao menos um contexto sem\xE2ntico \xE9 obrigat\xF3rio"
+    - name: zoneLabel
+      runtime_name: zone_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+      - "INV-VID-005: alternativa ao scout_event_id como contexto sem\xE2ntico"
+    - name: athleteIds
+      runtime_name: athlete_ids
+      required: false
+      type: array_of_uuid
+      constraints:
+      - 'nullable: true (default: [])'
+      - "INV-VID-005: alternativa como contexto sem\xE2ntico"
+    - name: contextLabel
+      runtime_name: context_label
+      required: false
+      type: string
+      constraints:
+      - 'nullable: true'
+    - name: createdAt
+      runtime_name: created_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+    - name: createdByUserId
+      runtime_name: created_by_user_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - 'boundary: reference to identity_access module'
+    runtime_extension_fields: []
+  DistributionProfile:
+    schema_ref: ../../../../../contracts/schemas/video/distribution_profile.schema.json
+    runtime_entity_ref: ../../../../../src/video/domain/entities.py#DistributionProfile
+    docs_refs:
+    - ../DOMAIN_RULES_VIDEO.md
+    - ../INVARIANTS_VIDEO.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+      constraints:
+      - "INV-VID-001: obrigat\xF3rio"
+    - name: profileLabel
+      runtime_name: profile_label
+      required: true
+      type: string
+      constraints:
+      - 'ex: ''technical_hd'', ''public_abr'''
+    - name: targetType
+      runtime_name: target_type
+      required: true
+      type: string_enum
+      constraints:
+      - 'enum: TECHNICAL_INTERNAL|PUBLIC_CDN|BROADCAST_PARTNER'
+      - "DR-VID-002: dual pipeline determin\xEDstico"
+    - name: codecLabel
+      runtime_name: codec_label
+      required: true
+      type: string
+      constraints:
+      - 'ex: ''h264'', ''h265'', ''av1'''
+    - name: bitrate
+      runtime_name: bitrate
+      required: true
+      type: integer
+      constraints:
+      - 'unidade: bps'
+      - "DR-VID-006: derivado de mezzanine \u2014 transcodifica\xE7\xE3o lazy"
+    - name: sessionId
+      runtime_name: session_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - 'boundary: anchored to MatchMediaSession'
+    - name: publishedAt
+      runtime_name: published_at
+      required: false
+      type: datetime_utc
+      constraints:
+      - 'nullable: true'
+      - "DR-VID-009: toda distribui\xE7\xE3o externa \xE9 rastreada"
+    - name: publishedByUserId
+      runtime_name: published_by_user_id
+      required: false
+      type: uuid_v4
+      constraints:
+      - 'nullable: true'
+      - "boundary: reference to identity_access module \u2014 DR-VID-009"
+    runtime_extension_fields: []
+endpoints:
+- operation_id: createSession
+  method: POST
+  path: /video/sessions
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1sessions/post
+  runtime_handler_ref: ../../../../../src/video/api.py#create_session
+  use_case_ref: ../../../../../src/video/application/use_cases.py#CreateSessionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 500
+- operation_id: listSessions
+  method: GET
+  path: /video/sessions
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1sessions/get
+  runtime_handler_ref: ../../../../../src/video/api.py#list_sessions
+  use_case_ref: ../../../../../src/video/application/use_cases.py#ListSessionsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 401
+  - 500
+- operation_id: getSession
+  method: GET
+  path: /video/sessions/{sessionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1sessions~1{sessionId}/get
+  runtime_handler_ref: ../../../../../src/video/api.py#get_session
+  use_case_ref: ../../../../../src/video/application/use_cases.py#GetSessionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: patchSession
+  method: PATCH
+  path: /video/sessions/{sessionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1sessions~1{sessionId}/patch
+  runtime_handler_ref: ../../../../../src/video/api.py#patch_session
+  use_case_ref: ../../../../../src/video/application/use_cases.py#PatchSessionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: createSegment
+  method: POST
+  path: /video/segments
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1segments/post
+  runtime_handler_ref: ../../../../../src/video/api.py#create_segment
+  use_case_ref: ../../../../../src/video/application/use_cases.py#IngestSegmentUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: listSegments
+  method: GET
+  path: /video/segments
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1segments/get
+  runtime_handler_ref: ../../../../../src/video/api.py#list_segments
+  use_case_ref: ../../../../../src/video/application/use_cases.py#ListSegmentsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createClip
+  method: POST
+  path: /video/clips
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1clips/post
+  runtime_handler_ref: ../../../../../src/video/api.py#create_clip
+  use_case_ref: ../../../../../src/video/application/use_cases.py#CreateClipUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 404
+  - 422
+  - 500
+- operation_id: listClips
+  method: GET
+  path: /video/clips
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1clips/get
+  runtime_handler_ref: ../../../../../src/video/api.py#list_clips
+  use_case_ref: ../../../../../src/video/application/use_cases.py#ListClipsUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 401
+  - 500
+- operation_id: publishDistribution
+  method: POST
+  path: /video/distribution
+  openapi_ref: ../../../../../contracts/openapi/paths/video.yaml#/video~1distribution/post
+  runtime_handler_ref: ../../../../../src/video/api.py#publish_distribution
+  use_case_ref: ../../../../../src/video/application/use_cases.py#PublishDistributionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-VID-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/video/api.py#_get_actor_id
+  operations:
+  - createSession
+  - listSessions
+  - getSession
+  - patchSession
+  - createSegment
+  - listSegments
+  - createClip
+  - listClips
+  - publishDistribution
+- id: ERR-VID-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  source_ref: ../../../../../src/video/domain/rules.py#assert_session_capturing
+  operations:
+  - createSession
+  - getSession
+  - patchSession
+  - createSegment
+  - listSegments
+  - createClip
+  - publishDistribution
+- id: ERR-VID-404-SESSION-NOT-FOUND
+  kind: domain
+  http_status: 404
+  source_ref: ../../../../../src/video/application/use_cases.py#GetSessionUseCase
+  operations:
+  - getSession
+  - patchSession
+  - createSegment
+  - listSegments
+  - createClip
+  - listClips
+  - publishDistribution
+- id: ERR-VID-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/video/domain/entities.py#validate_invariants
+  operations:
+  - createSession
+  - patchSession
+  - createSegment
+  - createClip
+  - publishDistribution
+  notes: "INV-VID-003: gaps de timecode; INV-VID-007: retentionPolicy; valida\xE7\xE3\
+    o de campos obrigat\xF3rios"
+- id: ERR-VID-409-STATE-CONFLICT
+  kind: domain
+  http_status: 409
+  source_ref: ../../../../../src/video/domain/rules.py#assert_session_capturing
+  operations:
+  - patchSession
+  - createSegment
+  - publishDistribution
+  notes: "DR-VID-002/DR-VID-005: opera\xE7\xE3o inv\xE1lida para o estado atual da\
+    \ sess\xE3o; INV-VID-002: PUBLISHED \xE9 imut\xE1vel"
+- id: ERR-VID-422-MISSING-SEMANTIC-CONTEXT
+  kind: domain
+  http_status: 422
+  source_ref: ../../../../../src/video/domain/entities.py#validate_invariants
+  operations:
+  - createClip
+  notes: "INV-VID-005: ClipDefinition sem scout_event_id, zone_label nem athlete_ids\
+    \ \xE9 422"
+- id: ERR-VID-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/video/api.py#_get_actor_id
+  operations:
+  - createSession
+  - listSessions
+  - getSession
+  - patchSession
+  - createSegment
+  - listSegments
+  - createClip
+  - listClips
+  - publishDistribution
+test_obligations:
+- id: VID-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/video/match_media_session.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: VID-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/video.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: VID-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/video/tests/
+  covers:
+  - INV-VID-001
+  - INV-VID-002
+  - INV-VID-003
+  - INV-VID-004
+  - INV-VID-005
+  - INV-VID-006
+  - INV-VID-007
+  - INV-VID-008
+  - INV-VID-009
+  - INV-VID-010
+  - INV-VID-011
+  - DR-VID-001
+  - DR-VID-002
+  - DR-VID-003
+  - DR-VID-004
+  - DR-VID-005
+  - DR-VID-006
+  - DR-VID-007
+  - DR-VID-008
+  - DR-VID-009
+  - DR-VID-010
+  verification: Domain unit and integration tests enforcing invariants, state transitions,
+    boundary rules and permission checks
+  evidence_refs:
+  - ../../../../../src/video/tests/
+- id: VID-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_video_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_video_source_graph_integrity.py

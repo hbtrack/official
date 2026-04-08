@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-26T04:39:28Z",
+  "timestamp_utc": "2026-04-08T04:20:02Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "bbd863e",
+    "git_commit": "56f3a3bd",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -17,7 +17,7 @@
       "oasdiff": "oasdiff version 1.12.3",
       "schemathesis": "schemathesis, version 4.12.1",
       "json_schema_validator": null,
-      "asyncapi_validator": "@asyncapi/cli/6.0.0 wsl-x64 node-v24.14.0",
+      "asyncapi_validator": "@asyncapi/cli/6.0.0 wsl-x64 node-v24.14.1",
       "arazzo_validator": null,
       "storybook": null
     }
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.ci.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260326T043928_cead73"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T042002_577cde"
   },
   "status_detail": {
     "active_gates_passed": 2,
-    "skip_count": 49,
+    "skip_count": 51,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -204,6 +204,10 @@
       {
         "gate_id": "LEGACY_CRITICAL_PATH_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
@@ -229,7 +233,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 50
       }
     },
     {
@@ -976,35 +980,53 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 4 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
-        "/home/davis/HB-TRACK/.github/workflows/ci.yml"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
-        "/home/davis/HB-TRACK/.github/workflows/ci.yml"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
       ],
       "evidence_files": [],
       "violations": [
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=4.",
+          "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de módulo foco: session_start.module_focus='video' != SESSION_HANDOFF.modulo_foco='governance'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=5.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Campo 'roadmap_phase' ausente em SESSION_HANDOFF.md. Obrigatório quando task_type=execute_roadmap_phase.",
           "severity": "error"
         }
       ],
       "metrics": {
-        "errors": 1,
+        "errors": 4,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 6
+        "violations": 4,
+        "duration_ms": 5
       }
     },
     {
@@ -1026,7 +1048,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 245
+        "duration_ms": 188
       }
     },
     {
@@ -1159,6 +1181,42 @@
       "gate_id": "LEGACY_CRITICAL_PATH_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",

@@ -47,7 +47,7 @@ inputs:
 - relpath: docs/hbtrack/modulos/teams/graph/test_obligations.yaml
   sha256: 63a540bcb332dfffa0b17f89fc14a95c182564d53247c8e2f24f60f6aa6bd247
 - relpath: src/teams/api.py
-  sha256: 531afdbf153ef8efbed137b209637eb1e83ffb18a406f0e0d6e51ce0a71a4912
+  sha256: 0ae9f4fea923227a5c2af8439f9e9498ff2867e9db2c74190b7f5bada61e8331
 - relpath: src/teams/application/use_cases.py
   sha256: 1750c2e3e5ad10b74188e243b02903d2583c07dac71e81eda78a5dab4fc01af1
 - relpath: src/teams/domain/entities.py

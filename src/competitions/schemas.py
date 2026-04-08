@@ -1,15 +1,19 @@
+from __future__ import annotations
+
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
+
 """
 Schemas I/O — módulo competitions (Django Ninja).
 Fonte: contracts/openapi/paths/competitions.yaml
 """
-from __future__ import annotations
 
 import uuid
 from datetime import date, datetime
 from typing import List, Optional
 
 from ninja import Schema
-
 
 class CompetitionOut(Schema):
     competitionId: uuid.UUID
@@ -46,13 +50,11 @@ class CompetitionOut(Schema):
             updatedAt=comp.updated_at,
         )
 
-
 class CompetitionListOut(Schema):
     data: List[CompetitionOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateCompetitionIn(Schema):
     seasonId: uuid.UUID
@@ -65,7 +67,6 @@ class CreateCompetitionIn(Schema):
     calendarEntryIds: List[uuid.UUID] = []
     registrationTeamIds: List[uuid.UUID] = []
 
-
 class PatchCompetitionIn(Schema):
     name: Optional[str] = None
     startDate: Optional[date] = None
@@ -74,7 +75,6 @@ class PatchCompetitionIn(Schema):
     statusLabel: Optional[str] = None
     stageLabels: Optional[List[str]] = None
     standingsSummary: Optional[str] = None
-
 
 class ErrorOut(Schema):
     detail: str

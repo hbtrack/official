@@ -161,7 +161,7 @@
     },
     {
       "relpath": "src/training/api.py",
-      "sha256": "e3984352cdf696f61be3e6a90e8a6021bcbc6f5e86333f5553ab9d0aefafccbe"
+      "sha256": "bd62e4b77416ddf5c5c92a295cef25c240da450d9561165898c32775acbd45ed"
     },
     {
       "relpath": "src/training/application/use_cases.py",
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "c1449a9d72794316820fa09c2951aefc13d988f995523890b3cda0f456a9b670"
+  "source_fingerprint": "43ddc71866eb029ee9fb51153592cc6630b18b85834cda185eee44ff2abf2e4f"
 }

@@ -1,0 +1,44 @@
+version: "1.0.0"
+status: active
+module: wellness
+
+errors:
+  - id: ERR-WEL-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/wellness/api.py#_role"
+    operations:
+      - createWellnessEntry
+      - listWellnessEntries
+      - getWellnessEntry
+      - listAthleteWellnessEntries
+      - getAthleteWellnessSummary
+  - id: ERR-WEL-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/wellness/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createWellnessEntry
+      - listWellnessEntries
+      - getWellnessEntry
+      - listAthleteWellnessEntries
+      - getAthleteWellnessSummary
+  - id: ERR-WEL-404-ENTRY-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/wellness/domain/rules.py#WellnessEntryNotFound"
+    operations:
+      - getWellnessEntry
+  - id: ERR-WEL-404-ATHLETE-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/wellness/domain/rules.py#AthleteNotFound"
+    operations:
+      - listAthleteWellnessEntries
+      - getAthleteWellnessSummary
+  - id: ERR-WEL-400-ENTRY-VALIDATION
+    kind: validation
+    http_status: 400
+    source_ref: "../../../../../src/wellness/domain/entities.py#validate_invariants"
+    operations:
+      - createWellnessEntry

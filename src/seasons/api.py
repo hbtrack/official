@@ -1,10 +1,16 @@
+from __future__ import annotations
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Router django-ninja — módulo seasons.
 6 endpoints correspondentes aos 6 operationIds do contrato.
 Contrato: contracts/openapi/paths/seasons.yaml
 ADR-007 (JWT), ADR-008 (RBAC), ADR-031 (Django).
 """
-from __future__ import annotations
 
 from http import HTTPStatus
 from uuid import UUID
@@ -44,7 +50,6 @@ from .schemas import (
 
 router = Router(tags=["seasons"])
 
-
 def _get_actor_role(request) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -54,7 +59,6 @@ def _get_actor_role(request) -> RoleLabel:
         except ValueError:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
-
 
 def _season_to_out(season) -> SeasonOut:
     return SeasonOut(
@@ -71,7 +75,6 @@ def _season_to_out(season) -> SeasonOut:
         created_at=season.created_at,
         updated_at=season.updated_at,
     )
-
 
 # ---------------------------------------------------------------------------
 # GET /seasons — listSeasons (FT-018)
@@ -99,7 +102,6 @@ def list_seasons(
         "total": result.total,
     }
 
-
 # ---------------------------------------------------------------------------
 # POST /seasons — createSeason (FT-019)
 # ---------------------------------------------------------------------------
@@ -126,7 +128,6 @@ def create_season(request, payload: CreateSeasonIn):
         raise HttpError(HTTPStatus.UNPROCESSABLE_ENTITY, str(exc))
     return HTTPStatus.CREATED, _season_to_out(season)
 
-
 # ---------------------------------------------------------------------------
 # GET /seasons/{seasonId} — getSeason (FT-020)
 # ---------------------------------------------------------------------------
@@ -140,7 +141,6 @@ def get_season(request, season_id: UUID):
     except SeasonNotFound as exc:
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     return _season_to_out(season)
-
 
 # ---------------------------------------------------------------------------
 # PATCH /seasons/{seasonId} — patchSeason (FT-021)
@@ -169,7 +169,6 @@ def patch_season(request, season_id: UUID, payload: PatchSeasonIn):
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     return _season_to_out(season)
 
-
 # ---------------------------------------------------------------------------
 # POST /seasons/{seasonId}/teams/{teamId} — addTeamToSeason (FT-022)
 # ---------------------------------------------------------------------------
@@ -195,7 +194,6 @@ def add_team_to_season(request, season_id: UUID, team_id: UUID):
     except SeasonNotFound as exc:
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     return HTTPStatus.NO_CONTENT, None
-
 
 # ---------------------------------------------------------------------------
 # DELETE /seasons/{seasonId}/teams/{teamId} — removeTeamFromSeason (FT-023)

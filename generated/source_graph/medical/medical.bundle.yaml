@@ -1,0 +1,349 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: medical
+graph_root: docs/hbtrack/modulos/medical/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/medical/medical_record.yaml
+  sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
+- relpath: contracts/openapi/paths/medical.yaml
+  sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+- relpath: contracts/schemas/medical/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/medical/medical_record.schema.json
+  sha256: e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md
+  sha256: 247f85f54635380736307c8e9dd0daeae602a3a5259d1720fa0db9a106991488
+- relpath: docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md
+  sha256: b10a11d173f72872976c72895cf0db540d1a44bca4a41e066b29c85e397ed85e
+- relpath: docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md
+  sha256: e0192dcc123e6cb54105e1febc11aaeb43eb54e3ae6f9b7eaf35a5a23341f88f
+- relpath: docs/hbtrack/modulos/medical/PERMISSIONS_MEDICAL.md
+  sha256: 437f67e4ac2d000aa091b14d151c2c6a65432855d0573f0b5b7889e8d7db6881
+- relpath: docs/hbtrack/modulos/medical/README.md
+  sha256: 1558a5dca177c7322accdeb1596d8ecb17c0192257c1e9976698ec311c7340af
+- relpath: docs/hbtrack/modulos/medical/TEST_MATRIX_MEDICAL.md
+  sha256: 4c01b4a031f349078ec5b4731ca02c3dabd6263157d99e0b6dc768163ff82f04
+- relpath: docs/hbtrack/modulos/medical/graph/endpoints.yaml
+  sha256: 47a9b2dc228f871c2e1e97cebf55feee8b6d078b60103294d9ad0edc77216e63
+- relpath: docs/hbtrack/modulos/medical/graph/entity_graph.yaml
+  sha256: 14c0d087dd5d15883baa9cac7c848d7f6d19d1acc98b64327873892c985f7f9b
+- relpath: docs/hbtrack/modulos/medical/graph/errors.yaml
+  sha256: c919df24c7c43f869226e4e905785e8d1cb5c6f016b2f94b4c089950d7085124
+- relpath: docs/hbtrack/modulos/medical/graph/module_manifest.yaml
+  sha256: 8bde51f993de5da3ee32280e4f50e20fc5296c46be2cf86aac6e5fcf1a277ca1
+- relpath: docs/hbtrack/modulos/medical/graph/test_obligations.yaml
+  sha256: 48eee0ce49b47c51cc6581930f3cb78d1f82339770ea05258985cc511cfb70ff
+- relpath: src/medical/api.py
+  sha256: 0651271e89da53f8fea656fd4480a7baee027421ca5c3421712261b57fc02927
+- relpath: src/medical/application/use_cases.py
+  sha256: 7c7ccbc633fdf4bad918ab93130a0bab9e8819ce19237672cce6dd79c8835ce9
+- relpath: src/medical/domain/entities.py
+  sha256: fe3b1e7f03dd8af94f3a3a53763b86ac9ef239e58deee9bf54b77e09df06016d
+- relpath: src/medical/domain/rules.py
+  sha256: c0d79a71271f1b7b6290d4f4c4f05280f090b5e08c9761643a0fee4ea42f0494
+- relpath: src/medical/tests/unit/test_medical_domain.py
+  sha256: 021c8dcb8d43c146e9f662bced78f5f6dd61b71fe47c05edcd7c5d245092741b
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: medical
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_MEDICAL.md
+    domain_rules: ../DOMAIN_RULES_MEDICAL.md
+    invariants: ../INVARIANTS_MEDICAL.md
+    permissions: ../PERMISSIONS_MEDICAL.md
+    test_matrix: ../TEST_MATRIX_MEDICAL.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/medical.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/medical/
+    primary_schema: ../../../../../contracts/schemas/medical/medical_record.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/medical/medical_record.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/medical/api.py
+    domain_entity: ../../../../../src/medical/domain/entities.py
+    domain_rules: ../../../../../src/medical/domain/rules.py
+    use_cases: ../../../../../src/medical/application/use_cases.py
+    unit_tests: ../../../../../src/medical/tests/unit/test_medical_domain.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - "MedicalRecordOut ainda exp\xF5e campos de runtime/auditoria (isDeleted, createdAt,\
+    \ updatedAt) fora do schema soberano medical_record.schema.json."
+  - Delete/soft-delete e retention LGPD seguem descritos no contrato, mas a trilha
+    de auditoria externa permanece governada fora do source graph local.
+  - AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem
+    governanca separada.
+entities:
+  MedicalRecord:
+    schema_ref: ../../../../../contracts/schemas/medical/medical_record.schema.json
+    runtime_entity_ref: ../../../../../src/medical/domain/entities.py#MedicalRecord
+    docs_refs:
+    - ../DOMAIN_RULES_MEDICAL.md
+    - ../INVARIANTS_MEDICAL.md
+    - ../PERMISSIONS_MEDICAL.md
+    - ../SPORT_SCIENCE_RULES_MEDICAL.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: athleteUserId
+      runtime_name: athlete_user_id
+      required: true
+      type: uuid_v4
+    - name: teamId
+      runtime_name: team_id
+      required: false
+      type: uuid_v4
+    - name: recordDate
+      runtime_name: record_date
+      required: true
+      type: date_only
+    - name: recordLabel
+      runtime_name: record_label
+      required: true
+      type: string
+    - name: assessmentSummary
+      runtime_name: assessment_summary
+      required: false
+      type: string
+    - name: restrictionSummary
+      runtime_name: restriction_summary
+      required: false
+      type: string
+    - name: returnToTrainingAuthorized
+      runtime_name: return_to_training_authorized
+      required: false
+      type: boolean
+    - name: returnToPlayAuthorized
+      runtime_name: return_to_play_authorized
+      required: false
+      type: boolean
+    - name: clinicalNotes
+      runtime_name: clinical_notes
+      required: false
+      type: string
+    runtime_extension_fields:
+    - name: isDeleted
+      runtime_name: is_deleted
+      type: boolean
+    - name: deletedAt
+      runtime_name: deleted_at
+      type: datetime
+    - name: createdAt
+      runtime_name: created_at
+      type: datetime
+    - name: updatedAt
+      runtime_name: updated_at
+      type: datetime
+endpoints:
+- operation_id: listMedicalRecords
+  method: GET
+  path: /medical/records
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/get
+  runtime_handler_ref: ../../../../../src/medical/api.py#list_medical_records
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#ListMedicalRecords
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createMedicalRecord
+  method: POST
+  path: /medical/records
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/post
+  runtime_handler_ref: ../../../../../src/medical/api.py#create_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#CreateMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: getMedicalRecord
+  method: GET
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/get
+  runtime_handler_ref: ../../../../../src/medical/api.py#get_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#GetMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: updateMedicalRecord
+  method: PATCH
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/patch
+  runtime_handler_ref: ../../../../../src/medical/api.py#update_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#UpdateMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+  - 500
+- operation_id: deleteMedicalRecord
+  method: DELETE
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/delete
+  runtime_handler_ref: ../../../../../src/medical/api.py#delete_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#DeleteMedicalRecord
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-MED-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/medical/api.py#_role
+  operations:
+  - listMedicalRecords
+  - createMedicalRecord
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/medical/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listMedicalRecords
+  - createMedicalRecord
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-404-RECORD-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/medical/domain/rules.py#MedicalRecordNotFound
+  operations:
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-400-RECORD-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/medical/domain/entities.py#validate_invariants
+  operations:
+  - createMedicalRecord
+  - updateMedicalRecord
+test_obligations:
+- id: MED-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/medical/medical_record.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: MED-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/medical.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: MED-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/medical/tests/unit/test_medical_domain.py
+  covers:
+  - INV-MED-001
+  - INV-MED-002
+  - INV-MED-003
+  - INV-MED-004
+  - DR-MED-002
+  - DR-MED-003
+  - DR-MED-004
+  - PERM-MED-001
+  - PERM-MED-003
+  - PERM-MED-004
+  verification: Unit tests for invariants, PHI access constraints and BOLA/BFLA medical
+    boundaries
+  evidence_refs:
+  - ../../../../../src/medical/tests/unit/test_medical_domain.py
+- id: MED-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_medical_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_medical_source_graph_integrity.py

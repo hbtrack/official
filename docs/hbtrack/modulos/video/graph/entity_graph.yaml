@@ -1,0 +1,340 @@
+version: "1.0.0"
+status: active
+module: video
+
+entities:
+  MatchMediaSession:
+    schema_ref: "../../../../../contracts/schemas/video/match_media_session.schema.json"
+    runtime_entity_ref: "../../../../../src/video/domain/entities.py#MatchMediaSession"
+    docs_refs:
+      - "../DOMAIN_RULES_VIDEO.md"
+      - "../INVARIANTS_VIDEO.md"
+      - "../PERMISSIONS_VIDEO.md"
+      - "../STATE_MODEL_VIDEO.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-VID-001: obrigatório"
+      - name: matchId
+        runtime_name: match_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "DR-VID-001: cada segment deve ter timecode único ancorado à sessão"
+          - "boundary: reference to matches module"
+      - name: state
+        runtime_name: state
+        required: true
+        type: string_enum
+        constraints:
+          - "STATE_MODEL_VIDEO.md: DRAFT|CAPTURING|SYNCING|TRANSCODING|PUBLISHED"
+          - "INV-VID-002: PUBLISHED é imutável — DR-VID-005"
+      - name: captureMode
+        runtime_name: capture_mode
+        required: true
+        type: string_enum
+        constraints:
+          - "enum: PANORAMIC|AUTO_FOLLOW|MULTI_ANGLE"
+      - name: retentionPolicy
+        runtime_name: retention_policy
+        required: true
+        type: string_enum
+        constraints:
+          - "INV-VID-007: retentionPolicy obrigatória"
+          - "INV-VID-008: padrão conservador DELETE_AFTER_7_DAYS se omitido"
+          - "DR-VID-008: sem policy silenciosa de retenção indefinida"
+      - name: lastTimecode
+        runtime_name: last_timecode
+        required: false
+        type: integer
+        constraints:
+          - "DR-VID-001: timecode lógico monótono em ms desde início"
+          - "INV-VID-003: sem gaps entre segments"
+      - name: technicalContactUserId
+        runtime_name: technical_contact_user_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "boundary: reference to identity_access module"
+      - name: createdAt
+        runtime_name: created_at
+        required: true
+        type: datetime_utc
+        constraints:
+          - "INV-VID-001: obrigatório"
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "boundary: reference to identity_access module — video não é dono de identidade"
+      - name: captureStartedAt
+        runtime_name: capture_started_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "preenchido quando state transita para CAPTURING"
+      - name: syncCompletedAt
+        runtime_name: sync_completed_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "preenchido quando state transita para SYNCING→TRANSCODING"
+      - name: transcodeCompletedAt
+        runtime_name: transcode_completed_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "preenchido quando state transita para TRANSCODING→PUBLISHED"
+      - name: publishedAt
+        runtime_name: published_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "DR-VID-009: timestamp da publicação registrada"
+      - name: segmentCount
+        runtime_name: segment_count
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true; padrão: 0"
+          - "contador de MediaSegments linkados a esta sessão"
+      - name: totalDurationMs
+        runtime_name: total_duration_ms
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true; padrão: 0; unidade: milissegundos"
+      - name: activeTranscodeJobCount
+        runtime_name: active_transcode_job_count
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true; padrão: 0"
+          - "jobs de transcodificação ativos no momento"
+    runtime_extension_fields: []
+
+  MediaSegment:
+    schema_ref: "../../../../../contracts/schemas/video/media_segment.schema.json"
+    runtime_entity_ref: "../../../../../src/video/domain/entities.py#MediaSegment"
+    docs_refs:
+      - "../DOMAIN_RULES_VIDEO.md"
+      - "../INVARIANTS_VIDEO.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-VID-001: obrigatório"
+      - name: sessionId
+        runtime_name: session_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "boundary: aggregation root = MatchMediaSession"
+      - name: timecodeLogical
+        runtime_name: timecode_logical
+        required: true
+        type: integer
+        constraints:
+          - "DR-VID-001: timecode lógico único por sessão"
+          - "INV-VID-003: timecodeLogical >= 0"
+      - name: timecodeLabel
+        runtime_name: timecode_label
+        required: false
+        type: string
+        constraints:
+          - "formato livre para exibição — ex: '00:05:23'"
+      - name: state
+        runtime_name: state
+        required: true
+        type: string_enum
+        constraints:
+          - "enum: OPEN|FINALIZED"
+          - "DR-VID-005: imutável após FINALIZED"
+      - name: codecLabel
+        runtime_name: codec_label
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+      - name: bitrate
+        runtime_name: bitrate
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true"
+          - "unidade: bps"
+      - name: durationMs
+        runtime_name: duration_ms
+        required: false
+        type: integer
+        constraints:
+          - "nullable: true"
+          - "unidade: milissegundos"
+      - name: sourceEdgeNodeId
+        runtime_name: source_edge_node_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "DR-VID-003: edge-first — snapshot do edge node que capturou"
+      - name: createdAt
+        runtime_name: created_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+      - name: finalizedAt
+        runtime_name: finalized_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "DR-VID-005: preenchido ao finalizar o segment"
+    runtime_extension_fields: []
+
+  ClipDefinition:
+    schema_ref: "../../../../../contracts/schemas/video/clip_definition.schema.json"
+    runtime_entity_ref: "../../../../../src/video/domain/entities.py#ClipDefinition"
+    docs_refs:
+      - "../DOMAIN_RULES_VIDEO.md"
+      - "../INVARIANTS_VIDEO.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-VID-001: obrigatório"
+      - name: sessionId
+        runtime_name: session_id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "boundary: aggregation root = MatchMediaSession"
+      - name: fromTimecode
+        runtime_name: from_timecode
+        required: true
+        type: integer
+        constraints:
+          - "fromTimecode < toTimecode — validado em validate_invariants"
+      - name: toTimecode
+        runtime_name: to_timecode
+        required: true
+        type: integer
+        constraints:
+          - "fromTimecode < toTimecode"
+      - name: scoutEventId
+        runtime_name: scout_event_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "DR-VID-004: clipping semântico — referência ao módulo scout"
+          - "INV-VID-005: ao menos um contexto semântico é obrigatório"
+      - name: zoneLabel
+        runtime_name: zone_label
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+          - "INV-VID-005: alternativa ao scout_event_id como contexto semântico"
+      - name: athleteIds
+        runtime_name: athlete_ids
+        required: false
+        type: array_of_uuid
+        constraints:
+          - "nullable: true (default: [])"
+          - "INV-VID-005: alternativa como contexto semântico"
+      - name: contextLabel
+        runtime_name: context_label
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+      - name: createdAt
+        runtime_name: created_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "boundary: reference to identity_access module"
+    runtime_extension_fields: []
+
+  DistributionProfile:
+    schema_ref: "../../../../../contracts/schemas/video/distribution_profile.schema.json"
+    runtime_entity_ref: "../../../../../src/video/domain/entities.py#DistributionProfile"
+    docs_refs:
+      - "../DOMAIN_RULES_VIDEO.md"
+      - "../INVARIANTS_VIDEO.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+        constraints:
+          - "INV-VID-001: obrigatório"
+      - name: profileLabel
+        runtime_name: profile_label
+        required: true
+        type: string
+        constraints:
+          - "ex: 'technical_hd', 'public_abr'"
+      - name: targetType
+        runtime_name: target_type
+        required: true
+        type: string_enum
+        constraints:
+          - "enum: TECHNICAL_INTERNAL|PUBLIC_CDN|BROADCAST_PARTNER"
+          - "DR-VID-002: dual pipeline determinístico"
+      - name: codecLabel
+        runtime_name: codec_label
+        required: true
+        type: string
+        constraints:
+          - "ex: 'h264', 'h265', 'av1'"
+      - name: bitrate
+        runtime_name: bitrate
+        required: true
+        type: integer
+        constraints:
+          - "unidade: bps"
+          - "DR-VID-006: derivado de mezzanine — transcodificação lazy"
+      - name: sessionId
+        runtime_name: session_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "boundary: anchored to MatchMediaSession"
+      - name: publishedAt
+        runtime_name: published_at
+        required: false
+        type: datetime_utc
+        constraints:
+          - "nullable: true"
+          - "DR-VID-009: toda distribuição externa é rastreada"
+      - name: publishedByUserId
+        runtime_name: published_by_user_id
+        required: false
+        type: uuid_v4
+        constraints:
+          - "nullable: true"
+          - "boundary: reference to identity_access module — DR-VID-009"
+    runtime_extension_fields: []

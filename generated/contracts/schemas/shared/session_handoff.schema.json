@@ -21,6 +21,21 @@
         "bloqueios_ativos",
         "evidence_paths"
     ],
+    "if": {
+        "properties": {
+            "task_type": {
+                "const": "execute_roadmap_phase"
+            }
+        },
+        "required": [
+            "task_type"
+        ]
+    },
+    "then": {
+        "required": [
+            "roadmap_phase"
+        ]
+    },
     "properties": {
         "data_ultima_sessao": {
             "type": "string",
@@ -58,6 +73,12 @@
             "type": "integer",
             "minimum": 0,
             "description": "Fase atual do ROADMAP operacional."
+        },
+        "roadmap_phase": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 13,
+            "description": "Fase do ROADMAP sendo executada. Obrigatório quando task_type=execute_roadmap_phase. Espelha fase_roadmap e alinha com session_start.roadmap_phase para validação cruzada pelo HANDOFF_COHERENCE_GATE."
         },
         "task_type": {
             "type": "string",
@@ -120,6 +141,7 @@
             "ci_status": "PASS",
             "modulo_foco": "governance",
             "fase_roadmap": 1,
+            "roadmap_phase": 1,
             "task_type": "execute_roadmap_phase",
             "boot_profile_id": "roadmap_execution",
             "task_id": "phase-1-foundation",

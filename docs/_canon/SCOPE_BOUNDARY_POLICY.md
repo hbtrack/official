@@ -660,6 +660,39 @@ exceptions: []
 
 ---
 
+### video
+**Função**: Gestão e distribuição de vídeo esportivo (streaming, upload, mídia de partida e treino)  
+**Owner**: platform-core
+
+```yaml
+allowed_references:
+  - module: identity_access
+    reason: "DR-VID-009: toda distribuição é auditada — publishedByUserId rastreia quem disparou a publicação (audit trail, não ownership)"
+    examples: ["distribution_profile.publishedByUserId"]
+    note: "video não modela identidade; referencia userId como FK de auditoria de distribuição apenas"
+
+forbidden_references:
+  - module: users
+  - module: seasons
+  - module: teams
+  - module: training
+  - module: wellness
+  - module: medical
+  - module: competitions
+  - module: matches
+  - module: scout
+  - module: exercises
+  - module: analytics
+  - module: reports
+  - module: ai_ingestion
+  - module: audit
+  - module: notifications
+
+exceptions: []
+```
+
+---
+
 ### identity_access (Cross-Cutting)
 **Função**: Autenticação, autorização, credenciais, sessão, MFA, JWT, RBAC  
 **Owner**: platform-core

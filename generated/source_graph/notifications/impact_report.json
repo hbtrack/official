@@ -1,0 +1,149 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/notifications.yaml",
+    "contracts/schemas/notifications/notification_delivery.schema.json",
+    "contracts/openapi/components/schemas/notifications/notification_delivery.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/notifications/README.md",
+    "docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md",
+    "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+    "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
+    "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+    "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md"
+  ],
+  "impacted_runtime": [
+    "src/notifications/api.py",
+    "src/notifications/domain/entities.py",
+    "src/notifications/domain/rules.py",
+    "src/notifications/application/use_cases.py",
+    "src/notifications/tests/unit/test_notifications.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "sha256": "a2c4706bd47523a6a361133f758d262746c7f71b734f6735abcfda697a18c623"
+    },
+    {
+      "relpath": "contracts/openapi/paths/notifications.yaml",
+      "sha256": "86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1"
+    },
+    {
+      "relpath": "contracts/schemas/notifications/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/notifications/notification_delivery.schema.json",
+      "sha256": "6b085893c9670ea2d23f27cfac6b8dc26a4ab0652a82fb3f33860e36436ca502"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
+      "sha256": "cb45b55d7591fde5952a3bb97bc67dc3b8d975a03f60f7241745301c4caad872"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md",
+      "sha256": "0b3873a9d6286e616cec634374697c53547d6d4e7106450db6aa916aef600df8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md",
+      "sha256": "2a9a0ec7afdae906f20e7549938bc3150d77effd9aa8d7b9173e9e19ce7ba61f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+      "sha256": "86a3201a9ee149ff487d8f45258c574de126aaaa32d3cd4a1387c17702d0d0f6"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/README.md",
+      "sha256": "63f03c972dcf8e6f2dd69a8d1a9f6bed29b71b032ec0250a4a87ff3288dcef08"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/TEST_MATRIX_NOTIFICATIONS.md",
+      "sha256": "5e0768b4c6b357a0d4dfb4bb13c849a8d00b1d6123f6c31597c332ede375ee0a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
+      "sha256": "9c185018f43f79c6741a34ed8aeff434af501b9ff7b7ad9eaa98aa326f753e63"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/graph/entity_graph.yaml",
+      "sha256": "9a17252d846c0714bdf2a1cde21328da8a8585ca9f60cf9d94a59d5a7923cf21"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/graph/errors.yaml",
+      "sha256": "53a65a173890294631ad913bbe881c201272a7bb9215981e2d5e108195d53887"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+      "sha256": "904c09de83505dba0b2f01dbf46b5acd39d3fde5425bb0f94c80a5a757f934fd"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
+      "sha256": "fedf1a1c68fe7f3bdb7664649935110ef7134263ddc1ade183da0b072e811230"
+    },
+    {
+      "relpath": "src/notifications/api.py",
+      "sha256": "97d2460e9eae6753b21e75bfe65b0ab0bfbbd8e6f1f34a705c51c76a31fec40c"
+    },
+    {
+      "relpath": "src/notifications/application/use_cases.py",
+      "sha256": "5552dba8d8baa61a27633337bb34ec8aafe54e5dbca4aef5e37a4bfa75ad4cf1"
+    },
+    {
+      "relpath": "src/notifications/domain/entities.py",
+      "sha256": "db939b47aece5b65983eee43d3710676007a3fe94f8b9fc173e485e901fcf03a"
+    },
+    {
+      "relpath": "src/notifications/domain/rules.py",
+      "sha256": "f0ebdf1ee4572604abfd05173d5ea35a92322ec34f1cabc504849170788c4728"
+    },
+    {
+      "relpath": "src/notifications/tests/unit/test_notifications.py",
+      "sha256": "d141017a4ec72b399c92db74face6f9fa08a45c614168d5545502ef1fe69022e"
+    }
+  ],
+  "known_gaps": [
+    "UserNotificationPreferences ainda nao possui schema soberano em contracts/schemas/notifications/ e permanece como surface de transporte/runtime.",
+    "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
+    "As rotas de preferences documentam 404 para usuario inexistente, mas o runtime atual materializa defaults via repository."
+  ],
+  "module": "notifications",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/notifications/notifications.bundle.yaml",
+    "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
+    "generated/source_graph/notifications/notifications.openapi_contract_view.yaml",
+    "generated/source_graph/notifications/impact_report.json"
+  ],
+  "source_fingerprint": "5a40b1b7e2168a44f764cbdd919b3f83e7bb09e13bfda8e9a96b9b7b91fcf1eb"
+}

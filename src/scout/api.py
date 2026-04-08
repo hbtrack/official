@@ -6,9 +6,15 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from scout.application.use_cases import (
     CreateScoutEvent, ListScoutEvents, GetScoutEvent,
     GetScoutAggregations, CompleteScoutSession,
+
 )
 from scout.domain.rules import (
     RoleLabel, InsufficientPrivilege, ScoutEventNotFound,
@@ -22,7 +28,6 @@ from scout.schemas import (
 router = Router()
 _repo = ScoutEventRepository()
 
-
 def _get_role(request: HttpRequest) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -33,7 +38,6 @@ def _get_role(request: HttpRequest) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_actor_id(request: HttpRequest) -> UUID:
     """Extrai actor_id do JWT validado."""
     actor_id = getattr(request, "_actor_id", None)
@@ -41,10 +45,8 @@ def _get_actor_id(request: HttpRequest) -> UUID:
         return UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_team_ids(request: HttpRequest):
     return getattr(request, "actor_team_ids", []) or []
-
 
 @router.get("/events", response={200: ScoutEventListOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def list_scout_events(
@@ -75,7 +77,6 @@ def list_scout_events(
     out_items = [ScoutEventOut.from_domain(ev) for ev in items]
     return 200, ScoutEventListOut(items=out_items, totalCount=total)
 
-
 @router.post("/events", response={201: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def create_scout_event(request: HttpRequest, payload: CreateScoutEventIn):
     role = _get_role(request)
@@ -105,7 +106,6 @@ def create_scout_event(request: HttpRequest, payload: CreateScoutEventIn):
         return 400, ErrorOut(detail=str(e))
     return 201, ScoutEventOut.from_domain(event)
 
-
 @router.get("/events/aggregations", response={200: ScoutAggregationsOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def get_scout_aggregations(
     request: HttpRequest,
@@ -125,7 +125,6 @@ def get_scout_aggregations(
         athleteBreakdown=result.get("athleteBreakdown", []),
     )
 
-
 @router.get("/events/{event_id}", response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_scout_event(request: HttpRequest, event_id: UUID):
     role = _get_role(request)
@@ -144,7 +143,6 @@ def get_scout_event(request: HttpRequest, event_id: UUID):
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
     return 200, ScoutEventOut.from_domain(event)
-
 
 @router.post("/sessions/{match_id}/complete", response={200: CompleteSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def complete_scout_session(

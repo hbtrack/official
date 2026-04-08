@@ -4,6 +4,9 @@ from uuid import UUID
 from datetime import datetime
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class NotificationDeliveryOut(Schema):
     id: UUID
@@ -32,13 +35,11 @@ class NotificationDeliveryOut(Schema):
             delivered_at=d.delivered_at,
         )
 
-
 class DeliveryListOut(Schema):
     data: List[NotificationDeliveryOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateNotificationIntentIn(Schema):
     recipientUserId: UUID
@@ -46,7 +47,6 @@ class CreateNotificationIntentIn(Schema):
     notificationTemplateRef: Optional[str] = None
     eventEnvelopeRef: Optional[str] = None
     preferenceLabel: Optional[str] = None
-
 
 class UserNotificationPreferencesOut(Schema):
     user_id: UUID
@@ -69,7 +69,6 @@ class UserNotificationPreferencesOut(Schema):
             quiet_hours_end=p.quiet_hours_end,
         )
 
-
 class UpdateNotificationPreferencesIn(Schema):
     pushEnabled: Optional[bool] = None
     emailEnabled: Optional[bool] = None
@@ -77,7 +76,6 @@ class UpdateNotificationPreferencesIn(Schema):
     smsEnabled: Optional[bool] = None
     quietHoursStart: Optional[str] = None
     quietHoursEnd: Optional[str] = None
-
 
 class ErrorOut(Schema):
     detail: str

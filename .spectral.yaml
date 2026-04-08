@@ -17,7 +17,20 @@
 #   .contract_driven/CONTRACT_SYSTEM_LAYOUT.md §3
 #   docs/_canon/ERROR_MODEL.md
 
-extends: []
+extends:
+  - spectral:oas
+
+# Override de regra do spectral:oas que produz falso-positivo com fragmentos
+# de referências externas ($ref: ./file.yaml#/~1path). O Spectral não resolve
+# corretamente os fragmentos JSON Pointer em $ref para path items externos,
+# gerando "unevaluated properties" em path items válidos. Downgrade para warn
+# para não bloquear o pipeline com falsos positivos.
+# Ref: https://github.com/stoplightio/spectral/issues/2354
+overrides:
+  - files:
+      - "**"
+    rules:
+      oas3-schema: warn
 
 rules:
   # ── 1. Versão OpenAPI ──────────────────────────────────────────────────────

@@ -1,0 +1,50 @@
+version: "1.0.0"
+status: active
+module: analytics
+
+obligations:
+  - id: ANL-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/analytics/analytics_snapshot.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ANL-TO-002
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/analytics/analytics_query_request.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ANL-TO-003
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/analytics/analytics_query_response.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ANL-TO-004
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/analytics.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ANL-TO-005
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/analytics/tests/unit/test_analytics.py"
+    covers:
+      - INV-ANL-001
+      - INV-ANL-002
+      - INV-ANL-005
+      - INV-ANL-006
+      - INV-ANL-007
+      - DR-ANL-009
+      - PERM-ANL-001
+      - PERM-ANL-002
+    verification: "Unit tests for invariants, permissions and query guards"
+    evidence_refs:
+      - "../../../../../src/analytics/tests/unit/test_analytics.py"
+  - id: ANL-TO-006
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_analytics_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_analytics_source_graph_integrity.py"

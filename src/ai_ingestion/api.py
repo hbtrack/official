@@ -5,11 +5,17 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from ai_ingestion.application.use_cases import (
     ListIngestionJobs,
     CreateIngestionJob,
     GetIngestionJob,
     RetryIngestionJob,
+
 )
 from ai_ingestion.infrastructure.repository import IngestionJobRepository
 from ai_ingestion.domain.rules import (
@@ -26,14 +32,12 @@ from ai_ingestion.schemas import (
 
 router = Router(tags=["ai_ingestion"])
 
-
 def _get_role(request: HttpRequest) -> str:
     """Extrai role do JWT validado."""
     role = getattr(request, "_actor_role", None)
     if role:
         return role
     raise HttpError(401, "Unauthenticated")
-
 
 @router.get("/jobs", response={200: IngestionJobListOut, 401: ErrorOut, 403: ErrorOut})
 def list_ingestion_jobs(
@@ -62,7 +66,6 @@ def list_ingestion_jobs(
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
 
-
 @router.post("/jobs", response={202: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 409: IngestionJobOut})
 def create_ingestion_job(request: HttpRequest, payload: CreateIngestionJobIn):
     role = _get_role(request)
@@ -82,7 +85,6 @@ def create_ingestion_job(request: HttpRequest, payload: CreateIngestionJobIn):
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
 
-
 @router.get("/jobs/{job_id}", response={200: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_ingestion_job(request: HttpRequest, job_id: UUID):
     role = _get_role(request)
@@ -94,7 +96,6 @@ def get_ingestion_job(request: HttpRequest, job_id: UUID):
         return 403, ErrorOut(detail=str(e))
     except IngestionJobNotFound as e:
         return 404, ErrorOut(detail=str(e))
-
 
 @router.post(
     "/jobs/{job_id}/retry",

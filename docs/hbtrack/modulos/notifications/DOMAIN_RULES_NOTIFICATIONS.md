@@ -19,6 +19,9 @@ Registrar as regras de negócio do módulo `notifications`.
 - `contracts/schemas/notifications/notification_delivery.schema.json`
 - `docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md`
 - Artefatos assíncronos do módulo (`AsyncAPI`, `Arazzo`) quando aplicável
+- `docs/hbtrack/modulos/notifications/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/notifications/graph/endpoints.yaml`
+- `docs/hbtrack/modulos/notifications/graph/errors.yaml`
 
 ## Regras de negócio
 | ID | Regra | Entidade afetada | Fonte | Observações |
@@ -33,3 +36,8 @@ Registrar as regras de negócio do módulo `notifications`.
 - Não inventar conteúdo de negócio fora de `template`/`event envelope` contratados.
 - Não mover política de acesso ou estado de domínio para `notifications`.
 - Não expor semântica específica do provedor externo como parte do contrato público.
+
+## Âncoras estruturadas
+- A entidade soberana de entrega e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/notifications/graph/entity_graph.yaml`.
+- O mapa mínimo de operações HTTP do módulo está em `docs/hbtrack/modulos/notifications/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/notifications/graph/errors.yaml`.

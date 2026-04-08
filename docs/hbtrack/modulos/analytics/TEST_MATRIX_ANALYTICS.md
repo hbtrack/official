@@ -21,3 +21,7 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-004 | `INVARIANTS_ANALYTICS.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-005 | `ERRORS_ANALYTICS.md` | Revisão da matriz mínima de exceções por operação crítica | Sim | `_reports/contract_gates/latest.json` |
 | TM-006 | `analytics_query_request.schema.json` + `analytics_query_response.schema.json` | Validação de query estruturada sem DSL livre nem row shape aberto | Sim | `_reports/contract_gates/latest.json` |
+
+## Obrigações estruturadas
+- O conjunto mínimo compilável do módulo está em `docs/hbtrack/modulos/analytics/graph/test_obligations.yaml`.
+- O pipeline deve manter `test_obligations.yaml` coerente com `contracts/`, `src/analytics/tests/` e `_reports/contract_gates/latest.json`.

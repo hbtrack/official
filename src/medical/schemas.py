@@ -7,6 +7,9 @@ from ninja import Schema
 
 from medical.domain.entities import MedicalRecord
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class MedicalRecordOut(Schema):
     id: uuid.UUID
@@ -41,11 +44,9 @@ class MedicalRecordOut(Schema):
             updatedAt=r.updated_at,
         )
 
-
 class MedicalRecordListOut(Schema):
     data: List[MedicalRecordOut]
     nextPageToken: Optional[str] = None
-
 
 class CreateMedicalRecordIn(Schema):
     athleteUserId: uuid.UUID
@@ -58,7 +59,6 @@ class CreateMedicalRecordIn(Schema):
     returnToPlayAuthorized: Optional[bool] = None
     clinicalNotes: Optional[str] = None
 
-
 class UpdateMedicalRecordIn(Schema):
     recordDate: Optional[date] = None
     recordLabel: Optional[str] = None
@@ -67,7 +67,6 @@ class UpdateMedicalRecordIn(Schema):
     returnToTrainingAuthorized: Optional[bool] = None
     returnToPlayAuthorized: Optional[bool] = None
     clinicalNotes: Optional[str] = None
-
 
 class ErrorOut(Schema):
     detail: str

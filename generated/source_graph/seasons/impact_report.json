@@ -109,7 +109,7 @@
     },
     {
       "relpath": "src/seasons/api.py",
-      "sha256": "1ef6bfda01facfdbe749157b2f785a0dd7f6fde9caecf06daf47d9b3c8949236"
+      "sha256": "174f9a45f8caa01a65ab778540073b2712545ab2606d2b7a8309ac6213d933a3"
     },
     {
       "relpath": "src/seasons/application/use_cases.py",
@@ -140,5 +140,5 @@
     "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
     "generated/source_graph/seasons/impact_report.json"
   ],
-  "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
+  "source_fingerprint": "63be0b800795f1ee1f940f609d3686b772d230bc8bbe201e513c35ccad9fbb62"
 }

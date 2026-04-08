@@ -1,0 +1,147 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/identity_access.yaml",
+    "contracts/schemas/identity_access/auth_session.schema.json",
+    "contracts/openapi/components/schemas/identity_access/auth_session.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/identity_access/README.md",
+    "docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md",
+    "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
+    "docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md",
+    "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
+    "docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md"
+  ],
+  "impacted_runtime": [
+    "src/identity_access/api.py",
+    "src/identity_access/domain/entities.py",
+    "src/identity_access/domain/rules.py",
+    "src/identity_access/application/use_cases.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/identity_access/auth_session.yaml",
+      "sha256": "1efc76528abf6388a9ab1bbd92ce8e33871ae8a9567ddeae5d3c71777a84b663"
+    },
+    {
+      "relpath": "contracts/openapi/paths/identity_access.yaml",
+      "sha256": "c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483"
+    },
+    {
+      "relpath": "contracts/schemas/identity_access/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/identity_access/auth_session.schema.json",
+      "sha256": "f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
+      "sha256": "4d6737f71f7728523cf0343e78530a09387f2390b38546af54a471e2f44c9205"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md",
+      "sha256": "8198ef84a735a843fdee6fdbf427b4437f483184e93a4d0cb30eefb63b9a6d39"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md",
+      "sha256": "75d36cecd7ae1065ae91903315c3dfa723127216bbf4b9eb45887962ed7b1b3a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
+      "sha256": "c5ddad36f61e8e7e5cf3150708711ff017a2ec228299c55eb54535906879313e"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/README.md",
+      "sha256": "c9401ec85c9c44e2438cd360a02c92d340bfe317e4e5151e05251cb446978ac8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md",
+      "sha256": "0adfdc7b8a496b28bf151e100dba1b77098e356618c244e720f9e3879eddc3cc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/graph/endpoints.yaml",
+      "sha256": "13ea1ca51ff8daa6c72e63ed3821dc20dacb87bcdcee8637d959cedf1b15ffc2"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml",
+      "sha256": "b969d0a7ed05194ddaa7e89f75670de9341da365a8ad403a96acaf997969c083"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/graph/errors.yaml",
+      "sha256": "7a6576d822290636004ded48ca57fdd9294bbbda0d726bf93a316d589d0d2f93"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
+      "sha256": "839f3a09a95ab34493fb3f615f07db9d05aa2724d9b9d9f958d4d1bfab880781"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml",
+      "sha256": "e71485defc0e4f03ba38467ba4d8ceb0165c9588f349143f935b15bb12ca6aec"
+    },
+    {
+      "relpath": "src/identity_access/api.py",
+      "sha256": "2d9cb2bddf54788cf60300bb703a0b66a02eaa46161c61f15701c7063ca111af"
+    },
+    {
+      "relpath": "src/identity_access/application/use_cases.py",
+      "sha256": "f8cc6906fc536828258094a7ea53a7203112760032f3fd0adfa3b26ad6942bb5"
+    },
+    {
+      "relpath": "src/identity_access/domain/entities.py",
+      "sha256": "67839214c660ae11fcb25d11c9e1210eac2374dfa6ca3e613b583571398af960"
+    },
+    {
+      "relpath": "src/identity_access/domain/rules.py",
+      "sha256": "a31ae38eed3fae6b20133a997aa30dfde3a509f411390a49f664fedabe1c4a1b"
+    }
+  ],
+  "known_gaps": [
+    "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+    "principalUserId em AuthSession referencia o módulo users — identity_access não é dono de perfil esportivo (DR-IAM-002).",
+    "Consentimentos OAuth/OIDC provider externos não são modelados aqui — boundary explicitado em DR-IAM-005.",
+    "MFA provider externo (TOTP, WebAuthn) é infraestrutura — não modelado como entidade soberana nesta fase.",
+    "JWT signing key management é infraestrutura — fora do escopo do source graph de domínio.",
+    "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position não aparecem neste módulo (INV-IAM-004)."
+  ],
+  "module": "identity_access",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/identity_access/identity_access.bundle.yaml",
+    "generated/source_graph/identity_access/identity_access.schema_contract_view.yaml",
+    "generated/source_graph/identity_access/identity_access.openapi_contract_view.yaml",
+    "generated/source_graph/identity_access/impact_report.json"
+  ],
+  "source_fingerprint": "9622b40b5005c2b99061894a6594c2425ef0c81353e9d1a336320f29a1a74455"
+}

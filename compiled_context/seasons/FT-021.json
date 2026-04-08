@@ -91,11 +91,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
-      "sha256": "48a0405e8510dd8e29a74bc1e58175746de7d367842613b5d6b81b4ad55b2b50"
+      "sha256": "dfb04caf6f7804523294208c847230548b54c3b7113398aca49ac6b9f32c35f4"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/impact_report.json",
-      "sha256": "9d9b61ee2a39ea724affc06b52dd00c5001499eea81a7d128d404042f2127172"
+      "sha256": "e0c763052aa01019a673e3fd3182fb5ac6b94c6b3225fc0a460223b54865e1a4"
     }
   ],
   "module": "seasons",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "34395674f0de150674a205044e0011bc6a7afc2f63afbf6b0048d57202132605",
+  "source_fingerprint": "e2f294be85dfbee0a339d8831d03b6c06e595d5518c92f16c9eaced70e425f5a",
   "source_graph": {
     "entities": {
       "Season": {
@@ -344,7 +344,7 @@
         "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
         "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
       ],
-      "source_fingerprint": "a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69"
+      "source_fingerprint": "63be0b800795f1ee1f940f609d3686b772d230bc8bbe201e513c35ccad9fbb62"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

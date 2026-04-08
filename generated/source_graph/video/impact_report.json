@@ -1,0 +1,167 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/video.yaml",
+    "contracts/schemas/video/match_media_session.schema.json",
+    "contracts/openapi/components/schemas/video/match_media_session.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/video/README.md",
+    "docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md",
+    "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md",
+    "docs/hbtrack/modulos/video/INVARIANTS_VIDEO.md",
+    "docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md",
+    "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md",
+    "docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md"
+  ],
+  "impacted_runtime": [
+    "src/video/api.py",
+    "src/video/domain/entities.py",
+    "src/video/domain/rules.py",
+    "src/video/application/use_cases.py",
+    "src/video/domain/state_machine.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/video/match_media_session.yaml",
+      "sha256": "5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a"
+    },
+    {
+      "relpath": "contracts/openapi/paths/video.yaml",
+      "sha256": "2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54"
+    },
+    {
+      "relpath": "contracts/schemas/video/clip_definition.schema.json",
+      "sha256": "ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873"
+    },
+    {
+      "relpath": "contracts/schemas/video/distribution_profile.schema.json",
+      "sha256": "e6a37d4bda16410a078c775289e34a5e64023945d61d257a4d3bf8ade62af8d6"
+    },
+    {
+      "relpath": "contracts/schemas/video/match_media_session.schema.json",
+      "sha256": "3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289"
+    },
+    {
+      "relpath": "contracts/schemas/video/media_segment.schema.json",
+      "sha256": "3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md",
+      "sha256": "c6fd9993a7ec3672ab64dc4f59ba990eceb98681907416098072fcaa464ed78a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/INVARIANTS_VIDEO.md",
+      "sha256": "f5887595f4f49b517acfa76de989e2ab179d9e46fb0e49784ea1059560a5c96c"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md",
+      "sha256": "e26c831de875eba980d03936f5a676cdf6ea80302fbd39b0ddc8781316b92913"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md",
+      "sha256": "4042a6bdf556ad51edc740e7abeec5e7366b04595101e15684b08943d8403836"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/README.md",
+      "sha256": "b7ce1d3d90fabe42ab4ab9728583c62d90701a6d5b3b969597a7bd910b7f8d45"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md",
+      "sha256": "ac28af5732e5c93c334dac3af06cb7e665982c9999a03f34961f7dcb1c261b11"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md",
+      "sha256": "6c57f0a1a2dee338d5a7073571aeaf72a7f809a9a67cce040b6277c7f196698b"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/graph/endpoints.yaml",
+      "sha256": "945be515ef869e0e247fdc1d6069c07b2363df3065b12f89fadc8c5625dcdc0a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/graph/entity_graph.yaml",
+      "sha256": "d3a38c427ffb2a7c08cf815ab4995588bc9810c6e6cb9129ec857a8083b50d4f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/graph/errors.yaml",
+      "sha256": "99e4642c747060cc18ae662a6d7dbf1058be7ed74fd26695da97afcedb9cd4e6"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/graph/module_manifest.yaml",
+      "sha256": "a03604de23478a8b2a6b61da37155f968d2e538d38c837c7f3559efd6d38e787"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/video/graph/test_obligations.yaml",
+      "sha256": "7b58b4274969817c9c71ad4443b02c7d119f90d8c2d082a0c81b2cf274ea16e1"
+    },
+    {
+      "relpath": "src/video/api.py",
+      "sha256": "9da1646a7645655ccb08958a7e3eaa70b7953a5c4bbadbd84af31c6ceb1fcf84"
+    },
+    {
+      "relpath": "src/video/application/use_cases.py",
+      "sha256": "6cb1d0940418df44cdc2d0854cfbd22337939a15cf47e071ba642b174a07600d"
+    },
+    {
+      "relpath": "src/video/domain/entities.py",
+      "sha256": "534682e61dbd27a2f09ec5561bfddc4f9460ba436d27b768c04a5e6e5be6c3ae"
+    },
+    {
+      "relpath": "src/video/domain/rules.py",
+      "sha256": "b02bacac436ccbf500fd406817f6926fe987dc43756fd976f99665264a3d15fd"
+    },
+    {
+      "relpath": "src/video/domain/state_machine.py",
+      "sha256": "6717cdf01e0d26bff84e48c0eb592a3d97141b5ee5cf85ac1074a5fc727abe4a"
+    }
+  ],
+  "known_gaps": [
+    "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph.",
+    "matchId é referência cruzada para módulo matches — boundary explicitado em DR-VID-001.",
+    "scout_event_id em ClipDefinition é referência cruzada para módulo scout — DR-VID-004.",
+    "created_by_user_id em MatchMediaSession referencia identity_access — video não é dono de identidade.",
+    "Perfis de transcodificação (DistributionProfile) são derivados de mezzanine — DR-VID-006.",
+    "STATE_MODEL_VIDEO.md descreve a máquina de estados DRAFT→CAPTURING→SYNCING→TRANSCODING→PUBLISHED.",
+    "Edge nodes são entidades de infraestrutura; não modelados como entidades de domínio soberanas nesta fase.",
+    "patchSession cobre múltiplas transições de estado (DR-VID-002, INV-VID-002) — transições validadas por state_machine.py."
+  ],
+  "module": "video",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/video/video.bundle.yaml",
+    "generated/source_graph/video/video.schema_contract_view.yaml",
+    "generated/source_graph/video/video.openapi_contract_view.yaml",
+    "generated/source_graph/video/impact_report.json"
+  ],
+  "source_fingerprint": "503c54032d4ca219784e446e02248709f620f46b66713157b45ebd978b3db695"
+}

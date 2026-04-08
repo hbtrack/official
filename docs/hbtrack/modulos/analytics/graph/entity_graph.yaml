@@ -1,0 +1,91 @@
+version: "1.0.0"
+status: active
+module: analytics
+
+entities:
+  AnalyticsSnapshot:
+    schema_ref: "../../../../../contracts/schemas/analytics/analytics_snapshot.schema.json"
+    runtime_entity_ref: "../../../../../src/analytics/domain/entities.py#AnalyticsSnapshot"
+    docs_refs:
+      - "../DOMAIN_RULES_ANALYTICS.md"
+      - "../INVARIANTS_ANALYTICS.md"
+    sovereign_fields:
+      - name: id
+        runtime_name: id
+        required: true
+        type: uuid_v4
+      - name: metricKey
+        runtime_name: metric_key
+        required: true
+        type: string
+      - name: sourceModuleLabels
+        runtime_name: source_module_labels
+        required: false
+        type: string[]
+      - name: timeWindowLabel
+        runtime_name: time_window_label
+        required: false
+        type: string
+      - name: granularityLabel
+        runtime_name: granularity_label
+        required: false
+        type: string
+      - name: filterSummary
+        runtime_name: filter_summary
+        required: false
+        type: string
+      - name: projectionKey
+        runtime_name: projection_key
+        required: false
+        type: string
+      - name: refreshModeLabel
+        runtime_name: refresh_mode_label
+        required: false
+        type: string
+      - name: computedAt
+        runtime_name: computed_at
+        required: true
+        type: timestamp_utc
+    runtime_extension_fields:
+      - name: createdByUserId
+        runtime_name: created_by_user_id
+        type: uuid_v4
+  AnalyticsQueryRequest:
+    schema_ref: "../../../../../contracts/schemas/analytics/analytics_query_request.schema.json"
+    runtime_entity_ref: "../../../../../src/analytics/domain/entities.py#AnalyticsQueryRequest"
+    docs_refs:
+      - "../DOMAIN_RULES_ANALYTICS.md"
+      - "../INVARIANTS_ANALYTICS.md"
+    sovereign_fields:
+      - name: scope
+        runtime_name: scope
+        required: true
+        type: string
+      - name: sourceModules
+        runtime_name: source_modules
+        required: true
+        type: string[]
+      - name: metricKeys
+        runtime_name: metric_keys
+        required: true
+        type: string[]
+      - name: timeWindow
+        runtime_name: time_window
+        required: true
+        type: string
+      - name: dateFrom
+        runtime_name: date_from
+        required: false
+        type: date
+      - name: dateTo
+        runtime_name: date_to
+        required: false
+        type: date
+      - name: granularity
+        runtime_name: granularity
+        required: true
+        type: string
+      - name: filters
+        runtime_name: filters
+        required: true
+        type: object

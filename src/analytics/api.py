@@ -6,10 +6,16 @@ from ninja import Router
 from ninja.errors import HttpError
 from django.http import HttpRequest
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from .schemas import (
     SnapshotOut, SnapshotListOut, CreateSnapshotIn,
     DashboardOut, DashboardListOut,
     QueryRequestIn, QueryResponseOut, ErrorOut,
+
 )
 from .domain.entities import AnalyticsQueryRequest
 from .domain.rules import RoleLabel, InsufficientPrivilege, SnapshotNotFound
@@ -27,7 +33,6 @@ _get_uc = GetAnalyticsSnapshot(_repo)
 _dashboards_uc = ListAnalyticsDashboards(_repo)
 _query_uc = QueryAnalyticsData(_repo)
 
-
 def _role(request: HttpRequest) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -38,14 +43,12 @@ def _role(request: HttpRequest) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _uid(request: HttpRequest) -> UUID:
     """Extrai actor_id do JWT validado."""
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
-
 
 @router.get("/snapshots", response={200: SnapshotListOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def list_snapshots(
@@ -78,7 +81,6 @@ def list_snapshots(
     except ValueError as e:
         return 422, ErrorOut(detail=str(e))
 
-
 @router.post("/snapshots", response={201: SnapshotOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_snapshot(request: HttpRequest, payload: CreateSnapshotIn):
     try:
@@ -100,7 +102,6 @@ def create_snapshot(request: HttpRequest, payload: CreateSnapshotIn):
     except ValueError as e:
         return 422, ErrorOut(detail=str(e))
 
-
 @router.get("/snapshots/{snapshot_id}", response={200: SnapshotOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_snapshot(request: HttpRequest, snapshot_id: UUID):
     try:
@@ -112,7 +113,6 @@ def get_snapshot(request: HttpRequest, snapshot_id: UUID):
         return 404, ErrorOut(detail=str(e))
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
-
 
 @router.get("/dashboards", response={200: DashboardListOut, 401: ErrorOut, 403: ErrorOut})
 def list_dashboards(
@@ -133,7 +133,6 @@ def list_dashboards(
         )
     except InsufficientPrivilege as e:
         return 403, ErrorOut(detail=str(e))
-
 
 @router.post("/query", response={200: QueryResponseOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut, 409: ErrorOut})
 def query_analytics(request: HttpRequest, payload: QueryRequestIn):

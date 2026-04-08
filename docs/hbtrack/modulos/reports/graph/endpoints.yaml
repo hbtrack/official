@@ -1,0 +1,114 @@
+version: "1.0.0"
+status: active
+module: reports
+
+endpoints:
+  - operation_id: listReportJobs
+    method: GET
+    path: /reports/jobs
+    openapi_ref: "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/get"
+    runtime_handler_ref: "../../../../../src/reports/api.py#list_report_jobs"
+    use_case_ref: "../../../../../src/reports/application/use_cases.py#ListReportJobs"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 422
+      - 500
+  - operation_id: createReportJob
+    method: POST
+    path: /reports/jobs
+    openapi_ref: "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/post"
+    runtime_handler_ref: "../../../../../src/reports/api.py#create_report_job"
+    use_case_ref: "../../../../../src/reports/application/use_cases.py#CreateReportJob"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 422
+      - 409
+      - 500
+  - operation_id: getReportJob
+    method: GET
+    path: /reports/jobs/{jobId}
+    openapi_ref: "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/get"
+    runtime_handler_ref: "../../../../../src/reports/api.py#get_report_job"
+    use_case_ref: "../../../../../src/reports/application/use_cases.py#GetReportJob"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+  - operation_id: updateReportJob
+    method: PATCH
+    path: /reports/jobs/{jobId}
+    openapi_ref: "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/patch"
+    runtime_handler_ref: "../../../../../src/reports/api.py#update_report_job"
+    use_case_ref: "../../../../../src/reports/application/use_cases.py#UpdateReportJob"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles:
+      - coach
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+  - operation_id: downloadReportArtifact
+    method: GET
+    path: /reports/jobs/{jobId}/download
+    openapi_ref: "../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/download/get"
+    runtime_handler_ref: "../../../../../src/reports/api.py#download_report_artifact"
+    use_case_ref: "../../../../../src/reports/application/use_cases.py#DownloadReportArtifact"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409

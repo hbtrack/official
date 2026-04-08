@@ -1,0 +1,90 @@
+version: "1.0.0"
+status: active
+module: video
+
+errors:
+  - id: ERR-VID-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/video/api.py#_get_actor_id"
+    operations:
+      - createSession
+      - listSessions
+      - getSession
+      - patchSession
+      - createSegment
+      - listSegments
+      - createClip
+      - listClips
+      - publishDistribution
+
+  - id: ERR-VID-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    source_ref: "../../../../../src/video/domain/rules.py#assert_session_capturing"
+    operations:
+      - createSession
+      - getSession
+      - patchSession
+      - createSegment
+      - listSegments
+      - createClip
+      - publishDistribution
+
+  - id: ERR-VID-404-SESSION-NOT-FOUND
+    kind: domain
+    http_status: 404
+    source_ref: "../../../../../src/video/application/use_cases.py#GetSessionUseCase"
+    operations:
+      - getSession
+      - patchSession
+      - createSegment
+      - listSegments
+      - createClip
+      - listClips
+      - publishDistribution
+
+  - id: ERR-VID-400-VALIDATION
+    kind: domain
+    http_status: 400
+    source_ref: "../../../../../src/video/domain/entities.py#validate_invariants"
+    operations:
+      - createSession
+      - patchSession
+      - createSegment
+      - createClip
+      - publishDistribution
+    notes: "INV-VID-003: gaps de timecode; INV-VID-007: retentionPolicy; validação de campos obrigatórios"
+
+  - id: ERR-VID-409-STATE-CONFLICT
+    kind: domain
+    http_status: 409
+    source_ref: "../../../../../src/video/domain/rules.py#assert_session_capturing"
+    operations:
+      - patchSession
+      - createSegment
+      - publishDistribution
+    notes: "DR-VID-002/DR-VID-005: operação inválida para o estado atual da sessão; INV-VID-002: PUBLISHED é imutável"
+
+  - id: ERR-VID-422-MISSING-SEMANTIC-CONTEXT
+    kind: domain
+    http_status: 422
+    source_ref: "../../../../../src/video/domain/entities.py#validate_invariants"
+    operations:
+      - createClip
+    notes: "INV-VID-005: ClipDefinition sem scout_event_id, zone_label nem athlete_ids é 422"
+
+  - id: ERR-VID-500-INTERNAL
+    kind: transport
+    http_status: 500
+    source_ref: "../../../../../src/video/api.py#_get_actor_id"
+    operations:
+      - createSession
+      - listSessions
+      - getSession
+      - patchSession
+      - createSegment
+      - listSegments
+      - createClip
+      - listClips
+      - publishDistribution

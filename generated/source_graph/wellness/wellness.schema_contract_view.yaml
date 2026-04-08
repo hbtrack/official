@@ -1,0 +1,65 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: wellness
+entity: WellnessEntry
+primary_entity: WellnessEntry
+primary_schema_ref: contracts/schemas/wellness/wellness_entry.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+required: &id001
+- id
+- athleteUserId
+- questionnaireDate
+- readinessScore
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: athleteUserId
+  runtime_name: athlete_user_id
+  required: true
+  type: uuid_v4
+- name: trainingSessionId
+  runtime_name: training_session_id
+  required: false
+  type: uuid_v4
+- name: questionnaireDate
+  runtime_name: questionnaire_date
+  required: true
+  type: date_only
+- name: questionnaireLabel
+  runtime_name: questionnaire_label
+  required: false
+  type: string
+- name: readinessScore
+  runtime_name: readiness_score
+  required: true
+  type: integer
+- name: fatigueScore
+  runtime_name: fatigue_score
+  required: false
+  type: integer
+- name: painScore
+  runtime_name: pain_score
+  required: false
+  type: integer
+- name: recoveryScore
+  runtime_name: recovery_score
+  required: false
+  type: integer
+- name: sleepHours
+  runtime_name: sleep_hours
+  required: false
+  type: number
+- name: notes
+  runtime_name: notes
+  required: false
+  type: string
+runtime_extension_fields: []
+entities:
+  WellnessEntry:
+    schema_ref: contracts/schemas/wellness/wellness_entry.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: []

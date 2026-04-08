@@ -1025,3 +1025,38 @@ gates:
     blocking_codes: [BLOCKED_LEGACY_IN_CRITICAL_PATH]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: WORKER_PROMPT_AUTHORITY_GATE
+    order: "20J"
+    name: "Worker Prompt Authority Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Valida que worker prompts são consistentes com SOURCE_AUTHORITY_GRAPH e TASK_CATALOG.
+      Checks: (1) todos os workers listados em TASK_CATALOG existem no filesystem;
+      (2) frontmatter dos workers tem task_type correspondente ao TASK_CATALOG;
+      (3) workers não referenciam fontes fora da hierarquia do SOURCE_AUTHORITY_GRAPH.
+    blocking_codes: [BLOCKED_WORKER_PROMPT_AUTHORITY]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: DOMAIN_GLOSSARY_CONSISTENCY_GATE
+    order: "20K"
+    name: "Domain Glossary Consistency Gate"
+    blocking: false
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Valida que DOMAIN_GLOSSARY.md existe em docs/_canon/, é bem-formado
+      (front matter YAML válido com status: active), contém termos com code_names,
+      e que OpenAPI paths usam code_names canônicos (não variantes).
+    blocking_codes: []
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py

@@ -19,6 +19,9 @@ Registrar as regras de negócio do módulo `wellness`.
 - `contracts/schemas/wellness/wellness_entry.schema.json`
 - `docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md`
 - Fontes técnico-científicas permitidas via authority matrix (`ASPETAR`, `ACSM`)
+- `docs/hbtrack/modulos/wellness/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/wellness/graph/errors.yaml`
+- `docs/hbtrack/modulos/wellness/graph/endpoints.yaml`
 
 ## Regras de negócio
 | ID | Regra | Entidades afetadas | Fonte | Observações |
@@ -33,3 +36,8 @@ Registrar as regras de negócio do módulo `wellness`.
 - Não inferir diagnóstico, tratamento, procedimento, prontuário ou retorno ao jogo a partir de `wellness`.
 - Não transformar score de wellness em decisão médica automática.
 - Não deduzir política de acesso a partir da UI; acesso sensível depende de `identity_access` e trilha em `audit`.
+
+## Âncoras estruturadas
+- As entidades soberanas e seus campos mapeados para runtime estão em `docs/hbtrack/modulos/wellness/graph/entity_graph.yaml`.
+- O mapa mínimo de operações e permissões publicadas está em `docs/hbtrack/modulos/wellness/graph/endpoints.yaml`.
+- O mapa mínimo de erros transport/domain do módulo está em `docs/hbtrack/modulos/wellness/graph/errors.yaml`.

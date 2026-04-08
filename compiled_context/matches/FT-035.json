@@ -91,11 +91,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/matches/matches.bundle.yaml",
-      "sha256": "21f4c19f422c7beb63758cbe4968e5e7d82493e80d9b2b65de7875ee34591ef1"
+      "sha256": "691e1a32d45c194f43291f59950255b3da8e2a0970a747fb75bc8e8893ed6a45"
     },
     {
       "relpath": "generated/source_graph/matches/matches.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/matches/impact_report.json",
-      "sha256": "884df4585c6a81fcecf744663d7890e124f04cffca23561eed856f9488baa312"
+      "sha256": "8d8237e0814c8feeb5fc17f29881bcd9bde7cd55a0dd1708a4477ecab301aa6b"
     }
   ],
   "module": "matches",
@@ -137,7 +137,7 @@
     "domain_rules": "src/matches/domain/rules.py",
     "use_cases": "src/matches/application/use_cases.py"
   },
-  "source_fingerprint": "c7b7ba51d77e16d89d54e834bbbb6cc810de6b6f5307a9e42062853adad00de8",
+  "source_fingerprint": "4c738cfab8328c4685b3ee8dbca9a4b2b9d1175f325e47b6b93d756cbbd28feb",
   "source_graph": {
     "entities": {
       "Match": {
@@ -478,7 +478,7 @@
         "officialIncidentIds referenciam módulo incidents (scheduling futuro) — DEC-MATCHES-001: CRUD simples.",
         "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch usa PATCH — mapeamento documentado em DEC-MATCHES-001."
       ],
-      "source_fingerprint": "4d848c9ada53bc78667f619018c4f41f1a0fb5c590e77645e02c509906c5df2f"
+      "source_fingerprint": "cc976e5551aa921eba5949469e42a012fc3c1305da4c0852e25fa601cd34ba8c"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

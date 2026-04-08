@@ -1,0 +1,147 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/reports.yaml",
+    "contracts/schemas/reports/report_job.schema.json",
+    "contracts/openapi/components/schemas/reports/report_job.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/reports/README.md",
+    "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
+    "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+    "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
+    "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+    "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md"
+  ],
+  "impacted_runtime": [
+    "src/reports/api.py",
+    "src/reports/domain/entities.py",
+    "src/reports/domain/rules.py",
+    "src/reports/application/use_cases.py",
+    "src/reports/tests/unit/test_reports.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "sha256": "2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d"
+    },
+    {
+      "relpath": "contracts/openapi/paths/reports.yaml",
+      "sha256": "f2f66a034edc4b916b456a6d01c52805d75f83fb73e3d6e48c68f4f2150ae3df"
+    },
+    {
+      "relpath": "contracts/schemas/reports/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/reports/report_job.schema.json",
+      "sha256": "cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+      "sha256": "014efa17191147d54a62442972b5e8c7800967091e95e545eb8b518e304b9bec"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md",
+      "sha256": "0b03212371e786864c9ab369bcde0b30c9ab532f7225d5e1b0b00baba9cbaca6"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md",
+      "sha256": "e76d2add4ae2479d4c82a7f682fe4855b850fe3ca6eac4a3bb0c5f2220ac2d45"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+      "sha256": "89e9b17825fb06c8f245e7570e1e651e03b3491e453970099f02cb940ea24e75"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/README.md",
+      "sha256": "32ea8d9ac8e165ea4913f52c075d1778b752844a9a40142a14b27e0cfd38da78"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
+      "sha256": "e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/graph/endpoints.yaml",
+      "sha256": "037825b74bf96d3ef812d5cf24a2563f2acec30d7a94c5c88612a90021d91f3b"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/graph/entity_graph.yaml",
+      "sha256": "b53b60807ab5c82318113f569ef16710603eeed9a7617ba0b10127b793cf6dcb"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/graph/errors.yaml",
+      "sha256": "fea1492d2407d2a6f9b37019db1004e56e2a3bb09e15ae0d610ddcfa40e72702"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
+      "sha256": "687dd9c1339174baca2bb6675f42477ce8f721cf8d4f703b1e2247ae32980592"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/reports/graph/test_obligations.yaml",
+      "sha256": "abe7cbdd7c642754d1deb103f519219ac3e27b31fe554bd81ce0b61bbba51e46"
+    },
+    {
+      "relpath": "src/reports/api.py",
+      "sha256": "c54a20da3801e78a062c2e9a0b4d38558c4a8bbdaeac32060524feca6185b109"
+    },
+    {
+      "relpath": "src/reports/application/use_cases.py",
+      "sha256": "9a5ef2a84f15e414c5e3662dacc652913a8e166a08f1e8d45a58f678e091f353"
+    },
+    {
+      "relpath": "src/reports/domain/entities.py",
+      "sha256": "2245e3b5774738ec65504aa2dec4fb3d17343f183f368a7079cb1bed62b99e22"
+    },
+    {
+      "relpath": "src/reports/domain/rules.py",
+      "sha256": "eb9f94b26bc659ac377aee2a8cc1d40e306979da3fdbc0349a48bd2633e40cee"
+    },
+    {
+      "relpath": "src/reports/tests/unit/test_reports.py",
+      "sha256": "b7a31d76e56c298449f613c578e2f28c6f9fec09045199534a42fde58f1258a5"
+    }
+  ],
+  "known_gaps": [
+    "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
+  ],
+  "module": "reports",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/reports/reports.bundle.yaml",
+    "generated/source_graph/reports/reports.schema_contract_view.yaml",
+    "generated/source_graph/reports/reports.openapi_contract_view.yaml",
+    "generated/source_graph/reports/impact_report.json"
+  ],
+  "source_fingerprint": "0ea18c2ecf9facc2b9fcbd446d3ba25ac83c12a9b03565cec7d8a1f9ce640b1e"
+}

@@ -1,0 +1,339 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: wellness
+graph_root: docs/hbtrack/modulos/wellness/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+  sha256: b55f2e8c119c4448b63ba543773a2e600a353a4bbb4d6d04adcdf2aed52bd08d
+- relpath: contracts/openapi/paths/wellness.yaml
+  sha256: 9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120
+- relpath: contracts/schemas/wellness/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/wellness/wellness_entry.schema.json
+  sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md
+  sha256: 277d60585d3b8b003a83a292b1fdbd66061435ec0d1e1ffc29acbf9b4069f2df
+- relpath: docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md
+  sha256: 3031a7846e0f99ed3fd77341e6ea6ed8a36dbff0c6ff61606fcd1369011eb0a6
+- relpath: docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md
+  sha256: 80816d64897e553e6daa60d6db6f30da4a8fcff5a857466791a4bd62b004c79b
+- relpath: docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md
+  sha256: 03a536cb78e91e25b728cefa06c5eac0d231af424f827c437258d3e7e6ae450c
+- relpath: docs/hbtrack/modulos/wellness/README.md
+  sha256: 5d0b49e49ea78780bdf313fea6f94f626ca5e9d8f69459600bd12883fa07cabf
+- relpath: docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md
+  sha256: 94fa820a49931b143845800f42f584cab6938b883d2889d5a74f301b0cbacb69
+- relpath: docs/hbtrack/modulos/wellness/graph/endpoints.yaml
+  sha256: c5b7c4530aea634639411326a2f2e109c443e1bc5270f5d1e76f92dbce88ddd5
+- relpath: docs/hbtrack/modulos/wellness/graph/entity_graph.yaml
+  sha256: e0117e3c01f206843a43876fa7a0f62fa27b5e331db4fc1dffd1713fb333a84f
+- relpath: docs/hbtrack/modulos/wellness/graph/errors.yaml
+  sha256: fc7d74f7e83400752c9b9af146a8d2ec3dee5da323bd23ee2dd7914defbf385b
+- relpath: docs/hbtrack/modulos/wellness/graph/module_manifest.yaml
+  sha256: 291993bf6afaa08d286433e711e3f3bdf193a9839f5688bdc975726126a866da
+- relpath: docs/hbtrack/modulos/wellness/graph/test_obligations.yaml
+  sha256: 0f5fcdbcf49b58f9cb7b2a67b662e383826b408b5da1934a37a79a91a5b4d4f4
+- relpath: src/wellness/api.py
+  sha256: 9c498bf899828917bf4aafdac29f2f01e2215c4ec80c4b0207437acbc439841f
+- relpath: src/wellness/application/use_cases.py
+  sha256: 52c9a2d473b3cd4d9eca7cf0576a3e4785fa505e34766490d08a9c59ba546552
+- relpath: src/wellness/domain/entities.py
+  sha256: 19d86af7d11a6c25365fd34d8ecbebdfa3580f082e214398fcdd89bf42707c2e
+- relpath: src/wellness/domain/rules.py
+  sha256: 49fc28df44005895e246daebae4e30f24b94f6e335ed0a76479ca1a10c5e0a2d
+- relpath: src/wellness/tests/unit/test_wellness_domain.py
+  sha256: 54ccda6a65aee4dd458893296876663f720b9f33b07a77b57a2b231e59f31bd4
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: wellness
+  phase: source_graph_rollout
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_WELLNESS.md
+    domain_rules: ../DOMAIN_RULES_WELLNESS.md
+    invariants: ../INVARIANTS_WELLNESS.md
+    permissions: ../PERMISSIONS_WELLNESS.md
+    test_matrix: ../TEST_MATRIX_WELLNESS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/wellness.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/wellness/
+    primary_schema: ../../../../../contracts/schemas/wellness/wellness_entry.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/wellness/api.py
+    domain_entity: ../../../../../src/wellness/domain/entities.py
+    domain_rules: ../../../../../src/wellness/domain/rules.py
+    use_cases: ../../../../../src/wellness/application/use_cases.py
+    unit_tests: ../../../../../src/wellness/tests/unit/test_wellness_domain.py
+  structured_ir:
+    entities: ./entity_graph.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - WellnessSummary ainda nao possui schema soberano em contracts/schemas/wellness/
+    e permanece como surface agregada de runtime/OpenAPI.
+  - AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem
+    governanca separada.
+  - As rotas de athlete history/summary documentam 404, mas o runtime atual nao materializa
+    AthleteNotFound de forma explicita.
+entities:
+  WellnessEntry:
+    schema_ref: ../../../../../contracts/schemas/wellness/wellness_entry.schema.json
+    runtime_entity_ref: ../../../../../src/wellness/domain/entities.py#WellnessEntry
+    docs_refs:
+    - ../DOMAIN_RULES_WELLNESS.md
+    - ../INVARIANTS_WELLNESS.md
+    - ../PERMISSIONS_WELLNESS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: athleteUserId
+      runtime_name: athlete_user_id
+      required: true
+      type: uuid_v4
+    - name: trainingSessionId
+      runtime_name: training_session_id
+      required: false
+      type: uuid_v4
+    - name: questionnaireDate
+      runtime_name: questionnaire_date
+      required: true
+      type: date_only
+    - name: questionnaireLabel
+      runtime_name: questionnaire_label
+      required: false
+      type: string
+    - name: readinessScore
+      runtime_name: readiness_score
+      required: true
+      type: integer
+    - name: fatigueScore
+      runtime_name: fatigue_score
+      required: false
+      type: integer
+    - name: painScore
+      runtime_name: pain_score
+      required: false
+      type: integer
+    - name: recoveryScore
+      runtime_name: recovery_score
+      required: false
+      type: integer
+    - name: sleepHours
+      runtime_name: sleep_hours
+      required: false
+      type: number
+    - name: notes
+      runtime_name: notes
+      required: false
+      type: string
+endpoints:
+- operation_id: createWellnessEntry
+  method: POST
+  path: /wellness/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/post
+  runtime_handler_ref: ../../../../../src/wellness/api.py#create_wellness_entry
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#CreateWellnessEntry
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: listWellnessEntries
+  method: GET
+  path: /wellness/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#list_wellness_entries
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#ListWellnessEntries
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: getWellnessEntry
+  method: GET
+  path: /wellness/entries/{entryId}
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/{entryId}/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#get_wellness_entry
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#GetWellnessEntry
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: listAthleteWellnessEntries
+  method: GET
+  path: /wellness/athletes/{athleteUserId}/entries
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/entries/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#list_athlete_wellness_entries
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#ListAthleteWellnessEntries
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: getAthleteWellnessSummary
+  method: GET
+  path: /wellness/athletes/{athleteUserId}/summary
+  openapi_ref: ../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/summary/get
+  runtime_handler_ref: ../../../../../src/wellness/api.py#get_athlete_wellness_summary
+  use_case_ref: ../../../../../src/wellness/application/use_cases.py#GetAthleteWellnessSummary
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+errors:
+- id: ERR-WEL-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/wellness/api.py#_role
+  operations:
+  - createWellnessEntry
+  - listWellnessEntries
+  - getWellnessEntry
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/wellness/domain/rules.py#InsufficientPrivilege
+  operations:
+  - createWellnessEntry
+  - listWellnessEntries
+  - getWellnessEntry
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-404-ENTRY-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/wellness/domain/rules.py#WellnessEntryNotFound
+  operations:
+  - getWellnessEntry
+- id: ERR-WEL-404-ATHLETE-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/wellness/domain/rules.py#AthleteNotFound
+  operations:
+  - listAthleteWellnessEntries
+  - getAthleteWellnessSummary
+- id: ERR-WEL-400-ENTRY-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/wellness/domain/entities.py#validate_invariants
+  operations:
+  - createWellnessEntry
+test_obligations:
+- id: WEL-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/wellness/wellness_entry.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: WEL-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/wellness.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: WEL-TO-003
+  scope: domain_invariants_and_permissions
+  artifact_ref: ../../../../../src/wellness/tests/unit/test_wellness_domain.py
+  covers:
+  - INV-WELL-001
+  - INV-WELL-002
+  - INV-WELL-003
+  - INV-WELL-004
+  - DR-WELL-005
+  - PERM-WEL-002
+  - PERM-WEL-003
+  - PERM-WEL-004
+  verification: Unit tests for invariants, BOLA and wellness boundary enforcement
+  evidence_refs:
+  - ../../../../../src/wellness/tests/unit/test_wellness_domain.py
+- id: WEL-TO-004
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_wellness_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_wellness_source_graph_integrity.py

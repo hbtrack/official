@@ -4,6 +4,9 @@ from uuid import UUID
 from datetime import datetime
 from ninja import Schema
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class AuditEntryOut(Schema):
     id: UUID
@@ -34,11 +37,9 @@ class AuditEntryOut(Schema):
             after_summary=e.after_summary,
         )
 
-
 class AuditEntryListOut(Schema):
     items: List[AuditEntryOut]
     nextPageToken: Optional[str] = None
-
 
 class CreateAuditEntryIn(Schema):
     actorUserId: UUID
@@ -52,13 +53,11 @@ class CreateAuditEntryIn(Schema):
     beforeSummary: Optional[str] = None
     afterSummary: Optional[str] = None
 
-
 class ExportOut(Schema):
     entries: List[AuditEntryOut]
     exportedCount: int
     exportedAt: datetime
     truncated: Optional[bool] = False
-
 
 class ErrorOut(Schema):
     detail: str

@@ -1,0 +1,115 @@
+version: "1.0.0"
+status: active
+module: wellness
+
+endpoints:
+  - operation_id: createWellnessEntry
+    method: POST
+    path: /wellness/entries
+    openapi_ref: "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/post"
+    runtime_handler_ref: "../../../../../src/wellness/api.py#create_wellness_entry"
+    use_case_ref: "../../../../../src/wellness/application/use_cases.py#CreateWellnessEntry"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - athlete
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 409
+      - 422
+      - 500
+  - operation_id: listWellnessEntries
+    method: GET
+    path: /wellness/entries
+    openapi_ref: "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/get"
+    runtime_handler_ref: "../../../../../src/wellness/api.py#list_wellness_entries"
+    use_case_ref: "../../../../../src/wellness/application/use_cases.py#ListWellnessEntries"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 500
+  - operation_id: getWellnessEntry
+    method: GET
+    path: /wellness/entries/{entryId}
+    openapi_ref: "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/entries/{entryId}/get"
+    runtime_handler_ref: "../../../../../src/wellness/api.py#get_wellness_entry"
+    use_case_ref: "../../../../../src/wellness/application/use_cases.py#GetWellnessEntry"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+  - operation_id: listAthleteWellnessEntries
+    method: GET
+    path: /wellness/athletes/{athleteUserId}/entries
+    openapi_ref: "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/entries/get"
+    runtime_handler_ref: "../../../../../src/wellness/api.py#list_athlete_wellness_entries"
+    use_case_ref: "../../../../../src/wellness/application/use_cases.py#ListAthleteWellnessEntries"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+  - operation_id: getAthleteWellnessSummary
+    method: GET
+    path: /wellness/athletes/{athleteUserId}/summary
+    openapi_ref: "../../../../../contracts/openapi/paths/wellness.yaml#/wellness/athletes/{athleteUserId}/summary/get"
+    runtime_handler_ref: "../../../../../src/wellness/api.py#get_athlete_wellness_summary"
+    use_case_ref: "../../../../../src/wellness/application/use_cases.py#GetAthleteWellnessSummary"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - coach
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500

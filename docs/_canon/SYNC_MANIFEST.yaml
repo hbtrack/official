@@ -1166,3 +1166,150 @@ rules:
       - "python3 scripts/compile/compile_context_bundle.py --module training --check --format json"
       - "python3 scripts/validate_contracts.py --profile ci"
       - "python3 -m pytest tests/pipeline_gates/test_training_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_training.py tests/pipeline_gates/test_context_bundle_training.py -q"
+
+  - rule_id: SCOUT_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/scout/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/scout/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/scout/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/scout/graph/errors.yaml"
+      - "docs/hbtrack/modulos/scout/graph/test_obligations.yaml"
+    source_kind: module_source_graph
+    change_types:
+      - domain_contract_change
+      - runtime_projection_change
+      - codegen_shape_change
+    required_consumers:
+      - "docs/hbtrack/modulos/scout/README.md"
+      - "docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md"
+      - "contracts/openapi/paths/scout.yaml"
+      - "contracts/openapi/components/schemas/scout/scout_event.yaml"
+      - "contracts/schemas/scout/scout_event.schema.json"
+      - "generated/source_graph/scout/scout.bundle.yaml"
+      - "generated/source_graph/scout/scout.schema_contract_view.yaml"
+      - "generated/source_graph/scout/scout.openapi_contract_view.yaml"
+      - "generated/source_graph/scout/impact_report.json"
+      - "compiled_context/scout/FT-036.json"
+      - "src/scout/api.py"
+      - "src/scout/domain/entities.py"
+      - "src/scout/domain/rules.py"
+      - "src/scout/application/use_cases.py"
+      - "tests/pipeline_gates/test_scout_source_graph_integrity.py"
+      - "tests/pipeline_gates/test_source_graph_compiler_scout.py"
+      - "tests/pipeline_gates/test_context_bundle_scout.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/scout/README.md"
+      - "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md"
+      - "contracts/openapi/paths/scout.yaml"
+      - "contracts/openapi/components/schemas/scout/scout_event.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module scout --check --format json"
+      - "python3 scripts/compile/compile_context_bundle.py --module scout --check --format json"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_scout_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_scout.py tests/pipeline_gates/test_context_bundle_scout.py -q"
+
+  - rule_id: AI_INGESTION_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml"
+      - "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml"
+    source_kind: "module_source_graph"
+    change_types:
+      - "domain_contract_change"
+      - "runtime_projection_change"
+      - "codegen_shape_change"
+    required_consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/README.md"
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+      - "contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+      - "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml"
+      - "generated/source_graph/ai_ingestion/impact_report.json"
+      - "compiled_context/ai_ingestion/FT-040.json"
+      - "src/ai_ingestion/api.py"
+      - "src/ai_ingestion/domain/entities.py"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module ai_ingestion --check"
+      - "python3 scripts/compile/compile_context_bundle.py --module ai_ingestion --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py -q"
+
+  - rule_id: VIDEO_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/video/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/video/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/video/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/video/graph/errors.yaml"
+      - "docs/hbtrack/modulos/video/graph/test_obligations.yaml"
+    source_kind: "module_source_graph"
+    change_types:
+      - "domain_contract_change"
+      - "runtime_projection_change"
+      - "codegen_shape_change"
+    required_consumers:
+      - "docs/hbtrack/modulos/video/README.md"
+      - "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md"
+      - "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md"
+      - "contracts/openapi/paths/video.yaml"
+      - "contracts/schemas/video/match_media_session.schema.json"
+      - "generated/source_graph/video/video.bundle.yaml"
+      - "generated/source_graph/video/impact_report.json"
+      - "compiled_context/video/FT-043.json"
+      - "src/video/api.py"
+      - "src/video/domain/entities.py"
+      - "tests/pipeline_gates/test_video_source_graph_integrity.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md"
+      - "contracts/openapi/paths/video.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module video --check"
+      - "python3 scripts/compile/compile_context_bundle.py --module video --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_video_source_graph_integrity.py -q"
+
+  - rule_id: IDENTITY_ACCESS_SOURCE_GRAPH_SYNC
+    source_master: "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml"
+    source_inputs:
+      - "docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml"
+      - "docs/hbtrack/modulos/identity_access/graph/endpoints.yaml"
+      - "docs/hbtrack/modulos/identity_access/graph/errors.yaml"
+      - "docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml"
+    source_kind: "module_source_graph"
+    change_types:
+      - "domain_contract_change"
+      - "runtime_projection_change"
+      - "codegen_shape_change"
+    required_consumers:
+      - "docs/hbtrack/modulos/identity_access/README.md"
+      - "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md"
+      - "docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md"
+      - "contracts/openapi/paths/identity_access.yaml"
+      - "contracts/schemas/identity_access/auth_session.schema.json"
+      - "generated/source_graph/identity_access/identity_access.bundle.yaml"
+      - "generated/source_graph/identity_access/impact_report.json"
+      - "compiled_context/identity_access/FT-011.json"
+      - "compiled_context/identity_access/FT-012.json"
+      - "compiled_context/identity_access/FT-013.json"
+      - "src/identity_access/api.py"
+      - "src/identity_access/domain/entities.py"
+      - "tests/pipeline_gates/test_identity_access_source_graph_integrity.py"
+    blocking_consumers:
+      - "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md"
+      - "contracts/openapi/paths/identity_access.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_source_graph.py --module identity_access --check"
+      - "python3 scripts/compile/compile_context_bundle.py --module identity_access --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+      - "python3 -m pytest tests/pipeline_gates/test_identity_access_source_graph_integrity.py -q"

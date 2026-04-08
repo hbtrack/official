@@ -97,11 +97,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "dc0b5e41d38621797c14b4a52621210f0df47a7f13f40fa54731527ada7c5d87"
+      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "2ec9674c6e118672a5154a0839b8a78d124bcc801b23b3243282c37ccfa63381"
+      "sha256": "5faac55d155128bb324cb7d204885b521a1a4db132c348f6a1e030dcedf982ec"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "7108e6dcfca0bf87ce0bdb1024a48b7df73ee0ebdbb7ed9da04938def9d443c2"
+      "sha256": "e3f85453e253f663ea1b2177550f3228703be80dc22b609d4361984be94381e0"
     }
   ],
   "module": "training",
@@ -149,7 +149,7 @@
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "53a93822d26d58ba930e6df173897f3af77658f4d749fa6e75b8126e2175fde3",
+  "source_fingerprint": "9459786ac37b7d22a949078081b80702b8f8a62a96895d0688c30ad65256ba75",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -780,7 +780,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "c1449a9d72794316820fa09c2951aefc13d988f995523890b3cda0f456a9b670"
+      "source_fingerprint": "43ddc71866eb029ee9fb51153592cc6630b18b85834cda185eee44ff2abf2e4f"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

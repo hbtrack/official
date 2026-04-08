@@ -1,0 +1,95 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: identity_access
+entity: AuthSession
+primary_entity: AuthSession
+primary_schema_ref: contracts/schemas/identity_access/auth_session.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/identity_access/auth_session.yaml
+required: &id001
+- id
+- principalUserId
+- sessionScopeLabel
+sovereign_fields: &id002
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "INV-IAM-001: obrigat\xF3rio"
+- name: principalUserId
+  runtime_name: principal_user_id
+  required: true
+  type: uuid_v4
+  constraints:
+  - "INV-IAM-001: obrigat\xF3rio"
+  - "DR-IAM-002: refer\xEAncia ao m\xF3dulo users \u2014 identity_access n\xE3o duplica\
+    \ perfil esportivo"
+  - 'boundary: reference to users module'
+- name: sessionScopeLabel
+  runtime_name: session_scope_label
+  required: true
+  type: string
+  constraints:
+  - "INV-IAM-001: obrigat\xF3rio"
+  - "DR-IAM-003: contexto t\xE9cnico de autoriza\xE7\xE3o \u2014 nunca derivado de\
+    \ posi\xE7\xE3o esportiva"
+  - 'maxLength: 80'
+- name: roleLabels
+  runtime_name: role_labels
+  required: false
+  type: array_of_string
+  constraints:
+  - 'INV-IAM-002: sem duplicatas (uniqueItems)'
+  - "DR-IAM-003: roleLabels \xE9 contexto t\xE9cnico (admin|coordinator|coach|athlete|member)"
+  - 'nullable: true (default: [])'
+- name: authMethodLabel
+  runtime_name: auth_method_label
+  required: false
+  type: string
+  constraints:
+  - 'nullable: true'
+  - 'exemplo: ''password'', ''oauth2'', ''saml'''
+- name: mfaRequired
+  runtime_name: mfa_required
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+  - "DR-IAM-004: ciclo de vida da sess\xE3o rastre\xE1vel"
+- name: mfaSatisfied
+  runtime_name: mfa_satisfied
+  required: false
+  type: boolean
+  constraints:
+  - 'nullable: true'
+  - "DR-IAM-004: somente v\xE1lido se mfaRequired=true"
+- name: issuedAt
+  runtime_name: issued_at
+  required: false
+  type: datetime_utc
+  constraints:
+  - 'nullable: true'
+  - 'INV-IAM-003: issuedAt < expiresAt quando ambos presentes'
+- name: expiresAt
+  runtime_name: expires_at
+  required: false
+  type: datetime_utc
+  constraints:
+  - 'nullable: true'
+  - 'INV-IAM-003: expiresAt > issuedAt'
+- name: revokedAt
+  runtime_name: revoked_at
+  required: false
+  type: datetime_utc
+  constraints:
+  - 'nullable: true'
+  - 'INV-IAM-003: revokedAt >= issuedAt quando presente'
+  - "DR-IAM-005: revoga\xE7\xE3o somente via identity_access"
+runtime_extension_fields: &id003 []
+entities:
+  AuthSession:
+    schema_ref: contracts/schemas/identity_access/auth_session.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: *id003

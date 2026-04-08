@@ -23,6 +23,15 @@ Documentar o escopo normativo do módulo `medical` e suas superfícies soberanas
 - Workflows (Arazzo): `contracts/workflows/medical/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
 
+## Source graph estruturado
+- Manifesto do módulo: `docs/hbtrack/modulos/medical/graph/module_manifest.yaml`
+- Entidades: `docs/hbtrack/modulos/medical/graph/entity_graph.yaml`
+- Endpoints: `docs/hbtrack/modulos/medical/graph/endpoints.yaml`
+- Erros: `docs/hbtrack/modulos/medical/graph/errors.yaml`
+- Obrigações de teste: `docs/hbtrack/modulos/medical/graph/test_obligations.yaml`
+
+Este conjunto ativa `medical` na trilha soberana de source graph. Ele deve permanecer alinhado com `contracts/`, `src/medical/` e os documentos normativos do módulo.
+
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)

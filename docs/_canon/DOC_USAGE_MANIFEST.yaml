@@ -487,6 +487,82 @@ entries:
       - "src/training/"
       - "tests/pipeline_gates/test_training_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_AI_INGESTION_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/ai_ingestion/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/ai_ingestion/README.md"
+      - "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md"
+      - "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/ai_ingestion/*.md"
+      - "contracts/schemas/ai_ingestion/"
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+      - "contracts/openapi/components/schemas/ai_ingestion/"
+      - "src/ai_ingestion/"
+      - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_SCOUT_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/scout/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/scout/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/scout/README.md"
+      - "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md"
+      - "docs/hbtrack/modulos/scout/TEST_MATRIX_SCOUT.md"
+      - "tests/pipeline_gates/test_scout_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/scout/*.md"
+      - "contracts/schemas/scout/"
+      - "contracts/openapi/paths/scout.yaml"
+      - "contracts/openapi/components/schemas/scout/"
+      - "src/scout/"
+      - "tests/pipeline_gates/test_scout_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_VIDEO_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/video/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/video/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/video/README.md"
+      - "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md"
+      - "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md"
+      - "tests/pipeline_gates/test_video_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/video/*.md"
+      - "contracts/schemas/video/"
+      - "contracts/openapi/paths/video.yaml"
+      - "contracts/openapi/components/schemas/video/"
+      - "src/video/"
+      - "tests/pipeline_gates/test_video_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_IDENTITY_ACCESS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/identity_access/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/identity_access/README.md"
+      - "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md"
+      - "docs/hbtrack/modulos/identity_access/TEST_MATRIX_IDENTITY_ACCESS.md"
+      - "tests/pipeline_gates/test_identity_access_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/identity_access/*.md"
+      - "contracts/schemas/identity_access/"
+      - "contracts/openapi/paths/identity_access.yaml"
+      - "contracts/openapi/components/schemas/identity_access/"
+      - "src/identity_access/"
+      - "tests/pipeline_gates/test_identity_access_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

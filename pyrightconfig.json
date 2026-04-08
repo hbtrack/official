@@ -1,0 +1,10 @@
+{
+    "exclude": [
+        ".venv",
+        "node_modules",
+        "dist",
+        "build",
+        "generated"
+    ],
+    "pythonVersion": "3.12"
+}

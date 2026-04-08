@@ -1,0 +1,54 @@
+version: "1.0.0"
+status: active
+module: video
+
+obligations:
+  - id: VID-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/video/match_media_session.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: VID-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/video.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: VID-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/video/tests/"
+    covers:
+      - INV-VID-001
+      - INV-VID-002
+      - INV-VID-003
+      - INV-VID-004
+      - INV-VID-005
+      - INV-VID-006
+      - INV-VID-007
+      - INV-VID-008
+      - INV-VID-009
+      - INV-VID-010
+      - INV-VID-011
+      - DR-VID-001
+      - DR-VID-002
+      - DR-VID-003
+      - DR-VID-004
+      - DR-VID-005
+      - DR-VID-006
+      - DR-VID-007
+      - DR-VID-008
+      - DR-VID-009
+      - DR-VID-010
+    verification: "Domain unit and integration tests enforcing invariants, state transitions, boundary rules and permission checks"
+    evidence_refs:
+      - "../../../../../src/video/tests/"
+
+  - id: VID-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_video_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_video_source_graph_integrity.py"

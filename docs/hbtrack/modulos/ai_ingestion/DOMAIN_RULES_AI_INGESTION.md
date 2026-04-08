@@ -18,6 +18,9 @@ Registrar as regras de negócio do módulo `ai_ingestion`.
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `contracts/schemas/ai_ingestion/ingestion_job.schema.json`
 - `docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md`
+- `docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml`
+- `docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml`
+- `docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml`
 - Artefatos assíncronos do módulo (`AsyncAPI`) quando aplicável
 
 ## Regras de negócio

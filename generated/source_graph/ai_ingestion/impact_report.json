@@ -1,0 +1,145 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/ai_ingestion.yaml",
+    "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+    "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/ai_ingestion/README.md",
+    "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+  ],
+  "impacted_runtime": [
+    "src/ai_ingestion/api.py",
+    "src/ai_ingestion/domain/entities.py",
+    "src/ai_ingestion/domain/rules.py",
+    "src/ai_ingestion/application/use_cases.py",
+    "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "sha256": "24ada9cde50e90478847ddde3d1d2f534e502173bb6370cbf270bfca8548182f"
+    },
+    {
+      "relpath": "contracts/openapi/paths/ai_ingestion.yaml",
+      "sha256": "0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3"
+    },
+    {
+      "relpath": "contracts/schemas/ai_ingestion/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+      "sha256": "3d3530940eeb4132dd000475f4aadbb93399d1c63b1e92230d5c9ab50d17706d"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+      "sha256": "a5bf3d04ced9270b165163870227621848267fcf87570e977ce538881b312247"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+      "sha256": "9aafcbab91b33effcd2fe3c7ed8e35f3c70a4cbc434e0940ff476c2b5ca52919"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+      "sha256": "39208abf42c6b1a98496218e245c37fc3f8957e04672a1ebac2a3fafb3ec6608"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+      "sha256": "95c954cc90cfc88c25aaac9a87dec768b3eb9f81130196d09a6cbe1948dd473f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/README.md",
+      "sha256": "ba1237008911563349737286e4a7414ace0d7cc78500c293f9404f472918e5d5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+      "sha256": "4c9f18400cf911f75d3f1a7f4e6c9db5a8d33ae335f338866a03511cbf68bb34"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+      "sha256": "d80f32b4a2eb1c0a24011a92c52495a5e2e9b25b7a3a315f3c3e2e2784be3057"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml",
+      "sha256": "042218c1a2c5a45a7cb0624a12cb1634e798df221b5075cddec38ec5301f564e"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+      "sha256": "91905c155019a00e8c79b557bbeb2b85726ffea1e549da03727f88c8497e3a3f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+      "sha256": "e71fbb667f91b10473aa3fbd4fae31307f3a913c1d0495ea7916be62f677debc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
+      "sha256": "537c53130e975e5ba10219a83f91e58ed4a6c457102ce8ef074e49d276ef19b4"
+    },
+    {
+      "relpath": "src/ai_ingestion/api.py",
+      "sha256": "cbb2611c452e8796ccda492b13782a01cad88dc95e74c5086034635758a9b94d"
+    },
+    {
+      "relpath": "src/ai_ingestion/application/use_cases.py",
+      "sha256": "767a05392f3f43debf5e34663f16bd0a6e74a577e105c275c75c284b0238958f"
+    },
+    {
+      "relpath": "src/ai_ingestion/domain/entities.py",
+      "sha256": "ede7423eab24cdda7582f4e27fdae11d0f944534b398be14b873a040d3e4ff29"
+    },
+    {
+      "relpath": "src/ai_ingestion/domain/rules.py",
+      "sha256": "94826320de0c6055afd3813147296b9796b226f5e30fce66bfcc9618f479930b"
+    },
+    {
+      "relpath": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+      "sha256": "629db8116c6e526fd179273a704700f4109acfe3ad7d232f69607992a27f98e0"
+    }
+  ],
+  "known_gaps": [],
+  "module": "ai_ingestion",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+    "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+    "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+    "generated/source_graph/ai_ingestion/impact_report.json"
+  ],
+  "source_fingerprint": "d1e48e3fd883963067063529a19973923c32d9b8a66ffde51c718dd1f25ae38a"
+}

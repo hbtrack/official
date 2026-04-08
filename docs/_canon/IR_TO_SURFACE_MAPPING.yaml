@@ -1,5 +1,5 @@
 version: 1.0.0
-status: PROPOSED
+status: active
 scope: hb_track
 artifact_type: ir_to_surface_mapping
 authority: deterministic_binding_map

@@ -25,6 +25,15 @@ Documentar o escopo normativo do módulo `analytics` e suas superfícies soberan
 - Workflows (Arazzo): `contracts/workflows/analytics/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
 
+## Source graph estruturado
+- Manifesto do módulo: `docs/hbtrack/modulos/analytics/graph/module_manifest.yaml`
+- Entidades: `docs/hbtrack/modulos/analytics/graph/entity_graph.yaml`
+- Endpoints: `docs/hbtrack/modulos/analytics/graph/endpoints.yaml`
+- Erros: `docs/hbtrack/modulos/analytics/graph/errors.yaml`
+- Obrigações de teste: `docs/hbtrack/modulos/analytics/graph/test_obligations.yaml`
+
+Este conjunto é a segunda ativação do source graph soberano fora do piloto de `reports`. Ele deve permanecer alinhado com `contracts/`, `src/analytics/` e os documentos normativos do módulo.
+
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)

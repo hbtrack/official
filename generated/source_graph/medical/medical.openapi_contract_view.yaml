@@ -1,0 +1,153 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: medical
+openapi_paths_ref: contracts/openapi/paths/medical.yaml
+operations:
+- operation_id: listMedicalRecords
+  method: GET
+  path: /medical/records
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/get
+  runtime_handler_ref: ../../../../../src/medical/api.py#list_medical_records
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#ListMedicalRecords
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createMedicalRecord
+  method: POST
+  path: /medical/records
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/post
+  runtime_handler_ref: ../../../../../src/medical/api.py#create_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#CreateMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 409
+  - 422
+  - 500
+- operation_id: getMedicalRecord
+  method: GET
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/get
+  runtime_handler_ref: ../../../../../src/medical/api.py#get_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#GetMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: updateMedicalRecord
+  method: PATCH
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/patch
+  runtime_handler_ref: ../../../../../src/medical/api.py#update_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#UpdateMedicalRecord
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+  - 500
+- operation_id: deleteMedicalRecord
+  method: DELETE
+  path: /medical/records/{recordId}
+  openapi_ref: ../../../../../contracts/openapi/paths/medical.yaml#/medical/records/{recordId}/delete
+  runtime_handler_ref: ../../../../../src/medical/api.py#delete_medical_record
+  use_case_ref: ../../../../../src/medical/application/use_cases.py#DeleteMedicalRecord
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-MED-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/medical/api.py#_role
+  operations:
+  - listMedicalRecords
+  - createMedicalRecord
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/medical/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listMedicalRecords
+  - createMedicalRecord
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-404-RECORD-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/medical/domain/rules.py#MedicalRecordNotFound
+  operations:
+  - getMedicalRecord
+  - updateMedicalRecord
+  - deleteMedicalRecord
+- id: ERR-MED-400-RECORD-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/medical/domain/entities.py#validate_invariants
+  operations:
+  - createMedicalRecord
+  - updateMedicalRecord

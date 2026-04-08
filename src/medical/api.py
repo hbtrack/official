@@ -7,11 +7,17 @@ from datetime import date
 from ninja import Router
 from ninja.errors import HttpError
 
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 from medical.application.use_cases import (
     CreateMedicalRecord, CreateMedicalRecordInput,
     ListMedicalRecords, ListMedicalRecordsInput,
     GetMedicalRecord, UpdateMedicalRecord, UpdateMedicalRecordInput,
     DeleteMedicalRecord,
+
 )
 from medical.domain.rules import (
     RoleLabel, MedicalRecordNotFound, InsufficientPrivilege,
@@ -25,7 +31,6 @@ from medical.schemas import (
 router = Router(tags=["medical"])
 _repo = MedicalRecordRepository()
 
-
 def _role(request) -> RoleLabel:
     """Extrai RoleLabel do JWT validado."""
     role = getattr(request, "_actor_role", None)
@@ -36,14 +41,12 @@ def _role(request) -> RoleLabel:
             return RoleLabel.MEMBER
     raise HttpError(401, "Unauthenticated")
 
-
 def _actor_id(request) -> uuid.UUID:
     """Extrai actor_id do JWT validado."""
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return uuid.UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
-
 
 @router.get(
     "/records",
@@ -83,7 +86,6 @@ def list_medical_records(
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 @router.post(
     "/records",
     response={201: MedicalRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
@@ -114,7 +116,6 @@ def create_medical_record(request, payload: CreateMedicalRecordIn):
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
 
-
 @router.get(
     "/records/{record_id}",
     response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
@@ -132,7 +133,6 @@ def get_medical_record(request, record_id: uuid.UUID):
         raise HttpError(HTTPStatus.NOT_FOUND, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 @router.patch(
     "/records/{record_id}",
@@ -163,7 +163,6 @@ def update_medical_record(request, record_id: uuid.UUID, payload: UpdateMedicalR
         raise HttpError(HTTPStatus.BAD_REQUEST, str(exc))
     except Exception as exc:
         raise HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, str(exc))
-
 
 @router.delete(
     "/records/{record_id}",

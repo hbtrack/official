@@ -7,6 +7,9 @@ from ninja import Schema
 
 from matches.domain.entities import Match
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class MatchOut(Schema):
     id: uuid.UUID
@@ -47,13 +50,11 @@ class MatchOut(Schema):
             updatedAt=m.updated_at,
         )
 
-
 class MatchListOut(Schema):
     data: List[MatchOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateMatchIn(Schema):
     competitionId: uuid.UUID
@@ -62,7 +63,6 @@ class CreateMatchIn(Schema):
     scheduledAt: datetime
     venueLabel: Optional[str] = None
     refereeNames: List[str] = []
-
 
 class PatchMatchIn(Schema):
     venueLabel: Optional[str] = None
@@ -74,7 +74,6 @@ class PatchMatchIn(Schema):
     awayScore: Optional[int] = None
     refereeNames: Optional[List[str]] = None
     officialIncidentIds: Optional[List[uuid.UUID]] = None
-
 
 class ErrorOut(Schema):
     detail: str

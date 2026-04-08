@@ -1,0 +1,127 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: ai_ingestion
+openapi_paths_ref: contracts/openapi/paths/ai_ingestion.yaml
+operations:
+- operation_id: listIngestionJobs
+  method: GET
+  path: /ingestion/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/get
+  runtime_handler_ref: ../../../../../src/ai_ingestion/api.py#list_ingestion_jobs
+  use_case_ref: ../../../../../src/ai_ingestion/application/use_cases.py#ListIngestionJobs
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: createIngestionJob
+  method: POST
+  path: /ingestion/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/post
+  runtime_handler_ref: ../../../../../src/ai_ingestion/api.py#create_ingestion_job
+  use_case_ref: ../../../../../src/ai_ingestion/application/use_cases.py#CreateIngestionJob
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 202
+  - 400
+  - 401
+  - 403
+  - 409
+  - 500
+- operation_id: getIngestionJob
+  method: GET
+  path: /ingestion/jobs/{jobId}
+  openapi_ref: ../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/get
+  runtime_handler_ref: ../../../../../src/ai_ingestion/api.py#get_ingestion_job
+  use_case_ref: ../../../../../src/ai_ingestion/application/use_cases.py#GetIngestionJob
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: retryIngestionJob
+  method: POST
+  path: /ingestion/jobs/{jobId}/retry
+  openapi_ref: ../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/retry/post
+  runtime_handler_ref: ../../../../../src/ai_ingestion/api.py#retry_ingestion_job
+  use_case_ref: ../../../../../src/ai_ingestion/application/use_cases.py#RetryIngestionJob
+  roles_allowed:
+  - admin
+  - coordinator
+  roles_denied:
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 202
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-AI-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/ai_ingestion/api.py#_get_role
+  operations:
+  - listIngestionJobs
+  - createIngestionJob
+  - getIngestionJob
+  - retryIngestionJob
+- id: ERR-AI-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/ai_ingestion/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listIngestionJobs
+  - createIngestionJob
+  - getIngestionJob
+  - retryIngestionJob
+- id: ERR-AI-404-JOB-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/ai_ingestion/domain/rules.py#IngestionJobNotFound
+  operations:
+  - getIngestionJob
+  - retryIngestionJob
+- id: ERR-AI-409-JOB-CONFLICT
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/ai_ingestion/domain/rules.py#IngestionJobConflict
+  operations:
+  - retryIngestionJob
+- id: ERR-AI-400-INGESTION-VALIDATION
+  kind: validation
+  http_status: 400
+  source_ref: ../../../../../src/ai_ingestion/domain/entities.py#validate_invariants
+  operations:
+  - createIngestionJob
+  - retryIngestionJob

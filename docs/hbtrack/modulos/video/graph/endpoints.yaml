@@ -1,0 +1,204 @@
+version: "1.0.0"
+status: active
+module: video
+
+endpoints:
+  - operation_id: createSession
+    method: POST
+    path: /video/sessions
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1sessions/post"
+    runtime_handler_ref: "../../../../../src/video/api.py#create_session"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#CreateSessionUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 500
+
+  - operation_id: listSessions
+    method: GET
+    path: /video/sessions
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1sessions/get"
+    runtime_handler_ref: "../../../../../src/video/api.py#list_sessions"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#ListSessionsUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles:
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 500
+
+  - operation_id: getSession
+    method: GET
+    path: /video/sessions/{sessionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1sessions~1{sessionId}/get"
+    runtime_handler_ref: "../../../../../src/video/api.py#get_session"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#GetSessionUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles:
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+
+  - operation_id: patchSession
+    method: PATCH
+    path: /video/sessions/{sessionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1sessions~1{sessionId}/patch"
+    runtime_handler_ref: "../../../../../src/video/api.py#patch_session"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#PatchSessionUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: createSegment
+    method: POST
+    path: /video/segments
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1segments/post"
+    runtime_handler_ref: "../../../../../src/video/api.py#create_segment"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#IngestSegmentUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+
+  - operation_id: listSegments
+    method: GET
+    path: /video/segments
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1segments/get"
+    runtime_handler_ref: "../../../../../src/video/api.py#list_segments"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#ListSegmentsUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - athlete
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 500
+
+  - operation_id: createClip
+    method: POST
+    path: /video/clips
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1clips/post"
+    runtime_handler_ref: "../../../../../src/video/api.py#create_clip"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#CreateClipUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+    roles_denied:
+      - member
+    owner_scoped_roles:
+      - athlete
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 404
+      - 422
+      - 500
+
+  - operation_id: listClips
+    method: GET
+    path: /video/clips
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1clips/get"
+    runtime_handler_ref: "../../../../../src/video/api.py#list_clips"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#ListClipsUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles:
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 500
+
+  - operation_id: publishDistribution
+    method: POST
+    path: /video/distribution
+    openapi_ref: "../../../../../contracts/openapi/paths/video.yaml#/video~1distribution/post"
+    runtime_handler_ref: "../../../../../src/video/api.py#publish_distribution"
+    use_case_ref: "../../../../../src/video/application/use_cases.py#PublishDistributionUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    owner_scoped_roles: []
+    response_codes:
+      - 201
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500

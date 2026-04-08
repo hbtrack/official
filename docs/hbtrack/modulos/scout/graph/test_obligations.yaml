@@ -1,0 +1,42 @@
+version: "1.0.0"
+status: active
+module: scout
+
+obligations:
+  - id: SCT-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/scout/scout_event.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: SCT-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/scout.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+
+  - id: SCT-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/scout/tests/"
+    covers:
+      - INV-SCOUT-001
+      - INV-SCOUT-002
+      - INV-SCOUT-003
+      - INV-SCOUT-004
+      - DR-SCOUT-001
+      - DR-SCOUT-002
+      - DR-SCOUT-003
+      - DR-SCOUT-004
+      - DR-SCOUT-005
+    verification: "Domain unit and integration tests enforcing invariants, taxonomy, boundary rules and permission checks"
+    evidence_refs:
+      - "../../../../../src/scout/tests/"
+
+  - id: SCT-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_scout_source_graph_integrity.py"

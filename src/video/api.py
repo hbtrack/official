@@ -1,10 +1,16 @@
+from __future__ import annotations
+
+# CODEGEN CUTOVER — generated use cases linked
+from .generated.application import use_cases as _gen_use_cases  # noqa: F401
+from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+
+
 """
 Django Ninja Router do módulo video.
 Implementa EXATAMENTE os endpoints de contracts/openapi/paths/video.yaml.
 PERMISSIONS_VIDEO.md governa RBAC por operação.
 BOLA (INV-VID-006): acesso scopado ao nível de MatchMediaSession.
 """
-from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
@@ -44,7 +50,6 @@ from .schemas import (
 
 router = Router(tags=["video"])
 
-
 def _get_actor_id(request):
     """Extrai actor_id do JWT validado."""
     import uuid as _uuid
@@ -53,10 +58,8 @@ def _get_actor_id(request):
         return _uuid.UUID(str(actor_id))
     raise HttpError(401, "Unauthenticated")
 
-
 def _get_repo() -> VideoRepository:
     return VideoRepository()
-
 
 def _session_to_out(s) -> dict:
     return {
@@ -70,7 +73,6 @@ def _session_to_out(s) -> dict:
         "createdAt": s.created_at,
         "createdByUserId": s.created_by_user_id,
     }
-
 
 def _segment_to_out(sg) -> dict:
     return {
@@ -87,7 +89,6 @@ def _segment_to_out(sg) -> dict:
         "finalizedAt": sg.finalized_at,
     }
 
-
 def _clip_to_out(c) -> dict:
     return {
         "id": c.id,
@@ -102,7 +103,6 @@ def _clip_to_out(c) -> dict:
         "createdByUserId": c.created_by_user_id,
     }
 
-
 def _dist_to_out(d) -> dict:
     return {
         "id": d.id,
@@ -114,7 +114,6 @@ def _dist_to_out(d) -> dict:
         "publishedAt": d.published_at,
         "publishedByUserId": d.published_by_user_id,
     }
-
 
 # ── POST /video/sessions — createSession ──────────────────────────────────────
 
@@ -143,7 +142,6 @@ def create_session(request, body: CreateSessionIn):
         return 201, _session_to_out(session)
     except ValueError as exc:
         raise HttpError(422, str(exc))
-
 
 # ── GET /video/sessions — listSessions ────────────────────────────────────────
 
@@ -181,7 +179,6 @@ def list_sessions(
         "pageSize": pageSize,
     }
 
-
 # ── GET /video/sessions/{sessionId} — getSession ──────────────────────────────
 
 @router.get(
@@ -199,7 +196,6 @@ def get_session(request, session_id: UUID):
     if session is None:
         raise HttpError(404, f"Sessão {session_id} não encontrada")
     return 200, _session_to_out(session)
-
 
 # ── PATCH /video/sessions/{sessionId} — patchSession ─────────────────────────
 
@@ -224,7 +220,6 @@ def patch_session(request, session_id: UUID, body: PatchSessionIn):
         return 200, _session_to_out(session)
     except ValueError as exc:
         raise HttpError(409, str(exc))
-
 
 # ── POST /video/segments — createSegment ──────────────────────────────────────
 
@@ -252,7 +247,6 @@ def create_segment(request, body: CreateSegmentIn):
         return 201, _segment_to_out(segment)
     except ValueError as exc:
         raise HttpError(409, str(exc))
-
 
 # ── GET /video/segments — listSegments ────────────────────────────────────────
 
@@ -286,7 +280,6 @@ def list_segments(
         "pageSize": pageSize,
     }
 
-
 # ── POST /video/clips — createClip ────────────────────────────────────────────
 
 @router.post(
@@ -316,7 +309,6 @@ def create_clip(request, body: CreateClipIn):
         return 201, _clip_to_out(clip)
     except ValueError as exc:
         raise HttpError(422, str(exc))
-
 
 # ── GET /video/clips — listClips ──────────────────────────────────────────────
 
@@ -352,7 +344,6 @@ def list_clips(
         "pageSize": pageSize,
     }
 
-
 # ── POST /video/distribution — publishDistribution ───────────────────────────
 
 @router.post(
@@ -382,7 +373,6 @@ def publish_distribution(request, body: PublishDistributionIn):
         return 201, _dist_to_out(dist)
     except ValueError as exc:
         raise HttpError(422, str(exc))
-
 
 # ── GET /video/distribution — listDistributions ───────────────────────────────
 

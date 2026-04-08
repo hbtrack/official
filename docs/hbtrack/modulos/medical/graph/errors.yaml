@@ -1,0 +1,40 @@
+version: "1.0.0"
+status: active
+module: medical
+
+errors:
+  - id: ERR-MED-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/medical/api.py#_role"
+    operations:
+      - listMedicalRecords
+      - createMedicalRecord
+      - getMedicalRecord
+      - updateMedicalRecord
+      - deleteMedicalRecord
+  - id: ERR-MED-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/medical/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listMedicalRecords
+      - createMedicalRecord
+      - getMedicalRecord
+      - updateMedicalRecord
+      - deleteMedicalRecord
+  - id: ERR-MED-404-RECORD-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/medical/domain/rules.py#MedicalRecordNotFound"
+    operations:
+      - getMedicalRecord
+      - updateMedicalRecord
+      - deleteMedicalRecord
+  - id: ERR-MED-400-RECORD-VALIDATION
+    kind: validation
+    http_status: 400
+    source_ref: "../../../../../src/medical/domain/entities.py#validate_invariants"
+    operations:
+      - createMedicalRecord
+      - updateMedicalRecord

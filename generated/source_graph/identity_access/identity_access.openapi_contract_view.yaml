@@ -1,0 +1,310 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: identity_access
+openapi_paths_ref: contracts/openapi/paths/identity_access.yaml
+operations:
+- operation_id: authLogin
+  method: POST
+  path: /auth/login
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1login/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_login
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#LoginUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 429
+  - 500
+- operation_id: authLogout
+  method: POST
+  path: /auth/logout
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1logout/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_logout
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#LogoutUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  response_codes:
+  - 204
+  - 401
+  - 500
+- operation_id: authRefreshToken
+  method: POST
+  path: /auth/refresh
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1refresh/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_refresh
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RefreshTokenUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 500
+- operation_id: authGetCurrentSession
+  method: GET
+  path: /auth/me
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1me/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#auth_me
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#GetCurrentSessionUseCase
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  roles_denied: []
+  owner_scoped_roles:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 401
+  - 500
+- operation_id: listActiveSessions
+  method: GET
+  path: /auth/sessions
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#list_active_sessions
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#ListActiveSessionsUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: revokeSession
+  method: DELETE
+  path: /auth/sessions/{sessionId}
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1sessions~1{sessionId}/delete
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#revoke_session
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: listUserRoles
+  method: GET
+  path: /auth/users/{userId}/roles
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/get
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#list_user_roles
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#ListUserRolesUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: assignRole
+  method: POST
+  path: /auth/users/{userId}/roles
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/post
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#assign_role
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#AssignRoleUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+- operation_id: revokeRole
+  method: DELETE
+  path: /auth/users/{userId}/roles/{roleLabel}
+  openapi_ref: ../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles~1{roleLabel}/delete
+  runtime_handler_ref: ../../../../../src/identity_access/api.py#revoke_role
+  use_case_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeRoleUseCase
+  roles_allowed:
+  - admin
+  roles_denied:
+  - coordinator
+  - coach
+  - athlete
+  - member
+  owner_scoped_roles: []
+  response_codes:
+  - 204
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 500
+errors:
+- id: ERR-IAM-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/identity_access/domain/rules.py#AuthError
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+- id: ERR-IAM-401-INVALID-CREDENTIALS
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#AuthError
+  operations:
+  - authLogin
+  - authRefreshToken
+  notes: "Credenciais inv\xE1lidas ou refresh token expirado/revogado"
+- id: ERR-IAM-401-SESSION-REVOKED
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#SessionRevoked
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "INV-IAM-003: sess\xE3o revogada (revokedAt preenchido)"
+- id: ERR-IAM-401-SESSION-EXPIRED
+  kind: domain
+  http_status: 401
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#SessionExpired
+  operations:
+  - authLogout
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "INV-IAM-003: sess\xE3o expirada (expiresAt no passado)"
+- id: ERR-IAM-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "DR-IAM-001: opera\xE7\xF5es de gest\xE3o de sess\xF5es e roles requerem\
+    \ role admin"
+- id: ERR-IAM-400-INVALID-ROLE
+  kind: domain
+  http_status: 400
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#InvalidRole
+  operations:
+  - assignRole
+  - revokeRole
+  notes: "DR-IAM-003: roleLabel n\xE3o \xE9 can\xF4nico (admin|coordinator|coach|athlete|member)"
+- id: ERR-IAM-400-VALIDATION
+  kind: domain
+  http_status: 400
+  source_ref: ../../../../../src/identity_access/domain/entities.py#validate_invariants
+  operations:
+  - authLogin
+  - authRefreshToken
+  - assignRole
+  notes: "INV-IAM-001: campos obrigat\xF3rios ausentes; INV-IAM-002: roleLabels com\
+    \ duplicatas"
+- id: ERR-IAM-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  source_ref: ../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase
+  operations:
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole
+  notes: "Sess\xE3o ou usu\xE1rio n\xE3o encontrado"
+- id: ERR-IAM-409-LAST-ADMIN
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/identity_access/domain/rules.py#LastAdminProtection
+  operations:
+  - revokeRole
+  notes: "DR-IAM-005: o \xFAltimo admin da plataforma n\xE3o pode ter role revogado"
+- id: ERR-IAM-429-RATE-LIMIT
+  kind: transport
+  http_status: 429
+  source_ref: ../../../../../src/identity_access/api.py#auth_login
+  operations:
+  - authLogin
+  notes: "OWASP API4:2023 \u2014 rate limiting obrigat\xF3rio em endpoint de autentica\xE7\
+    \xE3o"
+- id: ERR-IAM-500-INTERNAL
+  kind: transport
+  http_status: 500
+  source_ref: ../../../../../src/identity_access/api.py#auth_login
+  operations:
+  - authLogin
+  - authLogout
+  - authRefreshToken
+  - authGetCurrentSession
+  - listActiveSessions
+  - revokeSession
+  - listUserRoles
+  - assignRole
+  - revokeRole

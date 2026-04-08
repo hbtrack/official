@@ -41,6 +41,7 @@ class ExerciseVersion:
     secondary_objective: Optional[str] = None
     game_phases: List[str] = field(default_factory=list)
     materials: List[str] = field(default_factory=list)
+    thumbnail_url: Optional[str] = None
     change_reason: Optional[str] = None
     created_at: Optional[datetime] = None
     created_by_user_id: Optional[UUID] = None
@@ -83,11 +84,14 @@ class Exercise:
     scope: str
     created_by_user_id: UUID
     current_version_id: Optional[UUID] = None
+    current_version_number: Optional[int] = None
     organization_id: Optional[UUID] = None
     visibility_mode: str = "RESTRICTED"
     editorial_status: str = "ACTIVE"
     is_deleted: bool = False
+    thumbnail_url: Optional[str] = None
     deleted_at: Optional[datetime] = None
+    deletion_reason: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     current_version: Optional[ExerciseVersion] = None

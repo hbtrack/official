@@ -5,6 +5,9 @@ from uuid import UUID
 from ninja import Schema
 from exercises.domain.entities import Exercise, ExerciseVersion, ExerciseRelation, ExerciseACL
 
+# CODEGEN CUTOVER — generated layer linked
+from .generated import schemas as _gen_schemas  # noqa: F401
+
 
 class ExerciseVersionOut(Schema):
     versionId: UUID
@@ -41,7 +44,6 @@ class ExerciseVersionOut(Schema):
             safetyNotes=v.safety_notes, secondaryObjective=v.secondary_objective,
             gamePhases=v.game_phases or [], materials=v.materials or [], changeReason=v.change_reason)
 
-
 class ExerciseOut(Schema):
     exerciseId: UUID
     scope: str
@@ -58,7 +60,6 @@ class ExerciseOut(Schema):
             organizationId=e.organization_id,
             currentVersion=ExerciseVersionOut.from_domain(e.current_version) if e.current_version else None)
 
-
 class ExercisePreviewOut(Schema):
     exerciseId: UUID
     name: str
@@ -68,13 +69,11 @@ class ExercisePreviewOut(Schema):
         name = e.current_version.name if e.current_version else ""
         return cls(exerciseId=e.id, name=name)
 
-
 class ExerciseListOut(Schema):
     items: List[ExercisePreviewOut]
     page: int
     pageSize: int
     total: int
-
 
 class CreateExerciseIn(Schema):
     name: str
@@ -96,7 +95,6 @@ class CreateExerciseIn(Schema):
     gamePhases: Optional[List[str]] = None
     materials: Optional[List[str]] = None
     visibilityMode: Optional[str] = "RESTRICTED"
-
 
 class UpdateExerciseIn(Schema):
     changeReason: str
@@ -120,10 +118,8 @@ class UpdateExerciseIn(Schema):
     materials: Optional[List[str]] = None
     visibilityMode: Optional[str] = None
 
-
 class DeleteExerciseIn(Schema):
     deletionReason: str
-
 
 class ExerciseRelationOut(Schema):
     id: UUID
@@ -136,11 +132,9 @@ class ExerciseRelationOut(Schema):
         return cls(id=r.id, fromExerciseId=r.from_exercise_id,
             toExerciseId=r.to_exercise_id, relationType=r.relation_type)
 
-
 class AddRelationIn(Schema):
     toExerciseId: UUID
     relationType: str
-
 
 class ExerciseACLEntryOut(Schema):
     id: UUID
@@ -151,10 +145,8 @@ class ExerciseACLEntryOut(Schema):
     def from_domain(cls, a: ExerciseACL):
         return cls(id=a.id, exerciseId=a.exercise_id, userId=a.user_id)
 
-
 class AddACLEntryIn(Schema):
     userId: UUID
-
 
 class ErrorOut(Schema):
     detail: str
