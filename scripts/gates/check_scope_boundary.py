@@ -58,6 +58,7 @@ CANONICAL_MODULES = {
     "identity_access",
     "audit",
     "notifications",
+    "video",
 }
 
 EXIT_CODES = {

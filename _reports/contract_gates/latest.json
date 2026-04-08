@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-07T22:46:12Z",
+  "timestamp_utc": "2026-04-08T03:30:38Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "b6c60e4d",
+    "git_commit": "56457d09",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260407T224612_2170fb"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T033038_b45aba"
   },
   "status_detail": {
     "active_gates_passed": 52,
@@ -233,7 +233,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 91
+        "duration_ms": 52
       }
     },
     {
@@ -258,7 +258,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3096
+        "duration_ms": 9667
       }
     },
     {
@@ -463,7 +463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 9
       }
     },
     {
@@ -593,7 +593,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 136
+        "duration_ms": 153
       }
     },
     {
@@ -646,7 +646,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 10
       }
     },
     {
@@ -667,7 +667,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40
+        "duration_ms": 45
       }
     },
     {
@@ -688,7 +688,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 37
       }
     },
     {
@@ -709,7 +709,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 16
       }
     },
     {
@@ -730,7 +730,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 80
+        "duration_ms": 90
       }
     },
     {
@@ -751,7 +751,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 59
       }
     },
     {
@@ -772,7 +772,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 64
       }
     },
     {
@@ -793,7 +793,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 305
+        "duration_ms": 396
       }
     },
     {
@@ -814,7 +814,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 44
       }
     },
     {
@@ -873,7 +873,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 8
       }
     },
     {
@@ -928,7 +928,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 139
+        "duration_ms": 39
       }
     },
     {
@@ -955,7 +955,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 230
+        "duration_ms": 124
       }
     },
     {
@@ -1056,7 +1056,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 3
       }
     },
     {
@@ -1428,7 +1428,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 287
+        "duration_ms": 60
       }
     },
     {
@@ -1514,7 +1514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 682
+        "duration_ms": 760
       }
     },
     {
@@ -1537,7 +1537,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2824
+        "duration_ms": 4041
       }
     },
     {
@@ -1559,7 +1559,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1726
+        "duration_ms": 3817
       }
     },
     {
@@ -1598,7 +1598,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 543
+        "duration_ms": 608
       }
     },
     {
@@ -4509,7 +4509,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 1896
+        "duration_ms": 2243
       }
     },
     {
@@ -5175,7 +5175,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1693
+        "duration_ms": 1986
       }
     },
     {
@@ -5199,7 +5199,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1614
+        "duration_ms": 1704
       }
     },
     {
@@ -5219,7 +5219,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 19
       }
     },
     {
@@ -5259,7 +5259,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1861
+        "duration_ms": 2312
       }
     },
     {
@@ -5302,7 +5302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 61
       }
     },
     {
@@ -5324,7 +5324,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1309
+        "duration_ms": 1350
       }
     },
     {
@@ -5380,7 +5380,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 61
       }
     },
     {
@@ -5400,7 +5400,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       }
     },
     {
@@ -5420,7 +5420,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40519
+        "duration_ms": 45865
       }
     },
     {
@@ -5456,7 +5456,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 43
       }
     },
     {
@@ -5476,7 +5476,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 24
       }
     },
     {
@@ -5498,7 +5498,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 5
       }
     },
     {
@@ -5554,7 +5554,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 10
       }
     },
     {
@@ -5576,7 +5576,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 2
       }
     },
     {
@@ -5632,12 +5632,12 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5645,7 +5645,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 41
       }
     },
     {
@@ -5667,7 +5667,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 162
+        "duration_ms": 218
       }
     },
     {
@@ -5711,7 +5711,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 23
       }
     },
     {
@@ -6075,7 +6075,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 890
+        "duration_ms": 995
       }
     },
     {
@@ -6099,7 +6099,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 10
       }
     },
     {
@@ -6121,7 +6121,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 18
       }
     },
     {
@@ -6139,7 +6139,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -6160,7 +6160,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 30
       }
     },
     {
@@ -6183,7 +6183,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 17
       }
     },
     {
@@ -6204,7 +6204,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 26
       }
     },
     {
@@ -6224,7 +6224,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     },
     {
