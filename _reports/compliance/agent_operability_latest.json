@@ -1,0 +1,46 @@
+{
+  "generated_at": "2026-04-08",
+  "overall": "PARTIAL",
+  "pending_tasks": [
+    "B10-003"
+  ],
+  "dimensions": {
+    "adversarial_suites": {
+      "status": "PASS",
+      "detail": "0 arquivo(s) em tests/adversarial/, 3 em pipeline_gates/ com cobertura adversarial",
+      "files": [
+        "test_agent_compliance_phase0.py",
+        "test_done_legacy_phase7.py",
+        "test_phase_0_determinism.py"
+      ]
+    },
+    "sync_gates": {
+      "status": "PASS",
+      "detail": "validate_contracts.py --profile ci STATUS: PASS"
+    },
+    "bundle_freshness": {
+      "status": "PASS",
+      "detail": "compiled_context/ cobre 17/17 módulos canônicos",
+      "modules_covered": 17
+    },
+    "dss_traceability": {
+      "status": "PASS",
+      "detail": "Source graphs (module_manifest.yaml) presentes em 17/17 módulos"
+    },
+    "runtime_replay": {
+      "status": "PENDING",
+      "pending_task": "B10-003",
+      "detail": "tests/replay/staging/ não existe. B10-003 deve criar datasets seeded e replay packs por ciclo de negócio antes desta dimensão poder ser certificada."
+    },
+    "merge_rules_enforcement": {
+      "status": "PASS",
+      "detail": "merge-readiness.json válido | ruleset=contract-gates (id=13901517) | 6 checks required | parity tests: PASS",
+      "ruleset_id": 13901517,
+      "required_checks": 6
+    },
+    "operability_matrix": {
+      "status": "PASS",
+      "detail": "16 passed in 0.47s"
+    }
+  }
+}
