@@ -8,8 +8,8 @@ CDD (Contract-Driven Development): contratos governam autoria antes de código.
 Comunicar em português claro.
 
 ## Fontes de verdade
-- `docs/_canon/AGENT_INSTRUCTIONS.md` — **SSOT boot** (regras de boot canônicas)
-- `docs/_canon/CONTRACT_PIPELINE.md` — **SSOT pipeline CDD** (sequência canônica de fases)
+- `docs/_canon/AGENT_INSTRUCTIONS.md` — regras de boot canônicas
+- `docs/_canon/CONTRACT_PIPELINE.md` — sequência canônica de fases (pipeline CDD)
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
 - `.contract_driven/TASK_CATALOG.yaml`
 - `.contract_driven/BOOT_PROFILES.yaml`
