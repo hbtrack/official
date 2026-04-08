@@ -23,7 +23,7 @@
   "module_focus": "video",
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-08T03:35:59.571293+00:00",
+  "hook_validated_at": "2026-04-08T04:24:28.947183+00:00",
   "stage2_artifacts": [
     {
       "path": "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
@@ -615,6 +615,12 @@
       "path": "contracts/schemas/shared/session_handoff.schema.json",
       "sha256": "a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681",
       "created_at": "2026-04-08T04:14:40.220702+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/session_start.schema.json",
+      "sha256": "39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5",
+      "created_at": "2026-04-08T04:28:18.557862+00:00",
       "gate_exit_code": 0
     }
   ],

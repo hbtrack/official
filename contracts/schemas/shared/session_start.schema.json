@@ -27,7 +27,7 @@
             "task_type"
         ]
     },
-Garantir que todos os processos e ferramentas que geram o `SESSION_HANDOFF.md` para tarefas do tipo `execute_roadmap_phase` sejam atualizados para incluir o campo `roadmap_phase`.
+    "then": {
         "required": [
             "roadmap_phase"
         ]

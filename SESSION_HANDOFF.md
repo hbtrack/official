@@ -9,7 +9,7 @@ task_type: contract_revision
 boot_profile_id: contract_execution
 task_id: ROADMAP-PHASE-FIELD-ENFORCEMENT-001
 resultado: DONE
-proxima_acao_permitida: "PR #51 aberto. Aguardar CI passar após push do commit de enforcement do campo roadmap_phase."
+proxima_acao_permitida: "PR #51: aguardar CI após push do fix session_start.schema.json + enforcement roadmap_phase."
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
