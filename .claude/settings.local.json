@@ -1,6 +1,8 @@
 {
   "permissions": {
-    "allow": []
+    "allow": [
+      "Bash(GH_TOKEN=\"\" gh pr view 51 --json title,state,mergeable,mergeStateStatus,statusCheckRollup,reviews,reviewDecision)"
+    ]
   },
   "hooks": {
     "PreToolUse": [

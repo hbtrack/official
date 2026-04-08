@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-08T04:25:59Z",
+  "timestamp_utc": "2026-04-08T05:46:41Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "a6762d51",
+    "git_commit": "028f59ce",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T042559_c089b5"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T054641_6afc18"
   },
   "status_detail": {
     "active_gates_passed": 52,
@@ -233,7 +233,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 68
       }
     },
     {
@@ -258,7 +258,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12840
+        "duration_ms": 5599
       }
     },
     {
@@ -463,7 +463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 9
       }
     },
     {
@@ -593,7 +593,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 288
+        "duration_ms": 163
       }
     },
     {
@@ -646,7 +646,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 12
       }
     },
     {
@@ -667,7 +667,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 122
+        "duration_ms": 43
       }
     },
     {
@@ -688,7 +688,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 37
       }
     },
     {
@@ -709,7 +709,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 16
       }
     },
     {
@@ -730,7 +730,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 114
+        "duration_ms": 89
       }
     },
     {
@@ -751,7 +751,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 54
       }
     },
     {
@@ -772,7 +772,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 175
+        "duration_ms": 50
       }
     },
     {
@@ -793,7 +793,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 738
+        "duration_ms": 303
       }
     },
     {
@@ -814,7 +814,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 41
       }
     },
     {
@@ -873,7 +873,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 10
       }
     },
     {
@@ -928,7 +928,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 27
       }
     },
     {
@@ -955,7 +955,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 172
+        "duration_ms": 126
       }
     },
     {
@@ -1056,7 +1056,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -1428,7 +1428,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 249
+        "duration_ms": 80
       }
     },
     {
@@ -1514,7 +1514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1045
+        "duration_ms": 724
       }
     },
     {
@@ -1537,7 +1537,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8068
+        "duration_ms": 2315
       }
     },
     {
@@ -1559,7 +1559,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4356
+        "duration_ms": 1565
       }
     },
     {
@@ -1598,7 +1598,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 885
+        "duration_ms": 566
       }
     },
     {
@@ -4509,7 +4509,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 3244
+        "duration_ms": 2060
       }
     },
     {
@@ -5175,7 +5175,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2236
+        "duration_ms": 1794
       }
     },
     {
@@ -5199,7 +5199,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2427
+        "duration_ms": 1600
       }
     },
     {
@@ -5219,7 +5219,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 18
       }
     },
     {
@@ -5259,7 +5259,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3299
+        "duration_ms": 1688
       }
     },
     {
@@ -5302,7 +5302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 71
+        "duration_ms": 69
       }
     },
     {
@@ -5324,7 +5324,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1465
+        "duration_ms": 1553
       }
     },
     {
@@ -5380,7 +5380,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 70
+        "duration_ms": 77
       }
     },
     {
@@ -5400,7 +5400,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 14
       }
     },
     {
@@ -5420,7 +5420,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51984
+        "duration_ms": 43099
       }
     },
     {
@@ -5456,7 +5456,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 453
+        "duration_ms": 18
       }
     },
     {
@@ -5476,7 +5476,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 19
       }
     },
     {
@@ -5498,7 +5498,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 1
       }
     },
     {
@@ -5554,7 +5554,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 8
       }
     },
     {
@@ -5576,7 +5576,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 1
       }
     },
     {
@@ -5598,7 +5598,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 0
       }
     },
     {
@@ -5633,15 +5633,13 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_bundle_required_for_implementation.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_bundle_required_for_implementation.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5649,7 +5647,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 86
+        "duration_ms": 29
       }
     },
     {
@@ -5671,7 +5669,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 296
+        "duration_ms": 184
       }
     },
     {
@@ -5693,7 +5691,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -5715,7 +5713,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 24
       }
     },
     {
@@ -6079,7 +6077,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1606
+        "duration_ms": 945
       }
     },
     {
@@ -6103,7 +6101,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 8
       }
     },
     {
@@ -6125,7 +6123,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 17
       }
     },
     {
@@ -6143,7 +6141,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 6
       }
     },
     {
@@ -6164,7 +6162,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 27
       }
     },
     {
@@ -6187,7 +6185,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 8
       }
     },
     {
@@ -6208,7 +6206,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 22
       }
     },
     {
