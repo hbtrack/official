@@ -77,15 +77,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.bundle.yaml",
-      "sha256": "6392a4627f44e8c7b87473de81264c9ee83b0527bb33ccc6cf1ee8f341b129e3"
+      "sha256": "23ccff678da2e320718aac188915b42845e497f464efed18acd29e9c7b20a77f"
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.schema_contract_view.yaml",
@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/impact_report.json",
-      "sha256": "0469b95e9fd8a5d240f41aed2cf17d602d2023c0704bf96dffaececefa6e47de"
+      "sha256": "b387514eb102b97e43d40060af5b40dae2c4d9fd7e09ce54b57a572023e3a533"
     }
   ],
   "module": "identity_access",
@@ -129,7 +129,7 @@
     "domain_rules": "src/identity_access/domain/rules.py",
     "use_cases": "src/identity_access/application/use_cases.py"
   },
-  "source_fingerprint": "2bd5e6dcbe85f8d283b79a4dba26bfef62dec9201ae16e89d0d18fb21afc965a",
+  "source_fingerprint": "e74a5de14a44a6d1ddf05631d53b66a0f03f51e632a8e785d024f95781eb5642",
   "source_graph": {
     "entities": {
       "AuthSession": {
@@ -403,7 +403,7 @@
         "JWT signing key management é infraestrutura — fora do escopo do source graph de domínio.",
         "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position não aparecem neste módulo (INV-IAM-004)."
       ],
-      "source_fingerprint": "9622b40b5005c2b99061894a6594c2425ef0c81353e9d1a336320f29a1a74455"
+      "source_fingerprint": "b7b6a17ff8303b7ba91f30201d89c6177f1312756587abb1c820ac9e342a31bd"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

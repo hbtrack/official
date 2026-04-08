@@ -1,16 +1,16 @@
 ---
 data_ultima_sessao: "2026-04-08"
-branch_ativo: main
+branch_ativo: feat/b10-003a-contracts-compiler
 modo_operacao: ROADMAP
 ci_status: PASS
-modulo_foco: users
+modulo_foco: training
 fase_roadmap: 5
 roadmap_phase: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-003
 resultado: PENDENTE
-proxima_acao_permitida: "B10-003 em execução — fechamento total do backlog via 5 PRs sequenciais (A→E)"
+proxima_acao_permitida: "B10-003-A em execução — contracts compiler + openapi_paths.yaml para 17 módulos"
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json

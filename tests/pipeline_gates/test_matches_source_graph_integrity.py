@@ -172,4 +172,5 @@ def test_matches_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/matches/graph/endpoints.yaml",
         "docs/hbtrack/modulos/matches/graph/errors.yaml",
         "docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/matches/graph/openapi_paths.yaml",
     }

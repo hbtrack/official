@@ -89,15 +89,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "ebd901466bf73b9824131b37bd9883123e1545d360f411115f45f45a318a9de4"
+      "sha256": "814e4728e8514cd7055b306c5d9d47d2fa92c7f71863c85ad0e3ee003481909e"
     },
     {
       "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -109,7 +109,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/impact_report.json",
-      "sha256": "10fbdffe4102c16d22f4b66df75b228945435abda5945a839f52c025fba3e7c1"
+      "sha256": "ba266cc47d014e31ba253a725ba7e2e8f69de6e575f0880fdcdd42265c592d51"
     }
   ],
   "module": "teams",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "f7d2a1d32d0c19a89f5372c82aa9f7dcac050b82730d29dd424fe840603bf992",
+  "source_fingerprint": "4675ca051da4bfcfb6aab899735f803832a4e5a98872aac30ad34771b3335a8f",
   "source_graph": {
     "entities": {
       "Team": {
@@ -343,7 +343,7 @@
         "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
         "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
       ],
-      "source_fingerprint": "f6caf6c9b778979506b51c8b79313667156d7899c5a30d1f016489860bc8bc4a"
+      "source_fingerprint": "3b4ee2e53bfc2da413fd55b2880f067fc6b0083f693497c82c77fa9615f7e7ac"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

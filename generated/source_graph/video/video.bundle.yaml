@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/video/match_media_session.yaml
   sha256: 5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a
 - relpath: contracts/openapi/paths/video.yaml
-  sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+  sha256: ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe
 - relpath: contracts/schemas/video/clip_definition.schema.json
   sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
 - relpath: contracts/schemas/video/distribution_profile.schema.json
@@ -21,7 +21,7 @@ inputs:
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
-  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+  sha256: 53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f
 - relpath: docs/_canon/graph/global_policies.yaml
   sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
 - relpath: docs/_canon/graph/global_rules.yaml

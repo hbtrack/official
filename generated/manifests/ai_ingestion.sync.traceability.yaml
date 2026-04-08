@@ -150,39 +150,39 @@ traceability_manifest:
   - path: generated/contracts/openapi/openapi.yaml
     sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
   - path: generated/contracts/openapi/paths/ai_ingestion.yaml
-    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+    sha256: 3b5072f5f24f6f761a8755a5d85352bfc3c731b2ccf302a3ce5610c6a010315d
   - path: generated/contracts/openapi/paths/analytics.yaml
-    sha256: 74693ed89107d215d53311f21344d1592a92a9680346f8958460da7eb3114cd9
+    sha256: 6429f13c6691f4536af2ad1b04812b8141932a7f0a9f841db9bae09113950348
   - path: generated/contracts/openapi/paths/audit.yaml
-    sha256: e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a
+    sha256: 8e739b0e80c4e50d032721322d535e3a5fb556e6ec9f550c84e3738b876424db
   - path: generated/contracts/openapi/paths/competitions.yaml
-    sha256: c68d13dedf75bf07835f34c217b4ca09aa742fbd3e5782776918fa729077c8f3
+    sha256: e8b95b5513ee0f86ac7dc39e591cfb4497d766bb4f5b80f981e813b080be7119
   - path: generated/contracts/openapi/paths/exercises.yaml
-    sha256: 147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc
+    sha256: 4ae1eb6b9b2910d13e7ccfbbc405e8264e5abff3cf302a3d2e495400390b89f3
   - path: generated/contracts/openapi/paths/identity_access.yaml
-    sha256: c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483
+    sha256: 4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa
   - path: generated/contracts/openapi/paths/matches.yaml
-    sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
+    sha256: d2efe5493eaa2553b48f318f1145792acc2c013b8ccf50b5b7e7cdc466f10ed7
   - path: generated/contracts/openapi/paths/medical.yaml
-    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+    sha256: 2bbc929859ae7397ca92591c06f39662d55106b4e612b1d54cf64bdd7e3484f1
   - path: generated/contracts/openapi/paths/notifications.yaml
-    sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
+    sha256: bfb3b348a9806308947c324222b56c0003cfbbae6cd84d46ed6b33d9077cde39
   - path: generated/contracts/openapi/paths/reports.yaml
-    sha256: f2f66a034edc4b916b456a6d01c52805d75f83fb73e3d6e48c68f4f2150ae3df
+    sha256: d1c0fddba85df83e33238ae11fff1222def817ac7e5aaedef027e49db6977d54
   - path: generated/contracts/openapi/paths/scout.yaml
-    sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
+    sha256: bbc4c8cfd28085d117f169ef7536ff6139eebeb6164f16cc4420c3c663f8fa7e
   - path: generated/contracts/openapi/paths/seasons.yaml
-    sha256: 9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad
+    sha256: 943c09b15405b3f5a470e7db146dcc6e185ad02feb4e782cb2ac1a420f5c658d
   - path: generated/contracts/openapi/paths/teams.yaml
-    sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+    sha256: 52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c
   - path: generated/contracts/openapi/paths/training.yaml
-    sha256: 70d6bb1c01a0825f88f06d58098fe4d540f067123ee4a91f499f4517b22816cd
+    sha256: 6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae
   - path: generated/contracts/openapi/paths/users.yaml
-    sha256: 0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0
+    sha256: 3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe
   - path: generated/contracts/openapi/paths/video.yaml
-    sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+    sha256: ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe
   - path: generated/contracts/openapi/paths/wellness.yaml
-    sha256: 9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120
+    sha256: 6d53ba4d3c44291bcdfc45bbb93fb07ccb498da35c08d627b4b86b821c48e4a6
   - path: generated/contracts/openapi/redocly_lint.log
     sha256: 6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4
   - path: generated/contracts/openapi/spectral_lint.log
@@ -323,7 +323,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 6ead8d17fd47832f389f697932243d004605150216358a349d1ac7b21a3dc9ea
+  generated_tree_sha256: 3afbe339aa87937deb2901a5e13d2f79464fdd69023c7ec1a0d9bb0e2e467c11
   policy_path: generated/resolved_policy/ai_ingestion.sync.resolved.yaml
   policy_sha256: 52ac9f36b6b01483a49e4602a1b36f63e67970ea4f34040ce1d943b7dd69fdcf
   source_contracts:
@@ -474,39 +474,39 @@ traceability_manifest:
   - path: contracts/openapi/openapi.yaml
     sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
   - path: contracts/openapi/paths/ai_ingestion.yaml
-    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+    sha256: 3b5072f5f24f6f761a8755a5d85352bfc3c731b2ccf302a3ce5610c6a010315d
   - path: contracts/openapi/paths/analytics.yaml
-    sha256: 74693ed89107d215d53311f21344d1592a92a9680346f8958460da7eb3114cd9
+    sha256: 6429f13c6691f4536af2ad1b04812b8141932a7f0a9f841db9bae09113950348
   - path: contracts/openapi/paths/audit.yaml
-    sha256: e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a
+    sha256: 8e739b0e80c4e50d032721322d535e3a5fb556e6ec9f550c84e3738b876424db
   - path: contracts/openapi/paths/competitions.yaml
-    sha256: c68d13dedf75bf07835f34c217b4ca09aa742fbd3e5782776918fa729077c8f3
+    sha256: e8b95b5513ee0f86ac7dc39e591cfb4497d766bb4f5b80f981e813b080be7119
   - path: contracts/openapi/paths/exercises.yaml
-    sha256: 147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc
+    sha256: 4ae1eb6b9b2910d13e7ccfbbc405e8264e5abff3cf302a3d2e495400390b89f3
   - path: contracts/openapi/paths/identity_access.yaml
-    sha256: c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483
+    sha256: 4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa
   - path: contracts/openapi/paths/matches.yaml
-    sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
+    sha256: d2efe5493eaa2553b48f318f1145792acc2c013b8ccf50b5b7e7cdc466f10ed7
   - path: contracts/openapi/paths/medical.yaml
-    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+    sha256: 2bbc929859ae7397ca92591c06f39662d55106b4e612b1d54cf64bdd7e3484f1
   - path: contracts/openapi/paths/notifications.yaml
-    sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
+    sha256: bfb3b348a9806308947c324222b56c0003cfbbae6cd84d46ed6b33d9077cde39
   - path: contracts/openapi/paths/reports.yaml
-    sha256: f2f66a034edc4b916b456a6d01c52805d75f83fb73e3d6e48c68f4f2150ae3df
+    sha256: d1c0fddba85df83e33238ae11fff1222def817ac7e5aaedef027e49db6977d54
   - path: contracts/openapi/paths/scout.yaml
-    sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
+    sha256: bbc4c8cfd28085d117f169ef7536ff6139eebeb6164f16cc4420c3c663f8fa7e
   - path: contracts/openapi/paths/seasons.yaml
-    sha256: 9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad
+    sha256: 943c09b15405b3f5a470e7db146dcc6e185ad02feb4e782cb2ac1a420f5c658d
   - path: contracts/openapi/paths/teams.yaml
-    sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+    sha256: 52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c
   - path: contracts/openapi/paths/training.yaml
-    sha256: 70d6bb1c01a0825f88f06d58098fe4d540f067123ee4a91f499f4517b22816cd
+    sha256: 6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae
   - path: contracts/openapi/paths/users.yaml
-    sha256: 0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0
+    sha256: 3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe
   - path: contracts/openapi/paths/video.yaml
-    sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+    sha256: ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe
   - path: contracts/openapi/paths/wellness.yaml
-    sha256: 9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120
+    sha256: 6d53ba4d3c44291bcdfc45bbb93fb07ccb498da35c08d627b4b86b821c48e4a6
   - path: contracts/openapi/redocly_lint.log
     sha256: 6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4
   - path: contracts/openapi/spectral_lint.log
@@ -658,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
-  source_tree_sha256: f2c589a9efd1562b3127bc1f3c9ad2f0abcbfbafdc9b74a1be68b22d5f2db49f
+  source_tree_sha256: 0aaffcb311eb9a687f252333f338bf0f0a4329fede40d2be06015064ac5ef274

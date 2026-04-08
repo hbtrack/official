@@ -1313,3 +1313,248 @@ rules:
       - "python3 scripts/compile/compile_context_bundle.py --module identity_access --check"
       - "python3 scripts/validate_contracts.py --profile ci"
       - "python3 -m pytest tests/pipeline_gates/test_identity_access_source_graph_integrity.py -q"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OPENAPI PATHS SYNC — 17 módulos (adicionado em B10-003a)
+# source_master: docs/hbtrack/modulos/<module>/graph/openapi_paths.yaml
+# required_consumer: contracts/openapi/paths/<module>.yaml (DERIVED — compile_contracts.py)
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - rule_id: AI_INGESTION_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/ai_ingestion/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module ai_ingestion"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: ANALYTICS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/analytics/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/analytics.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/analytics.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module analytics"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: AUDIT_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/audit/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/audit.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/audit.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module audit"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: COMPETITIONS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/competitions/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/competitions.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/competitions.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module competitions"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: EXERCISES_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/exercises/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/exercises.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/exercises.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module exercises"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: IDENTITY_ACCESS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/identity_access/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/identity_access.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/identity_access.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module identity_access"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: MATCHES_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/matches/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/matches.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/matches.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module matches"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: MEDICAL_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/medical/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/medical.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/medical.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module medical"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: NOTIFICATIONS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/notifications/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/notifications.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/notifications.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module notifications"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: REPORTS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/reports/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/reports.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/reports.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module reports"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: SCOUT_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/scout/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/scout.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/scout.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module scout"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: SEASONS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/seasons/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/seasons.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/seasons.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module seasons"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: TEAMS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/teams/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/teams.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/teams.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module teams"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: TRAINING_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/training/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/training.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/training.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module training"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: USERS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/users/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/users.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/users.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module users"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: VIDEO_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/video/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/video.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/video.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module video"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"
+
+  - rule_id: WELLNESS_OPENAPI_PATHS_SYNC
+    source_master: "docs/hbtrack/modulos/wellness/graph/openapi_paths.yaml"
+    source_kind: "openapi_paths_source"
+    change_types:
+      - "api_contract_change"
+    required_consumers:
+      - "contracts/openapi/paths/wellness.yaml"
+    blocking_consumers:
+      - "contracts/openapi/paths/wellness.yaml"
+    validation_commands:
+      - "python3 scripts/compile/compile_contracts.py --module wellness"
+      - "python3 scripts/compile/compile_contracts.py --check"
+      - "python3 scripts/validate_contracts.py --profile ci"

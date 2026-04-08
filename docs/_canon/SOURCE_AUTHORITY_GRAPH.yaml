@@ -216,3 +216,31 @@ concepts:
       - "tests/pipeline_gates/test_ops_contract_compiler.py"
       - "tests/pipeline_gates/test_deploy_env_rendering_flow.py"
       - "tests/pipeline_gates/test_secret_rotation_contract.py"
+
+  openapi_paths_derived:
+    owner_source: "docs/hbtrack/modulos/*/graph/openapi_paths.yaml"
+    classification: derived
+    generator: "scripts/compile/compile_contracts.py"
+    note: "Adicionado em B10-003a — openapi/paths/*.yaml são artefatos DERIVADOS gerados pelo compiler"
+    artifacts:
+      - "contracts/openapi/paths/ai_ingestion.yaml"
+      - "contracts/openapi/paths/analytics.yaml"
+      - "contracts/openapi/paths/audit.yaml"
+      - "contracts/openapi/paths/competitions.yaml"
+      - "contracts/openapi/paths/exercises.yaml"
+      - "contracts/openapi/paths/identity_access.yaml"
+      - "contracts/openapi/paths/matches.yaml"
+      - "contracts/openapi/paths/medical.yaml"
+      - "contracts/openapi/paths/notifications.yaml"
+      - "contracts/openapi/paths/reports.yaml"
+      - "contracts/openapi/paths/scout.yaml"
+      - "contracts/openapi/paths/seasons.yaml"
+      - "contracts/openapi/paths/teams.yaml"
+      - "contracts/openapi/paths/training.yaml"
+      - "contracts/openapi/paths/users.yaml"
+      - "contracts/openapi/paths/video.yaml"
+      - "contracts/openapi/paths/wellness.yaml"
+    consumers:
+      - "contracts/openapi/openapi.yaml"
+      - "tests/pipeline_gates/test_contract_compiler.py"
+      - "scripts/contracts/validate/validate_contracts.py"

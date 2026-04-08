@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/reports/report_job.yaml
   sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
 - relpath: contracts/openapi/paths/reports.yaml
-  sha256: f2f66a034edc4b916b456a6d01c52805d75f83fb73e3d6e48c68f4f2150ae3df
+  sha256: d1c0fddba85df83e33238ae11fff1222def817ac7e5aaedef027e49db6977d54
 - relpath: contracts/schemas/reports/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/reports/report_job.schema.json
@@ -17,7 +17,7 @@ inputs:
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
-  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+  sha256: 53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f
 - relpath: docs/_canon/graph/global_policies.yaml
   sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
 - relpath: docs/_canon/graph/global_rules.yaml

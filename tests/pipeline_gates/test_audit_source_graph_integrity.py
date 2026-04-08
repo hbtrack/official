@@ -172,4 +172,5 @@ def test_audit_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/audit/graph/endpoints.yaml",
         "docs/hbtrack/modulos/audit/graph/errors.yaml",
         "docs/hbtrack/modulos/audit/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/audit/graph/openapi_paths.yaml",
     }

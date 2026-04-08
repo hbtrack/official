@@ -172,4 +172,5 @@ def test_teams_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/teams/graph/endpoints.yaml",
         "docs/hbtrack/modulos/teams/graph/errors.yaml",
         "docs/hbtrack/modulos/teams/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/teams/graph/openapi_paths.yaml",
     }

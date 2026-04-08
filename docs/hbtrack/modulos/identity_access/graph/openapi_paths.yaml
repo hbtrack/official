@@ -1,0 +1,582 @@
+# SOURCE MASTER — openapi_paths for module: identity_access
+# GENERATED CONTRACT: contracts/openapi/paths/identity_access.yaml  ← compiler output
+# Compiler: scripts/compile/compile_contracts.py
+# DO NOT edit contracts/openapi/paths/identity_access.yaml manually — regenerate via compiler
+#
+# Canonical API rules: .contract_driven/templates/api/api_rules.yaml
+# Related docs:
+# - docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md
+# - docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md
+# - docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md
+#
+# Each path must belong exclusively to this module (LAYOUT §6).
+# Naming conventions (api_rules.yaml canonical_conventions):
+#   - path segments: kebab-case (no /api, no /v1)
+#   - query params: camelCase
+#   - JSON fields: camelCase
+#   - OWASP API Security Top 10 (2023) compliance mandatory
+
+/auth/login:
+  post:
+    tags: [identity_access]
+    summary: Authenticate user
+    description: >
+      Autentica o usuário via email + senha. Retorna JWT de acesso (RS256) e um
+      refresh token opaco. A sessão gerada fica registrada como AuthSession.
+
+      Regras aplicadas:
+      - DR-IAM-001: identity_access é soberano de login e criação de sessão
+      - OWASP API2:2023 (Broken Authentication): rate-limit de tentativas via 429
+      - OWASP API3:2023: resposta não inclui hash de senha nem credenciais armazenadas
+      - INV-IAM-001: sessionScopeLabel obrigatório na sessão criada
+    operationId: authLogin
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [email, password]
+            additionalProperties: false
+            properties:
+              email:
+                type: string
+                format: email
+                maxLength: 254
+              password:
+                type: string
+                minLength: 8
+                maxLength: 128
+                writeOnly: true
+    responses:
+      "200":
+        description: Autenticação bem-sucedida
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accessToken, refreshToken, session]
+              additionalProperties: false
+              properties:
+                accessToken:
+                  type: string
+                  description: >
+                    JWT Bearer token (RS256). Claims incluídos: sub, roleLabels,
+                    sessionScopeLabel, iat, exp (ADR-007).
+                refreshToken:
+                  type: string
+                  description: Token opaco de uso único para renovação (OWASP API2:2023).
+                session:
+                  $ref: ../components/schemas/identity_access/auth_session.yaml
+      "400":
+        description: Credenciais malformadas
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Credenciais inválidas (email ou senha incorretos)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "429":
+        description: >
+          Muitas tentativas de login — rate-limit atingido (OWASP API2:2023).
+          Retry-After header indica o tempo em segundos.
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
+/auth/logout:
+  post:
+    tags: [identity_access]
+    summary: Revoke current session
+    description: >
+      Revoga a sessão associada ao Bearer token presente no header.
+      Define `revokedAt = now()`. O access token torna-se inválido imediatamente.
+      O refresh token associado também é invalidado.
+
+      Regras aplicadas:
+      - DR-IAM-001: identity_access governa revogação de sessão
+      - DR-IAM-005: revogação não pode ser delegada a módulos operacionais
+      - INV-IAM-003: revokedAt >= issuedAt (invariante temporal)
+    operationId: authLogout
+    security:
+      - HTTPBearer: []
+    responses:
+      "204":
+        description: Sessão revogada com sucesso
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/auth/refresh:
+  post:
+    tags: [identity_access]
+    summary: Refresh access token
+    description: >
+      Troca um refresh token válido por novo par (accessToken + refreshToken).
+      O refresh token apresentado é invalidado após uso — rotação obrigatória
+      (OWASP API2:2023). A sessão mantém o mesmo ID mas recebe novas datas.
+
+      Regras aplicadas:
+      - DR-IAM-001: refresh é responsabilidade exclusiva de identity_access
+      - OWASP API2:2023: refresh token de uso único, rotação ativa após cada uso
+    operationId: authRefreshToken
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [refreshToken]
+            additionalProperties: false
+            properties:
+              refreshToken:
+                type: string
+                description: Refresh token opaco obtido em authLogin ou authRefreshToken.
+    responses:
+      "200":
+        description: Novo par de tokens gerado
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accessToken, refreshToken]
+              additionalProperties: false
+              properties:
+                accessToken:
+                  type: string
+                refreshToken:
+                  type: string
+      "401":
+        description: Refresh token inválido, expirado ou já utilizado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
+/auth/me:
+  get:
+    tags: [identity_access]
+    summary: Get current session
+    description: >
+      Retorna a sessão ativa associada ao Bearer token do caller.
+      Permite introspecção de claims técnicos (roleLabels, sessionScopeLabel,
+      mfaSatisfied) sem expor dados de perfil (DR-IAM-002).
+
+      Regras aplicadas:
+      - DR-IAM-001: identity_access é soberano do estado da sessão
+      - DR-IAM-003: sessionScopeLabel e roleLabels são contexto técnico de authn
+      - INV-IAM-001: id, principalUserId, sessionScopeLabel sempre presentes
+      - OWASP API1:2023 (BOLA): resposta filtrada ao principalUserId do token
+    operationId: authGetCurrentSession
+    security:
+      - HTTPBearer: []
+    responses:
+      "200":
+        description: Sessão ativa do caller
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/identity_access/auth_session.yaml
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/auth/sessions:
+  get:
+    tags: [identity_access]
+    summary: List active sessions
+    description: >
+      Lista todas as sessões ativas da plataforma. Restrito a role `admin`.
+      Permite auditoria e monitoramento de sessões simultâneas.
+
+      Regras aplicadas:
+      - DR-IAM-001: identity_access é soberano da listagem de sessões
+      - OWASP API5:2023 (BFLA): role `admin` obrigatório, verificado server-side
+      - OWASP API4:2023: paginação cursor-based obrigatória (pageSize máximo: 100)
+    operationId: listActiveSessions
+    security:
+      - HTTPBearer: []
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: principalUserId
+        in: query
+        required: false
+        description: Filtrar sessões de um usuário específico (OWASP API1:2023)
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Lista paginada de sessões ativas
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              additionalProperties: false
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/identity_access/auth_session.yaml
+                nextPageToken:
+                  type: string
+                  description: Omit when no further pages.
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Role insuficiente — apenas `admin` pode listar todas as sessões
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/auth/sessions/{sessionId}:
+  delete:
+    tags: [identity_access]
+    summary: Revoke session by ID
+    description: >
+      Revoga uma sessão pelo ID. `admin` pode revogar qualquer sessão.
+      Usuário não-admin só pode revogar suas próprias sessões
+      (principalUserId == jwt.sub — OWASP API1:2023 BOLA).
+
+      Regras aplicadas:
+      - DR-IAM-005: revogação de sessão é soberania exclusiva de identity_access
+      - OWASP API1:2023 (BOLA): verificar ownership antes de revogar
+      - OWASP API5:2023 (BFLA): admin pode revogar qualquer sessão
+      - INV-IAM-003: revokedAt >= issuedAt (invariante temporal)
+    operationId: revokeSession
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: sessionId
+        in: path
+        required: true
+        description: UUID v4 da sessão a revogar
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Sessão revogada com sucesso
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Sem permissão para revogar esta sessão (não é owner nem admin)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Sessão não encontrada
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/auth/users/{userId}/roles:
+  get:
+    tags: [identity_access]
+    summary: List roles for user
+    description: >
+      Retorna todos os roles RBAC canônicos atribuídos a um usuário.
+      ADR-008: modelo flat de 5 roles (admin, coordinator, coach, athlete, member).
+      `admin` e `coordinator` podem listar roles de qualquer usuário;
+      self pode listar os próprios roles.
+
+      Regras aplicadas:
+      - DR-IAM-001: bindings RBAC são soberania de identity_access
+      - DR-IAM-003: roleLabels são contexto técnico — não derivados de posição esportiva
+      - OWASP API5:2023 (BFLA): role-based access verificado server-side
+    operationId: listUserRoles
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: UUID do usuário cujos roles serão listados
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Roles atribuídos ao usuário
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, roles]
+              additionalProperties: false
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                  x-semantic-id: identity.user.id.v1
+                roles:
+                  type: array
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum:
+                      - admin
+                      - coordinator
+                      - coach
+                      - athlete
+                      - member
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Sem permissão para listar roles deste usuário
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Usuário não encontrado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  post:
+    tags: [identity_access]
+    summary: Assign role to user
+    description: >
+      Atribui um role RBAC canônico (ADR-008) ao usuário.
+      `admin` pode atribuir qualquer role.
+      `coordinator` pode atribuir coach, athlete e member dentro da organização.
+      Atribuição de role gera entrada no módulo audit (cross-cutting compliance).
+
+      Regras aplicadas:
+      - DR-IAM-001: atribuição de role é soberania de identity_access
+      - DR-IAM-003: roleLabels são contexto técnico, nunca deduzidos de posição
+      - DR-IAM-005: binding de role não pode ser feito por módulos operacionais
+      - OWASP API5:2023 (BFLA): admin ou coordinator (com restrição de escopo)
+    operationId: assignRole
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: UUID do usuário que receberá o role
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [roleLabel]
+            additionalProperties: false
+            properties:
+              roleLabel:
+                type: string
+                description: Role canônico a atribuir (ADR-008)
+                enum:
+                  - admin
+                  - coordinator
+                  - coach
+                  - athlete
+                  - member
+    responses:
+      "200":
+        description: Role atribuído — retorna lista completa de roles do usuário
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, roles]
+              additionalProperties: false
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                  x-semantic-id: identity.user.id.v1
+                roles:
+                  type: array
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum:
+                      - admin
+                      - coordinator
+                      - coach
+                      - athlete
+                      - member
+      "400":
+        description: roleLabel ausente ou valor fora do enum canônico
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: "Sem permissão para atribuir este role (ex: coordinator tentando atribuir admin)"
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Usuário não encontrado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Role já atribuído ao usuário
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/auth/users/{userId}/roles/{roleLabel}:
+  delete:
+    tags: [identity_access]
+    summary: Revoke role from user
+    description: >
+      Remove um role RBAC canônico de um usuário.
+      `admin` pode revogar qualquer role.
+      `coordinator` pode revogar coach, athlete e member na própria organização.
+      Não é possível revogar o último role `admin` da plataforma (invariante de segurança).
+
+      Regras aplicadas:
+      - DR-IAM-001: revogação de role é soberania de identity_access
+      - DR-IAM-005: bindings de role não delegados a módulos operacionais
+      - OWASP API5:2023 (BFLA): admin ou coordinator (com restrição de escopo)
+    operationId: revokeRole
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: UUID do usuário
+        schema:
+          type: string
+          format: uuid
+      - name: roleLabel
+        in: path
+        required: true
+        description: Role canônico a revogar (ADR-008)
+        schema:
+          type: string
+          enum:
+            - admin
+            - coordinator
+            - coach
+            - athlete
+            - member
+    responses:
+      "204":
+        description: Role revogado com sucesso
+      "400":
+        description: roleLabel fora do enum canônico
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Token ausente ou inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Sem permissão para revogar este role
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Usuário ou role não encontrado neste usuário
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: >
+          Operação bloqueada — não é possível revogar o último admin ativo da
+          plataforma (invariante de segurança).
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

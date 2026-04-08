@@ -172,4 +172,5 @@ def test_users_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/users/graph/endpoints.yaml",
         "docs/hbtrack/modulos/users/graph/errors.yaml",
         "docs/hbtrack/modulos/users/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
     }
