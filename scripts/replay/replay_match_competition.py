@@ -96,7 +96,7 @@ def run_live(client, base_url: str, auth_header: dict, team_id: str) -> dict:
     # 4. Atualizar resultado
     r = client.patch(
         f"{base_url}/api/matches/{match_id}/",
-        json={"homeScore": 28, "awayScore": 25, "statusLabel": "finished"},
+        json={"homeScore": 28, "awayScore": 25, "statusLabel": "COMPLETED"},
         headers=auth_header,
     )
     results.append({"step": "matches_update", "status_code": r.status_code})
