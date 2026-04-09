@@ -4,10 +4,10 @@ Replay Pack — Ciclo 1: Identidade e Acesso
 Cobre: identity_access, users, audit
 
 Endpoints principais:
-  POST /api/auth/token/      → obter JWT
-  POST /api/auth/token/refresh/ → renovar JWT
-  GET  /api/users/me/        → perfil do usuário autenticado
-  GET  /api/audit/logs/      → listar logs de auditoria
+  POST /api/auth/login    → obter JWT (authLogin, retorna accessToken)
+  POST /api/auth/refresh  → renovar JWT (authRefreshToken)
+  GET  /api/auth/me       → sessão do usuário autenticado
+  GET  /api/audit/logs/   → listar logs de auditoria
 """
 from __future__ import annotations
 
@@ -15,10 +15,10 @@ CYCLE_ID = "ciclo1_identidade_acesso"
 CYCLE_MODULES = ["identity_access", "users", "audit"]
 
 ENDPOINTS = [
-    {"method": "POST", "path": "/api/auth/token/",         "name": "auth_token"},
-    {"method": "POST", "path": "/api/auth/token/refresh/", "name": "auth_refresh"},
-    {"method": "GET",  "path": "/api/users/me/",           "name": "users_me"},
-    {"method": "GET",  "path": "/api/audit/logs/",         "name": "audit_logs"},
+    {"method": "POST", "path": "/api/auth/login",   "name": "auth_login"},
+    {"method": "POST", "path": "/api/auth/refresh", "name": "auth_refresh"},
+    {"method": "GET",  "path": "/api/auth/me",      "name": "auth_me"},
+    {"method": "GET",  "path": "/api/audit/logs/",  "name": "audit_logs"},
 ]
 
 
@@ -36,22 +36,22 @@ def run_live(client, base_url: str, credentials: dict) -> dict:
 
     # 1. Autenticação
     r = client.post(
-        f"{base_url}/api/auth/token/",
+        f"{base_url}/api/auth/login",
         json={"email": credentials["email"], "password": credentials["password"]},
     )
-    results.append({"step": "auth_token", "status_code": r.status_code})
-    assert r.status_code == 200, f"auth/token falhou: {r.status_code}"
+    results.append({"step": "auth_login", "status_code": r.status_code})
+    assert r.status_code == 200, f"auth/login falhou: {r.status_code}"
     data = r.json()
-    assert "access" in data, "Resposta sem campo 'access'"
-    access_token = data["access"]
+    assert "accessToken" in data, "Resposta sem campo 'accessToken'"
+    access_token = data["accessToken"]
 
-    # 2. Perfil do usuário
+    # 2. Sessão do usuário autenticado
     r = client.get(
-        f"{base_url}/api/users/me/",
+        f"{base_url}/api/auth/me",
         headers={"Authorization": f"Bearer {access_token}"},
     )
-    results.append({"step": "users_me", "status_code": r.status_code})
-    assert r.status_code == 200, f"users/me falhou: {r.status_code}"
+    results.append({"step": "auth_me", "status_code": r.status_code})
+    assert r.status_code == 200, f"auth/me falhou: {r.status_code}"
 
     # 3. Logs de auditoria
     r = client.get(

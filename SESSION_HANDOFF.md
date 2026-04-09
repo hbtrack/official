@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-09"
-branch_ativo: feat/b10-003-staging-replay-packs
+branch_ativo: fix/replay-contract-alignment
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: training
@@ -9,8 +9,8 @@ roadmap_phase: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-003
-resultado: DONE
-proxima_acao_permitida: "B10-003 concluído — próximo: Phase 1–7 Implementation (identity_access → users → seasons → teams)"
+resultado: PENDENTE
+proxima_acao_permitida: "fix(replay): corrigir 3 P1 Codex — replay packs alinhados ao contrato"
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json

@@ -37,3 +37,6 @@ SEED_ADMIN_PASSWORD = "hbtrack_test_2024!"
 
 SEED_USER_EMAIL = "atleta@hbtrack.test"
 SEED_USER_PASSWORD = "hbtrack_test_2024!"
+
+SEED_ORG_ID = "00000000-0000-0000-0000-000000000001"
+SEED_CATEGORY_LABEL = "adulto_masculino"
