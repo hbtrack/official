@@ -307,10 +307,21 @@ Os itens abaixo são derivados e nunca sobrepõem artefatos normativos:
 Regras:
 - artefatos gerados nunca são normativos
 - artefatos gerados não devem ser editados manualmente quando existe regeneração
-- artefatos gerados devem viver sob `generated/`
+- artefatos gerados devem viver sob `generated/` — **exceção estrutural abaixo**
 - evidências e relatórios derivados devem viver sob `_reports/`
 - artefatos gerados devem ser regeneráveis a partir de fontes soberanas
 - drift entre artefato gerado e fonte normativa deve falhar o pipeline
+
+**Exceção estrutural — `contracts/openapi/paths/`:**
+`contracts/openapi/paths/<MODULE>.yaml` são artefatos DERIVADOS gerados por
+`scripts/compile/compile_contracts.py` a partir dos source masters em
+`docs/hbtrack/modulos/*/graph/openapi_paths.yaml`. Eles vivem em `contracts/`
+(não em `generated/`) por razão de co-localização com `contracts/openapi/openapi.yaml`,
+que os referencia via `$ref: paths/<module>.yaml` (caminho relativo do padrão OpenAPI).
+Mover para `generated/openapi/paths/` exigiria referenciar `../../generated/openapi/paths/`
+no root — antipadrão para specs OpenAPI. Esta exceção é documentada em
+`docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml` (entry `openapi_paths_derived`) e
+`docs/_canon/SYNC_MANIFEST.yaml` (rules `*_OPENAPI_PATHS_SYNC`). Não editar manualmente.
 
 ---
 

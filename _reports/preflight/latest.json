@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T00:24:02.706777+00:00",
+  "generated_at": "2026-04-09T00:47:53.323394+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
@@ -14,8 +14,8 @@
     {
       "context": "Validate Contract Gates",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 2
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Governance Tests",
@@ -32,8 +32,8 @@
     {
       "context": "ci / Validate Contracts",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 2
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "ci / Tests",
@@ -72,13 +72,8 @@
       "exit_code": 0
     }
   ],
-  "checks_failed": [
-    "Validate Contract Gates",
-    "ci / Validate Contracts"
-  ],
-  "missing_evidence": [
-    "handoff_scope_expansion"
-  ],
+  "checks_failed": [],
+  "missing_evidence": [],
   "semantic_findings": [
     {
       "when": "schema_field_removed",
@@ -106,7 +101,7 @@
     },
     {
       "when": "diff_outside_handoff_scope",
-      "triggered": true,
+      "triggered": false,
       "block_if_missing": true,
       "require": [
         "handoff_scope_expansion"
@@ -122,14 +117,14 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 184,
+    "changed_files": 185,
     "max_changed_files": 150,
-    "commits": 1,
+    "commits": 2,
     "max_commits": 20,
     "cross_domain_areas": 1,
     "max_cross_domain_areas": 3,
     "exceeded": true,
     "split_required": true
   },
-  "final_decision": "BLOCK"
+  "final_decision": "WARN"
 }
