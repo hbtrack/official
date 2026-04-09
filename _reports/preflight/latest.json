@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T03:54:13.204355+00:00",
+  "generated_at": "2026-04-09T04:49:51.470702+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
@@ -14,8 +14,8 @@
     {
       "context": "Validate Contract Gates",
       "category": "required",
-      "result": "PASS",
-      "exit_code": 0
+      "result": "FAIL",
+      "exit_code": 2
     },
     {
       "context": "Governance Tests",
@@ -32,8 +32,8 @@
     {
       "context": "ci / Validate Contracts",
       "category": "required",
-      "result": "PASS",
-      "exit_code": 0
+      "result": "FAIL",
+      "exit_code": 2
     },
     {
       "context": "ci / Tests",
@@ -68,11 +68,15 @@
     {
       "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
       "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
+      "result": "FAIL",
+      "exit_code": 1
     }
   ],
-  "checks_failed": [],
+  "checks_failed": [
+    "Validate Contract Gates",
+    "ci / Validate Contracts",
+    "Validação Cruzada SESSION_HANDOFF ↔ session_start"
+  ],
   "missing_evidence": [],
   "semantic_findings": [
     {
@@ -117,14 +121,14 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 21,
+    "changed_files": 19,
     "max_changed_files": 150,
-    "commits": 4,
+    "commits": 1,
     "max_commits": 20,
     "cross_domain_areas": 0,
     "max_cross_domain_areas": 3,
     "exceeded": false,
     "split_required": false
   },
-  "final_decision": "PASS"
+  "final_decision": "BLOCK"
 }
