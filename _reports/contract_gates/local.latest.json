@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-08T13:30:54Z",
+  "timestamp_utc": "2026-04-09T14:30:45Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "6a6caa67",
+    "git_commit": "698688f4",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260408T133054_44454a"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T143045_5b2adb"
   },
   "status_detail": {
     "active_gates_passed": 27,
-    "skip_count": 28,
+    "skip_count": 34,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -208,6 +208,30 @@
       {
         "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPACT_ANALYSIS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PARTIAL_UPDATE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "DOC_USAGE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "HBTRACK_CANON_PARITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
@@ -233,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 327
+        "duration_ms": 112
       }
     },
     {
@@ -258,7 +282,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4860
+        "duration_ms": 2367
       }
     },
     {
@@ -369,7 +393,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 18
       }
     },
     {
@@ -522,7 +546,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 169
+        "duration_ms": 155
       }
     },
     {
@@ -623,7 +647,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 3
       }
     },
     {
@@ -995,7 +1019,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 94
+        "duration_ms": 46
       }
     },
     {
@@ -1081,7 +1105,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 959
+        "duration_ms": 977
       }
     },
     {
@@ -1104,7 +1128,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2724
+        "duration_ms": 1411
       }
     },
     {
@@ -1126,7 +1150,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1629
+        "duration_ms": 2094
       }
     },
     {
@@ -1165,7 +1189,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 591
+        "duration_ms": 627
       }
     },
     {
@@ -3274,11 +3298,11 @@
           ],
           "range": {
             "start": {
-              "line": 9,
+              "line": 12,
               "character": 6
             },
             "end": {
-              "line": 150,
+              "line": 153,
               "character": 63
             }
           }
@@ -3294,11 +3318,11 @@
           ],
           "range": {
             "start": {
-              "line": 151,
+              "line": 154,
               "character": 7
             },
             "end": {
-              "line": 302,
+              "line": 305,
               "character": 63
             }
           }
@@ -3314,11 +3338,11 @@
           ],
           "range": {
             "start": {
-              "line": 304,
+              "line": 307,
               "character": 6
             },
             "end": {
-              "line": 350,
+              "line": 353,
               "character": 63
             }
           }
@@ -3334,11 +3358,11 @@
           ],
           "range": {
             "start": {
-              "line": 351,
+              "line": 354,
               "character": 8
             },
             "end": {
-              "line": 510,
+              "line": 513,
               "character": 63
             }
           }
@@ -3354,11 +3378,11 @@
           ],
           "range": {
             "start": {
-              "line": 511,
+              "line": 514,
               "character": 9
             },
             "end": {
-              "line": 574,
+              "line": 577,
               "character": 63
             }
           }
@@ -3374,11 +3398,11 @@
           ],
           "range": {
             "start": {
-              "line": 576,
+              "line": 579,
               "character": 7
             },
             "end": {
-              "line": 624,
+              "line": 627,
               "character": 63
             }
           }
@@ -3394,11 +3418,11 @@
           ],
           "range": {
             "start": {
-              "line": 626,
+              "line": 629,
               "character": 6
             },
             "end": {
-              "line": 682,
+              "line": 685,
               "character": 63
             }
           }
@@ -3414,11 +3438,11 @@
           ],
           "range": {
             "start": {
-              "line": 684,
+              "line": 687,
               "character": 6
             },
             "end": {
-              "line": 737,
+              "line": 740,
               "character": 63
             }
           }
@@ -3434,11 +3458,11 @@
           ],
           "range": {
             "start": {
-              "line": 739,
+              "line": 742,
               "character": 6
             },
             "end": {
-              "line": 791,
+              "line": 794,
               "character": 63
             }
           }
@@ -3454,11 +3478,11 @@
           ],
           "range": {
             "start": {
-              "line": 792,
+              "line": 795,
               "character": 7
             },
             "end": {
-              "line": 872,
+              "line": 875,
               "character": 63
             }
           }
@@ -3474,11 +3498,11 @@
           ],
           "range": {
             "start": {
-              "line": 874,
+              "line": 877,
               "character": 9
             },
             "end": {
-              "line": 927,
+              "line": 930,
               "character": 63
             }
           }
@@ -3494,11 +3518,11 @@
           ],
           "range": {
             "start": {
-              "line": 929,
+              "line": 932,
               "character": 6
             },
             "end": {
-              "line": 993,
+              "line": 996,
               "character": 63
             }
           }
@@ -3514,11 +3538,11 @@
           ],
           "range": {
             "start": {
-              "line": 994,
+              "line": 997,
               "character": 7
             },
             "end": {
-              "line": 1064,
+              "line": 1067,
               "character": 63
             }
           }
@@ -3534,11 +3558,11 @@
           ],
           "range": {
             "start": {
-              "line": 1066,
+              "line": 1069,
               "character": 9
             },
             "end": {
-              "line": 1119,
+              "line": 1122,
               "character": 63
             }
           }
@@ -3556,11 +3580,11 @@
           ],
           "range": {
             "start": {
-              "line": 2438,
+              "line": 2433,
               "character": 8
             },
             "end": {
-              "line": 2438,
+              "line": 2433,
               "character": 25
             }
           }
@@ -3578,11 +3602,11 @@
           ],
           "range": {
             "start": {
-              "line": 2517,
+              "line": 2512,
               "character": 8
             },
             "end": {
-              "line": 2517,
+              "line": 2512,
               "character": 25
             }
           }
@@ -3600,11 +3624,11 @@
           ],
           "range": {
             "start": {
-              "line": 2626,
+              "line": 2621,
               "character": 8
             },
             "end": {
-              "line": 2626,
+              "line": 2621,
               "character": 25
             }
           }
@@ -3622,11 +3646,11 @@
           ],
           "range": {
             "start": {
-              "line": 2703,
+              "line": 2698,
               "character": 8
             },
             "end": {
-              "line": 2703,
+              "line": 2698,
               "character": 25
             }
           }
@@ -3644,11 +3668,11 @@
           ],
           "range": {
             "start": {
-              "line": 2786,
+              "line": 2781,
               "character": 8
             },
             "end": {
-              "line": 2786,
+              "line": 2781,
               "character": 25
             }
           }
@@ -3666,11 +3690,11 @@
           ],
           "range": {
             "start": {
-              "line": 2832,
+              "line": 2827,
               "character": 8
             },
             "end": {
-              "line": 2832,
+              "line": 2827,
               "character": 24
             }
           }
@@ -3688,11 +3712,11 @@
           ],
           "range": {
             "start": {
-              "line": 2896,
+              "line": 2891,
               "character": 8
             },
             "end": {
-              "line": 2896,
+              "line": 2891,
               "character": 24
             }
           }
@@ -3710,11 +3734,11 @@
           ],
           "range": {
             "start": {
-              "line": 2963,
+              "line": 2958,
               "character": 8
             },
             "end": {
-              "line": 2963,
+              "line": 2958,
               "character": 26
             }
           }
@@ -3732,11 +3756,11 @@
           ],
           "range": {
             "start": {
-              "line": 3010,
+              "line": 3005,
               "character": 8
             },
             "end": {
-              "line": 3010,
+              "line": 3005,
               "character": 26
             }
           }
@@ -3754,11 +3778,11 @@
           ],
           "range": {
             "start": {
-              "line": 3077,
+              "line": 3072,
               "character": 8
             },
             "end": {
-              "line": 3077,
+              "line": 3072,
               "character": 23
             }
           }
@@ -3776,11 +3800,11 @@
           ],
           "range": {
             "start": {
-              "line": 3142,
+              "line": 3137,
               "character": 8
             },
             "end": {
-              "line": 3142,
+              "line": 3137,
               "character": 25
             }
           }
@@ -3798,11 +3822,11 @@
           ],
           "range": {
             "start": {
-              "line": 3223,
+              "line": 3218,
               "character": 8
             },
             "end": {
-              "line": 3223,
+              "line": 3218,
               "character": 25
             }
           }
@@ -3820,11 +3844,11 @@
           ],
           "range": {
             "start": {
-              "line": 3298,
+              "line": 3293,
               "character": 8
             },
             "end": {
-              "line": 3298,
+              "line": 3293,
               "character": 25
             }
           }
@@ -3842,11 +3866,11 @@
           ],
           "range": {
             "start": {
-              "line": 3376,
+              "line": 3371,
               "character": 8
             },
             "end": {
-              "line": 3376,
+              "line": 3371,
               "character": 25
             }
           }
@@ -3864,11 +3888,11 @@
           ],
           "range": {
             "start": {
-              "line": 3456,
+              "line": 3451,
               "character": 8
             },
             "end": {
-              "line": 3456,
+              "line": 3451,
               "character": 23
             }
           }
@@ -3886,11 +3910,11 @@
           ],
           "range": {
             "start": {
-              "line": 3522,
+              "line": 3517,
               "character": 8
             },
             "end": {
-              "line": 3522,
+              "line": 3517,
               "character": 23
             }
           }
@@ -3908,11 +3932,11 @@
           ],
           "range": {
             "start": {
-              "line": 3603,
+              "line": 3598,
               "character": 8
             },
             "end": {
-              "line": 3603,
+              "line": 3598,
               "character": 23
             }
           }
@@ -3930,11 +3954,11 @@
           ],
           "range": {
             "start": {
-              "line": 3693,
+              "line": 3688,
               "character": 8
             },
             "end": {
-              "line": 3693,
+              "line": 3688,
               "character": 24
             }
           }
@@ -3952,11 +3976,11 @@
           ],
           "range": {
             "start": {
-              "line": 3762,
+              "line": 3757,
               "character": 8
             },
             "end": {
-              "line": 3762,
+              "line": 3757,
               "character": 24
             }
           }
@@ -3974,11 +3998,11 @@
           ],
           "range": {
             "start": {
-              "line": 3822,
+              "line": 3817,
               "character": 8
             },
             "end": {
-              "line": 3822,
+              "line": 3817,
               "character": 23
             }
           }
@@ -3996,11 +4020,11 @@
           ],
           "range": {
             "start": {
-              "line": 3905,
+              "line": 3900,
               "character": 8
             },
             "end": {
-              "line": 3905,
+              "line": 3900,
               "character": 23
             }
           }
@@ -4018,11 +4042,11 @@
           ],
           "range": {
             "start": {
-              "line": 3988,
+              "line": 3983,
               "character": 8
             },
             "end": {
-              "line": 3988,
+              "line": 3983,
               "character": 23
             }
           }
@@ -4040,11 +4064,11 @@
           ],
           "range": {
             "start": {
-              "line": 4085,
+              "line": 4080,
               "character": 8
             },
             "end": {
-              "line": 4085,
+              "line": 4080,
               "character": 24
             }
           }
@@ -4062,11 +4086,11 @@
           ],
           "range": {
             "start": {
-              "line": 4175,
+              "line": 4170,
               "character": 8
             },
             "end": {
-              "line": 4175,
+              "line": 4170,
               "character": 17
             }
           }
@@ -4076,7 +4100,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 2025
+        "duration_ms": 2655
       }
     },
     {
@@ -4144,7 +4168,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       }
     },
     {
@@ -4513,6 +4537,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
@@ -4527,6 +4552,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/DOMAIN_RULES_AUDIT.md",
@@ -4540,6 +4566,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/audit/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/DOMAIN_RULES_COMPETITIONS.md",
@@ -4553,6 +4580,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/competitions/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml",
@@ -4567,6 +4595,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/exercises/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
@@ -4580,6 +4609,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/identity_access/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/DOMAIN_RULES_MATCHES.md",
@@ -4593,6 +4623,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/matches/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md",
@@ -4607,6 +4638,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/medical/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/DOMAIN_RULES_NOTIFICATIONS.md",
@@ -4620,6 +4652,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
@@ -4633,6 +4666,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/reports/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml",
@@ -4647,6 +4681,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/scout/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/DOMAIN_RULES_SEASONS.md",
@@ -4660,6 +4695,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/seasons/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/DOMAIN_RULES_TEAMS.md",
@@ -4673,6 +4709,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/COACH_INTERACTION_FLOW_TRAINING.md",
@@ -4693,6 +4730,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
@@ -4706,6 +4744,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md",
@@ -4720,6 +4759,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/video/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
@@ -4734,6 +4774,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/entity_graph.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/errors.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/wellness/graph/test_obligations.yaml"
       ],
       "evidence_files": [],
@@ -4742,7 +4783,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1801
+        "duration_ms": 2029
       }
     },
     {
@@ -4818,7 +4859,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1768
+        "duration_ms": 2118
       }
     },
     {
@@ -4861,7 +4902,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 66
       }
     },
     {
@@ -4883,7 +4924,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1356
+        "duration_ms": 1663
       }
     },
     {
@@ -4939,7 +4980,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 126
       }
     },
     {
@@ -4959,7 +5000,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 5
       }
     },
     {
@@ -4979,7 +5020,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49787
+        "duration_ms": 51191
       }
     },
     {
@@ -5035,7 +5076,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 23
       }
     },
     {
@@ -5157,13 +5198,13 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/scripts/certify/certify_agent_operability.py"
+        "/home/davis/HB-TRACK/_reports/compliance/agent_operability_latest.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/scripts/certify/certify_agent_operability.py"
+        "/home/davis/HB-TRACK/_reports/compliance/agent_operability_latest.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5171,7 +5212,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 11
       }
     },
     {
@@ -5193,7 +5234,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 273
+        "duration_ms": 198
       }
     },
     {
@@ -5215,7 +5256,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 6
       }
     },
     {
@@ -5275,7 +5316,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 7
       }
     },
     {
@@ -5297,7 +5338,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 20
       }
     },
     {
@@ -5315,7 +5356,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 7
       }
     },
     {
@@ -5391,12 +5432,120 @@
       }
     },
     {
+      "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "IMPACT_ANALYSIS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "PARTIAL_UPDATE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "DOC_USAGE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "HBTRACK_CANON_PARITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
       "gate_id": "READINESS_SUMMARY_GATE",
       "status": "PASS",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 26 PASS, 28 SKIP.",
+      "summary": "Pipeline PASS: 26 PASS, 34 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

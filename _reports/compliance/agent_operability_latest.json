@@ -1,9 +1,7 @@
 {
-  "generated_at": "2026-04-08",
-  "overall": "PARTIAL",
-  "pending_tasks": [
-    "B10-003"
-  ],
+  "generated_at": "2026-04-09",
+  "overall": "PASS",
+  "pending_tasks": [],
   "dimensions": {
     "adversarial_suites": {
       "status": "PASS",
@@ -28,9 +26,8 @@
       "detail": "Source graphs (module_manifest.yaml) presentes em 17/17 módulos"
     },
     "runtime_replay": {
-      "status": "PENDING",
-      "pending_task": "B10-003",
-      "detail": "tests/replay/staging/ não existe. B10-003 deve criar datasets seeded e replay packs por ciclo de negócio antes desta dimensão poder ser certificada."
+      "status": "PASS",
+      "detail": "Replay suite de staging executada"
     },
     "merge_rules_enforcement": {
       "status": "PASS",
@@ -40,7 +37,7 @@
     },
     "operability_matrix": {
       "status": "PASS",
-      "detail": "16 passed in 0.47s"
+      "detail": "16 passed in 0.53s"
     }
   }
 }
