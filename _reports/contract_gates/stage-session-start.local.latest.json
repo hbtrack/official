@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-09T04:56:53Z",
+  "timestamp_utc": "2026-04-09T12:33:36Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "8c3588c0",
+    "git_commit": "0eb5310f",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T045653_099fe7"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T123336_b08194"
   },
   "status_detail": {
     "active_gates_passed": 4,
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 68
       }
     },
     {
@@ -1023,7 +1023,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 13
       }
     },
     {
@@ -1045,7 +1045,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 299
+        "duration_ms": 243
       }
     },
     {

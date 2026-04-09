@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T04:49:51.470702+00:00",
+  "generated_at": "2026-04-09T05:20:24.319921+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
@@ -68,14 +68,13 @@
     {
       "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
       "category": "conditional",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     }
   ],
   "checks_failed": [
     "Validate Contract Gates",
-    "ci / Validate Contracts",
-    "Validação Cruzada SESSION_HANDOFF ↔ session_start"
+    "ci / Validate Contracts"
   ],
   "missing_evidence": [],
   "semantic_findings": [
@@ -121,9 +120,9 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 19,
+    "changed_files": 20,
     "max_changed_files": 150,
-    "commits": 1,
+    "commits": 2,
     "max_commits": 20,
     "cross_domain_areas": 0,
     "max_cross_domain_areas": 3,

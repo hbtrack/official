@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-09T00:43:48Z",
+  "timestamp_utc": "2026-04-09T05:16:19Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "cc8aaff9",
+    "git_commit": "0eb5310f",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.ci.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T004348_bc360c"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T051619_28bbe4"
   },
   "status_detail": {
     "active_gates_passed": 2,
-    "skip_count": 51,
+    "skip_count": 57,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -208,6 +208,30 @@
       {
         "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPACT_ANALYSIS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PARTIAL_UPDATE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "DOC_USAGE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "HBTRACK_CANON_PARITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
@@ -233,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 81
+        "duration_ms": 111
       }
     },
     {
@@ -980,7 +1004,7 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 3 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -998,6 +1022,12 @@
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
+          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
           "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=5.",
           "severity": "error"
         },
@@ -1009,10 +1039,10 @@
         }
       ],
       "metrics": {
-        "errors": 2,
+        "errors": 3,
         "warnings": 0,
-        "violations": 2,
-        "duration_ms": 8
+        "violations": 3,
+        "duration_ms": 14
       }
     },
     {
@@ -1034,7 +1064,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 309
+        "duration_ms": 319
       }
     },
     {
@@ -1203,6 +1233,114 @@
       "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "IMPACT_ANALYSIS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "PARTIAL_UPDATE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "DOC_USAGE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "HBTRACK_CANON_PARITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
