@@ -8998,6 +8998,286 @@ def _g_domain_glossary_consistency(root: pathlib.Path) -> dict:
                [], checked, [], violations, _ms(t0))
 
 
+# ── B10-003-B gates ───────────────────────────────────────────────────────────
+
+_CANONICAL_MODULES: tuple[str, ...] = (
+    "ai_ingestion", "analytics", "audit", "competitions", "exercises",
+    "identity_access", "matches", "medical", "notifications", "reports",
+    "scout", "seasons", "teams", "training", "users", "video", "wellness",
+)
+
+
+def _g_context_bundle_freshness(root: pathlib.Path) -> dict:
+    """CONTEXT_BUNDLE_FRESHNESS_GATE — Verifica que compiled_context/<module>/ tem
+    pelo menos um .json mais recente que o source master do módulo
+    (docs/hbtrack/modulos/<module>/graph/module_manifest.yaml).
+
+    FAIL se algum bundle estiver stale (mtime bundle < mtime source master).
+    SKIP_NOT_APPLICABLE se compiled_context/ não existir.
+    """
+    t0 = time.monotonic()
+    gate_id = "CONTEXT_BUNDLE_FRESHNESS_GATE"
+    context_root = root / "compiled_context"
+    if not context_root.exists():
+        return _skip(gate_id, "compiled_context/ não encontrado — gate não aplicável.", _ms(t0))
+
+    checked: list[str] = []
+    violations: list[dict] = []
+
+    for module in _CANONICAL_MODULES:
+        # Source master real dos bundles: module_manifest.yaml
+        source_master = root / "docs" / "hbtrack" / "modulos" / module / "graph" / "module_manifest.yaml"
+        bundle_dir = context_root / module
+
+        if not source_master.exists():
+            continue  # módulo sem source master — fora de escopo
+
+        checked.append(str(source_master.relative_to(root)))
+
+        if not bundle_dir.exists():
+            violations.append({
+                "blocking_code": "BLOCKED_BUNDLE_MISSING",
+                "artifact": f"compiled_context/{module}/",
+                "message": (
+                    f"Módulo '{module}': diretório compiled_context/{module}/ ausente. "
+                    "Bundle não gerado."
+                ),
+                "severity": "error",
+            })
+            continue
+
+        json_files = list(bundle_dir.glob("*.json"))
+        if not json_files:
+            violations.append({
+                "blocking_code": "BLOCKED_BUNDLE_MISSING",
+                "artifact": f"compiled_context/{module}/",
+                "message": (
+                    f"Módulo '{module}': nenhum arquivo .json em compiled_context/{module}/."
+                ),
+                "severity": "error",
+            })
+            continue
+
+        source_mtime = source_master.stat().st_mtime
+        newest_bundle_mtime = max(f.stat().st_mtime for f in json_files)
+
+        for jf in sorted(json_files):
+            checked.append(str(jf.relative_to(root)))
+
+        if newest_bundle_mtime < source_mtime:
+            import datetime
+            source_dt = datetime.datetime.fromtimestamp(source_mtime).isoformat(timespec="seconds")
+            bundle_dt = datetime.datetime.fromtimestamp(newest_bundle_mtime).isoformat(timespec="seconds")
+            violations.append({
+                "blocking_code": "BLOCKED_BUNDLE_STALE",
+                "artifact": f"compiled_context/{module}/",
+                "message": (
+                    f"Módulo '{module}': bundle stale. "
+                    f"Source master modificado em {source_dt}, bundle mais recente em {bundle_dt}. "
+                    "Executar: python3 scripts/compile/compile_context_bundle.py --module " + module
+                ),
+                "severity": "error",
+            })
+
+    if violations:
+        stale = [v for v in violations if "BLOCKED_BUNDLE_STALE" in v.get("blocking_code", "")]
+        missing = [v for v in violations if "BLOCKED_BUNDLE_MISSING" in v.get("blocking_code", "")]
+        summary = (
+            f"Bundles desatualizados: {len(stale)} stale, {len(missing)} ausentes."
+        )
+        return _pg(gate_id, "FAIL", True, "BLOCKED_BUNDLE_STALE",
+                   summary, [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               f"Todos os bundles de compiled_context/ estão atualizados ({len(_CANONICAL_MODULES)} módulos verificados).",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_impact_analysis(root: pathlib.Path) -> dict:
+    """IMPACT_ANALYSIS_GATE — Verifica que source masters staged têm todos os
+    blocking_consumers no mesmo staging area (git diff --cached).
+
+    Opera apenas sobre mudanças staged (pre-commit). Se não houver nada staged,
+    retorna SKIP_NOT_APPLICABLE — gates de retroactive commit analysis estão
+    fora do escopo deste gate.
+
+    SKIP_NOT_APPLICABLE se não estiver em contexto git, SYNC_MANIFEST ausente,
+    ou staging area vazia.
+    """
+    t0 = time.monotonic()
+    gate_id = "IMPACT_ANALYSIS_GATE"
+
+    sync_manifest_path = root / "docs" / "_canon" / "SYNC_MANIFEST.yaml"
+    if not sync_manifest_path.exists():
+        return _skip(gate_id, "SYNC_MANIFEST.yaml não encontrado — gate não aplicável.", _ms(t0))
+
+    # Obter diff do staging area (pre-commit context)
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--name-only", "--cached"],
+            capture_output=True, text=True, cwd=str(root), timeout=15,
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            return _skip(gate_id, "Staging area vazia — nenhuma mudança staged para analisar.", _ms(t0))
+        changed_files: set[str] = set(result.stdout.strip().splitlines())
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return _skip(gate_id, "git não disponível — gate não aplicável.", _ms(t0))
+
+    if not changed_files:
+        return _skip(gate_id, "Nenhum arquivo modificado detectado no diff.", _ms(t0))
+
+    # Carregar SYNC_MANIFEST
+    try:
+        manifest_data = yaml.safe_load(sync_manifest_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_MANIFEST_PARSE_ERROR",
+                   f"Erro ao carregar SYNC_MANIFEST.yaml: {e}",
+                   [], [str(sync_manifest_path.relative_to(root))], [], [], _ms(t0))
+
+    rules: list[dict] = (manifest_data or {}).get("rules", [])
+    if not rules:
+        return _skip(gate_id, "SYNC_MANIFEST.yaml sem regras definidas.", _ms(t0))
+
+    violations: list[dict] = []
+    checked = [str(sync_manifest_path.relative_to(root))]
+
+    for rule in rules:
+        source_master = rule.get("source_master", "")
+        blocking_consumers: list[str] = rule.get("blocking_consumers") or []
+        if not source_master or not blocking_consumers:
+            continue
+
+        # Verificar se source_master foi modificado
+        # source_master pode ser um path de arquivo ou diretório (glob)
+        source_changed = any(
+            f == source_master or f.startswith(source_master.rstrip("/") + "/")
+            for f in changed_files
+        )
+        if not source_changed:
+            continue
+
+        # source_master mudou — verificar que todos os blocking_consumers também mudaram
+        missing_consumers = [
+            c for c in blocking_consumers
+            if not any(
+                f == c or f.startswith(c.rstrip("/") + "/")
+                for f in changed_files
+            )
+        ]
+        if missing_consumers:
+            rule_id = rule.get("rule_id", source_master)
+            violations.append({
+                "blocking_code": "BLOCKED_PARTIAL_CONSUMER_UPDATE",
+                "artifact": source_master,
+                "message": (
+                    f"Regra '{rule_id}': source master '{source_master}' foi modificado "
+                    f"mas os seguintes blocking_consumers estão ausentes do commit: "
+                    + ", ".join(missing_consumers)
+                ),
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_PARTIAL_CONSUMER_UPDATE",
+                   f"IMPACT_ANALYSIS: {len(violations)} regra(s) com consumers faltando no commit.",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               "Todos os source masters modificados têm os blocking_consumers correspondentes no commit.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_partial_update(root: pathlib.Path) -> dict:
+    """PARTIAL_UPDATE_GATE — Verifica que source masters staged não mudam sem pelo
+    menos um required_consumer também staged.
+
+    Complementa IMPACT_ANALYSIS_GATE: detecta mudanças isoladas em source masters
+    sem nenhuma propagação para consumers. Opera apenas sobre staging area.
+
+    SKIP_NOT_APPLICABLE se não estiver em contexto git, SYNC_MANIFEST ausente,
+    ou staging area vazia.
+    """
+    t0 = time.monotonic()
+    gate_id = "PARTIAL_UPDATE_GATE"
+
+    sync_manifest_path = root / "docs" / "_canon" / "SYNC_MANIFEST.yaml"
+    if not sync_manifest_path.exists():
+        return _skip(gate_id, "SYNC_MANIFEST.yaml não encontrado — gate não aplicável.", _ms(t0))
+
+    # Obter diff do staging area (pre-commit context)
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--name-only", "--cached"],
+            capture_output=True, text=True, cwd=str(root), timeout=15,
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            return _skip(gate_id, "Staging area vazia — nenhuma mudança staged para analisar.", _ms(t0))
+        changed_files: set[str] = set(result.stdout.strip().splitlines())
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return _skip(gate_id, "git não disponível — gate não aplicável.", _ms(t0))
+
+    if not changed_files:
+        return _skip(gate_id, "Nenhum arquivo modificado detectado no diff.", _ms(t0))
+
+    # Carregar SYNC_MANIFEST
+    try:
+        manifest_data = yaml.safe_load(sync_manifest_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_MANIFEST_PARSE_ERROR",
+                   f"Erro ao carregar SYNC_MANIFEST.yaml: {e}",
+                   [], [str(sync_manifest_path.relative_to(root))], [], [], _ms(t0))
+
+    rules: list[dict] = (manifest_data or {}).get("rules", [])
+    if not rules:
+        return _skip(gate_id, "SYNC_MANIFEST.yaml sem regras definidas.", _ms(t0))
+
+    violations: list[dict] = []
+    checked = [str(sync_manifest_path.relative_to(root))]
+
+    for rule in rules:
+        source_master = rule.get("source_master", "")
+        required_consumers: list[str] = rule.get("required_consumers") or []
+        if not source_master or not required_consumers:
+            continue
+
+        source_changed = any(
+            f == source_master or f.startswith(source_master.rstrip("/") + "/")
+            for f in changed_files
+        )
+        if not source_changed:
+            continue
+
+        # source_master mudou — verificar que pelo menos UM required_consumer também mudou
+        any_consumer_present = any(
+            any(
+                f == c or f.startswith(c.rstrip("/") + "/")
+                for f in changed_files
+            )
+            for c in required_consumers
+        )
+        if not any_consumer_present:
+            rule_id = rule.get("rule_id", source_master)
+            violations.append({
+                "blocking_code": "BLOCKED_ORPHAN_SOURCE_UPDATE",
+                "artifact": source_master,
+                "message": (
+                    f"Regra '{rule_id}': source master '{source_master}' foi modificado "
+                    "mas nenhum required_consumer está presente no commit. "
+                    "Mudança isolada em source master sem propagação para consumers."
+                ),
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_ORPHAN_SOURCE_UPDATE",
+                   f"PARTIAL_UPDATE: {len(violations)} source master(s) modificados sem consumers.",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               "Todos os source masters modificados têm pelo menos um required_consumer no commit.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -9704,6 +9984,9 @@ def run_pipeline(
         ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
         ("WORKER_PROMPT_AUTHORITY_GATE", lambda: _g_worker_prompt_authority(root)),
         ("DOMAIN_GLOSSARY_CONSISTENCY_GATE", lambda: _g_domain_glossary_consistency(root)),
+        ("CONTEXT_BUNDLE_FRESHNESS_GATE", lambda: _g_context_bundle_freshness(root)),
+        ("IMPACT_ANALYSIS_GATE", lambda: _g_impact_analysis(root)),
+        ("PARTIAL_UPDATE_GATE", lambda: _g_partial_update(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

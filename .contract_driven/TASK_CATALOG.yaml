@@ -382,6 +382,25 @@ task_catalog:
     artifacts_produced: []
     pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
 
+  implementation_promotion:
+    task_type: implementation_promotion
+    worker_id: implementation_promotion_worker
+    worker_path: .contract_driven/agent_prompts/implementation_promotion.prompt.md
+    status: active
+    description: "Promover módulo de implementation_ready → implemented após validação completa de testes e CI"
+    profile_id: null
+    stage_allowed: [3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status=implementation_ready)
+      - evidence_ref (string, path to test evidence file in _reports/)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to implemented)
+    requires_gates: [CODE_ARCHITECTURE_GATE, FEATURE_READINESS_GATE]
+    notes: |
+      Único caminho formal para promover módulo de implementation_ready para implemented.
+      Requer evidência de testes (pytest PASS) e CI verde antes da promoção.
+      Promoção para status acima de implemented requer aprovação humana explícita.
+
   pr_fix:
     task_type: pr_fix
     worker_id: pr_fix_worker

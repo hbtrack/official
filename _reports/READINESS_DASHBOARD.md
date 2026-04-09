@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-04-09T01:09:50Z | run_id: `20260409T010950_402a10` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-04-09T02:31:45Z | run_id: `20260409T023145_ca7a30` | health: **100/100** | overall: **PASS**
 
 ## Modulos
 
@@ -81,4 +81,7 @@
 | LEGACY_CRITICAL_PATH_GATE | PASS | sim |
 | WORKER_PROMPT_AUTHORITY_GATE | PASS | sim |
 | DOMAIN_GLOSSARY_CONSISTENCY_GATE | PASS | nao |
+| CONTEXT_BUNDLE_FRESHNESS_GATE | PASS | sim |
+| IMPACT_ANALYSIS_GATE | SKIP_NOT_APPLICABLE | sim |
+| PARTIAL_UPDATE_GATE | SKIP_NOT_APPLICABLE | sim |
 | READINESS_SUMMARY_GATE | PASS | nao |

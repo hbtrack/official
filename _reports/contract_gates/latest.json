@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-09T01:09:50Z",
+  "timestamp_utc": "2026-04-09T02:31:45Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "cc8aaff9",
+    "git_commit": "63443cd4",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T010950_402a10"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T023145_ca7a30"
   },
   "status_detail": {
-    "active_gates_passed": 52,
-    "skip_count": 3,
+    "active_gates_passed": 53,
+    "skip_count": 5,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -208,6 +208,18 @@
       {
         "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
         "status": "PASS"
+      },
+      {
+        "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "IMPACT_ANALYSIS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PARTIAL_UPDATE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
@@ -233,7 +245,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 82
+        "duration_ms": 44
       }
     },
     {
@@ -258,7 +270,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1017
+        "duration_ms": 562
       }
     },
     {
@@ -463,7 +475,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 9
       }
     },
     {
@@ -593,7 +605,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 216
+        "duration_ms": 121
       }
     },
     {
@@ -646,7 +658,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       }
     },
     {
@@ -667,7 +679,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 76
+        "duration_ms": 42
       }
     },
     {
@@ -688,7 +700,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 36
       }
     },
     {
@@ -709,7 +721,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 15
       }
     },
     {
@@ -730,7 +742,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 157
+        "duration_ms": 80
       }
     },
     {
@@ -751,7 +763,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 97
+        "duration_ms": 49
       }
     },
     {
@@ -772,7 +784,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 80
+        "duration_ms": 47
       }
     },
     {
@@ -793,7 +805,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 505
+        "duration_ms": 278
       }
     },
     {
@@ -814,7 +826,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 30
       }
     },
     {
@@ -873,7 +885,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 7
       }
     },
     {
@@ -887,6 +899,7 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/hbtrack/decisoes",
         "/home/davis/HB-TRACK/docs/guias",
+        "/home/davis/HB-TRACK/.agents.md",
         "/home/davis/HB-TRACK/AGENTS.md",
         "/home/davis/HB-TRACK/AUDIT_DIAGNOSTICS_FINAL_REPORT.md",
         "/home/davis/HB-TRACK/CLAUDE.md",
@@ -929,7 +942,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 17
       }
     },
     {
@@ -956,7 +969,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 225
+        "duration_ms": 118
       }
     },
     {
@@ -1057,7 +1070,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 3
       }
     },
     {
@@ -1429,7 +1442,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 30
       }
     },
     {
@@ -1515,7 +1528,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1338
+        "duration_ms": 703
       }
     },
     {
@@ -1538,7 +1551,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1951
+        "duration_ms": 974
       }
     },
     {
@@ -1560,7 +1573,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2139
+        "duration_ms": 1196
       }
     },
     {
@@ -1599,7 +1612,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1032
+        "duration_ms": 580
       }
     },
     {
@@ -4510,7 +4523,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 3605
+        "duration_ms": 1806
       }
     },
     {
@@ -5193,7 +5206,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3200
+        "duration_ms": 1709
       }
     },
     {
@@ -5217,7 +5230,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3323
+        "duration_ms": 1558
       }
     },
     {
@@ -5237,7 +5250,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 2
       }
     },
     {
@@ -5277,7 +5290,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2685
+        "duration_ms": 1390
       }
     },
     {
@@ -5320,7 +5333,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 110
+        "duration_ms": 58
       }
     },
     {
@@ -5342,7 +5355,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2562
+        "duration_ms": 1216
       }
     },
     {
@@ -5398,7 +5411,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 116
+        "duration_ms": 58
       }
     },
     {
@@ -5418,7 +5431,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       }
     },
     {
@@ -5438,7 +5451,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 78037
+        "duration_ms": 40895
       }
     },
     {
@@ -5474,7 +5487,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 8
       }
     },
     {
@@ -5494,7 +5507,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 19
       }
     },
     {
@@ -5572,7 +5585,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 7
       }
     },
     {
@@ -5665,7 +5678,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 5
       }
     },
     {
@@ -5687,7 +5700,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 326
+        "duration_ms": 165
       }
     },
     {
@@ -5709,7 +5722,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 6
       }
     },
     {
@@ -5731,7 +5744,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 24
       }
     },
     {
@@ -6095,7 +6108,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1783
+        "duration_ms": 911
       }
     },
     {
@@ -6119,7 +6132,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 6
       }
     },
     {
@@ -6141,7 +6154,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 16
       }
     },
     {
@@ -6159,7 +6172,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 6
       }
     },
     {
@@ -6180,7 +6193,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 27
       }
     },
     {
@@ -6203,7 +6216,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       }
     },
     {
@@ -6224,7 +6237,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 25
       }
     },
     {
@@ -6248,12 +6261,127 @@
       }
     },
     {
+      "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Todos os bundles de compiled_context/ estão atualizados (17 módulos verificados).",
+      "inputs": [],
+      "artifacts_checked": [
+        "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "compiled_context/ai_ingestion/FT-040.json",
+        "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
+        "compiled_context/analytics/FT-038.json",
+        "docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
+        "compiled_context/audit/FT-041.json",
+        "docs/hbtrack/modulos/competitions/graph/module_manifest.yaml",
+        "compiled_context/competitions/FT-034.json",
+        "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
+        "compiled_context/exercises/FT-037.json",
+        "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
+        "compiled_context/identity_access/FT-011.json",
+        "compiled_context/identity_access/FT-012.json",
+        "compiled_context/identity_access/FT-013.json",
+        "docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
+        "compiled_context/matches/FT-035.json",
+        "docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
+        "compiled_context/medical/FT-033.json",
+        "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
+        "compiled_context/notifications/FT-042.json",
+        "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
+        "compiled_context/reports/FT-039.json",
+        "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
+        "compiled_context/scout/FT-036.json",
+        "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
+        "compiled_context/seasons/FT-018.json",
+        "compiled_context/seasons/FT-019.json",
+        "compiled_context/seasons/FT-020.json",
+        "compiled_context/seasons/FT-021.json",
+        "compiled_context/seasons/FT-022.json",
+        "compiled_context/seasons/FT-023.json",
+        "docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
+        "compiled_context/teams/FT-024.json",
+        "compiled_context/teams/FT-025.json",
+        "compiled_context/teams/FT-026.json",
+        "compiled_context/teams/FT-027.json",
+        "compiled_context/teams/FT-028.json",
+        "compiled_context/teams/FT-029.json",
+        "compiled_context/teams/FT-030.json",
+        "compiled_context/teams/FT-031.json",
+        "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+        "compiled_context/training/FT-001.json",
+        "compiled_context/training/FT-002.json",
+        "compiled_context/training/FT-003.json",
+        "compiled_context/training/FT-004.json",
+        "compiled_context/training/FT-005.json",
+        "compiled_context/training/FT-006.json",
+        "compiled_context/training/FT-007.json",
+        "compiled_context/training/FT-008.json",
+        "compiled_context/training/FT-009.json",
+        "compiled_context/training/FT-010.json",
+        "docs/hbtrack/modulos/users/graph/module_manifest.yaml",
+        "compiled_context/users/FT-014.json",
+        "compiled_context/users/FT-015.json",
+        "compiled_context/users/FT-016.json",
+        "compiled_context/users/FT-017.json",
+        "docs/hbtrack/modulos/video/graph/module_manifest.yaml",
+        "compiled_context/video/FT-043.json",
+        "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
+        "compiled_context/wellness/FT-032.json"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 2
+      }
+    },
+    {
+      "gate_id": "IMPACT_ANALYSIS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 3
+      }
+    },
+    {
+      "gate_id": "PARTIAL_UPDATE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 2
+      }
+    },
+    {
       "gate_id": "READINESS_SUMMARY_GATE",
       "status": "PASS",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 51 PASS, 3 SKIP.",
+      "summary": "Pipeline PASS: 52 PASS, 5 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

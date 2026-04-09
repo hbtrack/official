@@ -1060,3 +1060,60 @@ gates:
     blocking_codes: []
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: CONTEXT_BUNDLE_FRESHNESS_GATE
+    order: "20L"
+    name: "Context Bundle Freshness Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica que compiled_context/<module>/ tem pelo menos um arquivo .json
+      com mtime mais recente que o source master real do módulo
+      (docs/hbtrack/modulos/<module>/graph/module_manifest.yaml) para cada
+      módulo canônico. FAIL se bundle stale (mtime bundle < mtime source master)
+      ou ausente. Garante que context bundles estão sincronizados com os source
+      masters após mudanças no pipeline de compilação.
+    blocking_codes: [BLOCKED_BUNDLE_STALE, BLOCKED_BUNDLE_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: IMPACT_ANALYSIS_GATE
+    order: "20M"
+    name: "Impact Analysis Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [AXIOM_INTEGRITY_GATE]
+    description: >
+      Verifica que source masters modificados no commit atual têm todos os seus
+      blocking_consumers também modificados no mesmo commit (regra do SYNC_MANIFEST).
+      SKIP_NOT_APPLICABLE quando fora de contexto git ou sem SYNC_MANIFEST.
+      Impede atualizações parciais onde source master evolui sem propagar para
+      seus consumers obrigatórios.
+    blocking_codes: [BLOCKED_PARTIAL_CONSUMER_UPDATE]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: PARTIAL_UPDATE_GATE
+    order: "20N"
+    name: "Partial Update Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [IMPACT_ANALYSIS_GATE]
+    description: >
+      Verifica que source masters não mudam sem pelo menos um required_consumer
+      presente no mesmo commit. Complementa IMPACT_ANALYSIS_GATE detectando
+      mudanças isoladas em source masters sem nenhuma propagação para consumers.
+      SKIP_NOT_APPLICABLE quando fora de contexto git ou sem SYNC_MANIFEST.
+    blocking_codes: [BLOCKED_ORPHAN_SOURCE_UPDATE]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
