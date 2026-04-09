@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-09"
-branch_ativo: feat/b10-003c-gates-doc-parity
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: training
