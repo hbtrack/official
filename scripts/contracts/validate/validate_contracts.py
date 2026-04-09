@@ -9013,10 +9013,20 @@ def _g_context_bundle_freshness(root: pathlib.Path) -> dict:
     (docs/hbtrack/modulos/<module>/graph/module_manifest.yaml).
 
     FAIL se algum bundle estiver stale (mtime bundle < mtime source master).
-    SKIP_NOT_APPLICABLE se compiled_context/ não existir.
+    SKIP_NOT_APPLICABLE se compiled_context/ não existir OU em ambiente CI
+    (variável CI=true): mtime-based comparison é inválida em git checkout fresco
+    pois a ordem de escrita dos arquivos determina o mtime, não a relação de
+    dependência entre source masters e bundles.
     """
+    import os as _os
     t0 = time.monotonic()
     gate_id = "CONTEXT_BUNDLE_FRESHNESS_GATE"
+
+    # Em CI, mtime de arquivos checkout'd é função da ordem alphabética de escrita,
+    # não de dependência real — gate não aplicável neste contexto.
+    if _os.environ.get("CI", "").lower() in ("1", "true"):
+        return _skip(gate_id, "Ambiente CI detectado — mtime-based freshness check não aplicável em checkout fresco.", _ms(t0))
+
     context_root = root / "compiled_context"
     if not context_root.exists():
         return _skip(gate_id, "compiled_context/ não encontrado — gate não aplicável.", _ms(t0))

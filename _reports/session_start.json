@@ -1,11 +1,11 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-09T02:30:33.517095+00:00",
+  "session_timestamp": "2026-04-09T03:02:16.226164+00:00",
   "branch": "feat/b10-003b-gates-b6002-freshness",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -260,11 +260,30 @@
       "sha256": "54f7347dcb53ec9f04728d1c1aa764e0813b0b58cf53a33d2e354d4c90443f05",
       "created_at": "2026-04-09T01:14:15.873049+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "scripts/contracts/validate/validate_contracts.py",
+      "sha256": "281f4589ef38c2de9fda17dcc68148bfe140b451462b77799e7f558584befcf1",
+      "created_at": "2026-04-09T02:33:40.288438+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-09T03:04:42.834346+00:00"
+    },
+    {
+      "path": "docs/_canon/gates/GATES_REGISTRY.yaml",
+      "sha256": "ef4d8583e83f822abced6b317437deb123f0feccb98b0f121d8e0badcda88fe2",
+      "created_at": "2026-04-09T02:33:43.470195+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/TASK_CATALOG.yaml",
+      "sha256": "ee8067495b2033f5803d1d9e4db3127241c75f0d4c868ce31fcc3390f8987a1f",
+      "created_at": "2026-04-09T02:33:46.537639+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-09T00:37:31.064969+00:00",
+  "hook_validated_at": "2026-04-09T02:34:30.908589+00:00",
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 5,
