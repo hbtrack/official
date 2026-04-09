@@ -9288,6 +9288,241 @@ def _g_partial_update(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _g_doc_usage(root: pathlib.Path) -> dict:
+    """DOC_USAGE_GATE — Verifica que todos os docs declarados em DOC_USAGE_MANIFEST.yaml
+    existem em disco.
+
+    Para entradas com `paths:`: cada arquivo listado deve existir.
+    Para entradas com `path_globs:`: pelo menos um arquivo deve corresponder ao glob.
+
+    SKIP_NOT_APPLICABLE se DOC_USAGE_MANIFEST.yaml não existir.
+    """
+    t0 = time.monotonic()
+    gate_id = "DOC_USAGE_GATE"
+
+    manifest_path = root / "docs" / "_canon" / "DOC_USAGE_MANIFEST.yaml"
+    if not manifest_path.exists():
+        return _skip(gate_id, "DOC_USAGE_MANIFEST.yaml não encontrado — gate não aplicável.", _ms(t0))
+
+    try:
+        manifest_data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_MANIFEST_PARSE_ERROR",
+                   f"Erro ao carregar DOC_USAGE_MANIFEST.yaml: {e}",
+                   [], [str(manifest_path.relative_to(root))], [], [], _ms(t0))
+
+    entries: list[dict] = (manifest_data or {}).get("entries", [])
+    if not entries:
+        return _skip(gate_id, "DOC_USAGE_MANIFEST.yaml sem entradas.", _ms(t0))
+
+    violations: list[dict] = []
+    warnings: list[dict] = []
+    checked = [str(manifest_path.relative_to(root))]
+
+    for entry in entries:
+        rule_id = entry.get("rule_id", "UNKNOWN")
+
+        # Check explicit paths
+        for path_str in entry.get("paths", []):
+            full_path = root / path_str
+            if not full_path.exists():
+                violations.append({
+                    "rule_id": rule_id,
+                    "missing_path": path_str,
+                    "type": "missing_explicit_path",
+                })
+
+        # Check path_globs — warn if no matches (paths may not exist yet for all modules)
+        for pattern in entry.get("path_globs", []):
+            matches = list(root.glob(pattern))
+            if not matches:
+                warnings.append({
+                    "rule_id": rule_id,
+                    "pattern": pattern,
+                    "type": "empty_glob",
+                })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_DOC_MISSING",
+                   f"DOC_USAGE: {len(violations)} doc(s) declarado(s) explicitamente não existem em disco.",
+                   [], checked, [], violations, _ms(t0))
+
+    summary_parts = [f"{len(entries)} entradas verificadas"]
+    if warnings:
+        summary_parts.append(f"{len(warnings)} glob(s) sem correspondência (aviso)")
+
+    return _pg(gate_id, "PASS", True, None,
+               " — ".join(summary_parts) + ".",
+               [], checked, [], warnings, _ms(t0))
+
+
+def _g_canon_contract_driven_parity(root: pathlib.Path) -> dict:
+    """CANON_CONTRACT_DRIVEN_PARITY_GATE — Verifica que docs canônicos estão sincronizados
+    com fontes operacionais.
+
+    Checks:
+    1. TASK_CATALOG task types com `worker_path` → arquivo deve existir em disco
+    2. MODULE_REGISTRY módulos ↔ MODULE_SOURCE_AUTHORITY_MATRIX módulos (1:1)
+
+    SKIP_NOT_APPLICABLE se TASK_CATALOG.yaml não existir.
+    """
+    t0 = time.monotonic()
+    gate_id = "CANON_CONTRACT_DRIVEN_PARITY_GATE"
+
+    catalog_path = root / ".contract_driven" / "TASK_CATALOG.yaml"
+    if not catalog_path.exists():
+        return _skip(gate_id, "TASK_CATALOG.yaml não encontrado — gate não aplicável.", _ms(t0))
+
+    try:
+        catalog_data = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_CANON_DRIFT",
+                   f"Erro ao carregar TASK_CATALOG.yaml: {e}",
+                   [], [str(catalog_path.relative_to(root))], [], [], _ms(t0))
+
+    violations: list[dict] = []
+    checked = [str(catalog_path.relative_to(root))]
+
+    # Check 1: worker_path binding (task types com worker_path devem ter arquivo em disco)
+    task_catalog: dict = (catalog_data or {}).get("task_catalog", {})
+    for task_key, task in task_catalog.items():
+        if not isinstance(task, dict):
+            continue
+        worker_path = task.get("worker_path", "")
+        if not worker_path:
+            continue
+        status = task.get("status", "active")
+        if status == "frozen":
+            continue  # Tarefas frozen podem ter prompts inexistentes ainda
+        full_path = root / worker_path
+        if not full_path.exists():
+            violations.append({
+                "task_type": task_key,
+                "worker_path": worker_path,
+                "type": "missing_worker_prompt",
+            })
+            checked.append(worker_path)
+
+    # Check 2: MODULE_REGISTRY ↔ MODULE_SOURCE_AUTHORITY_MATRIX parity
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    matrix_path = root / "docs" / "_canon" / "MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+    if registry_path.exists() and matrix_path.exists():
+        checked.extend([
+            str(registry_path.relative_to(root)),
+            str(matrix_path.relative_to(root)),
+        ])
+        try:
+            registry_data = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+            matrix_data = yaml.safe_load(matrix_path.read_text(encoding="utf-8"))
+            registry_modules = set((registry_data or {}).get("modules", {}).keys())
+            matrix_modules = set((matrix_data or {}).get("modules", {}).keys())
+
+            in_registry_not_matrix = registry_modules - matrix_modules
+            in_matrix_not_registry = matrix_modules - registry_modules
+
+            for mod in sorted(in_registry_not_matrix):
+                violations.append({
+                    "module": mod,
+                    "type": "module_in_registry_not_in_matrix",
+                })
+            for mod in sorted(in_matrix_not_registry):
+                violations.append({
+                    "module": mod,
+                    "type": "module_in_matrix_not_in_registry",
+                })
+        except Exception as e:
+            violations.append({"type": "parse_error", "detail": str(e)})
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_CANON_DRIFT",
+                   f"CANON_DRIVEN_PARITY: {len(violations)} divergência(s) detectada(s).",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               "Todos os worker_paths existem em disco e MODULE_REGISTRY ↔ AUTHORITY_MATRIX em paridade.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_hbtrack_canon_parity(root: pathlib.Path) -> dict:
+    """HBTRACK_CANON_PARITY_GATE — Verifica paridade estrutural entre docs de módulo
+    e políticas canônicas globais.
+
+    Checks estruturais (sem NLP):
+    1. Todos os módulos do MODULE_REGISTRY têm diretório em docs/hbtrack/modulos/<module>/
+    2. GLOBAL_INVARIANTS.md existe e é não-vazio
+    3. DOMAIN_GLOSSARY.md existe e é não-vazio
+    4. Todos os módulos do MODULE_REGISTRY têm pelo menos um arquivo .yaml em graph/
+
+    SKIP_NOT_APPLICABLE se MODULE_REGISTRY.yaml não existir.
+    """
+    t0 = time.monotonic()
+    gate_id = "HBTRACK_CANON_PARITY_GATE"
+
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    if not registry_path.exists():
+        return _skip(gate_id, "MODULE_REGISTRY.yaml não encontrado — gate não aplicável.", _ms(t0))
+
+    try:
+        registry_data = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_HBTRACK_CANON_DRIFT",
+                   f"Erro ao carregar MODULE_REGISTRY.yaml: {e}",
+                   [], [str(registry_path.relative_to(root))], [], [], _ms(t0))
+
+    modules: dict = (registry_data or {}).get("modules", {})
+    violations: list[dict] = []
+    checked = [str(registry_path.relative_to(root))]
+
+    # Check 1: GLOBAL_INVARIANTS.md e DOMAIN_GLOSSARY.md existem e não-vazios
+    for doc_name in ("GLOBAL_INVARIANTS.md", "DOMAIN_GLOSSARY.md"):
+        doc_path = root / "docs" / "_canon" / doc_name
+        checked.append(str(doc_path.relative_to(root)))
+        if not doc_path.exists():
+            violations.append({"type": "missing_global_doc", "doc": doc_name})
+        elif doc_path.stat().st_size == 0:
+            violations.append({"type": "empty_global_doc", "doc": doc_name})
+
+    # Check 2: Cada módulo tem diretório em docs/hbtrack/modulos/<module>/
+    modulos_root = root / "docs" / "hbtrack" / "modulos"
+    for module_name in sorted(modules.keys()):
+        module_dir = modulos_root / module_name
+        if not module_dir.exists() or not module_dir.is_dir():
+            violations.append({
+                "type": "missing_module_directory",
+                "module": module_name,
+                "expected_path": str(module_dir.relative_to(root)),
+            })
+            continue
+
+        # Check 3: Cada módulo tem pelo menos um .yaml em graph/
+        graph_dir = module_dir / "graph"
+        if not graph_dir.exists():
+            violations.append({
+                "type": "missing_graph_directory",
+                "module": module_name,
+                "expected_path": str(graph_dir.relative_to(root)),
+            })
+        else:
+            yaml_files = list(graph_dir.glob("*.yaml"))
+            if not yaml_files:
+                violations.append({
+                    "type": "empty_graph_directory",
+                    "module": module_name,
+                    "path": str(graph_dir.relative_to(root)),
+                })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_HBTRACK_CANON_DRIFT",
+                   f"HBTRACK_CANON_PARITY: {len(violations)} violação(ões) estruturais detectada(s).",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               f"Todos os {len(modules)} módulos têm diretórios e graphs canônicos. "
+               "Docs globais presentes.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -9997,6 +10232,9 @@ def run_pipeline(
         ("CONTEXT_BUNDLE_FRESHNESS_GATE", lambda: _g_context_bundle_freshness(root)),
         ("IMPACT_ANALYSIS_GATE", lambda: _g_impact_analysis(root)),
         ("PARTIAL_UPDATE_GATE", lambda: _g_partial_update(root)),
+        ("DOC_USAGE_GATE", lambda: _g_doc_usage(root)),
+        ("CANON_CONTRACT_DRIVEN_PARITY_GATE", lambda: _g_canon_contract_driven_parity(root)),
+        ("HBTRACK_CANON_PARITY_GATE", lambda: _g_hbtrack_canon_parity(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

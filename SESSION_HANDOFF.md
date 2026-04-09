@@ -1,6 +1,6 @@
 ---
-data_ultima_sessao: "2026-04-08"
-branch_ativo: feat/b10-003b-gates-b6002-freshness
+data_ultima_sessao: "2026-04-09"
+branch_ativo: feat/b10-003c-gates-doc-parity
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: training
@@ -10,7 +10,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: B10-003
 resultado: PENDENTE
-proxima_acao_permitida: "PR-B pronto para commit+PR — próximo: PR-C (DOC_USAGE_GATE + CANON_CONTRACT_DRIVEN_PARITY_GATE + HBTRACK_CANON_PARITY_GATE)"
+proxima_acao_permitida: "PR-C pronto para commit+PR — próximo: PR-D (CI/CD GitHub Secrets)"
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json
