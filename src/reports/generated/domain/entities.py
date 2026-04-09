@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: reports
-# source_fingerprint: 0ea18c2ecf9facc2b9fcbd446d3ba25ac83c12a9b03565cec7d8a1f9ce640b1e
+# source_fingerprint: a6389bb97af621bfcb1e77bdf4de2e8e1504a3c549ce913a68003debb0fa903e
 
 from __future__ import annotations
 

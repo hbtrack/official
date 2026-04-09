@@ -1138,6 +1138,9 @@ class HBCLIv2:
                     if len(parts) >= 2 and parts[1] != declared_module:
                         # Verificar se não é infra/config/tests que são transversais
                         if parts[1] not in {"tests", "config", "migrations", "scripts", "docs"}:
+                            # Excluir src/<module>/generated/ — artefatos derivados de contratos
+                            if "/generated/" in f:
+                                continue
                             return True
         except Exception:
             pass

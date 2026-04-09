@@ -1,6 +1,6 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-08T23:36:34.976629+00:00",
+  "session_timestamp": "2026-04-09T00:32:32.808933+00:00",
   "branch": "feat/b10-003a-contracts-compiler",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
@@ -242,11 +242,23 @@
       "sha256": "6d53ba4d3c44291bcdfc45bbb93fb07ccb498da35c08d627b4b86b821c48e4a6",
       "created_at": "2026-04-08T23:40:35.001884+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/generated/api.py",
+      "sha256": "64cd10a7fde6d599f47e4a1f10347bb0422c65e5f22dfbb37e6e6e7d55c75b61",
+      "created_at": "2026-04-09T00:36:12.718313+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/generated/schemas.py",
+      "sha256": "143c58dc7e73f2e0ac101e5c1fb59656e48140bee00592b48d461b62d56ff63a",
+      "created_at": "2026-04-09T00:36:20.280929+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-08T19:14:39.433510+00:00",
+  "hook_validated_at": "2026-04-08T23:41:45.596209+00:00",
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 5,
