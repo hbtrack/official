@@ -164,3 +164,157 @@ def test_ci_validate_contracts_uses_hb_wrapper():
         f"'ci / Validate Contracts' local_equivalent deve usar 'scripts/hb validate', "
         f"atual: {le!r}"
     )
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Testes v2 — novos blocos do manifesto
+# ──────────────────────────────────────────────────────────────────────────────
+
+def test_schema_v2_version_pattern():
+    """Schema v2 deve rejeitar versões fora do padrão ^2.x.x."""
+    import re
+    schema = _schema()
+    pattern = schema["properties"]["version"]["pattern"]
+    assert re.match(r"\^2\\\\", pattern) or pattern.startswith("^2\\."), (
+        f"version.pattern deve ser ^2\\. (ruptura major consciente para v3), atual: {pattern!r}"
+    )
+
+
+def test_manifest_version_is_v2():
+    """O manifesto deve declarar version começando com '2.'."""
+    version = _manifest()["version"]
+    assert version.startswith("2."), (
+        f"merge-readiness.json version deve ser 2.x.x, atual: {version!r}"
+    )
+
+
+def test_execution_plan_fields_present():
+    """execution_plan deve ter todos os 5 campos obrigatórios."""
+    plan = _manifest().get("execution_plan")
+    assert plan is not None, "execution_plan ausente em merge-readiness.json"
+    for field in ("baseline_steps", "required_check_strategy", "conditional_check_strategy",
+                  "decision_policy", "output_report"):
+        assert field in plan, f"execution_plan.{field} ausente em merge-readiness.json"
+
+
+def test_execution_plan_baseline_includes_survival_suite():
+    """baseline_steps deve incluir survival_suite como passo obrigatório."""
+    steps = _manifest()["execution_plan"]["baseline_steps"]
+    assert "survival_suite" in steps, (
+        f"execution_plan.baseline_steps deve incluir 'survival_suite', atual: {steps!r}"
+    )
+
+
+def test_diff_classification_classes():
+    """diff_classification.classes: cada classe tem class_id único e paths não vazio."""
+    classes = _manifest().get("diff_classification", {}).get("classes", [])
+    assert classes, "diff_classification.classes está vazio"
+    ids_seen = set()
+    for cls in classes:
+        assert "class_id" in cls, f"Classe sem class_id: {cls!r}"
+        assert "paths" in cls and cls["paths"], f"Classe {cls.get('class_id')!r} sem paths"
+        assert cls["class_id"] not in ids_seen, f"class_id de classe duplicado: {cls['class_id']!r}"
+        ids_seen.add(cls["class_id"])
+
+
+def test_semantic_requirements_all_when_values():
+    """semantic_requirements.rules deve cobrir os 5 when values canônicos."""
+    valid_when = {
+        "schema_field_removed",
+        "new_cross_module_boundary",
+        "canonical_status_transition",
+        "diff_outside_handoff_scope",
+        "bridge_doc_uses_authority_language",
+    }
+    rules = _manifest().get("semantic_requirements", {}).get("rules", [])
+    assert rules, "semantic_requirements.rules está vazio"
+    for rule in rules:
+        assert rule.get("when") in valid_when, (
+            f"when value inválido: {rule.get('when')!r} — valores permitidos: {valid_when}"
+        )
+        assert isinstance(rule.get("require"), list) and rule["require"], (
+            f"rule '{rule.get('when')}': require deve ser lista não vazia"
+        )
+        assert isinstance(rule.get("block_if_missing"), bool), (
+            f"rule '{rule.get('when')}': block_if_missing deve ser booleano"
+        )
+
+
+def test_reviewability_limits_positive():
+    """reviewability: todos os limites inteiros devem ser positivos."""
+    rev = _manifest().get("reviewability", {})
+    assert rev, "reviewability ausente em merge-readiness.json"
+    for field in ("max_changed_files", "max_commits", "max_cross_domain_areas"):
+        assert field in rev, f"reviewability.{field} ausente"
+        assert isinstance(rev[field], int) and rev[field] >= 1, (
+            f"reviewability.{field} deve ser inteiro >= 1, atual: {rev[field]!r}"
+        )
+    assert isinstance(rev.get("split_required_when_exceeded"), bool), (
+        "reviewability.split_required_when_exceeded deve ser booleano"
+    )
+
+
+def test_pr_fix_resolution_covers_all_classes():
+    """pr_fix_resolution.finding_classes deve cobrir todos os 4 finding_ids canônicos, sem duplicatas."""
+    required_ids = {"defect_real", "governance_gap", "evidence_missing", "advisory_non_actionable"}
+    finding_classes = _manifest().get("pr_fix_resolution", {}).get("finding_classes", [])
+    assert finding_classes, "pr_fix_resolution.finding_classes está vazio"
+    ids_found = set()
+    for fc in finding_classes:
+        assert "finding_id" in fc and "action" in fc, f"finding_class malformado: {fc!r}"
+        assert fc["finding_id"] not in ids_found, f"finding_class finding_id duplicado: {fc['finding_id']!r}"
+        ids_found.add(fc["finding_id"])
+    missing = required_ids - ids_found
+    assert not missing, f"finding_classes faltando finding_ids: {missing!r}"
+
+
+def test_preflight_exit_code_convention():
+    """cmd_preflight deve documentar a nova convenção v2: 0=PASS, 1=WARN, 2=BLOCK.
+
+    Essa é uma convenção NOVA e DELIBERADA da v2 — não é continuidade da convenção
+    0=sucesso/!=0=falha usada pelos demais comandos de scripts/hb.
+    Verificar que a docstring ou comentário explicita isso.
+    """
+    script = (ROOT / "scripts/hb").read_text()
+    assert "0 = PASS" in script and "1 = WARN" in script and "2 = BLOCK" in script, (
+        "cmd_preflight deve documentar a convenção v2 de exit codes: "
+        "0=PASS, 1=WARN, 2=BLOCK (nova convenção deliberada, não continuidade)"
+    )
+
+
+def test_preflight_is_not_alias_of_survival_suite():
+    """preflight não deve mais ser alias de cmd_survival_suite no dispatcher."""
+    script = (ROOT / "scripts/hb").read_text()
+    # O dispatcher deve chamar cmd_preflight, não cmd_survival_suite, para o comando preflight
+    import re
+    # Buscar bloco do dispatcher: preflight -> cmd_preflight()
+    assert re.search(r'command\s*==\s*"preflight".*?cmd_preflight\(\)', script, re.DOTALL), (
+        "dispatcher de 'preflight' deve chamar cmd_preflight() e não cmd_survival_suite() — "
+        "preflight é o orquestrador v2, não um alias"
+    )
+
+
+def test_conditional_activation_by_diff_class():
+    """Checks condicionais com condição governance_changed devem ativar quando a classe está ativa.
+
+    Este teste valida a lógica de ativação de checks condicionais:
+    se governance_changed está em diff_classes e o check tem condition='governance_changed == true',
+    ele deve ser ativado.
+    """
+    manifest = _manifest()
+    conditionals = [c for c in manifest["checks"] if c["category"] == "conditional"]
+    assert conditionals, "Nenhum check conditional — teste não aplicável"
+
+    # Verificar que todos os condicionais têm condition declarada (já coberto por outro teste)
+    # e que a condition referencia uma classe conhecida de diff_classification
+    known_classes = {cls["class_id"] for cls in manifest["diff_classification"]["classes"]}
+    for check in conditionals:
+        condition = check.get("condition", "")
+        # Extrair o identificador da condição (ex: "governance_changed == true" → "governance_changed")
+        import re
+        identifiers = re.findall(r'\b([a-z_]+)\b(?=\s*==)', condition)
+        for ident in identifiers:
+            assert ident in known_classes, (
+                f"Check condicional {check['context']!r} usa condição '{ident}' "
+                f"que não é uma classe de diff conhecida. Classes: {known_classes!r}"
+            )

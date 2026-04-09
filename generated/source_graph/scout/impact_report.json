@@ -30,7 +30,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/scout.yaml",
-      "sha256": "331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427"
+      "sha256": "bbc4c8cfd28085d117f169ef7536ff6139eebeb6164f16cc4420c3c663f8fa7e"
     },
     {
       "relpath": "contracts/schemas/scout/.gitkeep",
@@ -50,7 +50,7 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/graph/global_policies.yaml",
@@ -148,5 +148,5 @@
     "generated/source_graph/scout/scout.openapi_contract_view.yaml",
     "generated/source_graph/scout/impact_report.json"
   ],
-  "source_fingerprint": "7786307ee367f3318e434317f2e51104370226037055c43570fb95eb87ce68ed"
+  "source_fingerprint": "a21d916c2077b2ec2735d3c5ef55ec6972cd9f46a96a2e6a86fba3b629bdbe8b"
 }

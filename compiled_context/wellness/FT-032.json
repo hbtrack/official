@@ -87,15 +87,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/wellness/wellness.bundle.yaml",
-      "sha256": "e7257603448befbba78004e21dde9dbff7249af049cf6e1698485f1a1d7859c3"
+      "sha256": "c66ed9650149401fd0acbdcf4691b733e3e87d0cffe933f0ad067fa1a28acede"
     },
     {
       "relpath": "generated/source_graph/wellness/wellness.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/wellness/impact_report.json",
-      "sha256": "56817ee78eb7855d538a4e96b6e3e0a50848aa5eb558314f6d2ffe85fc52722e"
+      "sha256": "9d2b1e559694905f1bae5308df5856b30a18e39eb3ecaac8effb0d2a5e856fdc"
     }
   ],
   "module": "wellness",
@@ -139,7 +139,7 @@
     "unit_tests": "src/wellness/tests/unit/test_wellness_domain.py",
     "use_cases": "src/wellness/application/use_cases.py"
   },
-  "source_fingerprint": "e58e97b6a65c9a6f9a98d40c7363bb92ce64a721f7aa5fb8698b13c24a93881b",
+  "source_fingerprint": "299a044bdb4ae673a9f656451d9a2af2e004640c482d1f475dedf32a0c2d7e13",
   "source_graph": {
     "entities": {
       "WellnessEntry": {
@@ -293,7 +293,7 @@
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
         "As rotas de athlete history/summary documentam 404, mas o runtime atual nao materializa AthleteNotFound de forma explicita."
       ],
-      "source_fingerprint": "976cbe130a2110ecca2e7c41ddc396eb34bd99c1106ea9a8f0ced7226e28024c"
+      "source_fingerprint": "c7d0963d84c472e569441b5daab74d04c30556ddc56b84aff979d5217a2b0c11"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

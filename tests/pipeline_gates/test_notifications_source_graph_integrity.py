@@ -172,4 +172,5 @@ def test_notifications_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/notifications/graph/endpoints.yaml",
         "docs/hbtrack/modulos/notifications/graph/errors.yaml",
         "docs/hbtrack/modulos/notifications/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/notifications/graph/openapi_paths.yaml",
     }

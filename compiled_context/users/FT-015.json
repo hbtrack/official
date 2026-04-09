@@ -85,15 +85,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
-      "sha256": "d6b026250fca6a05cb46e9421cc87ab87df701b425e871e181ac80b3f5bb96cc"
+      "sha256": "5c13069b0ed4a82faf1e2da88ec5e6f35212a7bd574513a0fccf9e18ebf031f3"
     },
     {
       "relpath": "generated/source_graph/users/users.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/users/impact_report.json",
-      "sha256": "0ed0eac8d001b972c9595761f80b755c5bdd4a4896bbc1802fb055dfc4ea5eca"
+      "sha256": "c9eb81098af23436c468cc6c88adb873527c201ea76de9c3a264a6332737face"
     }
   ],
   "module": "users",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "1acefce4dfb3022e13ad8b3aafe99d36c8717c5b3a6d94a4f9672203f1504046",
+  "source_fingerprint": "0eeb594ec060a4e8bfa66a97d1c5213908c541d31797bdb5e14523a4c70fcefa",
   "source_graph": {
     "entities": {
       "UserProfile": {
@@ -431,7 +431,7 @@
         "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
         "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
       ],
-      "source_fingerprint": "aea0c0220f42520e0643b2732923c510a5bb3c3c000eacd15b0c668587ce4d9e"
+      "source_fingerprint": "08ef32d18fdf09c2d21c3e439fcbd13650b3ce28ec084131a9dcdbb8eedc4bf2"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

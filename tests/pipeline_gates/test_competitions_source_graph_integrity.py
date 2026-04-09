@@ -172,4 +172,5 @@ def test_competitions_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/competitions/graph/endpoints.yaml",
         "docs/hbtrack/modulos/competitions/graph/errors.yaml",
         "docs/hbtrack/modulos/competitions/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/competitions/graph/openapi_paths.yaml",
     }

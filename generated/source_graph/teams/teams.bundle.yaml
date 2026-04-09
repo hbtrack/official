@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/teams/team.yaml
   sha256: b146f482738667d6b28c9d0e758ba2770ec167363ad52fa39d607453da1263fa
 - relpath: contracts/openapi/paths/teams.yaml
-  sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+  sha256: 52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c
 - relpath: contracts/schemas/teams/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/teams/team.schema.json
@@ -17,7 +17,7 @@ inputs:
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
-  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+  sha256: 53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f
 - relpath: docs/_canon/graph/global_policies.yaml
   sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
 - relpath: docs/_canon/graph/global_rules.yaml

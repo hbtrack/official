@@ -83,15 +83,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/scout/scout.bundle.yaml",
-      "sha256": "b62ea6c7704cb54a0d70ab61540da97dd1ebd02b4b4bf78776fe7c2fc37b6688"
+      "sha256": "44e230e18710aa4e03fb860c00b8e53d032861c073260622d920e923c3bfbe70"
     },
     {
       "relpath": "generated/source_graph/scout/scout.schema_contract_view.yaml",
@@ -103,7 +103,7 @@
     },
     {
       "relpath": "generated/source_graph/scout/impact_report.json",
-      "sha256": "6246a1ea613a860ddd02eb2661e5a0283901760d2c51318011f4226d799f0ffb"
+      "sha256": "7f58cc83796d498d831ddee74d83c510edf24b9ab4ad96ed32cbe4680924e042"
     }
   ],
   "module": "scout",
@@ -136,7 +136,7 @@
     "domain_rules": "src/scout/domain/rules.py",
     "use_cases": "src/scout/application/use_cases.py"
   },
-  "source_fingerprint": "af8576b50c09b8d97d3540ab47cfb1e8f18890a6556104a077c4c4e0c5184648",
+  "source_fingerprint": "548f491f0d5138d709f0762d73b4e8bd5520afad6358ef457af9f94f38aac207",
   "source_graph": {
     "entities": {
       "ScoutEvent": {
@@ -353,7 +353,7 @@
         "clipAssetRefs referenciam storage externo — scout não é dono do storage (DR-SCOUT-004).",
         "SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002)."
       ],
-      "source_fingerprint": "7786307ee367f3318e434317f2e51104370226037055c43570fb95eb87ce68ed"
+      "source_fingerprint": "a21d916c2077b2ec2735d3c5ef55ec6972cd9f46a96a2e6a86fba3b629bdbe8b"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

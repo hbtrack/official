@@ -174,4 +174,5 @@ def test_medical_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/medical/graph/endpoints.yaml",
         "docs/hbtrack/modulos/medical/graph/errors.yaml",
         "docs/hbtrack/modulos/medical/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/medical/graph/openapi_paths.yaml",
     }

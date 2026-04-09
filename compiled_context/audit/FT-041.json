@@ -85,15 +85,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/audit/audit.bundle.yaml",
-      "sha256": "79a33cba52d477f1e9afe1ee7ccfaeab23e07f78217d987c4a4eaafa18f58d8d"
+      "sha256": "88a45d1e54dc7372feb6352c0b1c3647fbf057cc2131a16fcc1897d12f5639b2"
     },
     {
       "relpath": "generated/source_graph/audit/audit.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/audit/impact_report.json",
-      "sha256": "39469ecf17f26286f311f851a90b5d96036d81f346b00806f53e8724c42ed7ff"
+      "sha256": "561e33e6680d13769f05de3f6568a2dfd2622acceaf0a0a167187d6d35f27434"
     }
   ],
   "module": "audit",
@@ -137,7 +137,7 @@
     "domain_rules": "src/audit/domain/rules.py",
     "use_cases": "src/audit/application/use_cases.py"
   },
-  "source_fingerprint": "847c2da3ce12c800005be3ebf9d7e347cd6836b425e964198d0f8476c59eaa8c",
+  "source_fingerprint": "12b38d5f53a39ce0d6584b698364ab9908069f60aefe4283c1ff2eb2fc812758",
   "source_graph": {
     "entities": {
       "AuditEntry": {
@@ -280,7 +280,7 @@
         "Export (GET /audit/entries/export) é LGPD/compliance endpoint; payload e formato de saída seguem ADR separados pendentes.",
         "AsyncAPI/Arazzo do módulo continuam fora do source graph local nesta fase e seguem governança separada."
       ],
-      "source_fingerprint": "571d4507e4dec7fc8a22e550b2599baa090dc3fd16eba93495f3dd6759c08127"
+      "source_fingerprint": "24553bae0ff9bb058a5e4d5a492a3940fa72ea89bb87bbd55fd49d299bcd4031"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -95,15 +95,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
-      "sha256": "36c740ed3eaaa1bc2ac1547381bb2a5529f364fa7a185b1b613de9aa6c11151e"
+      "sha256": "a668873af570f2e13a9fe9e4563d035e280530759e34ae0b0fe5812ec113fc6a"
     },
     {
       "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
@@ -115,7 +115,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/impact_report.json",
-      "sha256": "33a64c151b2f789d41b1e908a12bfe1fab825f478f506e22435254a15a520e61"
+      "sha256": "7af795d750bf772984af317b5266a54cb8d3934c973ee37f42cc9a10a0951753"
     }
   ],
   "module": "reports",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "0fd2b84c056d49b45e14b528c15d844f9e22213064a4e78160b434ff1c161a8a",
+  "source_fingerprint": "e98bd44cd760c75b9fd5758594c4fe9b5663db08632cadf1f23b64a94bd45b98",
   "source_graph": {
     "entities": {
       "ReportJob": {
@@ -321,7 +321,7 @@
       "known_gaps": [
         "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
       ],
-      "source_fingerprint": "0ea18c2ecf9facc2b9fcbd446d3ba25ac83c12a9b03565cec7d8a1f9ce640b1e"
+      "source_fingerprint": "a6389bb97af621bfcb1e77bdf4de2e8e1504a3c549ce913a68003debb0fa903e"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

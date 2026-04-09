@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/medical/medical_record.yaml
   sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
 - relpath: contracts/openapi/paths/medical.yaml
-  sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+  sha256: 2bbc929859ae7397ca92591c06f39662d55106b4e612b1d54cf64bdd7e3484f1
 - relpath: contracts/schemas/medical/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/medical/medical_record.schema.json
@@ -17,7 +17,7 @@ inputs:
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
-  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+  sha256: 53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f
 - relpath: docs/_canon/graph/global_policies.yaml
   sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
 - relpath: docs/_canon/graph/global_rules.yaml

@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://hbtrack.dev/schemas/merge-readiness",
     "title": "HB Track Merge-Readiness Manifest",
-    "description": "Declaração formal dos checks que bloqueiam merge em main, checks informativos e condicionais, e o executor local equivalente para cada um.",
+    "description": "Contrato executável de prontidão pré-push e merge-readiness. v2: inclui execution_plan, diff_classification, semantic_requirements, reviewability e pr_fix_resolution.",
     "type": "object",
     "required": [
         "version",
@@ -10,7 +10,12 @@
         "ruleset_name",
         "checks",
         "enforcement",
-        "local_executor"
+        "local_executor",
+        "execution_plan",
+        "diff_classification",
+        "semantic_requirements",
+        "reviewability",
+        "pr_fix_resolution"
     ],
     "additionalProperties": false,
     "properties": {
@@ -19,7 +24,8 @@
         },
         "version": {
             "type": "string",
-            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            "pattern": "^2\\.\\d+\\.\\d+$",
+            "description": "Versão major travada em 2.x — bump consciente de ruptura para v3."
         },
         "updated": {
             "type": "string",
@@ -197,6 +203,196 @@
                 },
                 "pre_push_hook": {
                     "type": "string"
+                }
+            }
+        },
+        "execution_plan": {
+            "type": "object",
+            "required": [
+                "baseline_steps",
+                "required_check_strategy",
+                "conditional_check_strategy",
+                "decision_policy",
+                "output_report"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "baseline_steps": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "survival_suite",
+                            "diff_scan",
+                            "schema_guard",
+                            "handoff_guard"
+                        ]
+                    }
+                },
+                "required_check_strategy": {
+                    "type": "string",
+                    "enum": [
+                        "run_all_required",
+                        "run_required_by_scope"
+                    ]
+                },
+                "conditional_check_strategy": {
+                    "type": "string",
+                    "enum": [
+                        "activate_by_diff",
+                        "activate_by_paths_and_rules"
+                    ]
+                },
+                "decision_policy": {
+                    "type": "string",
+                    "enum": [
+                        "block_on_required_fail",
+                        "block_on_required_fail_or_missing_evidence",
+                        "warn_on_missing_evidence"
+                    ]
+                },
+                "output_report": {
+                    "type": "string"
+                }
+            }
+        },
+        "diff_classification": {
+            "type": "object",
+            "required": [
+                "classes"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "class_id",
+                            "paths"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "class_id": {
+                                "type": "string"
+                            },
+                            "paths": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "semantic_requirements": {
+            "type": "object",
+            "required": [
+                "rules"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "when",
+                            "require",
+                            "block_if_missing"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "when": {
+                                "type": "string",
+                                "enum": [
+                                    "schema_field_removed",
+                                    "new_cross_module_boundary",
+                                    "canonical_status_transition",
+                                    "diff_outside_handoff_scope",
+                                    "bridge_doc_uses_authority_language"
+                                ]
+                            },
+                            "require": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "block_if_missing": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "reviewability": {
+            "type": "object",
+            "required": [
+                "max_changed_files",
+                "max_commits",
+                "max_cross_domain_areas",
+                "split_required_when_exceeded"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "max_changed_files": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "max_commits": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "max_cross_domain_areas": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "split_required_when_exceeded": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "pr_fix_resolution": {
+            "type": "object",
+            "required": [
+                "finding_classes"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "finding_classes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "finding_id",
+                            "action"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "finding_id": {
+                                "type": "string",
+                                "enum": [
+                                    "defect_real",
+                                    "governance_gap",
+                                    "evidence_missing",
+                                    "advisory_non_actionable"
+                                ]
+                            },
+                            "action": {
+                                "type": "string",
+                                "enum": [
+                                    "fix_repository",
+                                    "fix_governance_artifact",
+                                    "reply_with_evidence",
+                                    "reply_without_scope_expansion"
+                                ]
+                            }
+                        }
+                    }
                 }
             }
         }

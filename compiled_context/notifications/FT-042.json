@@ -86,15 +86,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.bundle.yaml",
-      "sha256": "95d10729ed8166abcccd7a2e6109b06c24e18e78bb525106aef08bb7b3716a81"
+      "sha256": "33aeafbc13f0f1e779b54d90d083fca512ad2f16ec7c7ce6a4508b0c8474e634"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
@@ -106,7 +106,7 @@
     },
     {
       "relpath": "generated/source_graph/notifications/impact_report.json",
-      "sha256": "8ba795470bdc1913b215355b04e5ade53a71bb878409d915f0fa344871e38c2f"
+      "sha256": "dceb3a013d62b53af0f78bcd3e0650b65d08a6f7ead5f48e92092f1d13c2ee4b"
     }
   ],
   "module": "notifications",
@@ -137,7 +137,7 @@
     "unit_tests": "src/notifications/tests/unit/test_notifications.py",
     "use_cases": "src/notifications/application/use_cases.py"
   },
-  "source_fingerprint": "27c64a1881fc5acea38647d64f14918337260626a4b2097189bf949a6db18238",
+  "source_fingerprint": "24efa44b33177d312f9f69dc282de9bd899eb2259f581fbc750983ceade594db",
   "source_graph": {
     "entities": {
       "NotificationDelivery": {
@@ -285,7 +285,7 @@
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
         "As rotas de preferences documentam 404 para usuario inexistente, mas o runtime atual materializa defaults via repository."
       ],
-      "source_fingerprint": "5a40b1b7e2168a44f764cbdd919b3f83e7bb09e13bfda8e9a96b9b7b91fcf1eb"
+      "source_fingerprint": "403dad7ab81386c5993c1857ac3d6ebe597a37af5c9249e61e2efe7065399c1a"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

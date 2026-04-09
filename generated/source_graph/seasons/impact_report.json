@@ -29,7 +29,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/seasons.yaml",
-      "sha256": "9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad"
+      "sha256": "943c09b15405b3f5a470e7db146dcc6e185ad02feb4e782cb2ac1a420f5c658d"
     },
     {
       "relpath": "contracts/schemas/seasons/.gitkeep",
@@ -49,7 +49,7 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/graph/global_policies.yaml",
@@ -140,5 +140,5 @@
     "generated/source_graph/seasons/seasons.openapi_contract_view.yaml",
     "generated/source_graph/seasons/impact_report.json"
   ],
-  "source_fingerprint": "63be0b800795f1ee1f940f609d3686b772d230bc8bbe201e513c35ccad9fbb62"
+  "source_fingerprint": "62962530e0f5d76792e56edb12bf18f22bbb777de6deea772e8f3bbcadce8c5d"
 }

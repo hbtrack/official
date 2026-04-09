@@ -31,7 +31,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/video.yaml",
-      "sha256": "2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54"
+      "sha256": "ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe"
     },
     {
       "relpath": "contracts/schemas/video/clip_definition.schema.json",
@@ -59,7 +59,7 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/graph/global_policies.yaml",
@@ -163,5 +163,5 @@
     "generated/source_graph/video/video.openapi_contract_view.yaml",
     "generated/source_graph/video/impact_report.json"
   ],
-  "source_fingerprint": "503c54032d4ca219784e446e02248709f620f46b66713157b45ebd978b3db695"
+  "source_fingerprint": "e0eee520346dd2de293c5fcbc7b694c0141d2004cbe0cb8c7f92c9479428af9e"
 }

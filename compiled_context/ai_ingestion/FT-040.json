@@ -76,15 +76,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
-      "sha256": "7c897a53cd32f6397bc9d2c5fb355ba48ae440d02c503002965aa8b475fcccaa"
+      "sha256": "ced0e32e4c02917db3bdc3374a51df91194e62bc7766a2c275b056fb01a5d229"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
-      "sha256": "e0e741482fc58925f325bb67ccf1068d0ab6217da480c17e90763f1736019aec"
+      "sha256": "9f98a81cbe6e9c7e956ae6625522e69d452e98dcd42ac57a581f14eebec585d0"
     }
   ],
   "module": "ai_ingestion",
@@ -127,7 +127,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "a4304ad9619e8628d35f4a83f21a103aacb5f58ca1ffccc8b22b62fe942e866f",
+  "source_fingerprint": "a81bf138d0568e172b12d5d19e93b0eb837f818fcef339cbe9ac94c108bd1da3",
   "source_graph": {
     "entities": {
       "IngestionJob": {
@@ -292,7 +292,7 @@
         "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
       ],
       "known_gaps": [],
-      "source_fingerprint": "d1e48e3fd883963067063529a19973923c32d9b8a66ffde51c718dd1f25ae38a"
+      "source_fingerprint": "53329b863b7c3925e6777975e45584bd069cf94b0b359f4e1890aa7be673f127"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

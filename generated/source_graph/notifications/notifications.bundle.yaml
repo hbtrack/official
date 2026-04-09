@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/notifications/notification_delivery.yaml
   sha256: a2c4706bd47523a6a361133f758d262746c7f71b734f6735abcfda697a18c623
 - relpath: contracts/openapi/paths/notifications.yaml
-  sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
+  sha256: bfb3b348a9806308947c324222b56c0003cfbbae6cd84d46ed6b33d9077cde39
 - relpath: contracts/schemas/notifications/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/notifications/notification_delivery.schema.json
@@ -17,7 +17,7 @@ inputs:
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
-  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+  sha256: 53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f
 - relpath: docs/_canon/graph/global_policies.yaml
   sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
 - relpath: docs/_canon/graph/global_rules.yaml

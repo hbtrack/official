@@ -172,4 +172,5 @@ def test_scout_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/scout/graph/endpoints.yaml",
         "docs/hbtrack/modulos/scout/graph/errors.yaml",
         "docs/hbtrack/modulos/scout/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/scout/graph/openapi_paths.yaml",
     }

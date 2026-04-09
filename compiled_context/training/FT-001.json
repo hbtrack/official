@@ -93,15 +93,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "5faac55d155128bb324cb7d204885b521a1a4db132c348f6a1e030dcedf982ec"
+      "sha256": "3f8cc6fe931ae36f9a9210beff5797217b74c7a2aee1300e2c0d4981f369f545"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "e3f85453e253f663ea1b2177550f3228703be80dc22b609d4361984be94381e0"
+      "sha256": "4bd2556d6e70e4b7fb9957953bdaee947da53629cf170768103e964c29123731"
     }
   ],
   "module": "training",
@@ -149,7 +149,7 @@
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "9459786ac37b7d22a949078081b80702b8f8a62a96895d0688c30ad65256ba75",
+  "source_fingerprint": "514b772ce011dfa64228aa884ab58a6151b8a25b8a5d28bc72d0132ed4d8b50c",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -780,7 +780,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "43ddc71866eb029ee9fb51153592cc6630b18b85834cda185eee44ff2abf2e4f"
+      "source_fingerprint": "c1b8469948cd3ed9f3900c618c0ee0a1e4acf1cce94986cd73973baf40984dba"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

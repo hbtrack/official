@@ -1,7 +1,7 @@
 {
     "$schema": "./contracts/schemas/shared/merge-readiness.schema.json",
-    "version": "1.0.0",
-    "updated": "2026-04-03",
+    "version": "2.0.0",
+    "updated": "2026-04-08",
     "target_branch": "main",
     "ruleset_name": "contract-gates",
     "ruleset_id": 13901517,
@@ -114,5 +114,121 @@
         "command": "python3 scripts/hb preflight",
         "evidence_path": "_reports/preflight/latest.json",
         "pre_push_hook": "scripts/git-hooks/pre-push"
+    },
+    "execution_plan": {
+        "baseline_steps": [
+            "survival_suite",
+            "diff_scan",
+            "schema_guard",
+            "handoff_guard"
+        ],
+        "required_check_strategy": "run_all_required",
+        "conditional_check_strategy": "activate_by_paths_and_rules",
+        "decision_policy": "block_on_required_fail_or_missing_evidence",
+        "output_report": "_reports/preflight/latest.json"
+    },
+    "diff_classification": {
+        "classes": [
+            {
+                "class_id": "governance_changed",
+                "paths": [
+                    ".contract_driven/**",
+                    "contracts/**",
+                    "docs/_canon/**"
+                ]
+            },
+            {
+                "class_id": "bridge_docs_changed",
+                "paths": [
+                    ".github/copilot-instructions.md",
+                    ".github/skills/**"
+                ]
+            },
+            {
+                "class_id": "session_contract_changed",
+                "paths": [
+                    "contracts/schemas/shared/session_start.schema.json",
+                    "SESSION_HANDOFF.md",
+                    "tests/pipeline_gates/test_session_state_phase3.py"
+                ]
+            },
+            {
+                "class_id": "frontend_changed",
+                "paths": [
+                    "frontend/**"
+                ]
+            },
+            {
+                "class_id": "schema_changed",
+                "paths": [
+                    "contracts/schemas/**"
+                ]
+            }
+        ]
+    },
+    "semantic_requirements": {
+        "rules": [
+            {
+                "when": "schema_field_removed",
+                "require": [
+                    "breaking_change_note"
+                ],
+                "block_if_missing": true
+            },
+            {
+                "when": "new_cross_module_boundary",
+                "require": [
+                    "scope_boundary_policy_update"
+                ],
+                "block_if_missing": true
+            },
+            {
+                "when": "canonical_status_transition",
+                "require": [
+                    "formal_activation_evidence"
+                ],
+                "block_if_missing": true
+            },
+            {
+                "when": "diff_outside_handoff_scope",
+                "require": [
+                    "handoff_scope_expansion"
+                ],
+                "block_if_missing": true
+            },
+            {
+                "when": "bridge_doc_uses_authority_language",
+                "require": [
+                    "bridge_doc_language_fix"
+                ],
+                "block_if_missing": true
+            }
+        ]
+    },
+    "reviewability": {
+        "max_changed_files": 150,
+        "max_commits": 20,
+        "max_cross_domain_areas": 3,
+        "split_required_when_exceeded": true
+    },
+    "pr_fix_resolution": {
+        "finding_classes": [
+            {
+                "finding_id": "defect_real",
+                "action": "fix_repository"
+            },
+            {
+                "finding_id": "governance_gap",
+                "action": "fix_governance_artifact"
+            },
+            {
+                "finding_id": "evidence_missing",
+                "action": "reply_with_evidence"
+            },
+            {
+                "finding_id": "advisory_non_actionable",
+                "action": "reply_without_scope_expansion"
+            }
+        ]
     }
 }

@@ -87,15 +87,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/matches/matches.bundle.yaml",
-      "sha256": "691e1a32d45c194f43291f59950255b3da8e2a0970a747fb75bc8e8893ed6a45"
+      "sha256": "550176a21dc72d54b56d56b2ca393030d22402216fafcdb697407ee08c500f2d"
     },
     {
       "relpath": "generated/source_graph/matches/matches.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/matches/impact_report.json",
-      "sha256": "8d8237e0814c8feeb5fc17f29881bcd9bde7cd55a0dd1708a4477ecab301aa6b"
+      "sha256": "78d7bbd1e326dc5b2ebfee2013c58d4d88709d5175164eb09a09219ad4001e85"
     }
   ],
   "module": "matches",
@@ -137,7 +137,7 @@
     "domain_rules": "src/matches/domain/rules.py",
     "use_cases": "src/matches/application/use_cases.py"
   },
-  "source_fingerprint": "4c738cfab8328c4685b3ee8dbca9a4b2b9d1175f325e47b6b93d756cbbd28feb",
+  "source_fingerprint": "2b5514337e35497062b5b20e1550df414f344d30b81e5e46b0e4cb40a69edbad",
   "source_graph": {
     "entities": {
       "Match": {
@@ -478,7 +478,7 @@
         "officialIncidentIds referenciam módulo incidents (scheduling futuro) — DEC-MATCHES-001: CRUD simples.",
         "addPlayerToLineup usa operationId=addPlayerToLineup mas runtime usa PUT; patchMatch usa PATCH — mapeamento documentado em DEC-MATCHES-001."
       ],
-      "source_fingerprint": "cc976e5551aa921eba5949469e42a012fc3c1305da4c0852e25fa601cd34ba8c"
+      "source_fingerprint": "49835db2d10f390f1e3c0ef249578d0a03fd6f76e1c3c1a9170f0eae6f004cc9"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

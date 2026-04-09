@@ -1,16 +1,16 @@
 ---
 data_ultima_sessao: "2026-04-08"
-branch_ativo: feat/b11-003-agent-compliance-cert
+branch_ativo: feat/b10-003a-contracts-compiler
 modo_operacao: ROADMAP
 ci_status: PASS
-modulo_foco: users
+modulo_foco: training
 fase_roadmap: 5
 roadmap_phase: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: B11-003
-resultado: DONE
-proxima_acao_permitida: "B11-003 concluído (PARTIAL). Próximo: B10-003 (staging replay) para certificação PASS total, ou iniciar fase 6 do roadmap"
+task_id: B10-003
+resultado: PENDENTE
+proxima_acao_permitida: "B10-003-A em execução — contracts compiler + openapi_paths.yaml para 17 módulos"
 bloqueios_ativos: []
 evidence_paths:
   - _reports/contract_gates/latest.json

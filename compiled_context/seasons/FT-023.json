@@ -87,15 +87,15 @@
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+      "sha256": "53a7534f637a960819ae26e9c92e6d2682bb7fdef967ee85e2862539e0e9034f"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "02f5a7f14b7b8b7354edc9de12d72847c407b0ba00aa41b7b4f6350c97f60745"
+      "sha256": "fa6da746eb3be29d4844265fd94218f31d75afee169be8463d54d923b1c149a0"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.bundle.yaml",
-      "sha256": "dfb04caf6f7804523294208c847230548b54c3b7113398aca49ac6b9f32c35f4"
+      "sha256": "9e2bdcedd9a3363691939df1bf6a344941a36c67af70be89fe26b924844df84d"
     },
     {
       "relpath": "generated/source_graph/seasons/seasons.schema_contract_view.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/seasons/impact_report.json",
-      "sha256": "e0c763052aa01019a673e3fd3182fb5ac6b94c6b3225fc0a460223b54865e1a4"
+      "sha256": "3a6dc16a4edcf917e0f48d72ccfda39e0866c7f98541a54512cfe4ad23dd0c16"
     }
   ],
   "module": "seasons",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "e2f294be85dfbee0a339d8831d03b6c06e595d5518c92f16c9eaced70e425f5a",
+  "source_fingerprint": "d13f6e9aeac85bfe43a74de05e34cc94359ecc4581d29322e163189922938ad1",
   "source_graph": {
     "entities": {
       "Season": {
@@ -315,7 +315,7 @@
         "competition_ids é referência cruzada para módulo competitions — boundary explicitado em INV-SEAS-004.",
         "organization_id é referência opcional; governança de organização pertence ao módulo identity_access."
       ],
-      "source_fingerprint": "63be0b800795f1ee1f940f609d3686b772d230bc8bbe201e513c35ccad9fbb62"
+      "source_fingerprint": "62962530e0f5d76792e56edb12bf18f22bbb777de6deea772e8f3bbcadce8c5d"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

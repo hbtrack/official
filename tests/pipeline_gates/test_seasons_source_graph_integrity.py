@@ -172,4 +172,5 @@ def test_seasons_module_docs_and_manifest_reference_source_graph():
         "docs/hbtrack/modulos/seasons/graph/endpoints.yaml",
         "docs/hbtrack/modulos/seasons/graph/errors.yaml",
         "docs/hbtrack/modulos/seasons/graph/test_obligations.yaml",
+        "docs/hbtrack/modulos/seasons/graph/openapi_paths.yaml",
     }

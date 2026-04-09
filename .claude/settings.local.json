@@ -1,22 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "Bash(GH_TOKEN=\"\" gh pr view 51 --json title,state,mergeable,mergeStateStatus,statusCheckRollup,reviews,reviewDecision)"
+      "Bash(GH_TOKEN=\"\" gh pr view 51 --json title,state,mergeable,mergeStateStatus,statusCheckRollup,reviews,reviewDecision)",
+      "Bash(python3 scripts/contracts/validate/validate_contracts.py --profile ci)"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
-        "type": "command",
-        "command": "python3 scripts/hooks/check_backend_gate.py",
-        "timeout": 10
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/hooks/check_backend_gate.py",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "type": "command",
-        "command": "python3 scripts/hooks/check_session_commit.py",
-        "timeout": 10
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/hooks/check_session_commit.py",
+            "timeout": 10
+          }
+        ]
       }
     ]
   }
