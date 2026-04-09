@@ -53,15 +53,23 @@ class TestLive:
             pytest.skip("HB_STAGING_URL não definida — modo estrutural apenas")
 
     def test_ciclo3_partida_competicao(self, http_client, staging_url):
+        from scripts.replay.common import (
+            SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD,
+            SEED_ORG_ID, SEED_CATEGORY_LABEL,
+        )
         r = http_client.post(
-            f"{staging_url}/api/auth/token/",
-            json={"email": "admin@hbtrack.test", "password": "hbtrack_test_2024!"},
+            f"{staging_url}/api/auth/login",
+            json={"email": SEED_ADMIN_EMAIL, "password": SEED_ADMIN_PASSWORD},
         )
         assert r.status_code == 200
-        token = r.json()["access"]
+        token = r.json()["accessToken"]
         auth = {"Authorization": f"Bearer {token}"}
-        # criar equipe para usar como referência
-        r2 = http_client.post(f"{staging_url}/api/teams/", json={"name": "T3", "gender": "M"}, headers=auth)
+        # criar equipe mandante para usar como referência
+        r2 = http_client.post(
+            f"{staging_url}/api/teams/",
+            json={"organizationId": SEED_ORG_ID, "name": "Replay Home T3", "categoryLabel": SEED_CATEGORY_LABEL},
+            headers=auth,
+        )
         team_id = r2.json().get("id")
         result = mod.run_live(http_client, staging_url, auth, team_id=team_id)
         assert result["status"] == "PASS"

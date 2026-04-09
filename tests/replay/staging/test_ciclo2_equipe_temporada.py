@@ -49,13 +49,13 @@ class TestLive:
             pytest.skip("HB_STAGING_URL não definida — modo estrutural apenas")
 
     def test_ciclo2_equipe_temporada(self, http_client, staging_url):
-        import httpx
+        from scripts.replay.common import SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD
         r = http_client.post(
-            f"{staging_url}/api/auth/token/",
-            json={"email": "admin@hbtrack.test", "password": "hbtrack_test_2024!"},
+            f"{staging_url}/api/auth/login",
+            json={"email": SEED_ADMIN_EMAIL, "password": SEED_ADMIN_PASSWORD},
         )
         assert r.status_code == 200
-        token = r.json()["access"]
+        token = r.json()["accessToken"]
         auth = {"Authorization": f"Bearer {token}"}
         result = mod.run_live(http_client, staging_url, auth)
         assert result["status"] == "PASS"

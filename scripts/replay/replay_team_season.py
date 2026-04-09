@@ -11,6 +11,8 @@ Endpoints principais:
 """
 from __future__ import annotations
 
+from .common import SEED_ORG_ID, SEED_CATEGORY_LABEL
+
 CYCLE_ID = "ciclo2_equipe_temporada"
 CYCLE_MODULES = ["teams", "seasons"]
 
@@ -37,7 +39,11 @@ def run_live(client, base_url: str, auth_header: dict) -> dict:
     # 1. Criar equipe
     r = client.post(
         f"{base_url}/api/teams/",
-        json={"name": "Replay Team", "gender": "M"},
+        json={
+            "organizationId": SEED_ORG_ID,
+            "name": "Replay Team",
+            "categoryLabel": SEED_CATEGORY_LABEL,
+        },
         headers=auth_header,
     )
     results.append({"step": "teams_create", "status_code": r.status_code})
@@ -47,7 +53,7 @@ def run_live(client, base_url: str, auth_header: dict) -> dict:
     # 2. Criar temporada
     r = client.post(
         f"{base_url}/api/seasons/",
-        json={"name": "Temporada Replay 2024", "start_date": "2024-01-01", "end_date": "2024-12-31"},
+        json={"name": "Temporada Replay 2024", "startDate": "2024-01-01", "endDate": "2024-12-31"},
         headers=auth_header,
     )
     results.append({"step": "seasons_create", "status_code": r.status_code})
