@@ -1117,3 +1117,63 @@ gates:
     blocking_codes: [BLOCKED_ORPHAN_SOURCE_UPDATE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: DOC_USAGE_GATE
+    order: "20O"
+    name: "Doc Usage Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica que todos os docs declarados em docs/_canon/DOC_USAGE_MANIFEST.yaml
+      existem em disco. Para entradas com `paths:`: cada arquivo listado deve existir.
+      Para entradas com `path_globs:`: pelo menos um arquivo deve corresponder ao glob
+      (WARN se nenhum — não bloqueia, pois docs podem não existir para todos os módulos).
+      FAIL se arquivo declarado explicitamente via `paths:` não existe em disco.
+      SKIP_NOT_APPLICABLE se DOC_USAGE_MANIFEST.yaml não existir.
+    blocking_codes: [BLOCKED_DOC_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: CANON_CONTRACT_DRIVEN_PARITY_GATE
+    order: "20P"
+    name: "Canon Contract-Driven Parity Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica que docs canônicos estão sincronizados com fontes operacionais.
+      Checks: (1) TASK_CATALOG task types com `worker_path` declarado devem ter o arquivo
+      em disco (tarefas `frozen` são excluídas); (2) MODULE_REGISTRY.yaml módulos ↔
+      MODULE_SOURCE_AUTHORITY_MATRIX.yaml módulos devem ter paridade exata (1:1).
+      FAIL se qualquer divergência detectada.
+      SKIP_NOT_APPLICABLE se TASK_CATALOG.yaml não existir.
+    blocking_codes: [BLOCKED_CANON_DRIFT]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: HBTRACK_CANON_PARITY_GATE
+    order: "20Q"
+    name: "HB Track Canon Parity Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [CANON_CONTRACT_DRIVEN_PARITY_GATE]
+    description: >
+      Verifica paridade estrutural entre docs de módulo e políticas canônicas globais.
+      Checks estruturais (sem NLP): (1) GLOBAL_INVARIANTS.md e DOMAIN_GLOSSARY.md
+      existem e são não-vazios; (2) cada módulo do MODULE_REGISTRY.yaml tem diretório
+      em docs/hbtrack/modulos/<module>/; (3) cada módulo tem pelo menos um arquivo .yaml
+      em graph/. FAIL se contradição estrutural detectada.
+      SKIP_NOT_APPLICABLE se MODULE_REGISTRY.yaml não existir.
+    blocking_codes: [BLOCKED_HBTRACK_CANON_DRIFT]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py

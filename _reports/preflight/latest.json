@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T00:47:53.323394+00:00",
+  "generated_at": "2026-04-09T03:54:13.204355+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
@@ -117,14 +117,14 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 185,
+    "changed_files": 21,
     "max_changed_files": 150,
-    "commits": 2,
+    "commits": 4,
     "max_commits": 20,
-    "cross_domain_areas": 1,
+    "cross_domain_areas": 0,
     "max_cross_domain_areas": 3,
-    "exceeded": true,
-    "split_required": true
+    "exceeded": false,
+    "split_required": false
   },
-  "final_decision": "WARN"
+  "final_decision": "PASS"
 }
