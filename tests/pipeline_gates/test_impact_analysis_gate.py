@@ -146,9 +146,12 @@ def test_context_bundle_freshness_gate_skips_without_compiled_context(tmp_path):
     )
 
 
-def test_context_bundle_freshness_gate_pass_when_bundles_fresh(tmp_path):
+def test_context_bundle_freshness_gate_pass_when_bundles_fresh(tmp_path, monkeypatch):
     """Gate deve PASS quando bundle .json é mais recente que source master."""
     import time as time_module
+
+    # Remover CI do ambiente para que o gate não faça SKIP automaticamente
+    monkeypatch.delenv("CI", raising=False)
 
     sys.path.insert(0, str(ROOT / "scripts" / "contracts" / "validate"))
     import validate_contracts as vc
@@ -180,9 +183,12 @@ def test_context_bundle_freshness_gate_pass_when_bundles_fresh(tmp_path):
     )
 
 
-def test_context_bundle_freshness_gate_fail_when_bundle_stale(tmp_path):
+def test_context_bundle_freshness_gate_fail_when_bundle_stale(tmp_path, monkeypatch):
     """Gate deve FAIL quando source master é mais recente que bundle."""
     import time as time_module
+
+    # Remover CI do ambiente para que o gate não faça SKIP automaticamente
+    monkeypatch.delenv("CI", raising=False)
 
     sys.path.insert(0, str(ROOT / "scripts" / "contracts" / "validate"))
     import validate_contracts as vc
