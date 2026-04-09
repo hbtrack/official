@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-09T20:41:37Z",
+  "timestamp_utc": "2026-04-09T22:06:49Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "16418a60",
+    "git_commit": "afbe7a0e",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T204137_f9f833"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260409T220649_c11048"
   },
   "status_detail": {
-    "active_gates_passed": 58,
-    "skip_count": 3,
+    "active_gates_passed": 56,
+    "skip_count": 5,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -215,11 +215,11 @@
       },
       {
         "gate_id": "IMPACT_ANALYSIS_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "PARTIAL_UPDATE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "DOC_USAGE_GATE",
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 67
+        "duration_ms": 91
       }
     },
     {
@@ -282,7 +282,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1809
+        "duration_ms": 2940
       }
     },
     {
@@ -487,7 +487,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 10
       }
     },
     {
@@ -617,7 +617,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 125
+        "duration_ms": 143
       }
     },
     {
@@ -670,7 +670,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 5
       }
     },
     {
@@ -691,7 +691,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 50
       }
     },
     {
@@ -733,7 +733,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 18
       }
     },
     {
@@ -754,7 +754,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 88
+        "duration_ms": 93
       }
     },
     {
@@ -775,7 +775,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 90
       }
     },
     {
@@ -796,7 +796,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 50
       }
     },
     {
@@ -817,7 +817,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 311
+        "duration_ms": 377
       }
     },
     {
@@ -838,7 +838,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 48
       }
     },
     {
@@ -897,7 +897,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 10
       }
     },
     {
@@ -954,7 +954,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 34
       }
     },
     {
@@ -981,7 +981,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 127
+        "duration_ms": 140
       }
     },
     {
@@ -1082,7 +1082,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 4
       }
     },
     {
@@ -1454,7 +1454,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 45
       }
     },
     {
@@ -1540,7 +1540,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 739
+        "duration_ms": 794
       }
     },
     {
@@ -1563,7 +1563,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1503
+        "duration_ms": 1909
       }
     },
     {
@@ -1585,7 +1585,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1440
+        "duration_ms": 1436
       }
     },
     {
@@ -1624,7 +1624,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 559
+        "duration_ms": 606
       }
     },
     {
@@ -4535,7 +4535,7 @@
         "errors": 0,
         "warnings": 142,
         "violations": 142,
-        "duration_ms": 1901
+        "duration_ms": 1964
       }
     },
     {
@@ -5218,7 +5218,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1854
+        "duration_ms": 1861
       }
     },
     {
@@ -5242,7 +5242,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1745
+        "duration_ms": 1688
       }
     },
     {
@@ -5302,7 +5302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1676
+        "duration_ms": 1752
       }
     },
     {
@@ -5345,7 +5345,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 75
       }
     },
     {
@@ -5367,7 +5367,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1370
+        "duration_ms": 1422
       }
     },
     {
@@ -5423,7 +5423,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 63
       }
     },
     {
@@ -5443,7 +5443,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       }
     },
     {
@@ -5463,7 +5463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42658
+        "duration_ms": 44721
       }
     },
     {
@@ -5499,7 +5499,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 11
       }
     },
     {
@@ -5519,7 +5519,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 22
       }
     },
     {
@@ -5690,7 +5690,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 8
       }
     },
     {
@@ -5712,7 +5712,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 170
+        "duration_ms": 178
       }
     },
     {
@@ -5756,7 +5756,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 26
       }
     },
     {
@@ -6120,7 +6120,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1030
+        "duration_ms": 981
       }
     },
     {
@@ -6166,7 +6166,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 17
       }
     },
     {
@@ -6205,7 +6205,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 28
       }
     },
     {
@@ -6228,7 +6228,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 5
       }
     },
     {
@@ -6249,7 +6249,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 26
       }
     },
     {
@@ -6348,47 +6348,43 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
       "gate_id": "IMPACT_ANALYSIS_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os source masters modificados têm os blocking_consumers correspondentes no commit.",
+      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
       "inputs": [],
-      "artifacts_checked": [
-        "docs/_canon/SYNC_MANIFEST.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 3
       }
     },
     {
       "gate_id": "PARTIAL_UPDATE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os source masters modificados têm pelo menos um required_consumer no commit.",
+      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
       "inputs": [],
-      "artifacts_checked": [
-        "docs/_canon/SYNC_MANIFEST.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 2
       }
     },
     {
@@ -6414,7 +6410,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 39
+        "duration_ms": 36
       }
     },
     {
@@ -6436,7 +6432,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 51
       }
     },
     {
@@ -6467,7 +6463,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 57 PASS, 3 SKIP.",
+      "summary": "Pipeline PASS: 55 PASS, 5 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
