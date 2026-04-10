@@ -1,21 +1,24 @@
 # ADR-029 — Runtime Contract Monitoring Strategy
 
 **Status:** accepted
-**Data:** 2026-03-17
+**Data:** 2026-03-17 (atualizado 2026-04-10 — SAN-007: FastAPI → Django Ninja)
 **Decisores:** Equipe técnica (sem decisão humana adicional necessária)
-**Stack:** OpenTelemetry + Prometheus + Grafana + Sentry + FastAPI middleware
+**Stack:** OpenTelemetry + Prometheus + Grafana + Sentry + Django middleware
+
+> **Nota (ADR-031):** Referências a "FastAPI middleware" neste ADR devem ser lidas como
+> "Django middleware" — o framework mudou para Django Ninja em 2026-03-17.
 
 ## Contexto
 
 Um contrato OpenAPI define o comportamento esperado da API. Após o deploy, é necessário
 garantir que o comportamento real em produção não divirja do contrato — caso contrário,
-consumers (o app mobile) podem quebrar silenciosamente.
+consumers (o app mobile/web) podem quebrar silenciosamente.
 
 ## Decisão
 
 **Abordagem:** monitoramento em camadas — middleware de validação inline + observabilidade externa.
 
-1. **FastAPI middleware** valida request/response contra o OpenAPI no momento da chamada
+1. **Django middleware** valida request/response contra o OpenAPI no momento da chamada
 2. **OpenTelemetry** instrumenta todos os traces sem vendor lock-in
 3. **Prometheus + Grafana** coleta métricas de SLA e error rates
 4. **Sentry** captura exceções de runtime e contract violations
@@ -36,7 +39,7 @@ automaticamente registrado + worker `contract_revision` acionado.
 
 **Negativas:**
 - Middleware de validação adiciona ~1-3ms de latência por request (aceitável)
-- Requer infraestrutura adicional (Prometheus, Grafana) na VPS Locaweb
+- Requer infraestrutura adicional (Prometheus, Grafana) na VPS
 
 ## Alternativas consideradas
 
@@ -47,5 +50,5 @@ automaticamente registrado + worker `contract_revision` acionado.
 ## Referências
 
 - `docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md` — política normativa completa
-- ADR-026: arquitetura de código (middleware no layer Interface)
+- ADR-026/ADR-031: arquitetura de código (middleware no layer Interface)
 - ADR-027: deploy pipeline (rollback conectado ao monitoramento)

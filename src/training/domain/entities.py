@@ -52,6 +52,19 @@ class SessionBlockIntensity(StrEnum):
     MAXIMUM = "MAXIMUM"
 
 
+class AttendanceStatus(StrEnum):
+    PRESENT = "PRESENT"
+    ABSENT = "ABSENT"
+    JUSTIFIED = "JUSTIFIED"
+    PRECONFIRMED = "PRECONFIRMED"
+
+
+class AttendanceSource(StrEnum):
+    COACH_INPUT = "coach_input"
+    ATHLETE_SELFCHECK = "athlete_selfcheck"
+    CORRECTION = "correction"
+
+
 class ExecutionType(StrEnum):
     SESSION_EXECUTION = "SESSION_EXECUTION"
     BLOCK_EXECUTION = "BLOCK_EXECUTION"
@@ -80,6 +93,28 @@ class ConversationOutcome(StrEnum):
     FOLLOWUP_SCHEDULED = "FOLLOWUP_SCHEDULED"
     DECISION_RECORDED = "DECISION_RECORDED"
     PENDING_FOLLOWUP = "PENDING_FOLLOWUP"
+
+
+class RecommendationActionType(StrEnum):
+    MODIFY_FOCUS = "MODIFY_FOCUS"
+    ADD_BLOCK = "ADD_BLOCK"
+    REMOVE_BLOCK = "REMOVE_BLOCK"
+    ADJUST_DURATION = "ADJUST_DURATION"
+    ADD_OBJECTIVE = "ADD_OBJECTIVE"
+    ADJUST_LOAD = "ADJUST_LOAD"
+    REVIEW_ATHLETE = "REVIEW_ATHLETE"
+
+
+class RecommendationStatus(StrEnum):
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    DISMISSED = "DISMISSED"
+
+
+class RecommendationPriority(StrEnum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
 
 
 # ---------------------------------------------------------------------------
@@ -255,6 +290,57 @@ class SessionBlock:
             raise ValueError("notes excede 1000 caracteres")
         if self.order_index < 0:
             raise ValueError("orderIndex deve ser >= 0")
+
+
+# ---------------------------------------------------------------------------
+# AttendanceRecord
+# ---------------------------------------------------------------------------
+
+@dataclass
+class AttendanceRecord:
+    """Fato append-only de presença por atleta em uma sessão."""
+
+    id: uuid.UUID
+    session_id: uuid.UUID
+    athlete_id: uuid.UUID
+    status: AttendanceStatus
+    source: AttendanceSource
+    recorded_at: datetime
+    created_at: datetime
+    updated_at: datetime
+
+    correction_by_user_id: Optional[uuid.UUID] = None
+    correction_at: Optional[datetime] = None
+    justification_reason: Optional[str] = None
+
+    def validate_invariants(self) -> None:
+        if self.source == AttendanceSource.CORRECTION:
+            if self.correction_by_user_id is None or self.correction_at is None:
+                raise ValueError(
+                    "INV-TRAIN-030: correction exige correctionByUserId e correctionAt"
+                )
+        elif self.correction_by_user_id is not None or self.correction_at is not None:
+            raise ValueError(
+                "INV-TRAIN-030: campos de correção só são permitidos quando source=correction"
+            )
+
+        if self.source == AttendanceSource.ATHLETE_SELFCHECK and self.status != AttendanceStatus.PRECONFIRMED:
+            raise ValueError(
+                "INV-TRAIN-063: athlete_selfcheck só pode registrar status PRECONFIRMED"
+            )
+
+        if self.status == AttendanceStatus.JUSTIFIED:
+            if not self.justification_reason:
+                raise ValueError(
+                    "attendance.justificationReason é obrigatório quando status=JUSTIFIED"
+                )
+        elif self.justification_reason:
+            raise ValueError(
+                "attendance.justificationReason só é permitido quando status=JUSTIFIED"
+            )
+
+        if self.justification_reason and len(self.justification_reason) > 255:
+            raise ValueError("attendance.justificationReason excede 255 caracteres")
 
 
 # ---------------------------------------------------------------------------
@@ -473,6 +559,87 @@ class AttentionQueueItem:
     dismissed_at: Optional[datetime] = None
     escalated_at: Optional[datetime] = None
     notes: Optional[str] = None
+
+
+@dataclass
+class Recommendation:
+    """Recomendação analítica pendente de decisão explícita do coach."""
+
+    id: uuid.UUID
+    session_id: uuid.UUID
+    generated_by_rule: str
+    action_type: RecommendationActionType
+    description: str
+    status: RecommendationStatus
+    generated_by_module: str
+    created_at: datetime
+    updated_at: datetime
+
+    priority: Optional[RecommendationPriority] = None
+    coach_note: Optional[str] = None
+    dismissal_reason: Optional[str] = None
+    resolved_at: Optional[datetime] = None
+    resolved_by_user_id: Optional[uuid.UUID] = None
+
+    def validate_invariants(self) -> None:
+        if not self.generated_by_rule or len(self.generated_by_rule) > 128:
+            raise ValueError("generatedByRule é obrigatório e deve ter <= 128 caracteres")
+        if not self.generated_by_rule.replace("_", "").isalnum() or self.generated_by_rule.upper() != self.generated_by_rule:
+            raise ValueError("generatedByRule deve estar em UPPER_SNAKE_CASE")
+        if not self.description or len(self.description) > 1000:
+            raise ValueError("description é obrigatória e deve ter <= 1000 caracteres")
+        if not self.generated_by_module or len(self.generated_by_module) > 64:
+            raise ValueError("generatedByModule é obrigatório e deve ter <= 64 caracteres")
+        if self.status == RecommendationStatus.DISMISSED and not self.dismissal_reason:
+            raise ValueError("dismissalReason é obrigatório quando status=DISMISSED")
+        if self.status == RecommendationStatus.PENDING:
+            if self.dismissal_reason or self.coach_note or self.resolved_at or self.resolved_by_user_id:
+                raise ValueError("Recommendation pendente não pode ter campos de resolução preenchidos")
+        else:
+            if self.resolved_at is None or self.resolved_by_user_id is None:
+                raise ValueError("Recommendation resolvida exige resolvedAt e resolvedByUserId")
+        if self.coach_note and len(self.coach_note) > 500:
+            raise ValueError("coachNote deve ter <= 500 caracteres")
+        if self.dismissal_reason and len(self.dismissal_reason) > 500:
+            raise ValueError("dismissalReason deve ter <= 500 caracteres")
+
+
+@dataclass
+class AthleteIneligibilityDeclaration:
+    """Declaração self-service de indisponibilidade do atleta para uma sessão."""
+
+    id: uuid.UUID
+    session_id: uuid.UUID
+    athlete_id: uuid.UUID
+    declared_at: datetime
+    created_at: datetime
+
+    reason_flags: list[str] = field(default_factory=list)
+    reason_other: Optional[str] = None
+    acknowledged_by_coach: bool = False
+    coach_note: Optional[str] = None
+
+    def validate_invariants(self) -> None:
+        if not self.reason_flags:
+            raise ValueError("reasonFlags deve conter pelo menos um motivo")
+        allowed_flags = {
+            "MEDICAL_APPOINTMENT",
+            "INJURY_PAIN",
+            "ACTIVE_RECOVERY_ONLY",
+            "TESTING_ANTI_DOPING",
+            "OTHER",
+        }
+        invalid = [flag for flag in self.reason_flags if flag not in allowed_flags]
+        if invalid:
+            raise ValueError(f"reasonFlags contém valores inválidos: {invalid}")
+        if "OTHER" in self.reason_flags and not self.reason_other:
+            raise ValueError("reasonOther é obrigatório quando OTHER está presente em reasonFlags")
+        if "OTHER" not in self.reason_flags and self.reason_other:
+            raise ValueError("reasonOther só é permitido quando OTHER está presente em reasonFlags")
+        if self.reason_other and len(self.reason_other) > 500:
+            raise ValueError("reasonOther deve ter <= 500 caracteres")
+        if self.coach_note and len(self.coach_note) > 500:
+            raise ValueError("coachNote deve ter <= 500 caracteres")
 
 
 # ---------------------------------------------------------------------------

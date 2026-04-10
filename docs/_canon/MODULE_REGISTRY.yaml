@@ -87,7 +87,7 @@ modules:
       - asyncapi
       - arazzo
   training:
-    status: implemented
+    status: implemented # SAN-013 (2026-04-10): Onda E concluída (63→0 stubs); burn-down completo — 6 implementações Onda E; 229 unit tests + suite integração pass; ratio ≤1%
     owner: performance-tech
     expected_surfaces:
       - module_docs_minimum

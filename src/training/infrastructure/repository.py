@@ -11,10 +11,13 @@ from typing import Optional
 
 from .models import (
     AttentionQueueItemModel,
+    AthleteIneligibilityDeclarationModel,
+    AttendanceRecordModel,
     ExecutionRecordModel,
     FeedbackThreadModel,
     MesocycleModel,
     MicrocycleModel,
+    RecommendationModel,
     SessionBlockModel,
     SessionObjectiveModel,
     TrainingSessionModel,
@@ -23,6 +26,14 @@ from .models import (
 )
 from ..domain.entities import (
     AttentionQueueItem,
+    AthleteIneligibilityDeclaration,
+    AttendanceRecord,
+    AttendanceSource,
+    AttendanceStatus,
+    Recommendation,
+    RecommendationActionType,
+    RecommendationPriority,
+    RecommendationStatus,
     ExecutionRecord,
     ExecutionType,
     FeedbackThread,
@@ -213,6 +224,43 @@ class SessionBlockRepository:
         )
 
 
+class AttendanceRepository:
+    def list_by_session(self, session_id: uuid.UUID) -> list[AttendanceRecord]:
+        return [
+            self._to_domain(m)
+            for m in AttendanceRecordModel.objects.filter(session_id=session_id).order_by("recorded_at", "created_at")
+        ]
+
+    def save(self, attendance: AttendanceRecord) -> AttendanceRecord:
+        m = AttendanceRecordModel.objects.create(
+            id=attendance.id,
+            session_id=attendance.session_id,
+            athlete_id=attendance.athlete_id,
+            status=attendance.status.value,
+            source=attendance.source.value,
+            recorded_at=attendance.recorded_at,
+            correction_by_user_id=attendance.correction_by_user_id,
+            correction_at=attendance.correction_at,
+            justification_reason=attendance.justification_reason or "",
+        )
+        return self._to_domain(m)
+
+    def _to_domain(self, m: AttendanceRecordModel) -> AttendanceRecord:
+        return AttendanceRecord(
+            id=m.id,
+            session_id=m.session_id,
+            athlete_id=m.athlete_id,
+            status=AttendanceStatus(m.status),
+            source=AttendanceSource(m.source),
+            recorded_at=m.recorded_at,
+            created_at=m.created_at,
+            updated_at=m.updated_at,
+            correction_by_user_id=m.correction_by_user_id,
+            correction_at=m.correction_at,
+            justification_reason=m.justification_reason or None,
+        )
+
+
 class WellnessPreRepository:
     def get_active(self, session_id: uuid.UUID, athlete_id: uuid.UUID) -> Optional[WellnessPre]:
         try:
@@ -304,6 +352,12 @@ class ExecutionRecordRepository:
             for m in ExecutionRecordModel.objects.filter(session_id=session_id).order_by("recorded_at")
         ]
 
+    def get_by_id(self, id: uuid.UUID) -> Optional[ExecutionRecord]:
+        try:
+            return self._to_domain(ExecutionRecordModel.objects.get(pk=id))
+        except ExecutionRecordModel.DoesNotExist:
+            return None
+
     def save(self, record: ExecutionRecord) -> ExecutionRecord:
         defaults = {
             "session_id": record.session_id,
@@ -376,6 +430,12 @@ class SessionObjectiveRepository:
 
 
 class FeedbackThreadRepository:
+    def get_by_id(self, id: uuid.UUID) -> Optional[FeedbackThread]:
+        try:
+            return self._to_domain(FeedbackThreadModel.objects.get(pk=id))
+        except FeedbackThreadModel.DoesNotExist:
+            return None
+
     def list_by_session(self, session_id: uuid.UUID) -> list[FeedbackThread]:
         return [
             self._to_domain(m)
@@ -421,13 +481,28 @@ class FeedbackThreadRepository:
 
 
 class AttentionQueueRepository:
-    def list_by_session(self, session_id: uuid.UUID) -> list[AttentionQueueItem]:
-        return [
-            self._to_domain(m)
-            for m in AttentionQueueItemModel.objects.filter(
-                session_id=session_id, resolved_at__isnull=True, dismissed_at__isnull=True
-            ).order_by("-created_at")
-        ]
+    def list_by_session(
+        self,
+        session_id: uuid.UUID,
+        resolved: bool = False,
+        severity: Optional[str] = None,
+    ) -> list[AttentionQueueItem]:
+        qs = AttentionQueueItemModel.objects.filter(session_id=session_id)
+        if severity:
+            qs = qs.filter(severity=severity)
+        if resolved:
+            qs = qs.exclude(
+                resolved_at__isnull=True,
+                dismissed_at__isnull=True,
+                escalated_at__isnull=True,
+            )
+        else:
+            qs = qs.filter(
+                resolved_at__isnull=True,
+                dismissed_at__isnull=True,
+                escalated_at__isnull=True,
+            )
+        return [self._to_domain(m) for m in qs.order_by("-created_at")]
 
     def get_by_id(self, id: uuid.UUID) -> Optional[AttentionQueueItem]:
         try:
@@ -464,6 +539,107 @@ class AttentionQueueRepository:
             notes=m.notes or None,
             created_at=m.created_at,
             updated_at=m.updated_at,
+        )
+
+
+class RecommendationRepository:
+    def list_by_session(
+        self,
+        session_id: uuid.UUID,
+        status: Optional[str] = None,
+    ) -> list[Recommendation]:
+        qs = RecommendationModel.objects.filter(session_id=session_id).order_by("-created_at")
+        if status:
+            qs = qs.filter(status=status)
+        return [self._to_domain(m) for m in qs]
+
+    def get_by_id(self, id: uuid.UUID) -> Optional[Recommendation]:
+        try:
+            return self._to_domain(RecommendationModel.objects.get(pk=id))
+        except RecommendationModel.DoesNotExist:
+            return None
+
+    def save(self, recommendation: Recommendation) -> Recommendation:
+        defaults = {
+            "session_id": recommendation.session_id,
+            "generated_by_rule": recommendation.generated_by_rule,
+            "action_type": recommendation.action_type.value,
+            "description": recommendation.description,
+            "status": recommendation.status.value,
+            "priority": recommendation.priority.value if recommendation.priority else None,
+            "generated_by_module": recommendation.generated_by_module,
+            "coach_note": recommendation.coach_note or "",
+            "dismissal_reason": recommendation.dismissal_reason or "",
+            "resolved_at": recommendation.resolved_at,
+            "resolved_by_user_id": recommendation.resolved_by_user_id,
+        }
+        m, _ = RecommendationModel.objects.update_or_create(pk=recommendation.id, defaults=defaults)
+        return self._to_domain(m)
+
+    def _to_domain(self, m: RecommendationModel) -> Recommendation:
+        return Recommendation(
+            id=m.id,
+            session_id=m.session_id,
+            generated_by_rule=m.generated_by_rule,
+            action_type=RecommendationActionType(m.action_type),
+            description=m.description,
+            status=RecommendationStatus(m.status),
+            priority=RecommendationPriority(m.priority) if m.priority else None,
+            generated_by_module=m.generated_by_module,
+            coach_note=m.coach_note or None,
+            dismissal_reason=m.dismissal_reason or None,
+            resolved_at=m.resolved_at,
+            resolved_by_user_id=m.resolved_by_user_id,
+            created_at=m.created_at,
+            updated_at=m.updated_at,
+        )
+
+
+class AthleteIneligibilityDeclarationRepository:
+    def get_by_session_athlete(
+        self,
+        session_id: uuid.UUID,
+        athlete_id: uuid.UUID,
+    ) -> Optional[AthleteIneligibilityDeclaration]:
+        try:
+            return self._to_domain(
+                AthleteIneligibilityDeclarationModel.objects.get(
+                    session_id=session_id,
+                    athlete_id=athlete_id,
+                )
+            )
+        except AthleteIneligibilityDeclarationModel.DoesNotExist:
+            return None
+
+    def save(
+        self,
+        declaration: AthleteIneligibilityDeclaration,
+    ) -> AthleteIneligibilityDeclaration:
+        m, _ = AthleteIneligibilityDeclarationModel.objects.update_or_create(
+            session_id=declaration.session_id,
+            athlete_id=declaration.athlete_id,
+            defaults={
+                "id": declaration.id,
+                "reason_flags": declaration.reason_flags,
+                "reason_other": declaration.reason_other or "",
+                "acknowledged_by_coach": declaration.acknowledged_by_coach,
+                "coach_note": declaration.coach_note or "",
+                "declared_at": declaration.declared_at,
+            },
+        )
+        return self._to_domain(m)
+
+    def _to_domain(self, m: AthleteIneligibilityDeclarationModel) -> AthleteIneligibilityDeclaration:
+        return AthleteIneligibilityDeclaration(
+            id=m.id,
+            session_id=m.session_id,
+            athlete_id=m.athlete_id,
+            reason_flags=list(m.reason_flags or []),
+            reason_other=m.reason_other or None,
+            acknowledged_by_coach=m.acknowledged_by_coach,
+            coach_note=m.coach_note or None,
+            declared_at=m.declared_at,
+            created_at=m.created_at,
         )
 
 

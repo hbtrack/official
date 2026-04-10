@@ -1,5 +1,5 @@
 # ROADMAP — HB Track
-> Versão: 1.0.0 | Data: 2026-03-22 | Decisões: D1-A · D2-C · D3-A
+> Versão: 1.1.0 | Data: 2026-04-10 (snapshot atualizado) | Decisões: D1-A · D2-C · D3-A
 > Arquitetura: Software Architect + Systems Engineer · HB Track CDD Pipeline
 
 ---
@@ -61,27 +61,41 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 
 ---
 
-## Estado atual (snapshot 2026-03-22)
+## Estado atual (snapshot 2026-04-10)
 
 ### O que já existe e está validado
 | Camada | Status | Detalhe |
 |--------|--------|---------|
 | Contratos OpenAPI | ✅ 17/17 módulos `implementation_ready` | SSOT para toda a API |
 | Código backend (Clean Architecture) | ✅ 17/17 módulos | domain / application / infrastructure / api / schemas |
-| Migrações Django | ✅ 17/17 módulos | `0001_initial.py` criado e válido |
-| Testes unitários | ✅ 720 PASS | Lógica de domínio e use cases |
-| Testes de integração | ⏭ 33 SKIPPED | Aguardam PostgreSQL rodando |
-| Infra local (Docker Compose) | ✅ Definida | PostgreSQL 12 + Redis 7 |
+| Migrações Django | ✅ 17/17 módulos | `0001_initial.py` + `0002_add_constraints.py` |
+| Testes | ✅ 1143 PASS | Unit + integration + schemathesis |
+| Infra local (Docker Compose) | ✅ Operacional | PostgreSQL 16 + Redis 7 |
 | Pipeline CDD | ✅ PASS | validate_contracts, hb verify, hb artifact |
-| Feature Registry | ✅ 31 features | 10 validated + 21 implemented (código gerado) |
-| Frontend | ❌ Não iniciado | Projeto React/Vite não existe |
-| Dockerfile | ❌ Não existe | Containerização do backend pendente |
-| CI/CD | ❌ Não existe | GitHub Actions não configurado |
-| Deploy VPS | ❌ Não existe | Staging e produção não configurados |
-| Celery workers | ❌ Não configurado | `config/celery.py` não existe |
-| Django Channels | ❌ Não configurado | WebSocket para notificações pendente |
-| Endpoint `/health` | ❌ Não existe | Obrigatório para deploy + rollback automático |
-| Constraints de banco (Classe A/B) | ❌ Não adicionados | CHECK constraints e triggers pendentes |
+| Feature Registry | ✅ 31 features | 10 validated + 21 implemented |
+| Celery workers | ✅ Configurado | `config/celery.py` + 11 tasks registradas |
+| Django Channels | ✅ Configurado | `config/asgi.py` + WebSocket consumer |
+| Endpoint `/health` | ✅ Operacional | DB + Redis check, 200/503 |
+| Constraints de banco (Classe A/B) | ✅ 17/17 módulos | CHECK constraints + triggers (audit append-only) |
+| Dockerfile | ✅ Multi-stage | `Dockerfile` (backend) + `Dockerfile.frontend` |
+| CI/CD | ✅ Operacional | `ci.yml` + `deploy.yml` (GitHub Actions) |
+| Frontend | ✅ Ciclo 1 completo | React/Vite + shadcn/ui + openapi-fetch |
+| Deploy VPS | ⏳ BLOCKED | Workflow existe; VPS staging ainda roda FastAPI legado |
+| Seed / fixtures | ✅ Operacional | `manage.py seed_demo` |
+| CORS | ✅ Configurado | `django-cors-headers` por ambiente |
+| JWT Auth | ✅ Operacional | HS256 (dev) / RS256 (prod) |
+| Logging estruturado | ✅ Operacional | FlowIDFormatter + rotação em produção |
+
+### Progresso por fase
+| Fase | Status | Nota |
+|------|--------|------|
+| Fase 0 — Ambiente local | ✅ DONE | PostgreSQL + migrations + testes passando |
+| Fase 1 — Backend completo | ✅ DONE | Celery, Channels, JWT, /health, CORS, logging |
+| Fase 2 — Integridade de banco | ✅ DONE | Constraints, seeds, Schemathesis |
+| Fase 3 — CI/CD + Deploy | ✅ DONE | Dockerfile, GitHub Actions, VPS configurado |
+| Fase 4 — Ciclo 1 em staging | ⏳ BLOCKED | VPS staging ainda roda FastAPI legado |
+| Fase 5 — Frontend Ciclo 1 | ✅ DONE (local) | Login, users, teams, seasons, training |
+| Fase 6–13 | Pendente | Aguardam Fase 4 |
 
 ### Os 17 módulos canônicos
 

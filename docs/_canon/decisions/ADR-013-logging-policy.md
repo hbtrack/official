@@ -9,7 +9,9 @@
 
 ## Context
 
-O HB Track tem múltiplos módulos Python/FastAPI sem política uniforme de logging. Sem padronização: logs são freeform (dificulta parsing), não há correlação de requisição entre serviços (sem trace ID), dados sensíveis podem aparecer acidentalmente em logs de debug, e eventos críticos de segurança (auth, deletes) podem não ser registrados.
+O HB Track tem múltiplos módulos Python sem política uniforme de logging. Sem padronização: logs são freeform (dificulta parsing), não há correlação de requisição entre serviços (sem trace ID), dados sensíveis podem aparecer acidentalmente em logs de debug, e eventos críticos de segurança (auth, deletes) podem não ser registrados.
+
+> **Nota (ADR-031):** Referências a "FastAPI" neste ADR devem ser lidas como "Django Ninja" — o framework mudou em 2026-03-17. A política de logging permanece inalterada; `FlowIDMiddleware` implementado como Django middleware.
 
 Este ADR formaliza o padrão de logging estruturado, propagação de `X-Flow-ID` e as regras de data-safety em logs.
 
@@ -45,7 +47,7 @@ Campos adicionais permitidos: `actorId` (UUID do usuário autenticado, nunca nom
   - Todos os logs da requisição naquele módulo.
   - Headers de saída para serviços downstream (workers Celery, chamadas HTTP internas).
   - Resposta HTTP (header `X-Flow-ID` presente).
-- Middleware de FastAPI responsável pela injeção/extração do `flowId` no request context.
+- Middleware Django responsável pela injeção/extração do `flowId` no request context.
 
 ### Níveis de log por ambiente
 

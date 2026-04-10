@@ -12,7 +12,9 @@ O HB Track expõe uma API HTTP multi-módulo com endpoints protegidos em todos o
 
 Sem essa decisão, nenhum contrato de módulo com endpoints protegidos pode ser finalizado (`BLOCKED_MISSING_ARCH_DECISION` por ARCH-001).
 
-O sistema é stateless por princípio (ARCHITECTURE.md §2 FastAPI) e opera com identidade gerenciada exclusivamente pelo módulo `identity_access`.
+O sistema é stateless por princípio (ARCHITECTURE.md §2) e opera com identidade gerenciada exclusivamente pelo módulo `identity_access`.
+
+> **Nota (ADR-031):** Referências a "FastAPI" neste ADR devem ser lidas como "Django Ninja" — o framework mudou em 2026-03-17. A estratégia de autenticação JWT permanece inalterada.
 
 ## Decision
 
@@ -92,7 +94,7 @@ Revogação explícita (logout, troca de senha, evento de segurança) via Redis:
 
 - **HS256**: mais simples, mas exige secret compartilhado entre módulos. Rejeitado: incompatível com soberania do `identity_access`.
 - **ES256**: mesma recomendação criptográfica do RS256 com chave menor, mas suporte em bibliotecas Python menos consolidado. Rejeitado para v0; candidato a revisão em v2.0.
-- **Sessão server-side (cookie + session store)**: stateful, incompatível com FastAPI stateless e workers Celery. Rejeitado.
+- **Sessão server-side (cookie + session store)**: stateful, incompatível com arquitetura stateless e workers Celery. Rejeitado.
 - **Opaque tokens (OAuth introspection)**: requer chamada de rede para validar cada token. Rejeitado: latência incompatível com o modelo de módulo único.
 
 ## Links

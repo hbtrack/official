@@ -14,6 +14,8 @@ Sem essa decisão, nenhum contrato com operações `role-restricted` pode ser fi
 
 `SECURITY_RULES.md` já lista perfis base como referência; esta ADR os torna normativos e define enforcement.
 
+> **Nota (ADR-031):** Referências a "FastAPI" ou "Router (FastAPI)" neste ADR devem ser lidas como "Django Ninja" — o framework mudou em 2026-03-17. A estratégia de autorização RBAC permanece inalterada.
+
 ## Decision
 
 ### Modelo de roles
