@@ -93,7 +93,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -161,19 +161,19 @@
     },
     {
       "relpath": "src/training/api.py",
-      "sha256": "bd62e4b77416ddf5c5c92a295cef25c240da450d9561165898c32775acbd45ed"
+      "sha256": "309bc355f0ee7891461c99fe10c9ae34a1c044be2e2aad8f65845da951d2cf25"
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "9bdbd528ae60004b66d05b6568973e483e7dd01cf0944b7ac8658560c26fbec1"
+      "sha256": "a1cae19c2921c8fc763976523f033f0962fbedf042ab3c6ab3d0b7d47d6dff97"
     },
     {
       "relpath": "src/training/domain/entities.py",
-      "sha256": "2764b8687be5e4efa1087ba25fc79a6a7e70e1a737c2ed7ac62028c283cfb286"
+      "sha256": "cb49a6d2f662651be108ce2b209bd5ebaf467ff8882c8a7b58e8701d6183e775"
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "e7860eb17ed32aef6413b3bd90489e5fd978b02142ebc636515f35d2a31546af"
+      "sha256": "7fb1784f3a02d4e1b5d087d51d5c1d79da2db2196626ce285b39bf77ccf61c7b"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "c1b8469948cd3ed9f3900c618c0ee0a1e4acf1cce94986cd73973baf40984dba"
+  "source_fingerprint": "0807d2039a3a931223dde0add7cf05dc457ca0bcfb07ba92fce7f5e364e4c4f9"
 }

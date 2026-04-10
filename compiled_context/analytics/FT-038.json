@@ -88,7 +88,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -100,7 +100,7 @@
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.bundle.yaml",
-      "sha256": "1bd30cc12a1850960ec1407164bfd217ad82c846fc812b2eb5b700d05134ccd4"
+      "sha256": "4272e6f2da4a07662408a48e157d06e7ad6cf17c472aef9e1cd82621e1b66039"
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
@@ -112,7 +112,7 @@
     },
     {
       "relpath": "generated/source_graph/analytics/impact_report.json",
-      "sha256": "ddcfd3bca142460abeec738dcac6c6dca3ab8f9ba29c889522729c7dda9cd55f"
+      "sha256": "bd647741b03ede796a3b8618d75d2052eefd1cc0c2bf3ba9c5757253ae2df2c0"
     }
   ],
   "module": "analytics",
@@ -142,7 +142,7 @@
     "unit_tests": "src/analytics/tests/unit/test_analytics.py",
     "use_cases": "src/analytics/application/use_cases.py"
   },
-  "source_fingerprint": "0066d3e61d2b3921a3c1033373e01681634f9af68c3c5c192c3321ca7cde21ba",
+  "source_fingerprint": "55004f6cdf12a28e6b40c506835a1ad1303c5d07f93b2c5430ca825a08a784b1",
   "source_graph": {
     "entities": {
       "AnalyticsQueryRequest": {
@@ -341,7 +341,7 @@
         "AnalyticsDashboard segue descrito inline em contracts/openapi/paths/analytics.yaml; ainda não existe schema soberano dedicado para esse envelope.",
         "AnalyticsQueryResponse permanece como surface de transporte fechada, mas sem entidade runtime dedicada em src/analytics/domain/."
       ],
-      "source_fingerprint": "d190837dc68866f0e7831428487a3144ea7a01e68c4b18696578a6d4a0d1f3d2"
+      "source_fingerprint": "566bbb44cf8811ea53c6084d98f403fadfc6b841b25347bb976fa3cac64f8785"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-10T18:19:18Z",
+  "timestamp_utc": "2026-04-10T22:42:55Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "523ba1d5",
+    "git_commit": "1a973809",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260410T181918_0d7dfc"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260410T224255_cf2214"
   },
   "status_detail": {
     "active_gates_passed": 2,
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49
+        "duration_ms": 171
       }
     },
     {
@@ -1004,17 +1004,17 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 5 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/BACKLOG_SANEAMENTO_EXECUTAVEL.md",
         "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/BACKLOG_SANEAMENTO_EXECUTAVEL.md",
         "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
       ],
       "evidence_files": [],
@@ -1022,21 +1022,39 @@
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=4.",
+          "message": "Seção obrigatória '## Estado Geral' ausente do handoff.",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=4 != session_start.roadmap_phase=3.",
+          "message": "Seção obrigatória '## Próxima ação permitida' ausente do handoff.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "ci_status diferente de UNKNOWN exige relatório de gates em evidence_paths.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de modo de operação: session_start.operation_mode='CDD' != SESSION_HANDOFF.modo_operacao='ROADMAP'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='saneamento'.",
           "severity": "error"
         }
       ],
       "metrics": {
-        "errors": 2,
+        "errors": 5,
         "warnings": 0,
-        "violations": 2,
-        "duration_ms": 5
+        "violations": 5,
+        "duration_ms": 9
       }
     },
     {
@@ -1058,7 +1076,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 181
+        "duration_ms": 324
       }
     },
     {

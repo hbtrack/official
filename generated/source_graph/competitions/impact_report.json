@@ -41,7 +41,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -142,5 +142,5 @@
     "generated/source_graph/competitions/competitions.openapi_contract_view.yaml",
     "generated/source_graph/competitions/impact_report.json"
   ],
-  "source_fingerprint": "0e7e44b68f9a5f60cf29f48931b6c779e11a25e02ad15c55edef2a63f3815e0e"
+  "source_fingerprint": "319936c3b5198e07fc0513c4a479abe9df7f729c035b8a118ddd7d7ab3c4cb99"
 }

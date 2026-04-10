@@ -1,7 +1,7 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-10T02:39:25.857497+00:00",
-  "branch": "main",
+  "session_timestamp": "2026-04-10T22:02:35.871067+00:00",
+  "branch": "chore/saneamento-completo-23-23",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -19,7 +19,7 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "stage0_exit_code": 0,
+  "stage0_exit_code": 2,
   "stage2_artifacts": [
     {
       "path": "contracts/schemas/shared/merge-readiness.schema.json",
@@ -286,7 +286,6 @@
   "hook_exit_code": 0,
   "hook_validated_at": "2026-04-10T18:08:29.015528+00:00",
   "module": "training",
-  "module_focus": "deploy_staging",
-  "roadmap_phase": 4,
-  "roadmap_task_id": "FASE-4-DEPLOY-STAGING"
+  "module_focus": "training",
+  "roadmap_phase": 1
 }

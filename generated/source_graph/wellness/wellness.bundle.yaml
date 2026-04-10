@@ -13,7 +13,7 @@ inputs:
 - relpath: contracts/schemas/wellness/wellness_entry.schema.json
   sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
-  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
+  sha256: 070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
@@ -51,7 +51,7 @@ inputs:
 - relpath: src/wellness/application/use_cases.py
   sha256: 52c9a2d473b3cd4d9eca7cf0576a3e4785fa505e34766490d08a9c59ba546552
 - relpath: src/wellness/domain/entities.py
-  sha256: 19d86af7d11a6c25365fd34d8ecbebdfa3580f082e214398fcdd89bf42707c2e
+  sha256: a6f529851d22889272d041755e4a684685f6ee7d6ca2339bd4b99b720a946d9a
 - relpath: src/wellness/domain/rules.py
   sha256: 49fc28df44005895e246daebae4e30f24b94f6e335ed0a76479ca1a10c5e0a2d
 - relpath: src/wellness/tests/unit/test_wellness_domain.py

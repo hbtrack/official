@@ -42,7 +42,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -145,5 +145,5 @@
     "generated/source_graph/medical/medical.openapi_contract_view.yaml",
     "generated/source_graph/medical/impact_report.json"
   ],
-  "source_fingerprint": "fe760907a02c93f0866baa7ffacb390b322a1b32dbaccbdf091629aa1dac8c16"
+  "source_fingerprint": "2d8f0dcf89c4cf46b9ca8b69aafbb1b0096fbd9b4d5a1394b00f2a1a760171f6"
 }

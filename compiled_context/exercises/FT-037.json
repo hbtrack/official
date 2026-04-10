@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -101,7 +101,7 @@
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.bundle.yaml",
-      "sha256": "bcccd57ac20da6535d194d0a50eb30d5c128d178d48c2707b2e8c30e0d020416"
+      "sha256": "c298e7dbe86e8f71844671c3e03428f4aa047885ef8f163f4948634c9c7d3563"
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "relpath": "generated/source_graph/exercises/impact_report.json",
-      "sha256": "f45aa83e3a68edf7d654d82a18e314607b5f343faddd89e77bb2969fb28c848d"
+      "sha256": "2acc14c3c85f70c709cebcf0965520c4762dbe40766fc984de7eda189b3820cb"
     }
   ],
   "module": "exercises",
@@ -144,7 +144,7 @@
     "unit_tests": "src/exercises/tests/unit/test_exercises.py",
     "use_cases": "src/exercises/application/use_cases.py"
   },
-  "source_fingerprint": "fc28669e0d55fbdf73c16245260a4968978f74ee3541f3c5285798273c1d9b96",
+  "source_fingerprint": "d0dc195f268ec94dab96bc8bd5ec45eee6a4207b6e8038828a10643b7f8f906e",
   "source_graph": {
     "entities": {
       "Exercise": {
@@ -743,7 +743,7 @@
         "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`.",
         "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."
       ],
-      "source_fingerprint": "747f67398b594fe899e16403c34a55c2dbde398326e20f085440db042a48cb4d"
+      "source_fingerprint": "fd43558642a78cdbe91033f7dd1b74876210c3b69119bf71d4efebc742a19870"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

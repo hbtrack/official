@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-04-10T18:20:33Z | run_id: `20260410T182033_d73e40` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-04-10T21:51:31Z | run_id: `20260410T215131_3b8d8b` | health: **97/100** | overall: **FAIL**
 
 ## Modulos
 
@@ -69,7 +69,7 @@
 | DEPLOY_READINESS_GATE | PASS | nao |
 | DATA_MIGRATION_GATE | PASS | nao |
 | MONITORING_POLICY_GATE | PASS | nao |
-| HANDOFF_COHERENCE_GATE | PASS | sim |
+| HANDOFF_COHERENCE_GATE | FAIL | sim |
 | MODULE_STATUS_COHERENCE_GATE | PASS | sim |
 | SURFACE_PROMOTION_COHERENCE_GATE | PASS | sim |
 | CROSS_MODULE_BOUNDARY_GATE | PASS | nao |
@@ -87,4 +87,4 @@
 | DOC_USAGE_GATE | PASS | sim |
 | CANON_CONTRACT_DRIVEN_PARITY_GATE | PASS | sim |
 | HBTRACK_CANON_PARITY_GATE | PASS | sim |
-| READINESS_SUMMARY_GATE | PASS | nao |
+| READINESS_SUMMARY_GATE | FAIL | nao |
