@@ -286,6 +286,8 @@
   "hook_exit_code": 0,
   "hook_validated_at": "2026-04-10T18:08:29.015528+00:00",
   "module": "training",
-  "module_focus": "training",
-  "roadmap_phase": 1
+  "module_focus": "saneamento",
+  "roadmap_phase": 4,
+  "roadmap_task_id": "SANEAMENTO-23-23",
+  "task_id": "SANEAMENTO-23-23"
 }

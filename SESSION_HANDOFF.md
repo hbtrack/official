@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-04-10"
 branch_ativo: chore/saneamento-completo-23-23
 modo_operacao: ROADMAP
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: saneamento
 fase_roadmap: 4
 roadmap_phase: 4
@@ -13,6 +13,7 @@ resultado: DONE
 proxima_acao_permitida: "Mergear PR #63 após CI verde, depois iniciar Fase 6 — Ciclo 2 (competitions, matches, scout, video)."
 bloqueios_ativos: []
 evidence_paths:
+  - _reports/contract_gates/latest.json
   - BACKLOG_SANEAMENTO_EXECUTAVEL.md
   - docs/_canon/MODULE_REGISTRY.yaml
 ---
@@ -31,7 +32,7 @@ evidence_paths:
 - `scripts/git-hooks/pre-push`, `scripts/hb` hardening
 - ADRs 007/008/013/028/029 atualizados (FastAPI→Django)
 
-## Estado atual
+## Estado Geral
 
 | Item | Status |
 |------|--------|
@@ -41,7 +42,7 @@ evidence_paths:
 | Fase 5 Frontend | ✅ DONE local |
 | Fase 6 Ciclo 2 | ⏳ próximo |
 
-## Próxima ação
+## Próxima ação permitida
 
 1. **Mergear PR #63** após CI verde
 2. **Fase 6** — Ciclo 2: competitions, matches, scout, video (frontend + staging)
