@@ -9,6 +9,11 @@ on:
         description: "Ambiente alvo (staging | production)"
         required: false
         default: "staging"
+      destructive_reset:
+        description: "Destruir volumes de DB/Redis e recriar do zero (PERDA DE DADOS)"
+        required: false
+        type: boolean
+        default: false
 
 env:
   IMAGE_NAME: hbtrack-backend
@@ -240,42 +245,11 @@ jobs:
             SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${SHORT_SHA}|" .env
 
-            # Validar .env: se tiver linhas sem VAR= (ex: PEM key multi-linha), regenerar
+            # Validar .env: se tiver linhas sem VAR= (ex: PEM key multi-linha), avisar
             if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
-              echo "⚠️ .env corrompido (formato inválido detectado) — regenerando..."
-              SK=$(python3 -c "import secrets; print(secrets.token_urlsafe(50))")
-              DB=$(python3 -c "import secrets; print(secrets.token_hex(16))")
-              {
-                echo "REGISTRY=ghcr.io/hbtrack"
-                echo "IMAGE_TAG=${SHORT_SHA}"
-                echo "NGINX_CONF=nginx.staging.conf"
-                echo "SECRET_KEY=${SK}"
-                echo "DEBUG=false"
-                echo "ALLOWED_HOSTS=staging.handballtrack.app,191.252.185.34"
-                echo "DB_NAME=hb_track_staging"
-                echo "DB_USER=hbtrack"
-                echo "DB_PASSWORD=${DB}"
-                echo "DB_HOST=postgres"
-                echo "DB_PORT=5432"
-                echo "DB_TEST_NAME=hb_track_staging_test"
-                echo "POSTGRES_DB=hb_track_staging"
-                echo "POSTGRES_USER=hbtrack"
-                echo "POSTGRES_PASSWORD=${DB}"
-                echo "REDIS_URL=redis://redis:6379/0"
-                echo "CELERY_BROKER_URL=redis://redis:6379/0"
-                echo "CELERY_TIMEZONE=America/Sao_Paulo"
-                echo "CORS_ALLOWED_ORIGINS=https://staging.handballtrack.app"
-                echo "LOG_LEVEL=INFO"
-                echo "CLOUDINARY_URL="
-                echo "CLOUDINARY_CLOUD_NAME="
-                echo "CLOUDINARY_API_KEY="
-                echo "CLOUDINARY_API_SECRET="
-                echo "CLOUDINARY_UPLOAD_PRESET=hb_profile_photo"
-                echo "RESEND_API_KEY="
-                echo "RESEND_FROM_EMAIL=suporte@handballtrack.app"
-                echo "RESEND_FROM_NAME=Handball Track"
-              } > .env
-              echo "✅ .env regenerado com credenciais novas"
+              echo "⚠️ .env contém linhas com formato inválido — verifique manualmente"
+              echo "   Para regenerar, execute o workflow com destructive_reset=true"
+              grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true
             else
               echo "✅ .env válido — credenciais existentes mantidas"
             fi
@@ -284,10 +258,15 @@ jobs:
 
             docker compose -f infra/docker-compose.prod.yml pull
 
-            # Reset apenas volumes de DB/Redis — preservar certificados SSL
-            echo "🔄 Parando containers e resetando volumes de dados..."
-            docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
-            docker volume rm hbtrack-prod_postgres_data hbtrack-prod_redis_data 2>/dev/null || true
+            if [ "${{ inputs.destructive_reset }}" = "true" ]; then
+              echo "🔄 DESTRUCTIVE RESET solicitado — parando containers e removendo volumes de dados..."
+              docker compose -f infra/docker-compose.prod.yml down -v 2>/dev/null || true
+              docker volume rm hbtrack-prod_postgres_data hbtrack-prod_redis_data 2>/dev/null || true
+              echo "⚠️ Volumes de DB e Redis removidos — dados serão recriados do zero"
+            else
+              echo "🔄 Deploy normal — parando containers, preservando dados..."
+              docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
+            fi
 
             # Gerar certificado SSL se ausente (porta 80 livre após down)
             if ! docker run --rm -v hbtrack-prod_certbot_conf:/etc/letsencrypt alpine \
@@ -355,13 +334,24 @@ jobs:
   # ─────────────────────────────────────────────────────────────
   # ETAPA 5: Validação de contratos contra staging live
   #          HTTP_RUNTIME_CONTRACT_GATE — Schemathesis CLI
+  #          Matrix: 1 job por módulo em paralelo (evita timeout)
   # ─────────────────────────────────────────────────────────────
   contract-conformance:
-    name: "5. Contract Conformance (Staging)"
+    name: "5. Contract Conformance — ${{ matrix.module }} (Staging)"
     runs-on: ubuntu-latest
     needs: deploy-staging
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - auth
+          - users
+          - teams
+          - seasons
+          - training
     env:
       HB_STAGING_URL: https://staging.handballtrack.app
+      HB_SCHEMATHESIS_MODULE: ${{ matrix.module }}
     steps:
       - uses: actions/checkout@v4
       - name: Sincronizar branch_ativo no SESSION_HANDOFF
