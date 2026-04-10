@@ -72,7 +72,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -84,7 +84,7 @@
     },
     {
       "relpath": "generated/source_graph/video/video.bundle.yaml",
-      "sha256": "8d63cc5c53a944a5de6c28514dc0e148827dcab3f0dbc96320d0407e8dfbe596"
+      "sha256": "c074171690ce992870a939c5554ddaedb01d6b7b6c5229f9154bc94ab7fba39b"
     },
     {
       "relpath": "generated/source_graph/video/video.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/video/impact_report.json",
-      "sha256": "7a46ce47027939ae99b798c5b5564ad59e5ef13189297d71e02f21f05a3d3097"
+      "sha256": "3ff6d99e13812bd704f1f1d0101938fbdbb3b8b6dfee7546410f764c6df218e8"
     }
   ],
   "module": "video",
@@ -130,7 +130,7 @@
     "state_machine": "src/video/domain/state_machine.py",
     "use_cases": "src/video/application/use_cases.py"
   },
-  "source_fingerprint": "898a636efc2f8481d33a230637834d47ebf4e491177f8bf8e8d238ef441d663a",
+  "source_fingerprint": "98e1130ee2c11bac0d8910998fc2f9d499d087186e6d75a2ea96dfa44fc38645",
   "source_graph": {
     "entities": {
       "ClipDefinition": {
@@ -738,7 +738,7 @@
         "Edge nodes são entidades de infraestrutura; não modelados como entidades de domínio soberanas nesta fase.",
         "patchSession cobre múltiplas transições de estado (DR-VID-002, INV-VID-002) — transições validadas por state_machine.py."
       ],
-      "source_fingerprint": "5e6128dc84578428e8cd577bfae07817c1d05f7a4179786617f299ef68b0a04a"
+      "source_fingerprint": "e0eee520346dd2de293c5fcbc7b694c0141d2004cbe0cb8c7f92c9479428af9e"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

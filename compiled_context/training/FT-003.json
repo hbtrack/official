@@ -90,7 +90,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -102,7 +102,7 @@
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "d22b6b834384667d25c6023acbf278e38943c758483744b66702186c2df63ae1"
+      "sha256": "3f8cc6fe931ae36f9a9210beff5797217b74c7a2aee1300e2c0d4981f369f545"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -114,7 +114,7 @@
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "a86ed1d455e2f1dadf9a5f5e5d006250f3759527b259afe1d939e098e145847f"
+      "sha256": "4bd2556d6e70e4b7fb9957953bdaee947da53629cf170768103e964c29123731"
     }
   ],
   "module": "training",
@@ -150,7 +150,7 @@
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "6c2ff74a4764ea8aafa7d16b065ded90fbd872fc755d8c8513ed3936cb639311",
+  "source_fingerprint": "514b772ce011dfa64228aa884ab58a6151b8a25b8a5d28bc72d0132ed4d8b50c",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -781,7 +781,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "0807d2039a3a931223dde0add7cf05dc457ca0bcfb07ba92fce7f5e364e4c4f9"
+      "source_fingerprint": "c1b8469948cd3ed9f3900c618c0ee0a1e4acf1cce94986cd73973baf40984dba"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

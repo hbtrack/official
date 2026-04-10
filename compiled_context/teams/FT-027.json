@@ -85,7 +85,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/teams.bundle.yaml",
-      "sha256": "49c901e0445407bfc874c5f06244005d10964752d265c049f92d9678b618a01d"
+      "sha256": "814e4728e8514cd7055b306c5d9d47d2fa92c7f71863c85ad0e3ee003481909e"
     },
     {
       "relpath": "generated/source_graph/teams/teams.schema_contract_view.yaml",
@@ -109,7 +109,7 @@
     },
     {
       "relpath": "generated/source_graph/teams/impact_report.json",
-      "sha256": "5d3ca704edc50e48bda8515df1cda7469d235683cb7380fe83223b42562634c3"
+      "sha256": "ba266cc47d014e31ba253a725ba7e2e8f69de6e575f0880fdcdd42265c592d51"
     }
   ],
   "module": "teams",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "d84a0a6fd71b8151fd47c1e58d6dc05beab70537d10efa331e70f327310a8e8c",
+  "source_fingerprint": "4675ca051da4bfcfb6aab899735f803832a4e5a98872aac30ad34771b3335a8f",
   "source_graph": {
     "entities": {
       "Team": {
@@ -386,7 +386,7 @@
         "organizationId é referência para módulo identity_access — boundary explicitado em module docs.",
         "athleteIds e staffUserIds referenciam módulo users — boundary explicitado em INV-TEAM-002."
       ],
-      "source_fingerprint": "82db61b6f421724404ef9fa8af58bf7d2916191be40b77765812cf27196a9e1d"
+      "source_fingerprint": "3b4ee2e53bfc2da413fd55b2880f067fc6b0083f693497c82c77fa9615f7e7ac"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

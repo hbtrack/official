@@ -72,7 +72,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -84,7 +84,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
-      "sha256": "7457016573c6fc7b784220306c0e22ff75919b1971b1da447010e781f229820d"
+      "sha256": "ced0e32e4c02917db3bdc3374a51df91194e62bc7766a2c275b056fb01a5d229"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
@@ -96,7 +96,7 @@
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
-      "sha256": "e112243fe87de7413a318b4fabea32e5f8fea95faecb5e95dea416cf0116d109"
+      "sha256": "9f98a81cbe6e9c7e956ae6625522e69d452e98dcd42ac57a581f14eebec585d0"
     }
   ],
   "module": "ai_ingestion",
@@ -127,7 +127,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "9bd05d24ae835dd89910d305dcec595d703482ae27ed102d1ff9d512ba53278c",
+  "source_fingerprint": "a81bf138d0568e172b12d5d19e93b0eb837f818fcef339cbe9ac94c108bd1da3",
   "source_graph": {
     "entities": {
       "IngestionJob": {
@@ -292,7 +292,7 @@
         "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
       ],
       "known_gaps": [],
-      "source_fingerprint": "333d926a8a2f715e1f70f2ca0418fbd40c643e2eb4d09d202bab44c1ec209c3c"
+      "source_fingerprint": "53329b863b7c3925e6777975e45584bd069cf94b0b359f4e1890aa7be673f127"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

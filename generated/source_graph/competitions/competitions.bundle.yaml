@@ -13,7 +13,7 @@ inputs:
 - relpath: contracts/schemas/competitions/competition.schema.json
   sha256: 16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
-  sha256: 070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml

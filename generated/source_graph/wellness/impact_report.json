@@ -42,7 +42,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -118,7 +118,7 @@
     },
     {
       "relpath": "src/wellness/domain/entities.py",
-      "sha256": "a6f529851d22889272d041755e4a684685f6ee7d6ca2339bd4b99b720a946d9a"
+      "sha256": "19d86af7d11a6c25365fd34d8ecbebdfa3580f082e214398fcdd89bf42707c2e"
     },
     {
       "relpath": "src/wellness/domain/rules.py",
@@ -145,5 +145,5 @@
     "generated/source_graph/wellness/wellness.openapi_contract_view.yaml",
     "generated/source_graph/wellness/impact_report.json"
   ],
-  "source_fingerprint": "a24f3c120e4d8b8dc45cb4f9ba73487a28d49139390d01546769d9bed8ad2676"
+  "source_fingerprint": "c7d0963d84c472e569441b5daab74d04c30556ddc56b84aff979d5217a2b0c11"
 }

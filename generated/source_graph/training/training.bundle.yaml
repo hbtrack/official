@@ -39,7 +39,7 @@ inputs:
 - relpath: contracts/schemas/training/training_suggestion_approval.schema.json
   sha256: 45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
-  sha256: 070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747
+  sha256: 0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
@@ -73,13 +73,13 @@ inputs:
 - relpath: docs/hbtrack/modulos/training/graph/test_obligations.yaml
   sha256: 5fadae9a1f794d00c6b6de66b08cc93aa121d8ff237f662dcc6cd489653ca5cc
 - relpath: src/training/api.py
-  sha256: 309bc355f0ee7891461c99fe10c9ae34a1c044be2e2aad8f65845da951d2cf25
+  sha256: bd62e4b77416ddf5c5c92a295cef25c240da450d9561165898c32775acbd45ed
 - relpath: src/training/application/use_cases.py
-  sha256: a1cae19c2921c8fc763976523f033f0962fbedf042ab3c6ab3d0b7d47d6dff97
+  sha256: 9bdbd528ae60004b66d05b6568973e483e7dd01cf0944b7ac8658560c26fbec1
 - relpath: src/training/domain/entities.py
-  sha256: cb49a6d2f662651be108ce2b209bd5ebaf467ff8882c8a7b58e8701d6183e775
+  sha256: 2764b8687be5e4efa1087ba25fc79a6a7e70e1a737c2ed7ac62028c283cfb286
 - relpath: src/training/domain/rules.py
-  sha256: 7fb1784f3a02d4e1b5d087d51d5c1d79da2db2196626ce285b39bf77ccf61c7b
+  sha256: e7860eb17ed32aef6413b3bd90489e5fd978b02142ebc636515f35d2a31546af
 module_manifest:
   version: 1.0.0
   status: active

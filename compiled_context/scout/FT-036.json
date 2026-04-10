@@ -79,7 +79,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
+      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -91,7 +91,7 @@
     },
     {
       "relpath": "generated/source_graph/scout/scout.bundle.yaml",
-      "sha256": "7cc3ca5cdd078602e8622e268a3b2d2e8d1fa649eb4578d544b59a11e5b3acbd"
+      "sha256": "44e230e18710aa4e03fb860c00b8e53d032861c073260622d920e923c3bfbe70"
     },
     {
       "relpath": "generated/source_graph/scout/scout.schema_contract_view.yaml",
@@ -103,7 +103,7 @@
     },
     {
       "relpath": "generated/source_graph/scout/impact_report.json",
-      "sha256": "573fe9eb2f50024d4510822c2bc7da5dba1b2293d23ab74dd9addaf7deb53c85"
+      "sha256": "7f58cc83796d498d831ddee74d83c510edf24b9ab4ad96ed32cbe4680924e042"
     }
   ],
   "module": "scout",
@@ -136,7 +136,7 @@
     "domain_rules": "src/scout/domain/rules.py",
     "use_cases": "src/scout/application/use_cases.py"
   },
-  "source_fingerprint": "fb5672bc013b371299e59d4b3c1370292ca628cb2d01d51de0609757c7647f6a",
+  "source_fingerprint": "548f491f0d5138d709f0762d73b4e8bd5520afad6358ef457af9f94f38aac207",
   "source_graph": {
     "entities": {
       "ScoutEvent": {
@@ -353,7 +353,7 @@
         "clipAssetRefs referenciam storage externo — scout não é dono do storage (DR-SCOUT-004).",
         "SCOUT_TAXONOMY_GATE valida conformidade de eventLabel/tagLabels contra CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002)."
       ],
-      "source_fingerprint": "8632f8635b08d80a2b1d9faedc1f9fe74c02a2392d7903afb4bbeb37aba71587"
+      "source_fingerprint": "a21d916c2077b2ec2735d3c5ef55ec6972cd9f46a96a2e6a86fba3b629bdbe8b"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
