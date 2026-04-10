@@ -82,7 +82,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -94,7 +94,7 @@
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.bundle.yaml",
-      "sha256": "33aeafbc13f0f1e779b54d90d083fca512ad2f16ec7c7ce6a4508b0c8474e634"
+      "sha256": "fb1985ce59922327fed43703e998aa6b342a6e7763a416a58fd26126f555d5c7"
     },
     {
       "relpath": "generated/source_graph/notifications/notifications.schema_contract_view.yaml",
@@ -106,7 +106,7 @@
     },
     {
       "relpath": "generated/source_graph/notifications/impact_report.json",
-      "sha256": "dceb3a013d62b53af0f78bcd3e0650b65d08a6f7ead5f48e92092f1d13c2ee4b"
+      "sha256": "cffedef56f414d8d475074ff1f715fc804e9432fad696f3fd08fc73108539feb"
     }
   ],
   "module": "notifications",
@@ -137,7 +137,7 @@
     "unit_tests": "src/notifications/tests/unit/test_notifications.py",
     "use_cases": "src/notifications/application/use_cases.py"
   },
-  "source_fingerprint": "24efa44b33177d312f9f69dc282de9bd899eb2259f581fbc750983ceade594db",
+  "source_fingerprint": "2cf7bcbd8e02364b19bfac80c482cb195d0e69891cb071ae0e5b57ada6838176",
   "source_graph": {
     "entities": {
       "NotificationDelivery": {
@@ -285,7 +285,7 @@
         "AsyncAPI/Arazzo do modulo continuam fora do source graph local nesta fase e seguem governanca separada.",
         "As rotas de preferences documentam 404 para usuario inexistente, mas o runtime atual materializa defaults via repository."
       ],
-      "source_fingerprint": "403dad7ab81386c5993c1857ac3d6ebe597a37af5c9249e61e2efe7065399c1a"
+      "source_fingerprint": "fededf51a4587123ff19d4ac629307453f0562892ad35b9fa6f7fee05413f6d0"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

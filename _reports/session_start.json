@@ -1,292 +1,292 @@
 {
-  "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-09T14:30:37.786847+00:00",
-  "branch": "main",
-  "pipeline_version": "1.0.0",
-  "boot_profile_id": "roadmap_execution",
-  "task_type": "execute_roadmap_phase",
-  "stage": 0,
-  "write_scope": "roadmap",
-  "worker_id": "execute_roadmap_phase",
-  "git_user": "HB Track Agent",
-  "git_email": "davis@hbtrack.local",
-  "operation_mode": "ROADMAP",
-  "stage0_validation_results": {
-    "task_type_valid": true,
-    "module_valid": true,
-    "worker_exists": true,
-    "boot_profile_exists": true,
-    "boot_paths_valid": true,
-    "required_sections_resolvable": true
-  },
-  "stage0_exit_code": 0,
-  "stage2_artifacts": [
-    {
-      "path": "contracts/schemas/shared/merge-readiness.schema.json",
-      "sha256": "055c06ab1268f8e2792c38bff84f07b6648687781b30f7bc9cbf4ed980058f60",
-      "created_at": "2026-04-08T19:13:25.584811+00:00",
-      "gate_exit_code": 0
+    "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
+    "session_timestamp": "2026-04-10T02:39:25.857497+00:00",
+    "branch": "main",
+    "pipeline_version": "1.0.0",
+    "boot_profile_id": "roadmap_execution",
+    "task_type": "execute_roadmap_phase",
+    "stage": 0,
+    "write_scope": "roadmap",
+    "worker_id": "execute_roadmap_phase",
+    "git_user": "HB Track Agent",
+    "git_email": "davis@hbtrack.local",
+    "operation_mode": "ROADMAP",
+    "stage0_validation_results": {
+        "task_type_valid": true,
+        "module_valid": true,
+        "worker_exists": true,
+        "boot_profile_exists": true,
+        "boot_paths_valid": true,
+        "required_sections_resolvable": true
     },
-    {
-      "path": "docs/hbtrack/modulos/ai_ingestion/graph/openapi_paths.yaml",
-      "sha256": "4562af1c4ddef3be0f5bbf8d6f3ac848f4bb3e2b9c32284fb5f569e20b383314",
-      "created_at": "2026-04-08T23:36:46.191921+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/analytics/graph/openapi_paths.yaml",
-      "sha256": "98280832f7e864a08361a2b623faf5057a69d06efd45fcd564cbc0d0f953d843",
-      "created_at": "2026-04-08T23:36:53.041833+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/audit/graph/openapi_paths.yaml",
-      "sha256": "826541e7e1fa15f167648b412a3d0e16be3bab43e084a93101772d6d1a1ff6c9",
-      "created_at": "2026-04-08T23:36:58.326878+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/competitions/graph/openapi_paths.yaml",
-      "sha256": "cff75c08ad60cd0923cb4d8a8373f0771283c9ea1803218d33d17f14e4acf366",
-      "created_at": "2026-04-08T23:37:03.835233+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/exercises/graph/openapi_paths.yaml",
-      "sha256": "70ebf792300893e665e7a14d20ef7c15811e7de6788896cd3ee1fdc4a719a7cd",
-      "created_at": "2026-04-08T23:37:09.404884+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/identity_access/graph/openapi_paths.yaml",
-      "sha256": "8144e5e06813af12ddb05f5302672a6ed6e2ab27f3b73287c437a93bd9d1557a",
-      "created_at": "2026-04-08T23:37:14.950723+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/matches/graph/openapi_paths.yaml",
-      "sha256": "2c3165e9a871a18c3d6fd6e92e1d1955a627e7c08d2468b7d9cecbf6de27e477",
-      "created_at": "2026-04-08T23:37:20.585403+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/medical/graph/openapi_paths.yaml",
-      "sha256": "f93df5ab3836dfb6c116e9d0f4722a6b02f3881c6a2cda9b1d67b4916a7895ea",
-      "created_at": "2026-04-08T23:37:25.928186+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/notifications/graph/openapi_paths.yaml",
-      "sha256": "a1da4cac0879474c4aab6520a50c695c4a49667dca7a95971ae5b78afee891be",
-      "created_at": "2026-04-08T23:37:31.207818+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/openapi_paths.yaml",
-      "sha256": "dde86d24947ba3d57d41a463fd4ac0d4ce6a881096cdd9879e4f46f3eeddc822",
-      "created_at": "2026-04-08T23:37:36.695281+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/scout/graph/openapi_paths.yaml",
-      "sha256": "8d71951d1bc6d752c048ce37828981b40a01307c188697a9656d9a57bf5fd469",
-      "created_at": "2026-04-08T23:37:42.267308+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/seasons/graph/openapi_paths.yaml",
-      "sha256": "c004f6b44fc9fa7c024ae0190221cadfd9a055494f49b82868eaf30796a3f51c",
-      "created_at": "2026-04-08T23:37:47.812880+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/teams/graph/openapi_paths.yaml",
-      "sha256": "25b94320169256a790d20ee763c6f673d8e1aed0f223e1c91c68874b5d1d34e9",
-      "created_at": "2026-04-08T23:37:53.255265+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-      "sha256": "bb41e088909a67ab43e335c9e2c3e6497bda297a3b5964d22793804a0eb8a3b7",
-      "created_at": "2026-04-08T23:37:58.560455+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
-      "sha256": "2390eb77428f5604556dfb7002520f05e907bce0036506c4c97d8aa796795cc2",
-      "created_at": "2026-04-08T23:38:03.900279+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/video/graph/openapi_paths.yaml",
-      "sha256": "5d79125b6b9034e8a420da0291ad3579220d58ea229a8a5495d2542fdf3dc327",
-      "created_at": "2026-04-08T23:38:09.348042+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/wellness/graph/openapi_paths.yaml",
-      "sha256": "475af88fc318f5c0fe4de93ef0b46d59d07cdd4098910c632f5d0b2e1ffb2fd7",
-      "created_at": "2026-04-08T23:38:14.789640+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "scripts/compile/compile_contracts.py",
-      "sha256": "24342ca7f5df6d15c3d108eae72c3d9cdebded0ca008d807be72e52637c6bfe7",
-      "created_at": "2026-04-08T23:38:20.171757+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "tests/pipeline_gates/test_contract_compiler.py",
-      "sha256": "0e7ad214dae5863e725fbf7e4c328fa4918eba31266e58929fbcaeffcae047ee",
-      "created_at": "2026-04-08T23:38:25.649207+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/ai_ingestion.yaml",
-      "sha256": "3b5072f5f24f6f761a8755a5d85352bfc3c731b2ccf302a3ce5610c6a010315d",
-      "created_at": "2026-04-08T23:39:07.032410+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/analytics.yaml",
-      "sha256": "6429f13c6691f4536af2ad1b04812b8141932a7f0a9f841db9bae09113950348",
-      "created_at": "2026-04-08T23:39:12.805657+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/audit.yaml",
-      "sha256": "8e739b0e80c4e50d032721322d535e3a5fb556e6ec9f550c84e3738b876424db",
-      "created_at": "2026-04-08T23:39:18.226352+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/competitions.yaml",
-      "sha256": "e8b95b5513ee0f86ac7dc39e591cfb4497d766bb4f5b80f981e813b080be7119",
-      "created_at": "2026-04-08T23:39:23.647468+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/exercises.yaml",
-      "sha256": "4ae1eb6b9b2910d13e7ccfbbc405e8264e5abff3cf302a3d2e495400390b89f3",
-      "created_at": "2026-04-08T23:39:28.752743+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/identity_access.yaml",
-      "sha256": "4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa",
-      "created_at": "2026-04-08T23:39:34.119071+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/matches.yaml",
-      "sha256": "d2efe5493eaa2553b48f318f1145792acc2c013b8ccf50b5b7e7cdc466f10ed7",
-      "created_at": "2026-04-08T23:39:39.646810+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/medical.yaml",
-      "sha256": "2bbc929859ae7397ca92591c06f39662d55106b4e612b1d54cf64bdd7e3484f1",
-      "created_at": "2026-04-08T23:39:44.883351+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/notifications.yaml",
-      "sha256": "bfb3b348a9806308947c324222b56c0003cfbbae6cd84d46ed6b33d9077cde39",
-      "created_at": "2026-04-08T23:39:50.404358+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/reports.yaml",
-      "sha256": "d1c0fddba85df83e33238ae11fff1222def817ac7e5aaedef027e49db6977d54",
-      "created_at": "2026-04-08T23:39:55.895932+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/scout.yaml",
-      "sha256": "bbc4c8cfd28085d117f169ef7536ff6139eebeb6164f16cc4420c3c663f8fa7e",
-      "created_at": "2026-04-08T23:40:01.551690+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/seasons.yaml",
-      "sha256": "943c09b15405b3f5a470e7db146dcc6e185ad02feb4e782cb2ac1a420f5c658d",
-      "created_at": "2026-04-08T23:40:06.926490+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/teams.yaml",
-      "sha256": "52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c",
-      "created_at": "2026-04-08T23:40:12.131571+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/training.yaml",
-      "sha256": "6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae",
-      "created_at": "2026-04-08T23:40:18.043246+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/users.yaml",
-      "sha256": "3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe",
-      "created_at": "2026-04-08T23:40:23.572733+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/video.yaml",
-      "sha256": "ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe",
-      "created_at": "2026-04-08T23:40:29.059447+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/paths/wellness.yaml",
-      "sha256": "6d53ba4d3c44291bcdfc45bbb93fb07ccb498da35c08d627b4b86b821c48e4a6",
-      "created_at": "2026-04-08T23:40:35.001884+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "src/reports/generated/api.py",
-      "sha256": "64cd10a7fde6d599f47e4a1f10347bb0422c65e5f22dfbb37e6e6e7d55c75b61",
-      "created_at": "2026-04-09T00:36:12.718313+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "src/reports/generated/schemas.py",
-      "sha256": "143c58dc7e73f2e0ac101e5c1fb59656e48140bee00592b48d461b62d56ff63a",
-      "created_at": "2026-04-09T00:36:20.280929+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": ".contract_driven/CONTRACT_SYSTEM_RULES.md",
-      "sha256": "54f7347dcb53ec9f04728d1c1aa764e0813b0b58cf53a33d2e354d4c90443f05",
-      "created_at": "2026-04-09T01:14:15.873049+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "scripts/contracts/validate/validate_contracts.py",
-      "sha256": "b015f1855af8126eca75182728fbf688e26f33e31a13aee3f5c2c64decab198c",
-      "created_at": "2026-04-09T02:33:40.288438+00:00",
-      "gate_exit_code": 0,
-      "validated_at": "2026-04-09T03:46:21.596952+00:00"
-    },
-    {
-      "path": "docs/_canon/gates/GATES_REGISTRY.yaml",
-      "sha256": "c061bedad0937c5864f583c92a1200840036238b75ab8343347b9d952e8e4f0f",
-      "created_at": "2026-04-09T02:33:43.470195+00:00",
-      "gate_exit_code": 0,
-      "validated_at": "2026-04-09T03:46:24.797486+00:00"
-    },
-    {
-      "path": ".contract_driven/TASK_CATALOG.yaml",
-      "sha256": "ee8067495b2033f5803d1d9e4db3127241c75f0d4c868ce31fcc3390f8987a1f",
-      "created_at": "2026-04-09T02:33:46.537639+00:00",
-      "gate_exit_code": 0
-    }
-  ],
-  "stage2_exit_code": 0,
-  "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-09T22:59:17.088895+00:00",
-  "module": "training",
-  "module_focus": "training",
-  "roadmap_phase": 5,
-  "roadmap_task_id": "B10-003"
+    "stage0_exit_code": 0,
+    "stage2_artifacts": [
+        {
+            "path": "contracts/schemas/shared/merge-readiness.schema.json",
+            "sha256": "055c06ab1268f8e2792c38bff84f07b6648687781b30f7bc9cbf4ed980058f60",
+            "created_at": "2026-04-08T19:13:25.584811+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/ai_ingestion/graph/openapi_paths.yaml",
+            "sha256": "4562af1c4ddef3be0f5bbf8d6f3ac848f4bb3e2b9c32284fb5f569e20b383314",
+            "created_at": "2026-04-08T23:36:46.191921+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/analytics/graph/openapi_paths.yaml",
+            "sha256": "98280832f7e864a08361a2b623faf5057a69d06efd45fcd564cbc0d0f953d843",
+            "created_at": "2026-04-08T23:36:53.041833+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/audit/graph/openapi_paths.yaml",
+            "sha256": "826541e7e1fa15f167648b412a3d0e16be3bab43e084a93101772d6d1a1ff6c9",
+            "created_at": "2026-04-08T23:36:58.326878+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/competitions/graph/openapi_paths.yaml",
+            "sha256": "cff75c08ad60cd0923cb4d8a8373f0771283c9ea1803218d33d17f14e4acf366",
+            "created_at": "2026-04-08T23:37:03.835233+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/exercises/graph/openapi_paths.yaml",
+            "sha256": "70ebf792300893e665e7a14d20ef7c15811e7de6788896cd3ee1fdc4a719a7cd",
+            "created_at": "2026-04-08T23:37:09.404884+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/identity_access/graph/openapi_paths.yaml",
+            "sha256": "8144e5e06813af12ddb05f5302672a6ed6e2ab27f3b73287c437a93bd9d1557a",
+            "created_at": "2026-04-08T23:37:14.950723+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/matches/graph/openapi_paths.yaml",
+            "sha256": "2c3165e9a871a18c3d6fd6e92e1d1955a627e7c08d2468b7d9cecbf6de27e477",
+            "created_at": "2026-04-08T23:37:20.585403+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/medical/graph/openapi_paths.yaml",
+            "sha256": "f93df5ab3836dfb6c116e9d0f4722a6b02f3881c6a2cda9b1d67b4916a7895ea",
+            "created_at": "2026-04-08T23:37:25.928186+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/notifications/graph/openapi_paths.yaml",
+            "sha256": "a1da4cac0879474c4aab6520a50c695c4a49667dca7a95971ae5b78afee891be",
+            "created_at": "2026-04-08T23:37:31.207818+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/openapi_paths.yaml",
+            "sha256": "dde86d24947ba3d57d41a463fd4ac0d4ce6a881096cdd9879e4f46f3eeddc822",
+            "created_at": "2026-04-08T23:37:36.695281+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/scout/graph/openapi_paths.yaml",
+            "sha256": "8d71951d1bc6d752c048ce37828981b40a01307c188697a9656d9a57bf5fd469",
+            "created_at": "2026-04-08T23:37:42.267308+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/seasons/graph/openapi_paths.yaml",
+            "sha256": "c004f6b44fc9fa7c024ae0190221cadfd9a055494f49b82868eaf30796a3f51c",
+            "created_at": "2026-04-08T23:37:47.812880+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/teams/graph/openapi_paths.yaml",
+            "sha256": "25b94320169256a790d20ee763c6f673d8e1aed0f223e1c91c68874b5d1d34e9",
+            "created_at": "2026-04-08T23:37:53.255265+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
+            "sha256": "bb41e088909a67ab43e335c9e2c3e6497bda297a3b5964d22793804a0eb8a3b7",
+            "created_at": "2026-04-08T23:37:58.560455+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
+            "sha256": "2390eb77428f5604556dfb7002520f05e907bce0036506c4c97d8aa796795cc2",
+            "created_at": "2026-04-08T23:38:03.900279+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/video/graph/openapi_paths.yaml",
+            "sha256": "5d79125b6b9034e8a420da0291ad3579220d58ea229a8a5495d2542fdf3dc327",
+            "created_at": "2026-04-08T23:38:09.348042+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/wellness/graph/openapi_paths.yaml",
+            "sha256": "475af88fc318f5c0fe4de93ef0b46d59d07cdd4098910c632f5d0b2e1ffb2fd7",
+            "created_at": "2026-04-08T23:38:14.789640+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "scripts/compile/compile_contracts.py",
+            "sha256": "24342ca7f5df6d15c3d108eae72c3d9cdebded0ca008d807be72e52637c6bfe7",
+            "created_at": "2026-04-08T23:38:20.171757+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "tests/pipeline_gates/test_contract_compiler.py",
+            "sha256": "0e7ad214dae5863e725fbf7e4c328fa4918eba31266e58929fbcaeffcae047ee",
+            "created_at": "2026-04-08T23:38:25.649207+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/ai_ingestion.yaml",
+            "sha256": "3b5072f5f24f6f761a8755a5d85352bfc3c731b2ccf302a3ce5610c6a010315d",
+            "created_at": "2026-04-08T23:39:07.032410+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/analytics.yaml",
+            "sha256": "6429f13c6691f4536af2ad1b04812b8141932a7f0a9f841db9bae09113950348",
+            "created_at": "2026-04-08T23:39:12.805657+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/audit.yaml",
+            "sha256": "8e739b0e80c4e50d032721322d535e3a5fb556e6ec9f550c84e3738b876424db",
+            "created_at": "2026-04-08T23:39:18.226352+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/competitions.yaml",
+            "sha256": "e8b95b5513ee0f86ac7dc39e591cfb4497d766bb4f5b80f981e813b080be7119",
+            "created_at": "2026-04-08T23:39:23.647468+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/exercises.yaml",
+            "sha256": "4ae1eb6b9b2910d13e7ccfbbc405e8264e5abff3cf302a3d2e495400390b89f3",
+            "created_at": "2026-04-08T23:39:28.752743+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/identity_access.yaml",
+            "sha256": "4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa",
+            "created_at": "2026-04-08T23:39:34.119071+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/matches.yaml",
+            "sha256": "d2efe5493eaa2553b48f318f1145792acc2c013b8ccf50b5b7e7cdc466f10ed7",
+            "created_at": "2026-04-08T23:39:39.646810+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/medical.yaml",
+            "sha256": "2bbc929859ae7397ca92591c06f39662d55106b4e612b1d54cf64bdd7e3484f1",
+            "created_at": "2026-04-08T23:39:44.883351+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/notifications.yaml",
+            "sha256": "bfb3b348a9806308947c324222b56c0003cfbbae6cd84d46ed6b33d9077cde39",
+            "created_at": "2026-04-08T23:39:50.404358+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/reports.yaml",
+            "sha256": "d1c0fddba85df83e33238ae11fff1222def817ac7e5aaedef027e49db6977d54",
+            "created_at": "2026-04-08T23:39:55.895932+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/scout.yaml",
+            "sha256": "bbc4c8cfd28085d117f169ef7536ff6139eebeb6164f16cc4420c3c663f8fa7e",
+            "created_at": "2026-04-08T23:40:01.551690+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/seasons.yaml",
+            "sha256": "943c09b15405b3f5a470e7db146dcc6e185ad02feb4e782cb2ac1a420f5c658d",
+            "created_at": "2026-04-08T23:40:06.926490+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/teams.yaml",
+            "sha256": "52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c",
+            "created_at": "2026-04-08T23:40:12.131571+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/training.yaml",
+            "sha256": "6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae",
+            "created_at": "2026-04-08T23:40:18.043246+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/users.yaml",
+            "sha256": "3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe",
+            "created_at": "2026-04-08T23:40:23.572733+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/video.yaml",
+            "sha256": "ac1367e6707d986f6383c18ad1362f3bd004e62f27644efdf69ded106f0d94fe",
+            "created_at": "2026-04-08T23:40:29.059447+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/wellness.yaml",
+            "sha256": "6d53ba4d3c44291bcdfc45bbb93fb07ccb498da35c08d627b4b86b821c48e4a6",
+            "created_at": "2026-04-08T23:40:35.001884+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "src/reports/generated/api.py",
+            "sha256": "64cd10a7fde6d599f47e4a1f10347bb0422c65e5f22dfbb37e6e6e7d55c75b61",
+            "created_at": "2026-04-09T00:36:12.718313+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "src/reports/generated/schemas.py",
+            "sha256": "143c58dc7e73f2e0ac101e5c1fb59656e48140bee00592b48d461b62d56ff63a",
+            "created_at": "2026-04-09T00:36:20.280929+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+            "sha256": "54f7347dcb53ec9f04728d1c1aa764e0813b0b58cf53a33d2e354d4c90443f05",
+            "created_at": "2026-04-09T01:14:15.873049+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "scripts/contracts/validate/validate_contracts.py",
+            "sha256": "b015f1855af8126eca75182728fbf688e26f33e31a13aee3f5c2c64decab198c",
+            "created_at": "2026-04-09T02:33:40.288438+00:00",
+            "gate_exit_code": 0,
+            "validated_at": "2026-04-09T03:46:21.596952+00:00"
+        },
+        {
+            "path": "docs/_canon/gates/GATES_REGISTRY.yaml",
+            "sha256": "c061bedad0937c5864f583c92a1200840036238b75ab8343347b9d952e8e4f0f",
+            "created_at": "2026-04-09T02:33:43.470195+00:00",
+            "gate_exit_code": 0,
+            "validated_at": "2026-04-09T03:46:24.797486+00:00"
+        },
+        {
+            "path": ".contract_driven/TASK_CATALOG.yaml",
+            "sha256": "ee8067495b2033f5803d1d9e4db3127241c75f0d4c868ce31fcc3390f8987a1f",
+            "created_at": "2026-04-09T02:33:46.537639+00:00",
+            "gate_exit_code": 0
+        }
+    ],
+    "stage2_exit_code": 0,
+    "hook_exit_code": 0,
+    "hook_validated_at": "2026-04-09T22:59:17.088895+00:00",
+    "module": "training",
+    "module_focus": "deploy_staging",
+    "roadmap_phase": 4,
+    "roadmap_task_id": "FASE-4-DEPLOY-STAGING"
 }

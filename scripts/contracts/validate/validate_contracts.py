@@ -6237,18 +6237,28 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
                    [], [], [],
                    [{"blocking_code": "ERROR_INFRA", "artifact": "schemathesis", "message": "st CLI not found", "severity": "error"}],
                    _ms(t0))
+    # Suporte a execução por módulo: HB_SCHEMATHESIS_MODULE=<module> reduz o escopo a um único
+    # path prefix e permite paralelismo via matrix no CI (cada job testa 1 módulo).
+    module_filter = os.environ.get("HB_SCHEMATHESIS_MODULE", "").strip()
+    if module_filter:
+        path_regex = rf"^/api/{re.escape(module_filter)}/"
+        timeout_sec = 120
+    else:
+        path_regex = r"^/api/(auth|users|teams|seasons|training)/"
+        timeout_sec = 300
+
     cmd = [
         st_cli, "run",
         schema_url,
         "--url", staging_url.rstrip("/"),
-        "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
+        "--include-path-regex", path_regex,
         "--checks", "not_a_server_error,response_schema_conformance",
         "--max-examples", "5",
         "--request-timeout", "10",
         "--no-color",
     ]
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=str(root))
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_sec, cwd=str(root))
         output = (proc.stdout + proc.stderr).strip()
     except FileNotFoundError:
         return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
@@ -6258,7 +6268,7 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
                    _ms(t0))
     except subprocess.TimeoutExpired:
         return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
-                   "schemathesis excedeu timeout de 300s.",
+                   f"schemathesis excedeu timeout de {timeout_sec}s.",
                    [], [], [],
                    [{"blocking_code": "ERROR_INFRA", "artifact": staging_url, "message": "timeout", "severity": "error"}],
                    _ms(t0))

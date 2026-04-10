@@ -81,7 +81,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -93,7 +93,7 @@
     },
     {
       "relpath": "generated/source_graph/audit/audit.bundle.yaml",
-      "sha256": "88a45d1e54dc7372feb6352c0b1c3647fbf057cc2131a16fcc1897d12f5639b2"
+      "sha256": "86d41b4cb66015f9c5b5f3d1640da944a5c7c564da5bf874517df21ee3397b28"
     },
     {
       "relpath": "generated/source_graph/audit/audit.schema_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/audit/impact_report.json",
-      "sha256": "561e33e6680d13769f05de3f6568a2dfd2622acceaf0a0a167187d6d35f27434"
+      "sha256": "739c56f9de5519ca024b2baec20403394f6f6f81dc4ca572b3126d4e3da260ff"
     }
   ],
   "module": "audit",
@@ -137,7 +137,7 @@
     "domain_rules": "src/audit/domain/rules.py",
     "use_cases": "src/audit/application/use_cases.py"
   },
-  "source_fingerprint": "12b38d5f53a39ce0d6584b698364ab9908069f60aefe4283c1ff2eb2fc812758",
+  "source_fingerprint": "4dd03a319b55e181eb393378dc5b3961714fcc22b30db1de9bfd3b68a4540f38",
   "source_graph": {
     "entities": {
       "AuditEntry": {
@@ -280,7 +280,7 @@
         "Export (GET /audit/entries/export) é LGPD/compliance endpoint; payload e formato de saída seguem ADR separados pendentes.",
         "AsyncAPI/Arazzo do módulo continuam fora do source graph local nesta fase e seguem governança separada."
       ],
-      "source_fingerprint": "24553bae0ff9bb058a5e4d5a492a3940fa72ea89bb87bbd55fd49d299bcd4031"
+      "source_fingerprint": "f375f1be98dd330a3ce4b0fb81f0c730440e5fc86b55f926f0638ccb24c82031"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
