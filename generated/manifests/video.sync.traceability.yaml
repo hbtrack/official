@@ -176,7 +176,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/paths/teams.yaml
     sha256: 52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c
   - path: generated/contracts/openapi/paths/training.yaml
-    sha256: b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54
+    sha256: f0507feccc77a2a240fb82f3c8a60fce3f63bb7f53c357b89d965484c2fccdca
   - path: generated/contracts/openapi/paths/users.yaml
     sha256: 3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe
   - path: generated/contracts/openapi/paths/video.yaml
@@ -500,7 +500,7 @@ traceability_manifest:
   - path: contracts/openapi/paths/teams.yaml
     sha256: 52cd92f32335e40283161a6d9baf34159f533fcfa58be4a2c60b4b63604cb75c
   - path: contracts/openapi/paths/training.yaml
-    sha256: b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54
+    sha256: f0507feccc77a2a240fb82f3c8a60fce3f63bb7f53c357b89d965484c2fccdca
   - path: contracts/openapi/paths/users.yaml
     sha256: 3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe
   - path: contracts/openapi/paths/video.yaml
