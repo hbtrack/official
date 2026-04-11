@@ -84,7 +84,7 @@ DATABASES = {
         "USER": os.environ.get("DB_USER", "hbtrack_dev"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "hbtrack_dev_pwd"),
         "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5433"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
         "TEST": {
             "NAME": os.environ.get("DB_TEST_NAME", "hb_track_test"),
         },
