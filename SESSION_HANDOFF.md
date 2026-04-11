@@ -3,12 +3,12 @@ data_ultima_sessao: "2026-04-11"
 branch_ativo: chore/saneamento-completo-23-23
 modo_operacao: ROADMAP
 ci_status: FAIL
-modulo_foco: training
-fase_roadmap: 3
-roadmap_phase: 3
+modulo_foco: saneamento
+fase_roadmap: 4
+roadmap_phase: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: FASE4-STAGING-REVALIDACAO-A1-B1
+task_id: SANEAMENTO-23-23
 resultado: DONE
 proxima_acao_permitida: "Deploy branch atual para staging (conterá prefixo /training/ e respectivos 500 responses)."
 bloqueios_ativos: []
@@ -17,7 +17,6 @@ evidence_paths:
   - contracts/openapi/paths/training.yaml
   - docs/hbtrack/modulos/training/graph/openapi_paths.yaml
   - _reports/contract_gates/latest.json
-  - _reports/contract_gates/precommit.latest.json
   - ROADMAP.md
 ---
 # SESSION HANDOFF — HB TRACK
