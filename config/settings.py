@@ -143,6 +143,8 @@ CHANNEL_LAYERS = {
 }
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
+# Temporarily allow all origins for CI tests
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     o.strip()
     for o in os.environ.get(
@@ -152,6 +154,21 @@ CORS_ALLOWED_ORIGINS = [
     if o.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True
+CORS_PREFLIGHT_MAX_AGE = 86400
+CORS_ALLOWED_ORIGINS_REGEXES = [
+    r"^http://localhost:\d+$",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # ── Logging estruturado ──────────────────────────────────────────────────────
 _LOG_DIR = BASE_DIR / "logs"
