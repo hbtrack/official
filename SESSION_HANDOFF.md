@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-04-11"
 branch_ativo: chore/saneamento-completo-23-23
 modo_operacao: ROADMAP
-ci_status: FAIL
+ci_status: PASS
 modulo_foco: training
 fase_roadmap: 1
 roadmap_phase: 1

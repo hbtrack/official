@@ -107,10 +107,10 @@
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-      "sha256": "24d12fd6dbc909d03b01269b524c357915f920fbe1af791882a5783d867c037b",
+      "sha256": "ef295adfede88f03639ce866edef40d32e58e6e9562d630b4b50c8a4260c5308",
       "created_at": "2026-04-08T23:37:58.560455+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-04-11T13:59:08.679263+00:00"
+      "validated_at": "2026-04-11T16:55:22.771405+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
@@ -222,10 +222,10 @@
     },
     {
       "path": "contracts/openapi/paths/training.yaml",
-      "sha256": "f0507feccc77a2a240fb82f3c8a60fce3f63bb7f53c357b89d965484c2fccdca",
+      "sha256": "b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54",
       "created_at": "2026-04-08T23:40:18.043246+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-04-11T16:30:14.996288+00:00"
+      "validated_at": "2026-04-11T16:55:02.137525+00:00"
     },
     {
       "path": "contracts/openapi/paths/users.yaml",
@@ -298,7 +298,7 @@
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-11T16:40:27.823026+00:00",
+  "hook_validated_at": "2026-04-11T16:44:50.801126+00:00",
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 1

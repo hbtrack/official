@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-11T16:39:54Z",
+  "timestamp_utc": "2026-04-11T16:44:18Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "162db142",
+    "git_commit": "e0fd9cd1",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T163954_87ec83"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T164418_2834a4"
   },
   "status_detail": {
     "active_gates_passed": 23,
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 240
+        "duration_ms": 205
       }
     },
     {
@@ -282,7 +282,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12833
+        "duration_ms": 11987
       }
     },
     {
@@ -393,7 +393,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 16
       }
     },
     {
@@ -638,7 +638,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 3
       }
     },
     {
@@ -1010,7 +1010,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 112
+        "duration_ms": 54
       }
     },
     {
@@ -1096,7 +1096,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 985
+        "duration_ms": 844
       }
     },
     {
@@ -1119,7 +1119,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5700
+        "duration_ms": 4971
       }
     },
     {
@@ -1141,7 +1141,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2126
+        "duration_ms": 1781
       }
     },
     {
@@ -1180,7 +1180,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 759
+        "duration_ms": 666
       }
     },
     {
@@ -4052,7 +4052,7 @@
         "errors": 0,
         "warnings": 140,
         "violations": 140,
-        "duration_ms": 2662
+        "duration_ms": 2770
       }
     },
     {
@@ -4120,7 +4120,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 16
       }
     },
     {
@@ -4735,7 +4735,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1992
+        "duration_ms": 2125
       }
     },
     {
@@ -4811,7 +4811,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2093
+        "duration_ms": 2227
       }
     },
     {
@@ -4854,7 +4854,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 70
+        "duration_ms": 79
       }
     },
     {
@@ -4876,7 +4876,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1601
+        "duration_ms": 1744
       }
     },
     {
@@ -4932,7 +4932,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 70
       }
     },
     {
@@ -4952,7 +4952,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 14
       }
     },
     {
@@ -5148,7 +5148,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 27
       }
     },
     {
@@ -5170,7 +5170,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 209
+        "duration_ms": 245
       }
     },
     {
@@ -5252,7 +5252,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 12
       }
     },
     {
