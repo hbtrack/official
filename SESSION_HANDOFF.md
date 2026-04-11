@@ -39,7 +39,7 @@ evidence_paths:
 
 Adicionadas `500` responses aos 3 endpoints com `security` (load-chart, messages, suggestions).
 
-## Estado Pipeline
+## Estado Geral
 
 | Item | Status |
 |---|---|
@@ -48,12 +48,16 @@ Adicionadas `500` responses aos 3 endpoints com `security` (load-chart, messages
 | **OPENAPI_POLICY_RULESET_GATE** | ✅ PASS |
 | **ASYNCAPI timeout** | ⚠️ WSL infra (não bloqueia) |
 
-## Próxima ação
+## Próxima ação permitida
 
 1. Merge branch → main 
 2. Deploy staging com prefixo sincronizado
 3. Validação live replay
 4. Marcar Fase 4 DONE
+
+## Bloqueios ativos
+
+Nenhum bloqueio. CI passing com todas as correções aplicadas.
 
 ## Evidências
 
