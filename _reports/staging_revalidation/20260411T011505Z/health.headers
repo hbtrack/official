@@ -1,0 +1,17 @@
+HTTP/2 200 
+server: nginx/1.27.5
+date: Sat, 11 Apr 2026 01:15:05 GMT
+content-type: application/json
+content-length: 43
+x-flow-id: ad83822c-045d-4551-9a48-73249102cc15
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: no-referrer-when-downgrade
+x-xss-protection: 1; mode=block
+vary: origin
+x-content-type-options: nosniff
+x-frame-options: DENY
+strict-transport-security: max-age=31536000; includeSubDomains
+referrer-policy: no-referrer-when-downgrade
+x-xss-protection: 1; mode=block
+

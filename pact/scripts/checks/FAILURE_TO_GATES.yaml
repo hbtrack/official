@@ -1,0 +1,33 @@
+# FAILURE_TO_GATES.yaml
+# Mapeamento: tipo de falha + capability → gates obrigatórios (base_required).
+# O pre-gate BUILD_LOCK_INTEGRITY é prepend automático em check_correction_protocol.py.
+# SSOT operacional: scripts/checks/check_correction_protocol.py
+version: "1.0.0"
+
+failure_types:
+  FT_AUTH_CONTRACT:
+    description: "Falha de contrato no módulo de autenticação"
+    by_capability:
+      AUTH:
+        - AUTH_E2E_LOGIN
+        - AUTH_CONTRACT_OPENAPI
+        - AUTH_SMOKE_RUNTIME
+
+  FT_CONTRACT_DRIFT:
+    description: "Drift entre contrato e implementação"
+    by_capability:
+      AUTH:
+        - AUTH_CONTRACT_OPENAPI
+        - AUTH_SMOKE_RUNTIME
+      TRAINING:
+        - TRAINING_CONTRACT_OPENAPI
+        - TRAINING_SMOKE_RUNTIME
+
+  FT_REGRESSION:
+    description: "Regressão funcional detectada por schemathesis ou testes de integração"
+    by_capability:
+      AUTH:
+        - AUTH_E2E_LOGIN
+        - AUTH_SMOKE_RUNTIME
+      TRAINING:
+        - TRAINING_SMOKE_RUNTIME

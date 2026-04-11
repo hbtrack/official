@@ -1,0 +1,1706 @@
+#!/usr/bin/env python3
+"""
+HB Track Pipeline CLI (v2 — PR2 Endurecimento)
+
+Validação determinística contra SSOTs:
+- BOOT_PROFILES.yaml (profiles de boot)
+- TASK_CATALOG.yaml (task types mapeados)
+- session_start.schema.json (schema de sessão)
+
+DONE = exitcode 0. Não avançar de fase sem exitcode 0.
+
+Mudanças em v2:
+- hb verify --task-type <task> --module <mod> OBRIGATÓRIO (sem defaults)
+- hb check --module <mod> OBRIGATÓRIO (sem defaults)
+- hb artifact <path> com upsert por hash SHA-256
+- hb reset para limpar sessão  
+- Validação contra SSOTs antes de executar
+
+Referência: .dev/planejamento/execut.md (Fase 2 — PR2)
+"""
+
+import argparse
+import fnmatch
+import json
+import os
+import pathlib
+import subprocess
+import sys
+from typing import Optional, Dict, Any
+import hashlib
+import uuid
+from datetime import datetime, timezone
+
+import yaml
+import jsonschema
+
+
+class HBCLIv2:
+    """CLI v2 com validação determinística contra SSOTs."""
+    
+    def __init__(self):
+        """Inicializar paths e carregar SSOTs."""
+        self.root = self._get_workspace_root()
+        self.session_file = self.root / "_reports/session_start.json"
+        self.legacy_session_dir = self.root / "_reports/legacy"
+        self.validator_script = self.root / "scripts/contracts/validate/validate_contracts.py"
+        
+        # Carregar SSOTs dos novos paths (.contract_driven)
+        self.boot_profiles = self._load_yaml(self.root / ".contract_driven/BOOT_PROFILES.yaml")
+        self.task_catalog = self._load_yaml(self.root / ".contract_driven/TASK_CATALOG.yaml")
+        self.module_registry = self._load_yaml(self.root / "docs/_canon/MODULE_REGISTRY.yaml")
+        self.session_schema = self._load_json(self.root / "contracts/schemas/shared/session_start.schema.json")
+        
+        self.session = self._load_session()
+        
+        # Detectar se sessão está obsoleta e migrar se necessário
+        self._migrate_legacy_session_if_needed()
+    
+    @staticmethod
+    def _get_workspace_root() -> pathlib.Path:
+        """Obter raiz do workspace."""
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--show-toplevel"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return pathlib.Path(result.stdout.strip())
+        except Exception:
+            return pathlib.Path.cwd()
+    
+    @staticmethod
+    def _load_yaml(path: pathlib.Path) -> Dict[str, Any]:
+        """Carregar e parsear YAML."""
+        if not path.exists():
+            raise FileNotFoundError(f"SSOT não encontrado: {path}")
+        with open(path) as f:
+            return yaml.safe_load(f)
+    
+    @staticmethod
+    def _load_json(path: pathlib.Path) -> Dict[str, Any]:
+        """Carregar e parsear JSON."""
+        if not path.exists():
+            raise FileNotFoundError(f"Schema não encontrado: {path}")
+        with open(path) as f:
+            return json.load(f)
+    
+    def _load_session(self) -> Dict[str, Any]:
+        """Carregar session_start.json ou retornar dict vazio."""
+        if self.session_file.exists():
+            try:
+                with open(self.session_file) as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"❌ Erro ao parsear session_start.json: {e}", file=sys.stderr)
+                return {}
+        return {}
+    
+    def _migrate_legacy_session_if_needed(self):
+        """
+        Detectar se sessão é de versão incompatível e migrar para legacy.
+        Sessão é considerada legada se:
+        - pipeline_version está ausente ou é incompatível
+        - Contém campos legados (timestamp, stages, etc)
+        """
+        if not self.session:
+            return
+        
+        # Versão atual esperada
+        expected_version = "1.0.0"
+        actual_version = self.session.get("pipeline_version")
+        
+        legacy_fields = ["timestamp", "stages", "stage0", "stage1", "stage2"]
+        has_legacy_fields = any(field in self.session for field in legacy_fields)
+        
+        if actual_version != expected_version or has_legacy_fields:
+            print(f"⚠️  Sessão legada detectada (versão={actual_version}, legacy_fields={has_legacy_fields})")
+            
+            # Criar diretório legacy
+            self.legacy_session_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Mover para legacy com timestamp
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%z")
+            legacy_path = self.legacy_session_dir / f"session_start.{timestamp}.json"
+            self.session_file.rename(legacy_path)
+            
+            print(f"✅ Sessão legada arquivada em: {legacy_path.relative_to(self.root)}")
+            
+            # Inicializar nova sessão vazia
+            self.session = {}
+    
+    def _get_canonical_modules(self) -> list:
+        """Carregar lista de módulos canônicos dinamicamente de MODULE_REGISTRY.yaml."""
+        modules = self.module_registry.get("modules", {})
+        return list(modules.keys())
+
+    def _check_generate_code_eligibility(self, module: str) -> int:
+        """Validação de elegibilidade para generate_code (Ordem 1).
+
+        Regras (em sequência, bloqueante):
+        1. Módulo deve estar em 'validated_contract' ou em status >= 'implementation_ready'.
+        2. Deve existir relatório adversarial em _reports/adversarial/<module>/ALL.adversarial.json
+           ou qualquer _reports/adversarial/*<module>*.adversarial.json.
+        3. overall_status do relatório deve ser 'PASS'.
+        Retorna 0 se elegível, 1 caso contrário.
+        """
+        modules = self.module_registry.get("modules", {})
+        mod_data = modules.get(module, {})
+        mod_status = mod_data.get("status", "draft_contract")
+        eligible_statuses = {
+            "validated_contract",
+            "implementation_ready",
+            "implemented",
+            "staging_validated",
+            "released",
+        }
+
+        if mod_status not in eligible_statuses:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' está em '{mod_status}'.",
+                file=sys.stderr,
+            )
+            print(
+                f"   Requerido: {sorted(eligible_statuses)}.",
+                file=sys.stderr,
+            )
+            print(
+                "   Siga a sequência: readiness_promotion → adversarial_analysis → generate_code.",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Verificar relatório adversarial
+        adversarial_dir = self.root / "_reports" / "adversarial"
+        report_found = False
+        report_pass = False
+
+        # Path canônico primeiro: _reports/adversarial/<module>/ALL.adversarial.json
+        canonical_path = adversarial_dir / module / "ALL.adversarial.json"
+        candidates = [canonical_path] + sorted(adversarial_dir.glob(f"*{module}*.adversarial.json"))
+        for rpath in candidates:
+            if not rpath.exists():
+                continue
+            try:
+                data = json.loads(rpath.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            report_found = True
+            if data.get("overall_status") == "PASS":
+                report_pass = True
+            break
+
+        if not report_found:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' não possui relatório "
+                "de análise adversarial em _reports/adversarial/.",
+                file=sys.stderr,
+            )
+            return 1
+
+        if not report_pass:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' tem relatório adversarial "
+                "mas overall_status != PASS. Resolva os achados antes de gerar código.",
+                file=sys.stderr,
+            )
+            return 1
+
+        print(f"✅ Elegibilidade generate_code: módulo='{module}', status='{mod_status}', adversarial=PASS")
+        return 0
+
+    
+    def _validate_boot_profile_id(self, profile_id: str) -> bool:
+        """Validar que boot_profile_id existe em BOOT_PROFILES.yaml."""
+        profiles = self.boot_profiles.get("profiles", {})
+        if profile_id not in profiles:
+            print(f"❌ boot_profile_id '{profile_id}' não reconhecido", file=sys.stderr)
+            print(f"   Profiles válidos: {', '.join(profiles.keys())}", file=sys.stderr)
+            return False
+        return True
+
+    def _resolve_profile_path(self, raw_path: str) -> pathlib.Path:
+        normalized = raw_path[2:] if raw_path.startswith("./") else raw_path
+        return self.root / normalized
+
+    # Marcadores mínimos de conteúdo para arquivos críticos de boot.
+    # Se o arquivo estiver em load_sequence e tiver entry aqui,
+    # pelo menos um dos marcadores deve aparecer no conteúdo.
+    _BOOT_CONTENT_MARKERS: dict[str, list[str]] = {
+        "docs/_canon/AGENT_INSTRUCTIONS.md": ["§0", "## 0", "# 0"],
+        "ROADMAP.md": ["## Fase", "## FASE", "## Phase", "# Fase"],
+        "SESSION_HANDOFF.md": ["---", "modo_operacao"],
+        "docs/_canon/CONTRACT_PIPELINE.md": ["§1", "## 1", "FASE"],
+        ".contract_driven/CONTRACT_SYSTEM_RULES.md": ["§", "##"],
+    }
+
+    def _validate_boot_profile_structure(self, profile_id: str) -> tuple[bool, bool]:
+        """Garantir que o profile referencie apenas paths válidos e resolvíveis,
+        e que arquivos de load_sequence tenham conteúdo significativo."""
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        paths_ok = True
+        sections_ok = True
+
+        for raw_path in profile.get("load_sequence", []):
+            raw_str = str(raw_path)
+            path = self._resolve_profile_path(raw_str)
+            if not path.exists():
+                # SESSION_HANDOFF.md é opcional (boot inicial pode não ter)
+                if raw_str == "SESSION_HANDOFF.md":
+                    continue
+                print(
+                    f"❌ load_sequence inválido em BOOT_PROFILES.yaml: '{raw_path}' não existe",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+                continue
+
+            # A4-FIX: Validar conteúdo além de existência
+            try:
+                content = path.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue  # Erros de leitura capturados por ouro layer
+
+            if not content.strip():
+                print(
+                    f"❌ load_sequence: '{raw_str}' existe mas está vazio — boot sem conteúdo.",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+                continue
+
+            # Verificar marcadores de conteúdo para arquivos críticos
+            # Normalizar raw_str removendo ./ para lookup
+            lookup_key = raw_str[2:] if raw_str.startswith("./") else raw_str
+            markers = self._BOOT_CONTENT_MARKERS.get(lookup_key)
+            if markers and not any(m in content for m in markers):
+                print(
+                    f"❌ load_sequence: '{raw_str}' não contém marcadores esperados "
+                    f"({markers[0]!r}, ...). Arquivo pode estar corrompido ou truncado.",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+
+        for raw_section in profile.get("required_sections", []):
+            section_ref = str(raw_section)
+            path_part = section_ref.split("§", 1)[0]
+            if path_part in {"GATES_REGISTRY.yaml", "CONTRACT_PIPELINE.md", "DECISION_POLICY.md"}:
+                path_part = {
+                    "GATES_REGISTRY.yaml": "docs/_canon/gates/GATES_REGISTRY.yaml",
+                    "CONTRACT_PIPELINE.md": "docs/_canon/CONTRACT_PIPELINE.md",
+                    "DECISION_POLICY.md": "docs/_canon/DECISION_POLICY.md",
+                }[path_part]
+            path = self._resolve_profile_path(path_part)
+            if not path.exists():
+                print(
+                    f"❌ required_sections inválido em BOOT_PROFILES.yaml: '{section_ref}' aponta para arquivo ausente",
+                    file=sys.stderr,
+                )
+                sections_ok = False
+
+        return paths_ok, sections_ok
+
+    def _apply_selection_rules(self, task_type: str) -> str:
+        """
+        Aplica selection_rules de BOOT_PROFILES.yaml para determinar o profile_id
+        correto para o task_type dado. TASK_CATALOG é a fonte de autoridade —
+        este método serve apenas para conferência de coerência.
+        """
+        task_catalog = self.task_catalog.get("task_catalog", {})
+        explicit = (task_catalog.get(task_type) or {}).get("profile_id")
+        if explicit:
+            return explicit
+        # Regras declarativas de BOOT_PROFILES.yaml §selection_rules
+        if task_type == "execute_roadmap_phase":
+            return "roadmap_execution"
+        contract_tasks = {"new_contract", "contract_revision", "new_event", "new_workflow", "new_schema"}
+        if task_type in contract_tasks:
+            return "contract_execution"
+        if task_type in {"architecture_review", "decision_discovery"}:
+            return "architecture_decision"
+        return "default"
+
+    def _check_stage_allowed(self, task_type: str, stage: int) -> bool:
+        """
+        Valida que o stage atual está em stage_allowed para o task_type.
+        Lista vazia em stage_allowed significa sem restrição de stage.
+        Emite aviso quando stage não está na lista; não bloqueia hard (stage_allowed
+        descreve o estágio de EXECUÇÃO do worker, não necessariamente o de boot).
+        """
+        task_catalog = self.task_catalog.get("task_catalog", {})
+        stage_allowed = (task_catalog.get(task_type) or {}).get("stage_allowed", [])
+        if not stage_allowed:
+            return True  # Sem restrição declarada
+        if stage not in stage_allowed:
+            print(
+                f"⚠️  ROUTING: task_type '{task_type}' declara stage_allowed={stage_allowed}; "
+                f"stage atual={stage}. Worker pode exigir avanço de estágio — consulte TASK_CATALOG.yaml.",
+                file=sys.stderr,
+            )
+            return False
+        return True
+
+    def _validate_required_section_content(self, profile_id: str) -> bool:
+        """
+        Verifica conteúdo mínimo das required_sections além de existência de path.
+        Falha (exit 1) se arquivo obrigatório está vazio.
+        Emite aviso (não falha hard) se heading numérica (§0, §1...) não localizada.
+        Garante que boot não seja 'verde' apenas por existência de arquivo.
+        """
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        all_good = True
+
+        for raw in profile.get("required_sections", []):
+            ref = str(raw)
+            if "§" not in ref:
+                path = self._resolve_profile_path(ref)
+                if path.exists():
+                    try:
+                        if not path.read_text(encoding="utf-8", errors="replace").strip():
+                            print(f"❌ Artefato obrigatório '{ref}' está vazio.", file=sys.stderr)
+                            all_good = False
+                    except OSError:
+                        pass  # Erros de path capturados por _validate_boot_profile_structure
+                continue
+
+            path_part, section_marker = ref.split("§", 1)
+            path = self._resolve_profile_path(path_part)
+            if not path.exists():
+                continue  # Capturado por _validate_boot_profile_structure
+
+            try:
+                content = path.read_text(encoding="utf-8", errors="replace")
+            except OSError as exc:
+                print(f"❌ Falha ao ler '{path_part}': {exc}", file=sys.stderr)
+                all_good = False
+                continue
+
+            if not content.strip():
+                print(f"❌ '{path_part}' está vazio mas requer seção §{section_marker}.", file=sys.stderr)
+                all_good = False
+                continue
+
+            # Verificação de heading para seções numéricas (§0, §1, §2...)
+            if section_marker.isdigit():
+                found = any(
+                    f"{h}{section_marker}." in content or f"{h}{section_marker} " in content
+                    for h in ("## ", "# ")
+                )
+                if not found:
+                    print(
+                        f"⚠️  '{path_part}§{section_marker}': heading '## {section_marker}.' não localizada. "
+                        "Seção pode ter sido renumerada ou usa formato diferente.",
+                        file=sys.stderr,
+                    )
+                    # Aviso informativo — não falha hard
+
+        return all_good
+
+    def _validate_profile_validations(self, profile_id: str) -> bool:
+        """
+        Aplica o bloco 'validations' do profile de boot além de verificação de path.
+        Regras implementadas:
+          - session_handoff_read: SESSION_HANDOFF.md não pode estar vazio se existir
+          - roadmap_phase_valid: ROADMAP.md deve existir e ter seções de fase
+        Retorna False quando exit_on_fail=true e uma validação obrigatória falha.
+        """
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        raw_validations = profile.get("validations", {})
+
+        # Normalizar: lista-de-dicts → dict plano
+        if isinstance(raw_validations, list):
+            flat: dict = {}
+            for item in raw_validations:
+                if isinstance(item, dict):
+                    flat.update(item)
+            raw_validations = flat
+
+        all_good = True
+
+        # session_handoff_read: true — SESSION_HANDOFF.md, se existir, deve ser não-vazio
+        if raw_validations.get("session_handoff_read") is True:
+            handoff = self.root / "SESSION_HANDOFF.md"
+            if handoff.exists():
+                if not handoff.read_text(encoding="utf-8", errors="replace").strip():
+                    print(
+                        "❌ SESSION_HANDOFF.md existe mas está vazio. "
+                        "Preencha ou remova o arquivo antes de continuar.",
+                        file=sys.stderr,
+                    )
+                    all_good = False
+                else:
+                    print("✅ SESSION_HANDOFF.md presente e não-vazio.")
+            else:
+                print("ℹ️  SESSION_HANDOFF.md ausente — boot inicial de sessão (aceitável).")
+
+        # roadmap_phase_valid: true — ROADMAP.md deve existir e ter estrutura de fases
+        if raw_validations.get("roadmap_phase_valid") is True:
+            roadmap = self.root / "ROADMAP.md"
+            if not roadmap.exists():
+                print(
+                    "❌ ROADMAP.md obrigatório para profile 'roadmap_execution' mas não existe.",
+                    file=sys.stderr,
+                )
+                all_good = False
+            else:
+                road_content = roadmap.read_text(encoding="utf-8", errors="replace")
+                if not any(m in road_content for m in ("## Fase", "## FASE", "## Phase", "# Fase")):
+                    print(
+                        "⚠️  ROADMAP.md existe mas ausência de seções '## Fase N' detectadas.",
+                        file=sys.stderr,
+                    )
+                    # Aviso informativo — formato pode variar
+
+        return all_good
+
+    @staticmethod
+    def _determine_write_scope(task_type: str, profile_id: str) -> str:
+        """Determinar write_scope da sessão a partir do task_type/profile."""
+        docs_tasks = {
+            "new_module",
+            "new_ui_contract",
+            "architecture_review",
+            "decision_discovery",
+            "readiness_promotion",
+        }
+        readonly_tasks = {
+            "pre_contract_boot",
+            "adversarial_analysis",
+            "audit_sovereign_integrity",
+            "audit_context_efficiency",
+            "audit_red_team_pipeline",
+            "audit_gate_coverage",
+            "audit_domain_completeness",
+        }
+
+        if profile_id == "roadmap_execution" or task_type == "execute_roadmap_phase":
+            return "roadmap"
+        if task_type == "generate_code":
+            return "backend"
+        if task_type in docs_tasks:
+            return "docs"
+        if task_type in readonly_tasks or task_type.startswith("audit_"):
+            return "readonly"
+        return "contracts"
+    
+    def _save_session(self):
+        """Salvar session_start.json."""
+        self.session_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.session_file, "w") as f:
+            json.dump(self.session, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    
+    def _validate_session_against_schema(self) -> bool:
+        """Validar sessão contra schema."""
+        try:
+            jsonschema.validate(self.session, self.session_schema)
+            return True
+        except jsonschema.ValidationError as e:
+            print(f"❌ Sessão inválida: {e.message}", file=sys.stderr)
+            return False
+    
+    def _get_git_branch(self) -> str:
+        """Obter branch ativo."""
+        try:
+            result = subprocess.run(
+                ["git", "branch", "--show-current"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            branch = result.stdout.strip()
+            if branch:
+                return branch
+            # Detached HEAD (CI checkout): tentar GITHUB_HEAD_REF, GITHUB_REF_NAME ou ref
+            for env_var in ("GITHUB_HEAD_REF", "GITHUB_REF_NAME"):
+                val = os.environ.get(env_var, "").strip()
+                if val:
+                    return val
+            result2 = subprocess.run(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                capture_output=True, text=True
+            )
+            ref = result2.stdout.strip()
+            return ref if ref and ref != "HEAD" else "detached"
+        except Exception:
+            return "unknown"
+    
+    def cmd_verify(
+        self,
+        task_type: str,
+        module: Optional[str],
+        roadmap_phase: Optional[int] = None,
+        roadmap_task_id: Optional[str] = None,
+    ) -> int:
+        """
+        FASE 0: SESSION_BOOT
+
+        Validar que task_type e module são válidos.
+        Criar/atualizar session_start.json.
+        """
+        print("\n══ FASE 0: SESSION_BOOT ══")
+
+        # Validação 1: task_type existe em TASK_CATALOG?
+        task_catalog = self.task_catalog.get("task_catalog", {})
+        if task_type not in task_catalog:
+            print(f"❌ task_type '{task_type}' não registrado em TASK_CATALOG.yaml", file=sys.stderr)
+            print(f"   Registrados: {', '.join(task_catalog.keys())}", file=sys.stderr)
+            return 1
+
+        task_config = task_catalog[task_type]
+
+        # Validação 2: status é active?
+        status = task_config.get("status")
+        if status == "frozen":
+            reason = task_config.get("reason_frozen", "não especificado")
+            unblock = task_config.get("unblock_condition", "não especificado")
+            print(f"❌ task_type '{task_type}' está FROZEN", file=sys.stderr)
+            print(f"   Razão: {reason}", file=sys.stderr)
+            print(f"   Desbloquear quando: {unblock}", file=sys.stderr)
+            return 1
+        elif status != "active":
+            print(f"❌ task_type '{task_type}' status={status} (esperado: active)", file=sys.stderr)
+            return 1
+
+        # Validação 3: module — obrigatório exceto para execute_roadmap_phase
+        is_roadmap_mode = (task_type == "execute_roadmap_phase")
+        canonical_modules = self._get_canonical_modules()
+        if module is None and not is_roadmap_mode:
+            print(
+                f"❌ --module é obrigatório para task_type='{task_type}'.",
+                file=sys.stderr,
+            )
+            print(f"   Canônicos: {', '.join(canonical_modules)}", file=sys.stderr)
+            return 1
+        module_valid = True
+        if module is not None and module not in canonical_modules:
+            print(f"❌ module '{module}' não é canônico", file=sys.stderr)
+            print(f"   Canônicos: {', '.join(canonical_modules)}", file=sys.stderr)
+            return 1
+
+        # Validação 4: worker_path existe?
+        worker_path = self.root / task_config.get("worker_path", "")
+        if not worker_path.exists():
+            print(f"❌ Worker prompt não existe: {worker_path}", file=sys.stderr)
+            return 1
+
+        # Validação 4b: elegibilidade de módulo para generate_code (BLOCKED_GENERATION_INELIGIBLE)
+        if task_type == "generate_code":
+            rc = self._check_generate_code_eligibility(module)
+            if rc != 0:
+                return rc
+
+        # Validação 5: boot_profile_id é válido?
+        # Nota: profile_id=null em TASK_CATALOG (ex: audit tasks) → fallback para "default"
+        profile_id = task_config.get("profile_id") or "default"
+        if not self._validate_boot_profile_id(profile_id):
+            return 1
+        boot_paths_valid, required_sections_valid = self._validate_boot_profile_structure(profile_id)
+        if not boot_paths_valid or not required_sections_valid:
+            return 1
+
+        # Validação 5b: selection_rules — coerência informativa (TASK_CATALOG prevalece)
+        selected_by_rules = self._apply_selection_rules(task_type)
+        if selected_by_rules != profile_id:
+            print(
+                f"⚠️  selection_rules → '{selected_by_rules}' vs TASK_CATALOG → '{profile_id}' "
+                "— TASK_CATALOG é a fonte de autoridade e prevalece.",
+                file=sys.stderr,
+            )
+
+        # Validação 5c: required_sections — conteúdo mínimo (falha hard para arquivo vazio)
+        if not self._validate_required_section_content(profile_id):
+            return 1
+
+        # Validação 5d: bloco validations (SESSION_HANDOFF.md, ROADMAP.md)
+        validations_ok = self._validate_profile_validations(profile_id)
+        exit_on_fail = self.boot_profiles.get("profiles", {}).get(profile_id, {}).get("exit_on_fail", True)
+        if not validations_ok and exit_on_fail:
+            return 1
+
+        # Validação 5e: stage_allowed — informativo (hb verify opera em stage 0)
+        self._check_stage_allowed(task_type, 0)
+
+        # Derivar campos de modo
+        operation_mode = "ROADMAP" if profile_id == "roadmap_execution" else "CDD"
+        module_focus = module  # pode ser None em modo ROADMAP sem --module
+
+        # Tudo OK — criar/atualizar sessão
+        if module is not None:
+            print(f"✅ task_type='{task_type}' (active, worker exists)")
+            print(f"✅ module='{module}' (canonical)")
+        else:
+            print(f"✅ task_type='{task_type}' (active, worker exists) [modo ROADMAP sem módulo fixo]")
+        print(f"✅ boot_profile_id='{profile_id}' (valid) | operation_mode={operation_mode}")
+        print("✅ boot_profile structure (paths + required_sections resolvíveis)")
+
+        # Inicializar/atualizar session
+        if "session_id" not in self.session:
+            self.session["session_id"] = str(uuid.uuid4())
+
+        session_update: dict = {
+            "session_timestamp": datetime.now(timezone.utc).isoformat(),
+            "branch": self._get_git_branch(),
+            "pipeline_version": "1.0.0",
+            "boot_profile_id": profile_id,
+            "task_type": task_type,
+            "stage": 0,
+            "write_scope": self._determine_write_scope(task_type, profile_id),
+            "worker_id": task_config.get("worker_id"),
+            "git_user": self._get_git_user(),
+            "git_email": self._get_git_email(),
+            "operation_mode": operation_mode,
+            "stage0_validation_results": {
+                "task_type_valid": True,
+                "module_valid": module_valid,
+                "worker_exists": True,
+                "boot_profile_exists": True,
+                "boot_paths_valid": boot_paths_valid,
+                "required_sections_resolvable": required_sections_valid,
+            },
+        }
+
+        # Campos opcionais — incluir apenas quando disponíveis
+        if module is not None:
+            session_update["module"] = module
+        if module_focus is not None:
+            session_update["module_focus"] = module_focus
+        if roadmap_phase is not None:
+            session_update["roadmap_phase"] = roadmap_phase
+        if roadmap_task_id is not None:
+            session_update["roadmap_task_id"] = roadmap_task_id
+
+        self.session.update(session_update)
+
+        # Limpar campos exclusivos de execute_roadmap_phase quando não aplicável,
+        # evitando dados stale que mascariam erros de schema.
+        if task_type != "execute_roadmap_phase":
+            self.session.pop("roadmap_phase", None)
+            self.session.pop("roadmap_task_id", None)
+        
+        # Validar contra schema
+        if not self._validate_session_against_schema():
+            return 1
+        
+        # Salvar
+        self._save_session()
+        
+        # Executar phase 0 do validator
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--stage", "session-start"],
+            capture_output=False
+        )
+        
+        self.session["stage0_exit_code"] = result.returncode
+        self._save_session()
+        
+        print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
+        return result.returncode
+    
+    def cmd_check(self, module: str) -> int:
+        """
+        FASE 1: PRE_AUTHORING
+        
+        Validar readiness do módulo.
+        Requer sessão inicializada com stage0_exit_code == 0 (hb verify PASS).
+        """
+        print("\n══ FASE 1: PRE_AUTHORING ══")
+        
+        # Validar que sessão foi inicializada
+        if "task_type" not in self.session or "session_id" not in self.session:
+            print("❌ Sessão não inicializada. Execute 'hb verify --task-type <task> --module <mod>' primeiro", file=sys.stderr)
+            return 1
+
+        # Validar que stage0_exit_code == 0
+        stage0_exit = self.session.get("stage0_exit_code")
+        if stage0_exit is None or stage0_exit != 0:
+            print(
+                f"❌ stage0_exit_code={stage0_exit} (esperado: 0). "
+                "Fase 0 (hb verify) não passou — corrija antes de avançar para Fase 1.",
+                file=sys.stderr,
+            )
+            return 1
+        
+        # Validar que module corresponde
+        if self.session.get("module") != module:
+            print(f"❌ Module mismatch: sessão tem '{self.session.get('module')}', você passou '{module}'", file=sys.stderr)
+            return 1
+        
+        print(f"✅ Sessão validada: task_type={self.session.get('task_type')}, module={module}")
+
+        # Validação informativa de stage_allowed para stage 1
+        task_type_s = self.session.get("task_type", "")
+        if task_type_s:
+            self._check_stage_allowed(task_type_s, 1)
+
+        # Atualizar stage
+        self.session["stage"] = 1
+        self._save_session()
+        
+        # Executar phase 1 do validator
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--stage", "pre-authoring", "--module", module],
+            capture_output=False
+        )
+        
+        self.session["stage1_exit_code"] = result.returncode
+        self._save_session()
+        
+        print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
+        return result.returncode
+    
+    def cmd_artifact(self, artifact_path: str) -> int:
+        """
+        FASE 2: PER_ARTIFACT
+        
+        Validar artefato. Fazer upsert com hash SHA-256.
+        Requer sessão inicializada com stage0_exit_code == 0 (hb verify PASS).
+        """
+        print(f"\n══ FASE 2: PER_ARTIFACT | {artifact_path} ══")
+
+        # Gate: sessão deve existir (hb verify executado)
+        if "session_id" not in self.session or "task_type" not in self.session:
+            print(
+                "❌ Sessão não inicializada. Execute 'hb verify --task-type <task> --module <mod>' primeiro.",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Gate: stage0_exit_code deve ser 0 (hb verify PASS)
+        stage0_exit = self.session.get("stage0_exit_code")
+        if stage0_exit is None:
+            print(
+                "❌ stage0_exit_code ausente em session_start.json. "
+                "Execute 'hb verify' antes de registrar artefatos.",
+                file=sys.stderr,
+            )
+            return 1
+        if stage0_exit != 0:
+            print(
+                f"❌ stage0_exit_code={stage0_exit} (esperado: 0). "
+                "Fase 0 (hb verify) não passou — corrija antes de registrar artefatos.",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Validação informativa de stage_allowed para stage 2
+        task_type_a = self.session.get("task_type", "")
+        if task_type_a:
+            self._check_stage_allowed(task_type_a, 2)
+
+        artifact_full = self.root / artifact_path
+        if not artifact_full.exists():
+            print(f"❌ Artefato não existe: {artifact_path}", file=sys.stderr)
+            return 1
+        
+        # Calcular hash
+        artifact_hash = self._calculate_file_hash(artifact_full)
+        
+        # Atualizar stage
+        self.session["stage"] = 2
+        
+        # Upsert artifact
+        artifacts = self.session.setdefault("stage2_artifacts", [])
+        existing = next((a for a in artifacts if a["path"] == artifact_path), None)
+        
+        if existing:
+            print(f"📝 Artefato já em session (hash anterior: {existing['sha256'][:8]}...)")
+            existing["sha256"] = artifact_hash
+            existing["validated_at"] = datetime.now(timezone.utc).isoformat()
+        else:
+            print(f"✅ Novo artefato")
+            artifacts.append({
+                "path": artifact_path,
+                "sha256": artifact_hash,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            })
+        
+        self._save_session()
+        
+        # Executar phase 2 do validator
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--stage", "artifact", "--artifact", artifact_path],
+            capture_output=False
+        )
+        
+        # Atualizar resultado do gate
+        artifact_obj = next(a for a in artifacts if a["path"] == artifact_path)
+        artifact_obj["gate_exit_code"] = result.returncode
+        # Persistir stage2_exit_code no estado da sessão (substitui pelo exit code mais recente)
+        self.session["stage2_exit_code"] = result.returncode
+        self._save_session()
+
+        print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
+        return result.returncode
+
+    def cmd_stage3(self) -> int:
+        """
+        FASE 3: VALIDATE_CONTRACTS (full run)
+
+        Roda validate_contracts.py completo e persiste stage3_exit_code na sessão.
+        Deve ser executado após todos os artefatos terem sido criados e registrados.
+        """
+        print("\n══ FASE 3: VALIDATE_CONTRACTS (full run) ══")
+
+        if "task_type" not in self.session:
+            print("❌ Sessão não inicializada. Execute 'hb verify' antes de 'hb stage3'.", file=sys.stderr)
+            return 1
+
+        print("Rodando validate_contracts.py --profile ci ...")
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--profile", "ci"],
+            capture_output=False,
+            cwd=self.root,
+        )
+
+        self.session["stage3_exit_code"] = result.returncode
+        self._save_session()
+
+        status = "✅ PASS" if result.returncode == 0 else f"❌ FAIL (exit {result.returncode})"
+        print(f"\nstage3_exit_code={result.returncode} | {status}")
+        print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
+        return result.returncode
+
+    def cmd_status(self) -> int:
+        """Mostrar status completo da sessão."""
+        print("\n══ ESTADO COMPLETO DO PIPELINE ══\n")
+
+        if not self.session:
+            print("❌ Nenhuma sessão ativa")
+            return 1
+
+        print(f"Session ID: {self.session.get('session_id', 'N/A')}")
+        print(f"Task Type: {self.session.get('task_type', 'N/A')}")
+        print(f"Module: {self.session.get('module', 'N/A')}")
+        print(f"Branch: {self.session.get('branch', 'N/A')}")
+        print(f"Stage: {self.session.get('stage', 'N/A')}")
+        
+        if "stage0_exit_code" in self.session:
+            code = self.session["stage0_exit_code"]
+            status = "✅ PASS" if code == 0 else f"❌ FAIL ({code})"
+            print(f"Phase 0 (boot): {status}")
+        
+        if "stage1_exit_code" in self.session:
+            code = self.session["stage1_exit_code"]
+            status = "✅ PASS" if code == 0 else f"❌ FAIL ({code})"
+            print(f"Phase 1 (discovery): {status}")
+        
+        if "stage2_artifacts" in self.session:
+            print(f"Phase 2 (artifacts): {len(self.session['stage2_artifacts'])} artefato(s)")
+            for art in self.session["stage2_artifacts"]:
+                code = art.get("gate_exit_code", "?")
+                status = "✅" if code == 0 else f"❌ ({code})"
+                print(f"  {status} {art['path']} (hash: {art['sha256'][:8]}...)")
+        
+        return 0
+    
+    # ──────────────────────────────────────────────────────
+    # Helpers de preflight
+    # ──────────────────────────────────────────────────────
+
+    @staticmethod
+    def _match_diff_class(changed_files: list, patterns: list) -> bool:
+        """Retorna True se algum arquivo alterado bate com algum padrão glob da classe."""
+        for f in changed_files:
+            for pattern in patterns:
+                # Normalizar: padrão com /** → prefixo + qualquer profundidade
+                if pattern.endswith("/**"):
+                    prefix = pattern[:-3]  # remove /**
+                    if f == prefix or f.startswith(prefix + "/"):
+                        return True
+                else:
+                    if fnmatch.fnmatch(f, pattern):
+                        return True
+        return False
+
+    def _get_diff_files(self, target_branch: str) -> list:
+        """Retornar lista de arquivos alterados em relação ao target_branch."""
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--name-only", f"{target_branch}...HEAD"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                # Tentar sem ...HEAD (branch sem commits além do base)
+                result = subprocess.run(
+                    ["git", "diff", "--name-only", target_branch],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+            files = [f.strip() for f in result.stdout.splitlines() if f.strip()]
+            # Incluir arquivos modificados/untracked não commitados
+            untracked = subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            for line in untracked.stdout.splitlines():
+                if line and len(line) > 3:
+                    path = line[3:].strip().strip('"')
+                    if path not in files:
+                        files.append(path)
+            return files
+        except Exception as e:
+            print(f"⚠️  Não foi possível calcular diff: {e}", file=sys.stderr)
+            return []
+
+    def _get_commit_count(self, target_branch: str) -> int:
+        """Retornar número de commits na branch atual acima do target_branch."""
+        try:
+            result = subprocess.run(
+                ["git", "rev-list", "--count", f"{target_branch}...HEAD"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                return int(result.stdout.strip() or "0")
+            return 0
+        except Exception:
+            return 0
+
+    # ──────────────────────────────────────────────────────
+    # Detecção semântica — onda 1
+    # ──────────────────────────────────────────────────────
+
+    def _detect_schema_field_removed(self, changed_files: list, target_branch: str) -> bool:
+        """Detecta se algum campo foi removido de um arquivo .schema.json no diff."""
+        import re
+
+        schema_files = [f for f in changed_files if f.endswith(".schema.json")]
+        if not schema_files:
+            return False
+
+        for schema_path in schema_files:
+            abs_path = self.root / schema_path
+            if not abs_path.exists():
+                # Arquivo removido — considerado field removal
+                return True
+            try:
+                current_text = abs_path.read_text()
+                base_result = subprocess.run(
+                    ["git", "show", f"{target_branch}:{schema_path}"],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+                if base_result.returncode != 0:
+                    # Arquivo novo — sem remoção
+                    continue
+                base_text = base_result.stdout
+
+                current_keys = set(re.findall(r'"([^"]+)":\s*\{', current_text))
+                base_keys = set(re.findall(r'"([^"]+)":\s*\{', base_text))
+                removed = base_keys - current_keys
+                if removed:
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_canonical_status_transition(self, changed_files: list, target_branch: str) -> bool:
+        """Detecta mudança de status canônico (ex: DRAFT → ACTIVE) em contratos ou docs."""
+        import re
+
+        status_pattern = re.compile(
+            r'status["\']?\s*:\s*["\']?(DRAFT|ACTIVE|DEPRECATED|FROZEN)',
+            re.IGNORECASE,
+        )
+        for f in changed_files:
+            abs_path = self.root / f
+            if not abs_path.exists() or abs_path.suffix not in {".yaml", ".yml", ".json", ".md"}:
+                continue
+            try:
+                current_text = abs_path.read_text()
+                base_result = subprocess.run(
+                    ["git", "show", f"{target_branch}:{f}"],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+                if base_result.returncode != 0:
+                    continue
+                base_text = base_result.stdout
+
+                current_statuses = set(m.group(1).upper() for m in status_pattern.finditer(current_text))
+                base_statuses = set(m.group(1).upper() for m in status_pattern.finditer(base_text))
+                if current_statuses != base_statuses:
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_bridge_doc_authority_language(self, changed_files: list) -> bool:
+        """Detecta uso de linguagem autoritativa em bridge docs modificados."""
+        import re
+
+        # Bridge docs: arquivos em .github/ que não são workflows ou ações
+        bridge_patterns = [
+            ".github/copilot-instructions.md",
+            ".github/skills/**",
+            ".github/instructions/**",
+            "CLAUDE.md",
+            "AGENTS.md",
+        ]
+        authority_pattern = re.compile(
+            r'\b(SSOT|sovereign|source of truth|defines rules|canonical authority|'
+            r'normative|authoritative|MUST NOT|MUST be|governs)\b',
+            re.IGNORECASE,
+        )
+
+        for f in changed_files:
+            is_bridge = any(
+                fnmatch.fnmatch(f, p) or (p.endswith("/**") and f.startswith(p[:-3] + "/"))
+                for p in bridge_patterns
+            )
+            if not is_bridge:
+                continue
+            abs_path = self.root / f
+            if not abs_path.exists():
+                continue
+            try:
+                text = abs_path.read_text()
+                if authority_pattern.search(text):
+                    # Bridge doc com linguagem autoritativa — verificar se tem disclamer BRIDGE ONLY
+                    if "BRIDGE ONLY" not in text and "NON-SOVEREIGN" not in text:
+                        return True
+            except Exception:
+                continue
+        return False
+
+    # ──────────────────────────────────────────────────────
+    # Detecção semântica — onda 2
+    # ──────────────────────────────────────────────────────
+
+    def _detect_new_cross_module_boundary(self, changed_files: list) -> bool:
+        """Detecta referências cross-módulo introduzidas por arquivos modificados."""
+        import re
+
+        # Módulos canônicos — prefixos de path src/
+        module_dirs = {
+            "users", "teams", "seasons", "competitions", "matches",
+            "training", "medical", "analytics", "reports", "notifications",
+            "scout", "video", "exercises", "wellness", "identity_access",
+            "audit", "ai_ingestion",
+        }
+        cross_ref_pattern = re.compile(
+            r'from\s+src\.(\w+)\.',
+        )
+        for f in changed_files:
+            if not f.startswith("src/"):
+                continue
+            parts = f.split("/")
+            if len(parts) < 2:
+                continue
+            current_module = parts[1]
+            if current_module not in module_dirs:
+                continue
+            abs_path = self.root / f
+            if not abs_path.exists() or abs_path.suffix != ".py":
+                continue
+            try:
+                text = abs_path.read_text()
+                for m in cross_ref_pattern.finditer(text):
+                    ref_module = m.group(1)
+                    if ref_module in module_dirs and ref_module != current_module:
+                        return True
+            except Exception:
+                continue
+        return False
+
+    def _detect_diff_outside_handoff_scope(self, changed_files: list) -> bool:
+        """Detecta se algum arquivo alterado está fora do escopo declarado no SESSION_HANDOFF.md."""
+        import re
+
+        handoff = self.root / "SESSION_HANDOFF.md"
+        if not handoff.exists():
+            return False
+        try:
+            text = handoff.read_text()
+            # Extrair paths/módulos da seção "O que foi feito" ou front matter
+            # Se não há declaração explícita de scope, não bloquear
+            module_match = re.search(r'modulo_foco:\s*(\S+)', text)
+            if not module_match:
+                return False
+            declared_module = module_match.group(1).strip('"\'')
+            # Verificar se há mudanças em paths de outros módulos
+            for f in changed_files:
+                if f.startswith("src/") and declared_module not in f:
+                    parts = f.split("/")
+                    if len(parts) >= 2 and parts[1] != declared_module:
+                        # Verificar se não é infra/config/tests que são transversais
+                        if parts[1] not in {"tests", "config", "migrations", "scripts", "docs"}:
+                            # Excluir src/<module>/generated/ — artefatos derivados de contratos
+                            if "/generated/" in f:
+                                continue
+                            return True
+        except Exception:
+            pass
+        return False
+
+    # ──────────────────────────────────────────────────────
+    # PR fix — classificação de findings
+    # ──────────────────────────────────────────────────────
+
+    @staticmethod
+    def classify_finding(finding_id: str, manifest: dict) -> str:
+        """Mapear finding_id para ação determinística via pr_fix_resolution do manifesto.
+
+        Retorna a ação canônica (ex: 'fix_repository') ou 'unknown' se não mapeado.
+        Leitura dinâmica do manifesto — não hardcoded.
+        """
+        finding_classes = manifest.get("pr_fix_resolution", {}).get("finding_classes", [])
+        for fc in finding_classes:
+            if fc.get("finding_id") == finding_id:
+                return fc.get("action", "unknown")
+        return "unknown"
+
+    # ──────────────────────────────────────────────────────
+    # cmd_preflight — orquestrador real de merge-readiness v2
+    # ──────────────────────────────────────────────────────
+
+    def cmd_preflight(self) -> int:
+        """Rodar preflight completo — orquestrador de merge-readiness v2.
+
+        Nova convenção de exit code (v2 — deliberada, não continuidade da convenção atual
+        de 0=sucesso / !=0=falha usada pelos demais comandos):
+          0 = PASS  — seguro fazer push
+          1 = WARN  — pode fazer push, com risco/documentação pendente não bloqueante
+          2 = BLOCK — não deve fazer push
+
+        Fluxo:
+          1. Ler merge-readiness.json
+          2. Calcular diff vs target_branch
+          3. Classificar diff via diff_classification.classes
+          4. Executar baseline_steps (survival_suite obrigatório)
+          5. Executar checks required (run_all_required)
+          6. Executar checks conditional ativados por diff class
+          7. Verificar semantic_requirements — onda 1 (schema_field_removed,
+             canonical_status_transition, bridge_doc_uses_authority_language)
+             e onda 2 (new_cross_module_boundary, diff_outside_handoff_scope)
+          8. Verificar reviewability (changed_files, commits, cross_domain_areas)
+          9. Calcular final_decision e gravar _reports/preflight/latest.json
+        """
+        print("\n══ PREFLIGHT — merge-readiness v2 ══")
+
+        # 1. Ler manifesto
+        manifest_path = self.root / "merge-readiness.json"
+        if not manifest_path.exists():
+            print("❌ merge-readiness.json não encontrado.", file=sys.stderr)
+            return 2
+        manifest = self._load_json(manifest_path)
+        target_branch = manifest.get("target_branch", "main")
+        decision_policy = manifest.get("execution_plan", {}).get(
+            "decision_policy", "block_on_required_fail"
+        )
+        reviewability = manifest.get("reviewability", {})
+        output_report = manifest.get("execution_plan", {}).get(
+            "output_report", "_reports/preflight/latest.json"
+        )
+
+        print(f"  target_branch : {target_branch}")
+        print(f"  decision_policy: {decision_policy}")
+
+        # 2. Calcular diff
+        changed_files = self._get_diff_files(target_branch)
+        commit_count = self._get_commit_count(target_branch)
+        print(f"\n  Arquivos no diff: {len(changed_files)}")
+        print(f"  Commits acima de {target_branch}: {commit_count}")
+
+        # 3. Classificar diff
+        diff_classes: list = []
+        for cls in manifest.get("diff_classification", {}).get("classes", []):
+            if self._match_diff_class(changed_files, cls.get("paths", [])):
+                diff_classes.append(cls["class_id"])
+        print(f"  Classes de diff ativas: {diff_classes or ['(nenhuma)']}")
+
+        # 4. Baseline: survival suite
+        checks_run = []
+        checks_failed = []
+
+        print("\n── Baseline: survival suite ──")
+        ss_result = self.cmd_survival_suite()
+        checks_run.append({"step": "survival_suite", "result": "PASS" if ss_result == 0 else "FAIL", "exit_code": ss_result})
+        if ss_result != 0:
+            checks_failed.append("survival_suite")
+
+        # 5. Checks required
+        print("\n── Checks required ──")
+        for check in manifest.get("checks", []):
+            if check.get("category") != "required":
+                continue
+            context = check["context"]
+            cmd_str = check.get("local_equivalent", "")
+            if not cmd_str:
+                continue
+            print(f"  Rodando: {context}")
+            rc = subprocess.run(cmd_str, shell=True, cwd=self.root).returncode
+            status = "PASS" if rc == 0 else "FAIL"
+            checks_run.append({"context": context, "category": "required", "result": status, "exit_code": rc})
+            if rc != 0:
+                checks_failed.append(context)
+                print(f"    ❌ FAIL (exit {rc})")
+            else:
+                print(f"    ✅ PASS")
+
+        # 6. Checks conditional — ativar por diff class
+        print("\n── Checks conditional ──")
+        for check in manifest.get("checks", []):
+            if check.get("category") != "conditional":
+                continue
+            condition = check.get("condition", "")
+            context = check["context"]
+            # Avaliar condição: "governance_changed == true" etc.
+            activated = False
+            if "governance_changed" in condition and "governance_changed" in diff_classes:
+                activated = True
+            elif "session_contract_changed" in condition and "session_contract_changed" in diff_classes:
+                activated = True
+            elif "frontend_changed" in condition and "frontend_changed" in diff_classes:
+                activated = True
+            elif "schema_changed" in condition and "schema_changed" in diff_classes:
+                activated = True
+
+            if not activated:
+                print(f"  ⏭  {context} — não ativado (condição: {condition})")
+                continue
+
+            cmd_str = check.get("local_equivalent", "")
+            if not cmd_str:
+                print(f"  ⏭  {context} — sem local_equivalent")
+                continue
+
+            print(f"  Rodando: {context}")
+            rc = subprocess.run(cmd_str, shell=True, cwd=self.root).returncode
+            status = "PASS" if rc == 0 else "FAIL"
+            checks_run.append({"context": context, "category": "conditional", "result": status, "exit_code": rc})
+            if rc != 0:
+                checks_failed.append(context)
+                print(f"    ❌ FAIL (exit {rc})")
+            else:
+                print(f"    ✅ PASS")
+
+        # 7. Semantic requirements
+        print("\n── Semantic requirements ──")
+        semantic_findings = []
+        missing_evidence = []
+
+        semantic_detectors = {
+            "schema_field_removed": lambda: self._detect_schema_field_removed(changed_files, target_branch),
+            "canonical_status_transition": lambda: self._detect_canonical_status_transition(changed_files, target_branch),
+            "bridge_doc_uses_authority_language": lambda: self._detect_bridge_doc_authority_language(changed_files),
+            "new_cross_module_boundary": lambda: self._detect_new_cross_module_boundary(changed_files),
+            "diff_outside_handoff_scope": lambda: self._detect_diff_outside_handoff_scope(changed_files),
+        }
+
+        for rule in manifest.get("semantic_requirements", {}).get("rules", []):
+            when = rule.get("when")
+            block = rule.get("block_if_missing", False)
+            require = rule.get("require", [])
+            detector = semantic_detectors.get(when)
+            triggered = detector() if detector else False
+            finding = {"when": when, "triggered": triggered, "block_if_missing": block, "require": require}
+            semantic_findings.append(finding)
+            if triggered:
+                print(f"  ⚠️  Detectado: {when} — requer: {require}")
+                if block:
+                    missing_evidence.extend(require)
+            else:
+                print(f"  ✅ {when} — não detectado")
+
+        # 8. Reviewability
+        print("\n── Reviewability ──")
+        max_files = reviewability.get("max_changed_files", 150)
+        max_commits = reviewability.get("max_commits", 20)
+        max_domains = reviewability.get("max_cross_domain_areas", 3)
+        split_required = reviewability.get("split_required_when_exceeded", True)
+
+        # Cross-domain: quantos prefixos src/<module> distintos no diff
+        src_modules = set()
+        for f in changed_files:
+            if f.startswith("src/"):
+                parts = f.split("/")
+                if len(parts) >= 2:
+                    src_modules.add(parts[1])
+        cross_domain_count = len(src_modules)
+
+        reviewability_exceeded = (
+            len(changed_files) > max_files
+            or commit_count > max_commits
+            or cross_domain_count > max_domains
+        )
+
+        reviewability_check = {
+            "changed_files": len(changed_files),
+            "max_changed_files": max_files,
+            "commits": commit_count,
+            "max_commits": max_commits,
+            "cross_domain_areas": cross_domain_count,
+            "max_cross_domain_areas": max_domains,
+            "exceeded": reviewability_exceeded,
+            "split_required": split_required and reviewability_exceeded,
+        }
+
+        if reviewability_exceeded:
+            print(f"  ⚠️  Limites excedidos: arquivos={len(changed_files)}/{max_files}, "
+                  f"commits={commit_count}/{max_commits}, domínios={cross_domain_count}/{max_domains}")
+        else:
+            print(f"  ✅ Dentro dos limites de reviewability")
+
+        # 9. Calcular final_decision
+        has_required_fail = bool(checks_failed)
+        has_missing_evidence = bool(missing_evidence)
+
+        if decision_policy == "block_on_required_fail_or_missing_evidence":
+            if has_required_fail or has_missing_evidence:
+                final_decision = "BLOCK"
+            elif reviewability_exceeded and split_required:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+        elif decision_policy == "block_on_required_fail":
+            if has_required_fail:
+                final_decision = "BLOCK"
+            elif has_missing_evidence or reviewability_exceeded:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+        else:  # warn_on_missing_evidence
+            if has_required_fail:
+                final_decision = "BLOCK"
+            elif has_missing_evidence:
+                final_decision = "WARN"
+            else:
+                final_decision = "PASS"
+
+        # Gerar report
+        report = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "branch_target": target_branch,
+            "diff_classes": diff_classes,
+            "checks_run": checks_run,
+            "checks_failed": checks_failed,
+            "missing_evidence": missing_evidence,
+            "semantic_findings": semantic_findings,
+            "reviewability_check": reviewability_check,
+            "final_decision": final_decision,
+        }
+
+        report_path = self.root / output_report
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
+
+        # Resumo final
+        decision_icon = {"PASS": "✅", "WARN": "⚠️ ", "BLOCK": "❌"}.get(final_decision, "?")
+        print(f"\n══ PREFLIGHT: {decision_icon} {final_decision} ══")
+        if checks_failed:
+            print(f"  Checks com falha: {checks_failed}")
+        if missing_evidence:
+            print(f"  Evidência ausente: {missing_evidence}")
+        print(f"  Relatório: {output_report}")
+
+        # Exit codes v2 (nova convenção deliberada):
+        #   0 = PASS, 1 = WARN, 2 = BLOCK
+        exit_map = {"PASS": 0, "WARN": 1, "BLOCK": 2}
+        return exit_map.get(final_decision, 2)
+
+    def cmd_survival_suite(self) -> int:
+        """Rodar suíte de sobrevivência obrigatória.
+
+        Deve passar antes de qualquer mudança em:
+        gates, profiles, task catalog, schemas críticos, validate_contracts.py,
+        bridge docs (.github/skills, .github/copilot-instructions.md), prompts
+        (.contract_driven/agent_prompts/**) ou templates (docs/_canon/templates/**).
+        """
+        SURVIVAL_SUITE = [
+            "tests/test_pipeline_governance.py",
+            "tests/pipeline_gates/test_phase_0_determinism.py",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestSSOTParity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestHookIntegrity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestZeroBootProfileReferences",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::test_parity_cli_verify",
+            "tests/pipeline_gates/test_tooling_config_gate.py",
+            # FASE 3 — modelo único de estado de sessão
+            "tests/pipeline_gates/test_session_state_phase3.py",
+            # FASE 4 — paridade schema/template/skills/prompts
+            "tests/pipeline_gates/test_schema_template_parity_phase4.py",
+            # E4 — invariantes de drift de toolchain e merge-readiness
+            "tests/invariants/test_toolchain_parity.py",
+            "tests/invariants/test_merge_readiness_parity.py",
+        ]
+        print("\n══ SURVIVAL SUITE ══")
+        print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v", "-m", "not slow"],
+            cwd=self.root,
+        )
+        if result.returncode == 0:
+            print("\n✅ Survival suite: PASS — seguro prosseguir.")
+        else:
+            print("\n❌ Survival suite: FAIL — não avançar sem suíte verde.")
+        return result.returncode
+
+    def cmd_reset(self) -> int:
+        """Limpar sessão (novo boot)."""
+        print("\n══ RESET: Limpando sessão ══")
+
+        if self.session_file.exists():
+            self.session_file.unlink()
+            print("✅ session_start.json removido")
+
+        self.session = {}
+        print("✅ Sessão limpa. Execute 'hb verify' para nova sessão.\n")
+        return 0
+
+    @property
+    def _ci_test_env(self) -> dict:
+        """Ambiente de teste derivado de toolchain.json (single source of truth)."""
+        toolchain = self._load_json(self.root / "toolchain.json")
+        pg = toolchain["services"]["postgres"]
+        redis = toolchain["services"]["redis"]
+        db_host = "localhost"
+        db_port = str(pg["port"])
+        return {
+            "SECRET_KEY": "ci-secret-key-for-testing-only-not-real",
+            "DEBUG": "false",
+            "ALLOWED_HOSTS": "localhost,127.0.0.1",
+            "HB_RUN_SCHEMATHESIS": "0",
+            "DATABASE_URL": (
+                f"postgres://{pg['test_user']}:{pg['test_password']}"
+                f"@{db_host}:{db_port}/{pg['test_db']}"
+            ),
+            "DB_NAME": pg["test_db"],
+            "DB_USER": pg["test_user"],
+            "DB_PASSWORD": pg["test_password"],
+            "DB_HOST": db_host,
+            "DB_PORT": db_port,
+            "REDIS_URL": f"redis://{db_host}:{redis['port']}/0",
+            "CELERY_BROKER_URL": f"redis://{db_host}:{redis['port']}/1",
+            "CELERY_RESULT_BACKEND": f"redis://{db_host}:{redis['port']}/2",
+            "CORS_ALLOWED_ORIGINS": "http://localhost:3000,http://localhost:5173",
+            "LOG_LEVEL": "WARNING",
+            "JWT_ALGORITHM": "HS256",
+            "JWT_SECRET": "ci-jwt-secret-for-testing-only",
+        }
+
+    def cmd_validate(self, profile: str = "ci") -> int:
+        """Rodar validate_contracts.py com perfil de CI — executor canônico para 'Validate Contract Gates'.
+
+        Perfil padrão: ci (equivalente a CI=true sem flag).
+        """
+        print(f"\n══ VALIDATE CONTRACTS — perfil: {profile} ══")
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--profile", profile],
+            cwd=self.root,
+        )
+        if result.returncode == 0:
+            print(f"\n✅ validate ({profile}): PASS")
+        else:
+            print(f"\n❌ validate ({profile}): FAIL")
+        return result.returncode
+
+    def cmd_ci(self, profile: str = "pr") -> int:
+        """Rodar suíte CI local com ambiente derivado de toolchain.json.
+
+        Perfis:
+          pr   — pytest -q -m "not slow" --tb=short  (padrão, rápido)
+          full — pytest -v --tb=short                (cobertura completa)
+        """
+        print(f"\n══ CI LOCAL — perfil: {profile} ══")
+        subprocess.run(
+            ["git", "config", "core.hooksPath", "scripts/git-hooks"],
+            cwd=self.root, capture_output=True,
+        )
+        env = {**os.environ, **self._ci_test_env}
+
+        if profile == "pr":
+            cmd = [sys.executable, "-m", "pytest", "-q", "-m", "not slow", "--tb=short"]
+        elif profile == "full":
+            env["HB_RUN_SCHEMATHESIS"] = "1"
+            cmd = [sys.executable, "-m", "pytest", "-v", "--tb=short"]
+        else:
+            print(f"❌ Perfil desconhecido: {profile!r}. Use 'pr' ou 'full'.", file=sys.stderr)
+            return 2
+
+        print("Sincronizando schema do banco (migrate)...")
+        migrate = subprocess.run(
+            [sys.executable, "manage.py", "migrate", "--noinput"],
+            env=env, cwd=self.root,
+        )
+        if migrate.returncode != 0:
+            print(f"\n❌ CI local ({profile}): migrate falhou")
+            return migrate.returncode
+
+        result = subprocess.run(cmd, env=env, cwd=self.root)
+        if result.returncode == 0:
+            print(f"\n✅ CI local ({profile}): PASS")
+        else:
+            print(f"\n❌ CI local ({profile}): FAIL")
+        return result.returncode
+    
+    @staticmethod
+    def _calculate_file_hash(path: pathlib.Path) -> str:
+        """Calcular SHA-256 do arquivo."""
+        sha256 = hashlib.sha256()
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    
+    @staticmethod
+    def _get_git_user() -> str:
+        """Obter git user.name."""
+        try:
+            result = subprocess.run(
+                ["git", "config", "user.name"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return result.stdout.strip()
+        except Exception:
+            return "unknown"
+    
+    @staticmethod
+    def _get_git_email() -> str:
+        """Obter git user.email."""
+        try:
+            result = subprocess.run(
+                ["git", "config", "user.email"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return result.stdout.strip()
+        except Exception:
+            return "unknown@example.com"
+    
+    def run(self, args: Optional[list] = None) -> int:
+        """Executar CLI."""
+        parser = argparse.ArgumentParser(
+            prog="hb",
+            description="HB Track Pipeline CLI (v2 — determinístico)",
+        )
+        
+        subparsers = parser.add_subparsers(dest="command", help="Comando")
+        
+        # verify
+        verify_p = subparsers.add_parser("verify", help="Fase 0: Boot e validação de sessão")
+        verify_p.add_argument("--task-type", required=True, help="Task type (deve estar em TASK_CATALOG)")
+        verify_p.add_argument("--module", required=False, default=None,
+                              help="Módulo canônico (um dos 17). Obrigatório exceto para execute_roadmap_phase.")
+        verify_p.add_argument("--roadmap-phase", type=int, default=None,
+                              help="Fase do ROADMAP em execução (0-13). Usado apenas em modo ROADMAP.")
+        verify_p.add_argument("--roadmap-task-id", default=None,
+                              help="Identificador da tarefa roadmap (ex: 'phase-1-foundation').")
+        
+        # check
+        check_p = subparsers.add_parser("check", help="Fase 1: Validação de módulo")
+        check_p.add_argument("--module", required=True, help="Módulo canônico")
+        
+        # artifact
+        artifact_p = subparsers.add_parser("artifact", help="Fase 2: Validação de artefato per-file")
+        artifact_p.add_argument("path", help="Caminho do artefato (relativo ao workspace)")
+        
+        # status
+        subparsers.add_parser("status", help="Mostrar status completo da sessão")
+        
+        # reset
+        subparsers.add_parser("reset", help="Limpar sessão (novo boot)")
+
+        # survival-suite
+        subparsers.add_parser(
+            "survival-suite",
+            help="Rodar suíte de sobrevivência (obrigatório antes de mudança em gates/profiles/schemas)",
+        )
+
+        # preflight — alias de survival-suite com invariantes (autoridade de merge local)
+        subparsers.add_parser(
+            "preflight",
+            help="Rodar preflight completo: survival-suite + invariantes de drift",
+        )
+
+        # stage3 — validar contratos (full run) e registrar stage3_exit_code
+        subparsers.add_parser(
+            "stage3",
+            help="FASE 3: rodar validate_contracts.py completo e registrar stage3_exit_code",
+        )
+
+        # validate -- executor canônico para Validate Contract Gates
+        validate_p = subparsers.add_parser(
+            "validate",
+            help="Rodar validate_contracts.py --profile ci (executor canônico para 'Validate Contract Gates')",
+        )
+        validate_p.add_argument(
+            "--profile", default="ci", choices=["local", "precommit", "ci"],
+            help="Perfil de validação (padrão: ci)",
+        )
+
+        # ci -- rodar suíte CI local com ambiente derivado de toolchain.json
+        ci_p = subparsers.add_parser("ci", help="Rodar suíte CI local (pr|full)")
+        ci_p.add_argument(
+            "--profile", default="pr", choices=["pr", "full"],
+            help="Perfil de CI: pr (rápido, sem slow) ou full (completo)",
+        )
+
+        # help
+        subparsers.add_parser("help", help="Mostrar ajuda")
+        
+        parsed_args = parser.parse_args(args)
+        
+        if not parsed_args.command or parsed_args.command == "help":
+            parser.print_help()
+            return 0
+        
+        try:
+            if parsed_args.command == "verify":
+                return self.cmd_verify(
+                    parsed_args.task_type,
+                    parsed_args.module,
+                    roadmap_phase=getattr(parsed_args, "roadmap_phase", None),
+                    roadmap_task_id=getattr(parsed_args, "roadmap_task_id", None),
+                )
+            elif parsed_args.command == "check":
+                return self.cmd_check(parsed_args.module)
+            elif parsed_args.command == "artifact":
+                return self.cmd_artifact(parsed_args.path)
+            elif parsed_args.command == "status":
+                return self.cmd_status()
+            elif parsed_args.command == "reset":
+                return self.cmd_reset()
+            elif parsed_args.command == "survival-suite":
+                return self.cmd_survival_suite()
+            elif parsed_args.command == "preflight":
+                return self.cmd_preflight()
+            elif parsed_args.command == "stage3":
+                return self.cmd_stage3()
+            elif parsed_args.command == "validate":
+                return self.cmd_validate(parsed_args.profile)
+            elif parsed_args.command == "ci":
+                return self.cmd_ci(parsed_args.profile)
+        except FileNotFoundError as e:
+            print(f"❌ {e}", file=sys.stderr)
+            return 2
+        except Exception as e:
+            print(f"❌ Erro inesperado: {e}", file=sys.stderr)
+            return 2
+        
+        return 0
+
+
+def main():
+    """Entrypoint."""
+    cli = HBCLIv2()
+    sys.exit(cli.run())
+
+
+if __name__ == "__main__":
+    main()

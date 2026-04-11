@@ -1,0 +1,584 @@
+#!/usr/bin/env python3
+"""
+HB Track Pre-Commit Hook (v4 — Governance Path Enforcement)
+
+Validação determinística de contrato-driven pipeline antes de commit:
+1. Validar schema de _reports/session_start.json
+2. Bloquear se stage0_exit_code != 0 (boot falhou)
+3. Bloquear se stage1_exit_code != 0 (discovery falhou)
+4. Bloquear se stage2_exit_code presente e != 0 (execution falhou)
+5. Bloquear se artefato staged não está em stage2_artifacts
+6. Comparar sha256 do blob staged vs stage2_artifacts
+7. Bloquear se qualquer artefato staged tem gate_exit_code != 0
+8. Bloquear se SESSION_HANDOFF.md falta quando há mudanças
+9. Executar validate_contracts.py --profile precommit
+10. Se mudanças em GOVERNANCE_PATHS: rodar survival-suite + paridade schema/template/skills
+11. Registrar resultado em session_start.json
+
+GOVERNANCE_PATHS (rastreados por integridade de governânça):
+  .contract_driven/**
+  docs/_canon/**
+  .github/copilot-instructions.md
+  .github/skills/**
+  scripts/contracts/validate/**
+  scripts/hb
+  contracts/schemas/shared/**
+
+Pipeline de validação:
+  session.json → stage0/1/2 checks → artifacts hash → gate_exit_code → SESSION_HANDOFF → validator → [governance check]
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+import json
+import hashlib
+from pathlib import Path
+from typing import Dict, Any, List, Tuple
+import jsonschema
+
+
+class HBHookValidator:
+    """Validador de pre-commit com enforcement de contract-driven."""
+
+    # Paths de governança que ativam verificações extras de integridade
+    GOVERNANCE_PATHS = (
+        ".contract_driven/",
+        "docs/_canon/",
+        ".github/copilot-instructions.md",
+        ".github/skills/",
+        "scripts/contracts/validate/",
+        "scripts/hb",
+        "contracts/schemas/shared/",
+    )
+
+    # Paths de artefatos governados pelo pipeline CDD
+    CONTRACT_PATHS = (
+        "contracts/",
+        "docs/hbtrack/",
+    )
+    
+    def __init__(self):
+        """Inicializar paths e carregar SSOTs."""
+        self.repo_root = self._get_repo_root()
+        self.session_file = self.repo_root / "_reports" / "session_start.json"
+        self.schema_file = (
+            self.repo_root / "contracts" / "schemas" / "shared" / "session_start.schema.json"
+        )
+        self.validator_script = self.repo_root / "scripts" / "contracts" / "validate" / "validate_contracts.py"
+
+        # Preferir Python da venv se disponível (git hook usa /usr/bin/python3 que pode não ter pytest)
+        _venv_python = self.repo_root / ".venv" / "bin" / "python"
+        self.python_bin = str(_venv_python) if _venv_python.exists() else sys.executable
+
+        self.session: Dict[str, Any] = {}
+        self.schema: Dict[str, Any] = {}
+
+        self.errors: List[str] = []
+        self.warnings: List[str] = []
+    
+    @staticmethod
+    def _get_repo_root() -> Path:
+        """Obter raiz do repositório via git."""
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--show-toplevel"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return Path(result.stdout.strip())
+        except Exception as e:
+            print(f"❌ HOOK: Não consegui determinar repo root: {e}", file=sys.stderr)
+            sys.exit(1)
+    
+    def load_session(self) -> bool:
+        """Carregar session_start.json ou falhar bloqueando."""
+        if not self.session_file.exists():
+            self.errors.append(
+                f"❌ HOOK: {self.session_file.relative_to(self.repo_root)} não existe\n"
+                "   Execute 'hb verify --task-type <task> --module <mod>' primeiro"
+            )
+            return False
+        
+        try:
+            with open(self.session_file) as f:
+                self.session = json.load(f)
+            return True
+        except Exception as e:
+            self.errors.append(f"❌ HOOK: Erro ao parsear {self.session_file.name}: {e}")
+            return False
+    
+    def load_schema(self) -> bool:
+        """Carregar schema de validação."""
+        if not self.schema_file.exists():
+            self.errors.append(f"❌ HOOK: Schema não encontrado: {self.schema_file.relative_to(self.repo_root)}")
+            return False
+        
+        try:
+            with open(self.schema_file) as f:
+                self.schema = json.load(f)
+            return True
+        except Exception as e:
+            self.errors.append(f"❌ HOOK: Erro ao parsear schema: {e}")
+            return False
+    
+    def validate_session_schema(self) -> bool:
+        """Validar session contra JSON Schema."""
+        if not self.schema:
+            self.errors.append("❌ HOOK: Schema não foi carregado")
+            return False
+        
+        try:
+            jsonschema.validate(self.session, self.schema)
+            return True
+        except jsonschema.ValidationError as e:
+            self.errors.append(f"❌ HOOK: Sessão inválida contra schema: {e.message}")
+            return False
+        except Exception as e:
+            self.errors.append(f"❌ HOOK: Erro ao validar schema: {e}")
+            return False
+    
+    def check_stage0_exit_code(self) -> bool:
+        """Bloquear se stage0_exit_code != 0 (boot falhou)."""
+        stage0_code = self.session.get("stage0_exit_code")
+        
+        if stage0_code is None:
+            self.errors.append("❌ HOOK: stage0_exit_code ausente (execute 'hb verify' primeiro)")
+            return False
+        
+        if stage0_code != 0:
+            self.errors.append(f"❌ HOOK: Phase 0 (boot) falhou com exitcode={stage0_code}")
+            return False
+        
+        return True
+    
+    def check_stage1_exit_code(self) -> bool:
+        """Bloquear se stage1_exit_code != 0 (discovery falhou)."""
+        stage1_code = self.session.get("stage1_exit_code")
+        
+        # stage1 é opcional (pode não ter sido executado ainda)
+        if stage1_code is None:
+            self.warnings.append("⚠️  HOOK: stage1_exit_code ausente (executar 'hb check' é recomendado)")
+            return True
+        
+        if stage1_code != 0:
+            self.errors.append(f"❌ HOOK: Phase 1 (discovery) falhou com exitcode={stage1_code}")
+            return False
+        
+        return True
+    
+    def _get_all_staged_files(self) -> List[str]:
+        """Obter todos os arquivos staged (qualquer path)."""
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
+                capture_output=True,
+                text=True,
+                cwd=self.repo_root,
+                check=True,
+            )
+            return [f for f in result.stdout.strip().split("\n") if f]
+        except Exception as e:
+            self.errors.append(f"❌ HOOK: Erro ao listar arquivos staged: {e}")
+            return []
+
+    def get_staged_files(self, in_scope: List[str] | None = None) -> List[str]:
+        """Obter lista de arquivos staged para commit no escopo CONTRACT_PATHS."""
+        scopes = in_scope if in_scope is not None else list(self.CONTRACT_PATHS)
+        staged = self._get_all_staged_files()
+        return [f for f in staged if any(f.startswith(scope) for scope in scopes)]
+
+    def get_staged_governance_files(self) -> List[str]:
+        """Obter arquivos staged que pertencem a GOVERNANCE_PATHS."""
+        staged = self._get_all_staged_files()
+        result = []
+        for f in staged:
+            for gpath in self.GOVERNANCE_PATHS:
+                if gpath.endswith("/"):
+                    if f.startswith(gpath):
+                        result.append(f)
+                        break
+                else:
+                    if f == gpath or f.startswith(gpath + "/"):
+                        result.append(f)
+                        break
+        return result
+    
+    def calculate_file_hash(self, file_path: Path) -> str:
+        """Calcular SHA-256 de arquivo."""
+        sha256 = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    
+    def check_stage2_exit_code(self) -> bool:
+        """Bloquear se stage2_exit_code está presente e != 0 (FASE 2 falhou)."""
+        stage2_code = self.session.get("stage2_exit_code")
+
+        if stage2_code is None:
+            self.warnings.append(
+                "⚠️  HOOK: stage2_exit_code ausente (FASE 2 não completada no pipeline)\n"
+                "   Execute o pipeline completo antes de commitar"
+            )
+            return True
+
+        if stage2_code != 0:
+            self.errors.append(
+                f"❌ HOOK: Phase 2 (execution) falhou com exitcode={stage2_code}\n"
+                "   Corrija os erros de execução antes de commitar"
+            )
+            return False
+
+        return True
+
+    def check_artifacts_integrity(self) -> bool:
+        """
+        Validar que:
+        1. Todos os arquivos staged em contracts/ ou docs/hbtrack/ estão em stage2_artifacts
+        2. Os hashes correspondem (detecção de mudanças pós-validação)
+        """
+        staged_files = self.get_staged_files()
+        if not staged_files:
+            return True  # Nada para validar
+        
+        artifacts = self.session.get("stage2_artifacts", [])
+        artifact_paths = {art["path"]: art for art in artifacts}
+        
+        all_ok = True
+        
+        for staged_path in staged_files:
+            if staged_path not in artifact_paths:
+                self.errors.append(
+                    f"❌ HOOK: Artefato staged sem entrada em stage2_artifacts:\n"
+                    f"   Staged: {staged_path}\n"
+                    f"   Adicione via: hb artifact {staged_path}"
+                )
+                all_ok = False
+                continue
+            
+            # Verificar hash
+            artifact_record = artifact_paths[staged_path]
+            file_full_path = self.repo_root / staged_path
+            
+            if not file_full_path.exists():
+                self.errors.append(f"❌ HOOK: Arquivo desapareceu: {staged_path}")
+                all_ok = False
+                continue
+            
+            current_hash = self.calculate_file_hash(file_full_path)
+            recorded_hash = artifact_record.get("sha256", "")
+            
+            if current_hash != recorded_hash:
+                self.errors.append(
+                    f"❌ HOOK: Hash mismatch (artefato foi modificado pós-validação):\n"
+                    f"   Path: {staged_path}\n"
+                    f"   Hash gravado: {recorded_hash[:16]}...\n"
+                    f"   Hash atual: {current_hash[:16]}...\n"
+                    f"   Re-valide: hb artifact {staged_path}"
+                )
+                all_ok = False
+        
+        return all_ok
+    
+    def check_artifact_gate_exit_codes(self) -> bool:
+        """
+        Verificar que todos os artefatos staged têm gate_exit_code == 0.
+
+        Se gate_exit_code != 0, o artefato foi registrado com gate falhando.
+        Commit bloqueado até que o artefato seja corrigido e re-registrado.
+        """
+        staged_files = self.get_staged_files()
+        if not staged_files:
+            return True
+
+        artifacts = self.session.get("stage2_artifacts", [])
+        artifact_paths = {art["path"]: art for art in artifacts}
+
+        all_ok = True
+
+        for staged_path in staged_files:
+            if staged_path not in artifact_paths:
+                # Já detectado em check_artifacts_integrity — não duplicar erro
+                continue
+
+            artifact_record = artifact_paths[staged_path]
+            gate_exit_code = artifact_record.get("gate_exit_code")
+
+            if gate_exit_code is None:
+                self.warnings.append(
+                    f"⚠️  HOOK: Artefato sem gate_exit_code registrado:\n"
+                    f"   Path: {staged_path}\n"
+                    f"   Re-registre via: hb artifact {staged_path}"
+                )
+                continue
+
+            if gate_exit_code != 0:
+                self.errors.append(
+                    f"❌ HOOK: Artefato com gate falhando (gate_exit_code={gate_exit_code}):\n"
+                    f"   Path: {staged_path}\n"
+                    f"   Corrija o gate antes de commitar: hb artifact {staged_path}"
+                )
+                all_ok = False
+
+        return all_ok
+
+    def check_session_handoff_requirement(self) -> bool:
+        """
+        Bloquear se há mudanças em contracts/ ou docs/hbtrack/
+        mas SESSION_HANDOFF.md não está staged.
+        """
+        staged_files = self.get_staged_files()
+        
+        if not staged_files:
+            return True  # Nada governado foi modificado
+        
+        # Verificar se SESSION_HANDOFF.md está staged
+        session_handoff_path = "SESSION_HANDOFF.md"
+        
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--cached", "--name-only"],
+                capture_output=True,
+                text=True,
+                cwd=self.repo_root,
+                check=True
+            )
+            
+            all_staged = result.stdout.strip().split("\n")
+            
+            if session_handoff_path not in all_staged:
+                self.errors.append(
+                    f"❌ HOOK: SESSION_HANDOFF.md não está staged\n"
+                    f"   Você modificou artefatos governados mas não atualizou SESSION_HANDOFF.md\n"
+                    f"   Execute: git add SESSION_HANDOFF.md"
+                )
+                return False
+        except Exception as e:
+            self.errors.append(f"❌ HOOK: Erro ao verificar SESSION_HANDOFF.md: {e}")
+            return False
+        
+        return True
+    
+    def check_governance_integrity(self) -> bool:
+        """
+        Verificações de integridade e coerência para mudanças em GOVERNANCE_PATHS.
+
+        Ativado apenas quando arquivos de governança são staged.
+        Executa:
+          1. survival-suite — testes obrigatórios de governança
+          2. paridade schema x template x skills (test_schema_template_parity_phase4)
+          3. validação cruzada SESSION_HANDOFF ↔ session_start (test_session_state_phase3)
+        """
+        gov_files = self.get_staged_governance_files()
+        if not gov_files:
+            return True  # Nenhuma mudança de governança — skip
+
+        print(
+            f"\n══ HOOK: Governança detectada — {len(gov_files)} arquivo(s) em GOVERNANCE_PATHS ══"
+        )
+        for f in gov_files:
+            print(f"   📁 {f}")
+        print()
+
+        hb_script = self.repo_root / "scripts" / "hb"
+
+        # 1. Survival suite
+        print("▶ HOOK [Gov 1/3]: Rodando survival-suite...")
+        result = subprocess.run(
+            [self.python_bin, str(hb_script), "survival-suite"],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: survival-suite FAIL — mude de governança exige survival-suite verde.\n"
+                "   Corrija os testes antes de commitar."
+            )
+            return False
+        print("✅ survival-suite PASS\n")
+
+        # 2. Paridade schema x template x skills
+        print("▶ HOOK [Gov 2/3]: Paridade schema/template/skills...")
+        result = subprocess.run(
+            [
+                self.python_bin,
+                "-m",
+                "pytest",
+                "tests/pipeline_gates/test_schema_template_parity_phase4.py",
+                "-q",
+                "--tb=short",
+            ],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: Paridade schema/template/skills FAIL.\n"
+                "   Algum bridge doc ou skill diverge do schema ativo. Corrija antes de commitar."
+            )
+            return False
+        print("✅ Paridade schema/template/skills PASS\n")
+
+        # 3. Validação cruzada SESSION_HANDOFF ↔ session_start
+        print("▶ HOOK [Gov 3/3]: Validação cruzada SESSION_HANDOFF ↔ session_start...")
+        result = subprocess.run(
+            [
+                self.python_bin,
+                "-m",
+                "pytest",
+                "tests/pipeline_gates/test_session_state_phase3.py",
+                "-q",
+                "--tb=short",
+                "-m",
+                "not slow",
+            ],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: Validação cruzada SESSION_HANDOFF ↔ session_start FAIL.\n"
+                "   State de sessão incoerente. Execute 'hb verify' e atualize SESSION_HANDOFF.md."
+            )
+            return False
+        print("✅ Validação cruzada SESSION_HANDOFF ↔ session_start PASS\n")
+
+        return True
+
+    def execute_validator_profile(self) -> int:
+        """Executar validate_contracts.py --profile precommit."""
+        if not self.validator_script.exists():
+            self.errors.append(
+                f"❌ HOOK: Validator script não encontrado: "
+                f"{self.validator_script.relative_to(self.repo_root)}"
+            )
+            return 1
+        
+        print("\n══ HOOK: Executando validate_contracts.py --profile precommit ══\n")
+        
+        result = subprocess.run(
+            [self.python_bin, str(self.validator_script), "--profile", "precommit"],
+            cwd=self.repo_root
+        )
+        
+        return result.returncode
+    
+    def save_hook_success(self):
+        """
+        Registrar sucesso do hook em session_start.json.
+
+        Chamado APENAS quando o hook passa (exit 0) — nunca em falha.
+        Evita o ciclo de sobrescritas: cada tentativa falha não altera session_start.json.
+        A evidência de falha já existe nos artefatos com gate_exit_code != 0.
+        """
+        if self.session:
+            self.session["hook_exit_code"] = 0
+            self.session["hook_validated_at"] = (
+                __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+            )
+
+            try:
+                with open(self.session_file, "w") as f:
+                    json.dump(self.session, f, indent=2, ensure_ascii=False)
+                    f.write("\n")
+            except Exception as e:
+                print(f"⚠️  HOOK: Não consegui salvar session. {e}", file=sys.stderr)
+    
+    def run(self) -> int:
+        """Executar pipeline completo de validação."""
+        
+        print("\n══ HB TRACK PRE-COMMIT HOOK (v4 — Governance Path Enforcement) ══\n")
+        
+        # Fase 1: Carregar artefatos
+        print("▶ Fase 1: Carregando session e schema...")
+        if not self.load_session():
+            self._print_errors_and_exit(1)
+        if not self.load_schema():
+            self._print_errors_and_exit(1)
+        print("✅ Session e schema carregados\n")
+        
+        # Fase 2: Validar session contra schema
+        print("▶ Fase 2: Validando session contra schema...")
+        if not self.validate_session_schema():
+            self._print_errors_and_exit(1)
+        print("✅ Session válida\n")
+        
+        # Fase 3: Verificar exit codes dos estágios anteriores
+        print("▶ Fase 3: Verificando exit codes (stage0, stage1, stage2)...")
+        if not self.check_stage0_exit_code():
+            self._print_errors_and_exit(1)
+        if not self.check_stage1_exit_code():
+            if self.errors:  # stage1 check pode gerar error
+                self._print_errors_and_exit(1)
+            # stage1 warning é OK
+        if not self.check_stage2_exit_code():
+            if self.errors:
+                self._print_errors_and_exit(1)
+            # stage2 warning (ausente) é OK
+        print("✅ Exit codes válidos\n")
+
+        # Fase 4: Verificar integridade de artefatos (path + hash)
+        print("▶ Fase 4: Verificando integridade de artefatos staged...")
+        if not self.check_artifacts_integrity():
+            self._print_errors_and_exit(1)
+        print("✅ Artefatos íntegros\n")
+
+        # Fase 4.5: Verificar gate_exit_code por artefato
+        print("▶ Fase 4.5: Verificando gate_exit_code por artefato staged...")
+        if not self.check_artifact_gate_exit_codes():
+            self._print_errors_and_exit(1)
+        if self.warnings:
+            for w in self.warnings:
+                print(w)
+            self.warnings.clear()
+        print("✅ Gate exit codes válidos\n")
+
+        # Fase 5: Verificar SESSION_HANDOFF.md
+        print("▶ Fase 5: Verificando SESSION_HANDOFF.md...")
+        if not self.check_session_handoff_requirement():
+            self._print_errors_and_exit(1)
+        print("✅ SESSION_HANDOFF.md presente\n")
+
+        # Fase 6: Verificações de integridade para mudanças de governança
+        print("▶ Fase 6: Verificando integridade de governança (GOVERNANCE_PATHS)...")
+        if not self.check_governance_integrity():
+            self._print_errors_and_exit(1)
+        print("✅ Governança íntegra\n")
+
+        # Fase 7: Executar validator com profile precommit
+        print("▶ Fase 7: Executando validator...")
+        validator_exit = self.execute_validator_profile()
+
+        if validator_exit != 0:
+            print(f"\n❌ HOOK BLOQUEADO: validator retornou exit code {validator_exit}\n")
+            return validator_exit
+
+        # Gravar sucesso SOMENTE quando o hook passa — nunca em falha
+        self.save_hook_success()
+
+        print("\n✅ PRE-COMMIT HOOK: TUDO OK — commit permitido\n")
+        return 0
+    
+    def _print_errors_and_exit(self, exit_code: int):
+        """Imprimir erros e sair sem gravar em session_start.json.
+
+        Falhas não são registradas — session_start.json só é atualizado em sucesso.
+        """
+        print("\n❌ HOOK BLOQUEADO\n")
+        for error in self.errors:
+            print(error, file=sys.stderr)
+
+        for warning in self.warnings:
+            print(warning, file=sys.stderr)
+
+        sys.exit(exit_code)
+
+
+def main() -> int:
+    """Entrypoint do hook."""
+    validator = HBHookValidator()
+    return validator.run()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
