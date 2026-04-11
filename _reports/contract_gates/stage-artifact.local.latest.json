@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-11T13:44:25Z",
+  "timestamp_utc": "2026-04-11T14:00:12Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "f8bdb4ae",
+    "git_commit": "2c8cc414",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T134425_e4da17"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T140012_c90877"
   },
   "status_detail": {
     "active_gates_passed": 8,
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 61
       }
     },
     {
@@ -282,7 +282,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6575
+        "duration_ms": 5751
       }
     },
     {
@@ -924,7 +924,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 92
+        "duration_ms": 83
       }
     },
     {
@@ -982,7 +982,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2155
+        "duration_ms": 7235
       }
     },
     {
@@ -1086,7 +1086,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 20
       }
     },
     {
@@ -1250,7 +1250,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 14
       }
     },
     {
@@ -1488,7 +1488,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 24
       }
     },
     {

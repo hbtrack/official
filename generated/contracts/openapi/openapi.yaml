@@ -27,6 +27,11 @@ servers:
   - url: https://staging.hbtrack.local
     description: Staging (placeholder — substituir por host real no deploy)
 
+# Security global — JWT Bearer obrigatório para todos os endpoints exceto /health.
+# Endpoints específicos podem relaxar com security: [] local.
+security:
+  - HTTPBearer: []
+
 # Path items são definidos por módulo em contracts/openapi/paths/<module>.yaml.
 # Adicionar referências aqui conforme cada contrato de módulo for estabelecido.
 #
@@ -60,78 +65,78 @@ paths:
   /teams/{teamId}/staff/{staffUserId}:
     $ref: ./paths/teams.yaml#/~1teams~1{teamId}~1staff~1{staffUserId}
   # training module - path items defined in ./paths/training.yaml
-  /training-sessions:
-    $ref: ./paths/training.yaml#/~1training-sessions
-  /training-sessions/{id}:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}
-  /training-sessions/{id}/blocks:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks
-  /training-sessions/{id}/blocks/{blockId}:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks~1{blockId}
-  /training-sessions/{id}/blocks/reorder:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks~1reorder
-  /training-sessions/{id}/attendance:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attendance
-  /training-sessions/{id}/wellness-pre:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre
-  /training-sessions/{id}/wellness-pre/{athleteId}:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre~1{athleteId}
-  /training-sessions/{id}/wellness-post:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-post
-  /training-sessions/{id}/wellness-post/{athleteId}:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-post~1{athleteId}
-  /mesocycles:
-    $ref: ./paths/training.yaml#/~1mesocycles
-  /mesocycles/{id}:
-    $ref: ./paths/training.yaml#/~1mesocycles~1{id}
-  /microcycles:
-    $ref: ./paths/training.yaml#/~1microcycles
-  /microcycles/{id}:
-    $ref: ./paths/training.yaml#/~1microcycles~1{id}
-  /training-sessions/{id}/start:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1start
-  /training-sessions/{id}/complete:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1complete
-  /training-sessions/{id}/execution-records:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1execution-records
-  /training-sessions/{id}/execution-records/{recordId}:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1execution-records~1{recordId}
-  /training-sessions/{id}/feedback-threads:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1feedback-threads
-  /training-sessions/{id}/objectives:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1objectives
-  /training-sessions/{id}/attention-queue:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attention-queue
-  /training-sessions/{id}/cancel:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1cancel
-  /training-sessions/{id}/publish:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1publish
-  /training-sessions/{id}/unpublish:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1unpublish
-  /training-sessions/{id}/archive:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1archive
-  /training-sessions/{id}/recommendations:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1recommendations
-  /training-sessions/{id}/recommendations/{recommendationId}/accept:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept
-  /training-sessions/{id}/recommendations/{recommendationId}/dismiss:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss
-  /training-sessions/{id}/ineligibility:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1ineligibility
-  /training-sessions/{id}/attention-queue/{itemId}/resolve:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve
-  /training-sessions/{id}/attention-queue/{itemId}/dismiss:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss
-  /training-sessions/{id}/attention-queue/{itemId}/escalate:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate
-  /training-sessions/{id}/feedback-threads/{threadId}/close:
-    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close
-  /training/load-chart:
-    $ref: ./paths/training.yaml#/~1training~1load-chart
-  /hb-pro-coach/conversations/{conversationId}/messages:
-    $ref: ./paths/training.yaml#/~1hb-pro-coach~1conversations~1{conversationId}~1messages
-  /hb-pro-coach/training-suggestions:
-    $ref: ./paths/training.yaml#/~1hb-pro-coach~1training-suggestions
+  /training/training-sessions:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions
+  /training/training-sessions/{id}:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}
+  /training/training-sessions/{id}/blocks:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1blocks
+  /training/training-sessions/{id}/blocks/{blockId}:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1blocks~1{blockId}
+  /training/training-sessions/{id}/blocks/reorder:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1blocks~1reorder
+  /training/training-sessions/{id}/attendance:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1attendance
+  /training/training-sessions/{id}/wellness-pre:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1wellness-pre
+  /training/training-sessions/{id}/wellness-pre/{athleteId}:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1wellness-pre~1{athleteId}
+  /training/training-sessions/{id}/wellness-post:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1wellness-post
+  /training/training-sessions/{id}/wellness-post/{athleteId}:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1wellness-post~1{athleteId}
+  /training/mesocycles:
+    $ref: ./paths/training.yaml#/~1training~1mesocycles
+  /training/mesocycles/{id}:
+    $ref: ./paths/training.yaml#/~1training~1mesocycles~1{id}
+  /training/microcycles:
+    $ref: ./paths/training.yaml#/~1training~1microcycles
+  /training/microcycles/{id}:
+    $ref: ./paths/training.yaml#/~1training~1microcycles~1{id}
+  /training/training-sessions/{id}/start:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1start
+  /training/training-sessions/{id}/complete:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1complete
+  /training/training-sessions/{id}/execution-records:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1execution-records
+  /training/training-sessions/{id}/execution-records/{recordId}:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1execution-records~1{recordId}
+  /training/training-sessions/{id}/feedback-threads:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1feedback-threads
+  /training/training-sessions/{id}/objectives:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1objectives
+  /training/training-sessions/{id}/attention-queue:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1attention-queue
+  /training/training-sessions/{id}/cancel:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1cancel
+  /training/training-sessions/{id}/publish:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1publish
+  /training/training-sessions/{id}/unpublish:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1unpublish
+  /training/training-sessions/{id}/archive:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1archive
+  /training/training-sessions/{id}/recommendations:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1recommendations
+  /training/training-sessions/{id}/recommendations/{recommendationId}/accept:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept
+  /training/training-sessions/{id}/recommendations/{recommendationId}/dismiss:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss
+  /training/training-sessions/{id}/ineligibility:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1ineligibility
+  /training/training-sessions/{id}/attention-queue/{itemId}/resolve:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve
+  /training/training-sessions/{id}/attention-queue/{itemId}/dismiss:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss
+  /training/training-sessions/{id}/attention-queue/{itemId}/escalate:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate
+  /training/training-sessions/{id}/feedback-threads/{threadId}/close:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close
+  /training/training-sessions/{id}/load-chart:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1load-chart
+  /training/training-sessions/{id}/messages:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1messages
+  /training/training-sessions/{id}/suggestions:
+    $ref: ./paths/training.yaml#/~1training~1training-sessions~1{id}~1suggestions
   # wellness module - path items defined in ./paths/wellness.yaml
   /wellness/entries:
     $ref: ./paths/wellness.yaml#/~1wellness~1entries
