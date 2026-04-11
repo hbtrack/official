@@ -143,6 +143,45 @@ class SessionBlockModel(models.Model):
         return f"SessionBlock({self.id}, session={self.session_id}, phase={self.phase})"
 
 
+class AttendanceRecordModel(models.Model):
+    """Fato append-only de presença em sessão de treino."""
+
+    STATUS_CHOICES = [
+        ("PRESENT", "Present"),
+        ("ABSENT", "Absent"),
+        ("JUSTIFIED", "Justified"),
+        ("PRECONFIRMED", "Preconfirmed"),
+    ]
+    SOURCE_CHOICES = [
+        ("coach_input", "Coach Input"),
+        ("athlete_selfcheck", "Athlete Selfcheck"),
+        ("correction", "Correction"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session_id = models.UUIDField(db_index=True)
+    athlete_id = models.UUIDField(db_index=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    source = models.CharField(max_length=32, choices=SOURCE_CHOICES, default="coach_input")
+    recorded_at = models.DateTimeField(db_index=True)
+    correction_by_user_id = models.UUIDField(null=True, blank=True)
+    correction_at = models.DateTimeField(null=True, blank=True)
+    justification_reason = models.CharField(max_length=255, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "training_attendance_records"
+        app_label = "training"
+        indexes = [
+            models.Index(fields=["session_id", "athlete_id"], name="training_attend_sess_ath_idx"),
+            models.Index(fields=["session_id", "recorded_at"], name="training_attend_sess_rec_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"AttendanceRecord(session={self.session_id}, athlete={self.athlete_id}, status={self.status})"
+
+
 class WellnessPreModel(models.Model):
     """
     Wellness pré-treino por atleta.
@@ -305,6 +344,76 @@ class AttentionQueueItemModel(models.Model):
     class Meta:
         db_table = "training_attention_queue_items"
         app_label = "training"
+
+
+class RecommendationModel(models.Model):
+    """Recommendation gerada por analytics/ai_ingestion e revisada no módulo training."""
+
+    STATUS_CHOICES = [
+        ("PENDING", "Pending"),
+        ("ACCEPTED", "Accepted"),
+        ("DISMISSED", "Dismissed"),
+    ]
+    ACTION_TYPE_CHOICES = [
+        ("MODIFY_FOCUS", "Modify Focus"),
+        ("ADD_BLOCK", "Add Block"),
+        ("REMOVE_BLOCK", "Remove Block"),
+        ("ADJUST_DURATION", "Adjust Duration"),
+        ("ADD_OBJECTIVE", "Add Objective"),
+        ("ADJUST_LOAD", "Adjust Load"),
+        ("REVIEW_ATHLETE", "Review Athlete"),
+    ]
+    PRIORITY_CHOICES = [
+        ("LOW", "Low"),
+        ("MEDIUM", "Medium"),
+        ("HIGH", "High"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session_id = models.UUIDField(db_index=True)
+    generated_by_rule = models.CharField(max_length=128)
+    action_type = models.CharField(max_length=32, choices=ACTION_TYPE_CHOICES)
+    description = models.TextField()
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default="PENDING", db_index=True)
+    priority = models.CharField(max_length=16, choices=PRIORITY_CHOICES, null=True, blank=True)
+    generated_by_module = models.CharField(max_length=64)
+    coach_note = models.TextField(blank=True, default="")
+    dismissal_reason = models.TextField(blank=True, default="")
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolved_by_user_id = models.UUIDField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "training_recommendations"
+        app_label = "training"
+        indexes = [
+            models.Index(fields=["session_id", "status"], name="training_reco_sess_status_idx"),
+        ]
+
+
+class AthleteIneligibilityDeclarationModel(models.Model):
+    """Declaração de indisponibilidade do atleta no check-in de training."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session_id = models.UUIDField(db_index=True)
+    athlete_id = models.UUIDField(db_index=True)
+    reason_flags = models.JSONField(default=list)
+    reason_other = models.TextField(blank=True, default="")
+    acknowledged_by_coach = models.BooleanField(default=False)
+    coach_note = models.TextField(blank=True, default="")
+    declared_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "training_athlete_ineligibility_declarations"
+        app_label = "training"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["session_id", "athlete_id"],
+                name="training_ineligibility_session_athlete_uniq",
+            ),
+        ]
 
 
 class MesocycleModel(models.Model):

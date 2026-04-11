@@ -1,43 +1,41 @@
-# Generated reports (DO NOT VERSION)
-report*.json
-report*.txt
-validation_report.txt
-docs/scripts/consolidated_report.json
-docs/_generated/
-# Exception: canonical JSON schemas inside contracts/ (required by REQUIRED_ARTIFACT_PRESENCE_GATE)
-!contracts/schemas/**/*.schema.json
-# Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
-!generated/contracts/**/*.schema.json
+# ============================================================================
+# HB Track — .gitignore
+# Stack: Django 5.x + React/Vite + PostgreSQL 16 + Redis 7 + Celery 5
+# Atualizado: 2026-04-10 (SAN-006)
+# ============================================================================
 
-# Build/test artifacts
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+pip-wheel-metadata/
+.tox/
+.hypothesis/
+.ruff_cache/
+
+# ── Node / Frontend ─────────────────────────────────────────────────────────
+node_modules/
+
+# ── Build / Test artifacts ───────────────────────────────────────────────────
 build/
 dist/
 .reports/
-*.egg-info/
-__pycache__/
 .pytest_cache/
 .coverage
+coverage.xml
+htmlcov/
+celerybeat-schedule*
+*.sqlite3
 
-# Arquivos handoof de sessão - podem conter dados sensíveis e não devem ser versionados
-SESSION_HANDOOF*
-
-
-# Arquivos do Dev - Davi Sermenho
-.dev
-.dev/
-
-# Python virtualenvs
-venv/
-.venv/
-
-#Arquivos temporarios
-temp/
-
-# Node/Frontend dependencies
-node_modules/
-Hb Track - Fronted/node_modules/
-
-# Environment and secrets
+# ── Environment and secrets ─────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
@@ -46,54 +44,11 @@ Hb Track - Fronted/node_modules/
 id_ed25519
 id_ed25519.*
 
-# VPS documentation with sensitive credentials (passwords, SSH keys, IPs)
-# Contains production infrastructure secrets - do NOT commit
+# ── VPS documentation (contains credentials, IPs, SSH keys) ─────────────────
 /VPS/
 !/VPS/templates/
 
-# OS / IDE
-.DS_Store
-Thumbs.db
-.vscode/
-
-# Logs and caches
-*.log
-!docs/hbtrack/evidence/**/*.log
-# Exception: validation logs inside contracts/ referenced by drift manifests
-!contracts/**/*.log
-# Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
-!generated/contracts/**/*.log
-.cache/
-
-# Local runtime/generated dirs
-.hb_guard/
-
-# Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
-_reports/dispatch/
-# _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
-_reports/runs/
-_reports/ARQUITETO.yaml
-_reports/EXECUTOR.yaml
-_reports/TESTADOR.yaml
-.hb_backups/
-.hb_lock
-.hb_tmp_tests/
-
-# Temporary batch scripts
-tmp_*.ps1
-
-# Local/invalid placeholders on Windows
-nul
-*/nul
-
-# Separate local repo (do not vendor inside mono repo)
-brain-gist/
-
-# Implementation code (backend/frontend) - this is a contracts-only repo
-Hb Track - Backend/
-Hb Track - Fronted/
-
-# Generated reports (DO NOT VERSION)
+# ── Generated reports (DO NOT VERSION) ───────────────────────────────────────
 report*.json
 report*.txt
 validation_report.txt
@@ -104,77 +59,62 @@ docs/_generated/
 # Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
 !generated/contracts/**/*.schema.json
 
-# Build/test artifacts
-build/
-dist/
-.reports/
-*.egg-info/
-__pycache__/
-.pytest_cache/
-.coverage
+# ── Agent runtime signals (ephemeral, never version) ────────────────────────
+_reports/dispatch/
+_reports/runs/
+_reports/ARQUITETO.yaml
+_reports/EXECUTOR.yaml
+_reports/TESTADOR.yaml
+# _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
 
-# Python bytecode / artifacts
-*.py[cod]
-*$py.class
-*.so
-.Python
+# ── .CEPRAEA/ — material de pesquisa/planejamento histórico (SAN-016, 2026-04-10) ──
+# Zero consumidores em scripts/hb, validate_contracts.py, workflows, .contract_driven/.
+# Conteúdo: auditorias históricas, análises de paridade, video_pipeline offline.
+# Todos os 29 arquivos rastreados são artefatos derivados non-sovereign; não há valor
+# em versionar novos arquivos neste diretório.
+.CEPRAEA/
 
-# Python virtualenvs
-venv/
-.venv/
-ENV/
-env/
-env.bak/
-venv.bak/
+# ── _reports/ retention policy (SAN-014, 2026-04-10) ────────────────────────
+# Consumidores ativos confirmados (MANTER VERSIONADO — não adicionar aqui):
+#   contract_gates/latest.json, contract_gates/*.latest.json (scripts/hb + validate_contracts.py + merge-readiness.json)
+#   preflight/latest.json (validate_contracts.py + merge-readiness.json)
+#   session_start.json (scripts/hb + validate_contracts.py)
+#   adversarial/ (ADVERSARIAL_GATE em validate_contracts.py)
+#   agent_execution/*.json (PRE_CONTRACT_EVIDENCE_GATE em validate_contracts.py)
+#   compliance/agent_operability_latest.json (pre-push / SESSION_HANDOFF)
+#   evidence/boot_resolution_report.json (validate_contracts.py)
+#   legacy/ (scripts/hb — migração de sessões antigas)
+#   DOMAIN_COMPLETENESS_*.json/md (gerado + commitado por workflow domain-completeness-audit.yml)
+#
+# Histórico sem consumidor ativo — ignorar novos arquivos:
+_reports/enforcement/
+_reports/parity/
+# Nota: 118 arquivos raiz de histórico de sessão (AUDIT_*, BACKLOG_2C_*, C4_*, etc.)
+# já estão commitados como registro histórico congelado. Não adicionar novos.
+# Para destravar: `git rm --cached _reports/enforcement/ _reports/parity/` quando conveniente.
+# Para remover histórico raiz: `git rm --cached _reports/*.md _reports/*.txt` (exceto session_start.json)
 
-# Node/Frontend dependencies
-node_modules/
-Hb Track - Fronted/node_modules/
-
-# Local settings / test artifacts
-.hypothesis/
-celerybeat-schedule*
+# ── HB Track local runtime ──────────────────────────────────────────────────
+.hb_guard/
+.hb_backups/
+.hb_lock
 .hb_tmp_tests/
 
-# Environment and secrets
-.env
-.env.local
-.env.*.local
-!.env.example
-*.pem
-*.key
-id_ed25519
-id_ed25519.*
+# ── Windows NTFS metadata (SAN-017, 2026-04-10) ─────────────────────────────
+# Gerados ao baixar arquivos no Windows; sem valor em Linux/WSL
+*:Zone.Identifier
 
-# Packaging / wheels
-pip-wheel-metadata/
-
-# Alembic / SQL review artifacts
-review.sql
-review_*.sql
-
-# Coverage / reports
-coverage.xml
-htmlcov/
-
-# Databases / local files
-*.sqlite3
-
-# Logs and caches
+# ── Logs and caches ─────────────────────────────────────────────────────────
 *.log
-!docs/hbtrack/evidence/**
+!docs/hbtrack/evidence/**/*.log
 # Exception: validation logs inside contracts/ referenced by drift manifests
 !contracts/**/*.log
 # Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
 !generated/contracts/**/*.log
 logs/
 .cache/
-# _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
 
-# Testing tools / tox
-.tox/
-
-# OS / IDE
+# ── OS / IDE ─────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 ehthumbs.db
@@ -185,73 +125,50 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 
-# Misc local/runtime dirs
-.hb_guard/
-.hb_backups/
-
-# Local/invalid placeholders on Windows
+# ── Local/invalid placeholders on Windows ────────────────────────────────────
 nul
 */nul
 
-# Agents / local agent files
+# ── Archives (no physical delete policy) ─────────────────────────────────────
+_archived/
+**/_archived/
+**/_archived/**
+_archived_e2e/
+/archive
+archive/
+
+# ── Agents / local agent files ───────────────────────────────────────────────
 # Note: .github/agents/ is TRACKED (canonical governance structure)
 /agents/
 docs/agents/
 scripts/agents/
 *.agent
 
-# Ruff / other caches
-/.ruff_cache/
+# ── Dev local ────────────────────────────────────────────────────────────────
+.dev/
+temp/
+brain-gist/
 
-# Archived e2e
-_archived_e2e/
-_archived_e2e
+# ── Alembic review artifacts (legacy, still useful to ignore) ────────────────
+review.sql
+review_*.sql
 
-# Archived audit/compliance artifacts (no physical delete policy)
-_archived/
-**/_archived/
-**/_archived/**
-/archive 
-archive/
+# ── Session handoff typo variants (prevent accidental commits) ───────────────
+SESSION_HANDOOF*
 
-# Other
-coverage.xml
+# ── Temporary batch scripts ──────────────────────────────────────────────────
+tmp_*.ps1
 
-# Backend-specific files and folders (kept with relative path to root)
-# These were only present in Hb Track - Backend/.gitignore
-Hb Track - Backend/review.sql
-Hb Track - Backend/review_*.sql
-Hb Track - Backend/celerybeat-schedule*
-Hb Track - Backend/pip-wheel-metadata/
-Hb Track - Backend/htmlcov/
-Hb Track - Backend/.tox/
-Hb Track - Backend/_archived_e2e/
-Hb Track - Backend/.ruff_cache/
-Hb Track - Backend/.hypothesis/
-Hb Track - Backend/.claude
-Hb Track - Backend/.vscode/
-Hb Track - Backend/.idea/
-Hb Track - Backend/agents/
-Hb Track - Backend/*.agent
-Hb Track - Backend/coverage.xml
-Hb Track - Backend/*.sqlite3
-Hb Track - Backend/*.py[cod]
-Hb Track - Backend/*$py.class
-Hb Track - Backend/*.so
-Hb Track - Backend/.Python
-Hb Track - Backend/ENV/
-Hb Track - Backend/env/
-Hb Track - Backend/env.bak/
-Hb Track - Backend/venv.bak/
-Hb Track - Backend/.env.local
-Hb Track - Backend/.env.*.local
-Hb Track - Backend/*.swp
-Hb Track - Backend/*.swo
-
-# Evidence packs (execution_tasks artifacts) - ARCH-DOCS-ARTIFACTS-002
-# Prevent accidental commit of evidence pack archives
+# ── Evidence packs (ARCH-DOCS-ARTIFACTS-002) ─────────────────────────────────
 docs/execution_tasks/artifacts/**/*.zip
 docs/execution_tasks/artifacts/**/*.tar.gz
 docs/execution_tasks/artifacts/**/*.tgz
-docs/execution_tasks/artifacts/**/*.7z_reports/audit/KANBAN_* 
-_audit_output.txt 
+docs/execution_tasks/artifacts/**/*.7z
+
+# ── Audit output ─────────────────────────────────────────────────────────────
+_reports/audit/KANBAN_*
+_audit_output.txt
+
+# ── Legacy separate repos (merged into monorepo — paths no longer exist) ─────
+Hb Track - Backend/
+Hb Track - Fronted/

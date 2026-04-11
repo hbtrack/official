@@ -73,7 +73,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "0f22b477ffaf2dec13c77adc469fd21cbbbf2fd2d6d1d5d6fcf672039972fedd"
+      "sha256": "070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -85,7 +85,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.bundle.yaml",
-      "sha256": "23ccff678da2e320718aac188915b42845e497f464efed18acd29e9c7b20a77f"
+      "sha256": "18719f6da05713da929dee8442ab95bd7178ffb2c008f0937511b96626a374be"
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.schema_contract_view.yaml",
@@ -97,7 +97,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/impact_report.json",
-      "sha256": "b387514eb102b97e43d40060af5b40dae2c4d9fd7e09ce54b57a572023e3a533"
+      "sha256": "d1ba2402c2a77c3ee6b0b0152d9baa87e071f39d7ec614a98280a34c6f1ce1aa"
     }
   ],
   "module": "identity_access",
@@ -129,7 +129,7 @@
     "domain_rules": "src/identity_access/domain/rules.py",
     "use_cases": "src/identity_access/application/use_cases.py"
   },
-  "source_fingerprint": "e74a5de14a44a6d1ddf05631d53b66a0f03f51e632a8e785d024f95781eb5642",
+  "source_fingerprint": "975a4c1efaac87f0e7b3e792fa440c12996b6961bf5bb48bb6fb030536d767e5",
   "source_graph": {
     "entities": {
       "AuthSession": {
@@ -370,7 +370,7 @@
         "JWT signing key management é infraestrutura — fora do escopo do source graph de domínio.",
         "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position não aparecem neste módulo (INV-IAM-004)."
       ],
-      "source_fingerprint": "b7b6a17ff8303b7ba91f30201d89c6177f1312756587abb1c820ac9e342a31bd"
+      "source_fingerprint": "c17bbb2afc7875908b9c1133722dcee2287a54fddaeb779fcf722c48bbf77fb0"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

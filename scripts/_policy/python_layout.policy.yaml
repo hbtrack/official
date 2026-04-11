@@ -14,19 +14,12 @@ policy:
   mode: "report_only"
   allowed_roots:
     - "scripts/"
-    - "app/"
+    - "src/"
+    - "config/"
     - "tests/"
-    - "db/"
     - "docs/scripts/"
     - ".github/scripts/"
-    - "Hb Track - Backend/app/"
-    - "Hb Track - Backend/tests/"
-    - "Hb Track - Backend/db/"
-    - "Hb Track - Backend/alembic/"
-    - "Hb Track - Backend/scripts/"
-    - "Hb Track - Backend/services/"
   forbidden_prefixes:
     - "docs/_generated/"
-    - "Hb Track - Backend/docs/_generated/"
   ignore_globs:
     - "backup-dados-criticos/**"

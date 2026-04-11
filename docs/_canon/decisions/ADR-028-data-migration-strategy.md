@@ -69,54 +69,14 @@ em `src/training/migrations/` quando a implementação começar.
 - ADR-031: stack atual (Django Ninja + Django Migrations)
 - ADR-027: deploy pipeline (staging obrigatório para migrations)
 
-## Contexto
+---
 
-O HB Track usa PostgreSQL 16 como banco de dados principal (definido em ADR-026).
-A medida que os contratos de schema evoluem, é necessária uma estratégia de migração
-que garanta que mudanças não quebrem dados existentes em produção.
+<details>
+<summary>📜 Versão original (Alembic) — histórico, supersedida por ADR-031</summary>
 
-## Decisão
+A versão original deste ADR usava Alembic + SQLAlchemy como ferramenta de migração.
+Foi substituída por Django Migrations quando o backend migrou para Django Ninja (ADR-031, 2026-03-17).
+O conteúdo original foi removido em 2026-04-10 (SAN-007) para eliminar ambiguidade.
+Consultar git history para referência.
 
-**Ferramenta:** Alembic (migração de banco de dados padrão do ecossistema Python/SQLAlchemy).
-
-**Razões:**
-1. Integração nativa com SQLAlchemy 2.x (stack definida no ADR-026)
-2. Suporte a autogenerate — detecta mudanças no modelo automaticamente
-3. Migrations versionadas e rastreáveis via git
-4. Suporte completo a up + down migrations (reversibilidade obrigatória)
-
-**Estrutura:** uma pasta `migrations/<MODULE>/versions/` por módulo canônico.
-Isso mantém isolamento de contexto, facilita revisão e alinha com o CDD por módulo.
-
-**Regra de ouro:** nenhuma migration chega a produção sem passar por staging primeiro.
-Isso está reforçado no DEPLOY_PIPELINE.md (ADR-027).
-
-## Fluxo
-
-```
-mudança em contracts/schemas/ → DATA_MIGRATION_GATE verifica → migration criada
-→ alembic upgrade head (staging) → validação → aprovação humana → produção
-```
-
-## Consequências
-
-**Positivas:**
-- Evoluções de schema são auditáveis e reversíveis
-- Gate automatizado previne deploy com schema inconsistente
-- Alinhado com o ciclo de vida de contratos (schema é parte do contrato)
-
-**Negativas:**
-- Adiciona passo obrigatório para qualquer mudança de schema
-- Autogenerate pode criar migrations incorretas — sempre revisar antes de aplicar
-
-## Alternativas consideradas
-
-- **Flyway:** descartado — ecossistema Java, fora do stack Python definido
-- **Django migrations:** descartado — HB Track usa FastAPI, não Django
-- **Migrations manuais (SQL puro):** descartado — sem versioning automático, propenso a erro
-
-## Referências
-
-- `docs/_canon/DATA_MIGRATION_POLICY.md` — política normativa completa
-- ADR-026: stack de código (Python/FastAPI/SQLAlchemy/PostgreSQL)
-- ADR-027: deploy pipeline (staging obrigatório para migrations)
+</details>

@@ -131,6 +131,34 @@ class UpdateSessionBlockIn(Schema):
     notes: Optional[str] = None
 
 # ---------------------------------------------------------------------------
+# Attendance schemas
+# ---------------------------------------------------------------------------
+
+class AttendanceRecordOut(Schema):
+    athlete_id: uuid.UUID
+    status: str
+    recorded_at: datetime
+    source: str
+    correction_by_user_id: Optional[uuid.UUID] = None
+    correction_at: Optional[datetime] = None
+    justification_reason: Optional[str] = None
+
+
+class AttendanceListOut(Schema):
+    items: List[AttendanceRecordOut]
+
+
+class RecordSessionAttendanceIn(Schema):
+    athlete_id: uuid.UUID
+    status: str
+    source: str = "coach_input"
+    correction_by_user_id: Optional[uuid.UUID] = None
+    correction_at: Optional[datetime] = None
+    justification_reason: Optional[str] = None
+    observed_at: Optional[datetime] = None
+
+
+# ---------------------------------------------------------------------------
 # Wellness schemas
 # ---------------------------------------------------------------------------
 
@@ -156,6 +184,15 @@ class SubmitWellnessPreIn(Schema):
     muscle_soreness: Optional[int] = None
     notes: Optional[str] = None
 
+
+class UpdateWellnessPreIn(Schema):
+    readiness: Optional[int] = None
+    sleep_quality: Optional[int] = None
+    mood: Optional[int] = None
+    fatigue: Optional[int] = None
+    muscle_soreness: Optional[int] = None
+    notes: Optional[str] = None
+
 class WellnessPostOut(Schema):
     id: uuid.UUID
     session_id: uuid.UUID
@@ -169,6 +206,13 @@ class WellnessPostOut(Schema):
 
 class SubmitWellnessPostIn(Schema):
     athlete_id: uuid.UUID
+    perceived_exertion: Optional[int] = None
+    enjoyment: Optional[int] = None
+    technical_learning: Optional[int] = None
+    notes: Optional[str] = None
+
+
+class UpdateWellnessPostIn(Schema):
     perceived_exertion: Optional[int] = None
     enjoyment: Optional[int] = None
     technical_learning: Optional[int] = None
@@ -265,6 +309,16 @@ class CreateMesocycleIn(Schema):
     objective: Optional[str] = None
     notes: Optional[str] = None
 
+
+class UpdateMesocycleIn(Schema):
+    name: Optional[str] = None
+    started_at: Optional[datetime] = None
+    ended_at: Optional[datetime] = None
+    season_id: Optional[uuid.UUID] = None
+    team_id: Optional[uuid.UUID] = None
+    objective: Optional[str] = None
+    notes: Optional[str] = None
+
 # ---------------------------------------------------------------------------
 # Microcycle schemas
 # ---------------------------------------------------------------------------
@@ -304,14 +358,212 @@ class CreateMicrocycleIn(Schema):
     planned_sessions_count: Optional[_PlannedCount] = None
     notes: Optional[str] = None
 
+
+class UpdateMicrocycleIn(Schema):
+    week_number: Optional[_WeekNumber] = None
+    started_at: Optional[datetime] = None
+    ended_at: Optional[datetime] = None
+    team_id: Optional[uuid.UUID] = None
+    name: Optional[str] = None
+    objective: Optional[str] = None
+    planned_sessions_count: Optional[_PlannedCount] = None
+    notes: Optional[str] = None
+
+# ---------------------------------------------------------------------------
+# Feedback Threads schemas
+# ---------------------------------------------------------------------------
+
+class FeedbackThreadOut(Schema):
+    id: uuid.UUID
+    session_id: uuid.UUID
+    context_type: str
+    context_ref_id: uuid.UUID
+    conversation_outcome: str
+    created_by_user_id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+    athlete_id: Optional[uuid.UUID] = None
+    content: Optional[str] = None
+    follow_up_at: Optional[datetime] = None
+    commitment_text: Optional[str] = None
+    decision_text: Optional[str] = None
+
+
+class FeedbackThreadListOut(Schema):
+    data: List[FeedbackThreadOut]
+
+
+class CreateFeedbackThreadIn(Schema):
+    context_type: str
+    context_ref_id: uuid.UUID
+    conversation_outcome: str
+    athlete_id: Optional[uuid.UUID] = None
+    content: Optional[str] = None
+    follow_up_at: Optional[datetime] = None
+    commitment_text: Optional[str] = None
+    decision_text: Optional[str] = None
+
+
+class CloseFeedbackThreadIn(Schema):
+    resolution_summary: str
+
+
+# ---------------------------------------------------------------------------
+# Attention Queue schemas
+# ---------------------------------------------------------------------------
+
+class AttentionQueueItemOut(Schema):
+    id: uuid.UUID
+    session_id: uuid.UUID
+    severity: str
+    reason_code: str
+    target_entity_type: str
+    target_entity_id: uuid.UUID
+    message: str
+    created_at: datetime
+    resolved_at: Optional[datetime] = None
+    resolved_by_user_id: Optional[uuid.UUID] = None
+
+
+class AttentionQueueListOut(Schema):
+    data: List[AttentionQueueItemOut]
+
+
+class ResolveAttentionQueueItemIn(Schema):
+    resolution_evidence: str
+
+
+class DismissAttentionQueueItemIn(Schema):
+    dismissal_reason: str
+
+
+class EscalateAttentionQueueItemIn(Schema):
+    escalation_target: str
+    escalation_note: str
+
+
+# ---------------------------------------------------------------------------
+# Recommendation schemas
+# ---------------------------------------------------------------------------
+
+class RecommendationOut(Schema):
+    id: uuid.UUID
+    session_id: uuid.UUID
+    generated_by_rule: str
+    action_type: str
+    description: str
+    status: str
+    generated_by_module: str
+    created_at: datetime
+    updated_at: datetime
+    priority: Optional[str] = None
+    coach_note: Optional[str] = None
+    dismissal_reason: Optional[str] = None
+    resolved_at: Optional[datetime] = None
+    resolved_by_user_id: Optional[uuid.UUID] = None
+
+
+class RecommendationListOut(Schema):
+    data: List[RecommendationOut]
+
+
+class AcceptRecommendationIn(Schema):
+    coach_note: Optional[str] = None
+
+
+class DismissRecommendationIn(Schema):
+    dismissal_reason: str
+
+
+# ---------------------------------------------------------------------------
+# Ineligibility schemas
+# ---------------------------------------------------------------------------
+
+class AthleteIneligibilityDeclarationOut(Schema):
+    id: uuid.UUID
+    session_id: uuid.UUID
+    athlete_id: uuid.UUID
+    reason_flags: List[str]
+    declared_at: datetime
+    created_at: datetime
+    reason_other: Optional[str] = None
+    acknowledged_by_coach: bool = False
+    coach_note: Optional[str] = None
+
+
+class SubmitIneligibilityDeclarationIn(Schema):
+    athlete_id: uuid.UUID
+    reason_flags: List[str]
+    reason_other: Optional[str] = None
+
 # ---------------------------------------------------------------------------
 # Transition (state actions) schemas
 # ---------------------------------------------------------------------------
+
+class UpdateTrainingSessionIn(Schema):
+    session_at: Optional[datetime] = None
+    session_type: Optional[str] = None
+    duration_planned_minutes: Optional[int] = None
+    location: Optional[str] = None
+    main_objective: Optional[str] = None
+    secondary_objective: Optional[str] = None
+    planned_load: Optional[int] = None
+    intensity_target: Optional[int] = None
+    session_block: Optional[str] = None
+    standalone: Optional[bool] = None
+    notes: Optional[str] = None
+    focus_attack_positional_pct: Optional[Decimal] = None
+    focus_defense_positional_pct: Optional[Decimal] = None
+    focus_transition_offense_pct: Optional[Decimal] = None
+    focus_transition_defense_pct: Optional[Decimal] = None
+    focus_attack_technical_pct: Optional[Decimal] = None
+    focus_defense_technical_pct: Optional[Decimal] = None
+    focus_physical_pct: Optional[Decimal] = None
+    phase_focus_defense: Optional[bool] = None
+    phase_focus_attack: Optional[bool] = None
+    phase_focus_transition_offense: Optional[bool] = None
+    phase_focus_transition_defense: Optional[bool] = None
+
+
+class ReorderSessionBlocksIn(Schema):
+    block_ids: List[uuid.UUID]
+
 
 class TransitionOut(Schema):
     id: uuid.UUID
     status: str
     updated_at: datetime
+
+# ---------------------------------------------------------------------------
+# Load Chart schemas (Onda E)
+# ---------------------------------------------------------------------------
+
+class LoadChartEntryOut(Schema):
+    id: uuid.UUID
+    recorded_at: datetime
+    planned_value: Optional[float] = None
+    actual_value: Optional[float] = None
+    planned_unit: Optional[str] = None
+    actual_unit: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class LoadChartOut(Schema):
+    session_id: uuid.UUID
+    planned_load: Optional[int] = None
+    actual_load_recorded: Optional[int] = None
+    entries: List[LoadChartEntryOut] = []
+
+
+# ---------------------------------------------------------------------------
+# Training Suggestion schemas (Onda E)
+# ---------------------------------------------------------------------------
+
+class SubmitTrainingSuggestionIn(Schema):
+    athlete_id: uuid.UUID
+    subject: str
+    body: str
+
 
 class ErrorOut(Schema):
     detail: str

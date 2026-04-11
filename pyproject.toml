@@ -1,6 +1,7 @@
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
 pythonpath = ["src", ".", "scripts"]
+norecursedirs = [".git", ".venv", ".pytest_cache", "node_modules", "frontend/node_modules", "dist", "build", "pact"]
 markers = [
     "slow: testes lentos que invocam subprocessos pesados (hb stage3, full validate_contracts)",
 ]

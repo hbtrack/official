@@ -13,7 +13,7 @@ from datetime import datetime, timezone, timedelta
 from enum import StrEnum
 from typing import Optional
 
-from .entities import TrainingSessionStatus
+from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
 
 
 class RoleLabel(StrEnum):
@@ -55,6 +55,50 @@ class WellnessWindowClosed(Exception):
 
 class DuplicateWellnessEntry(Exception):
     """INV-TRAIN-009/010: já existe wellness ativo."""
+
+
+class WellnessEntryNotFound(Exception):
+    """Registro de wellness não encontrado para sessão/atleta."""
+
+
+class AttendanceRecordNotFound(Exception):
+    """Registro de presença não encontrado."""
+
+
+class MesocycleNotFound(Exception):
+    """Mesociclo não encontrado."""
+
+
+class MicrocycleNotFound(Exception):
+    """Microciclo não encontrado."""
+
+
+class ExecutionRecordNotFound(Exception):
+    """Registro de execução não encontrado."""
+
+
+class FeedbackThreadNotFound(Exception):
+    """Thread de feedback não encontrada."""
+
+
+class AttentionQueueItemNotFound(Exception):
+    """Item da attention queue não encontrado."""
+
+
+class AttentionQueueConflict(Exception):
+    """Item da attention queue já foi actionado ou está em estado inválido."""
+
+
+class RecommendationNotFound(Exception):
+    """Recommendation não encontrada."""
+
+
+class RecommendationConflict(Exception):
+    """Recommendation não está em estado compatível com a ação solicitada."""
+
+
+class IneligibilityDeclarationNotFound(Exception):
+    """Declaração de indisponibilidade não encontrada."""
 
 
 class ElasticSumRuleViolation(Exception):
@@ -198,6 +242,41 @@ def assert_can_submit_wellness(
         return
     raise InsufficientPrivilege(
         "BOPLA: athlete só pode submeter wellness de si mesmo"
+    )
+
+
+def assert_can_view_athlete_record(
+    role: RoleLabel,
+    actor_id: uuid.UUID,
+    target_athlete_id: uuid.UUID,
+) -> None:
+    """Staff pode ver qualquer registro de atleta; athlete só pode ver o próprio."""
+    if role in STAFF_ROLES:
+        return
+    if role == RoleLabel.ATHLETE and actor_id == target_athlete_id:
+        return
+    raise InsufficientPrivilege("BOLA: athlete só pode acessar o próprio registro")
+
+
+def assert_can_record_attendance(
+    role: RoleLabel,
+    actor_id: uuid.UUID,
+    target_athlete_id: uuid.UUID,
+    status: AttendanceStatus,
+    source: AttendanceSource,
+) -> None:
+    """Staff registra qualquer presença; athlete só pode fazer self-check PRECONFIRMED."""
+    if role in STAFF_ROLES:
+        return
+    if (
+        role == RoleLabel.ATHLETE
+        and actor_id == target_athlete_id
+        and status == AttendanceStatus.PRECONFIRMED
+        and source == AttendanceSource.ATHLETE_SELFCHECK
+    ):
+        return
+    raise InsufficientPrivilege(
+        "attendance: athlete só pode registrar PRECONFIRMED de si mesmo via athlete_selfcheck"
     )
 
 

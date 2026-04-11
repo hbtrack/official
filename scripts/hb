@@ -85,6 +85,32 @@ class HBCLIv2:
             raise FileNotFoundError(f"Schema não encontrado: {path}")
         with open(path) as f:
             return json.load(f)
+
+    def _state_artifacts(self) -> list[pathlib.Path]:
+        """Artefatos canônicos que devem sobreviver a execuções observacionais."""
+        return [
+            self.root / "_reports" / "session_start.json",
+            self.root / "_reports" / "contract_gates" / "latest.json",
+        ]
+
+    def _snapshot_state_artifacts(self) -> dict[pathlib.Path, str | None]:
+        """Capturar conteúdo atual dos artefatos canônicos antes de subprocessos."""
+        backups: dict[pathlib.Path, str | None] = {}
+        for state_path in self._state_artifacts():
+            backups[state_path] = (
+                state_path.read_text(encoding="utf-8") if state_path.exists() else None
+            )
+        return backups
+
+    @staticmethod
+    def _restore_state_artifacts(backups: dict[pathlib.Path, str | None]) -> None:
+        """Restaurar artefatos canônicos após subprocessos observacionais."""
+        for state_path, backup in backups.items():
+            if backup is not None:
+                state_path.parent.mkdir(parents=True, exist_ok=True)
+                state_path.write_text(backup, encoding="utf-8")
+            elif state_path.exists():
+                state_path.unlink()
     
     def _load_session(self) -> Dict[str, Any]:
         """Carregar session_start.json ou retornar dict vazio."""
@@ -1438,15 +1464,27 @@ class HBCLIv2:
         ]
         print("\n══ SURVIVAL SUITE ══")
         print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
-        result = subprocess.run(
-            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v", "-m", "not slow"],
-            cwd=self.root,
-        )
-        if result.returncode == 0:
+
+        # A survival suite deve ser observacional. Alguns testes de SESSION_STATE
+        # exercitam `hb verify` e escrevem `_reports/session_start.json` no repo real.
+        # Restauramos o estado ao final para que o preflight não herde side-effects
+        # do próprio baseline antes de rodar `hb validate --profile ci`.
+        _backups = self._snapshot_state_artifacts()
+
+        result = None
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v", "-m", "not slow"],
+                cwd=self.root,
+            )
+        finally:
+            self._restore_state_artifacts(_backups)
+
+        if result is not None and result.returncode == 0:
             print("\n✅ Survival suite: PASS — seguro prosseguir.")
         else:
             print("\n❌ Survival suite: FAIL — não avançar sem suíte verde.")
-        return result.returncode
+        return result.returncode if result is not None else 2
 
     def cmd_reset(self) -> int:
         """Limpar sessão (novo boot)."""
@@ -1520,6 +1558,7 @@ class HBCLIv2:
             cwd=self.root, capture_output=True,
         )
         env = {**os.environ, **self._ci_test_env}
+        backups = self._snapshot_state_artifacts()
 
         if profile == "pr":
             cmd = [sys.executable, "-m", "pytest", "-q", "-m", "not slow", "--tb=short"]
@@ -1530,21 +1569,24 @@ class HBCLIv2:
             print(f"❌ Perfil desconhecido: {profile!r}. Use 'pr' ou 'full'.", file=sys.stderr)
             return 2
 
-        print("Sincronizando schema do banco (migrate)...")
-        migrate = subprocess.run(
-            [sys.executable, "manage.py", "migrate", "--noinput"],
-            env=env, cwd=self.root,
-        )
-        if migrate.returncode != 0:
-            print(f"\n❌ CI local ({profile}): migrate falhou")
-            return migrate.returncode
+        try:
+            print("Sincronizando schema do banco (migrate)...")
+            migrate = subprocess.run(
+                [sys.executable, "manage.py", "migrate", "--noinput"],
+                env=env, cwd=self.root,
+            )
+            if migrate.returncode != 0:
+                print(f"\n❌ CI local ({profile}): migrate falhou")
+                return migrate.returncode
 
-        result = subprocess.run(cmd, env=env, cwd=self.root)
-        if result.returncode == 0:
-            print(f"\n✅ CI local ({profile}): PASS")
-        else:
-            print(f"\n❌ CI local ({profile}): FAIL")
-        return result.returncode
+            result = subprocess.run(cmd, env=env, cwd=self.root)
+            if result.returncode == 0:
+                print(f"\n✅ CI local ({profile}): PASS")
+            else:
+                print(f"\n❌ CI local ({profile}): FAIL")
+            return result.returncode
+        finally:
+            self._restore_state_artifacts(backups)
     
     @staticmethod
     def _calculate_file_hash(path: pathlib.Path) -> str:
