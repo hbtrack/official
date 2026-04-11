@@ -1604,3 +1604,6 @@
 {"run_id": "20260411T140037_1f334e", "timestamp_utc": "2026-04-11T14:00:37Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 95, "git_commit": "2c8cc414"}
 {"run_id": "20260411T140142_4595b8", "timestamp_utc": "2026-04-11T14:01:42Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 95, "git_commit": "2c8cc414"}
 {"run_id": "20260411T140232_66095b", "timestamp_utc": "2026-04-11T14:02:32Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 95, "git_commit": "2c8cc414"}
+{"run_id": "20260411T171350_1cdf83", "timestamp_utc": "2026-04-11T17:13:50Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 97, "git_commit": "8d4246e2"}
+{"run_id": "20260411T171528_d5c87e", "timestamp_utc": "2026-04-11T17:15:28Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "8d4246e2"}
+{"run_id": "20260411T171659_8de9ee", "timestamp_utc": "2026-04-11T17:16:59Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "8d4246e2"}
