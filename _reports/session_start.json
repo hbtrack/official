@@ -1,11 +1,11 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-10T22:02:35.871067+00:00",
+  "session_timestamp": "2026-04-11T13:22:29.859092+00:00",
   "branch": "chore/saneamento-completo-23-23",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -19,7 +19,7 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "stage0_exit_code": 2,
+  "stage0_exit_code": 0,
   "stage2_artifacts": [
     {
       "path": "contracts/schemas/shared/merge-readiness.schema.json",
@@ -107,9 +107,10 @@
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-      "sha256": "bb41e088909a67ab43e335c9e2c3e6497bda297a3b5964d22793804a0eb8a3b7",
+      "sha256": "ef295adfede88f03639ce866edef40d32e58e6e9562d630b4b50c8a4260c5308",
       "created_at": "2026-04-08T23:37:58.560455+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-11T16:55:22.771405+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
@@ -221,9 +222,10 @@
     },
     {
       "path": "contracts/openapi/paths/training.yaml",
-      "sha256": "6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae",
+      "sha256": "b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54",
       "created_at": "2026-04-08T23:40:18.043246+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-11T16:55:02.137525+00:00"
     },
     {
       "path": "contracts/openapi/paths/users.yaml",
@@ -280,13 +282,24 @@
       "sha256": "ee8067495b2033f5803d1d9e4db3127241c75f0d4c868ce31fcc3390f8987a1f",
       "created_at": "2026-04-09T02:33:46.537639+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/openapi.yaml",
+      "sha256": "e6fe633c0005bd3879a9ba71bcde4db221b66b4946bfd5d7b03174f7f8468b54",
+      "created_at": "2026-04-11T13:44:00.368267+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/baseline/openapi_baseline.json",
+      "sha256": "2e4d53a28e070ca8bf5c27becd7c748f9be285ef6dc7cecb94a1c33b794930c8",
+      "created_at": "2026-04-11T14:00:12.773083+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-10T18:08:29.015528+00:00",
+  "hook_validated_at": "2026-04-11T16:58:23.242482+00:00",
   "module": "training",
-  "module_focus": "saneamento",
-  "roadmap_phase": 4,
-  "roadmap_task_id": "SANEAMENTO-23-23"
+  "module_focus": "training",
+  "roadmap_phase": 1
 }

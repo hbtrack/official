@@ -1,5 +1,5 @@
 # ROADMAP — HB Track
-> Versão: 1.1.0 | Data: 2026-04-10 (snapshot atualizado) | Decisões: D1-A · D2-C · D3-A
+> Versão: 1.1.1 | Data: 2026-04-10 (snapshot revalidado localmente) | Decisões: D1-A · D2-C · D3-A
 > Arquitetura: Software Architect + Systems Engineer · HB Track CDD Pipeline
 
 ---
@@ -63,15 +63,22 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 
 ## Estado atual (snapshot 2026-04-10)
 
+### Revalidação local desta atualização
+- `python3 scripts/contracts/validate/validate_contracts.py --profile precommit` → PASS em 2026-04-10
+- `python3 scripts/hb preflight` → PASS em 2026-04-10/11
+- `_reports/contract_gates/latest.json` → `overall_status=PASS`
+- `_reports/preflight/latest.json` → `final_decision=PASS`
+- `hb ci --profile pr` executado via `preflight` → PASS (`1840 passed`, `27 skipped`, `4 deselected`; frontend `12/12`; build Vite PASS)
+
 ### O que já existe e está validado
 | Camada | Status | Detalhe |
 |--------|--------|---------|
 | Contratos OpenAPI | ✅ 17/17 módulos `implementation_ready` | SSOT para toda a API |
 | Código backend (Clean Architecture) | ✅ 17/17 módulos | domain / application / infrastructure / api / schemas |
 | Migrações Django | ✅ 17/17 módulos | `0001_initial.py` + `0002_add_constraints.py` |
-| Testes | ✅ 1143 PASS | Unit + integration + schemathesis |
+| Testes | ✅ suíte local ampla validada | `hb ci --profile pr` PASS; backend `1840 passed / 27 skipped / 4 deselected`; frontend `12/12`; build PASS |
 | Infra local (Docker Compose) | ✅ Operacional | PostgreSQL 16 + Redis 7 |
-| Pipeline CDD | ✅ PASS | validate_contracts, hb verify, hb artifact |
+| Pipeline CDD | ✅ PASS | `validate_contracts` precommit/latest PASS + `hb preflight` PASS |
 | Feature Registry | ✅ 31 features | 10 validated + 21 implemented |
 | Celery workers | ✅ Configurado | `config/celery.py` + 11 tasks registradas |
 | Django Channels | ✅ Configurado | `config/asgi.py` + WebSocket consumer |
@@ -80,7 +87,7 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 | Dockerfile | ✅ Multi-stage | `Dockerfile` (backend) + `Dockerfile.frontend` |
 | CI/CD | ✅ Operacional | `ci.yml` + `deploy.yml` (GitHub Actions) |
 | Frontend | ✅ Ciclo 1 completo | React/Vite + shadcn/ui + openapi-fetch |
-| Deploy VPS | ⏳ BLOCKED | Workflow existe; VPS staging ainda roda FastAPI legado |
+| Deploy VPS (staging) | ✅ RUNTIME SAUDÁVEL | Revalidado 2026-04-11: `/health` 200, nginx/1.27.5, DB+Redis ok, OpenAPI 3.1.0 publicada (82 paths / 127 ops); evidência em `_reports/staging_revalidation/latest/` |
 | Seed / fixtures | ✅ Operacional | `manage.py seed_demo` |
 | CORS | ✅ Configurado | `django-cors-headers` por ambiente |
 | JWT Auth | ✅ Operacional | HS256 (dev) / RS256 (prod) |
@@ -93,9 +100,15 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 | Fase 1 — Backend completo | ✅ DONE | Celery, Channels, JWT, /health, CORS, logging |
 | Fase 2 — Integridade de banco | ✅ DONE | Constraints, seeds, Schemathesis |
 | Fase 3 — CI/CD + Deploy | ✅ DONE | Dockerfile, GitHub Actions, VPS configurado |
-| Fase 4 — Ciclo 1 em staging | ⏳ BLOCKED | VPS staging ainda roda FastAPI legado |
+| Fase 4 — Ciclo 1 em staging | ⚠️ PARTIAL_PASS | Runtime saudável e 5 módulos deployados (revalidação 2026-04-11). **A1 (prefixo) + B1 (endpoints) resolvidos em PR #64** (pending staging deployment). Pendente: replay live autenticado (seed admin ausente) |
 | Fase 5 — Frontend Ciclo 1 | ✅ DONE (local) | Login, users, teams, seasons, training |
-| Fase 6–13 | Pendente | Aguardam Fase 4 |
+| Fase 6–13 | Pendente | Aguardam fechamento formal da Fase 4 (replay live PASS com seed admin) |
+
+### Próxima ação identificada
+1. **Merge PR #64** (Phase 4 A1+B1 fixes) → CI valida + deploy automático para staging
+2. **Provisionar seed admin em staging** (`admin@hbtrack.demo`) para destravar replay packs em modo live
+
+Evidência atual da revalidação: `_reports/staging_revalidation/latest/REPORT.md`.
 
 ### Os 17 módulos canônicos
 
@@ -405,9 +418,9 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   2. `POST /api/users/` → cria perfil de treinador
   3. `POST /api/teams/` → cria time
   4. `POST /api/seasons/` → cria temporada
-  5. `POST /api/training-sessions/` → cria sessão de treino
-  6. `POST /api/training-sessions/{id}/publish` → publica sessão
-  7. `POST /api/training-sessions/{id}/attendance` → registra presença
+  5. `POST /api/training/training-sessions/` → cria sessão de treino
+  6. `POST /api/training/training-sessions/{id}/publish` → publica sessão
+  7. `POST /api/training/training-sessions/{id}/attendance` → registra presença
 - [ ] Testar RBAC: operação proibida retorna 403 (não 500)
 - [ ] Testar paginação em listagens com seed data
 - [ ] Testar idempotência de operações documentadas

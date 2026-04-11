@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/training/training_session.yaml
   sha256: 46fda3e793fd53bd7d1e86c7cc2eac8b38f7e7696e8518824955532231ab8ab2
 - relpath: contracts/openapi/paths/training.yaml
-  sha256: 6f464610eccbdf027ba50119e7c2edb889740c0a63c3b65823e696ec513a96ae
+  sha256: b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54
 - relpath: contracts/schemas/training/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/training/ajv_compile.log
@@ -73,9 +73,9 @@ inputs:
 - relpath: docs/hbtrack/modulos/training/graph/test_obligations.yaml
   sha256: 5fadae9a1f794d00c6b6de66b08cc93aa121d8ff237f662dcc6cd489653ca5cc
 - relpath: src/training/api.py
-  sha256: 309bc355f0ee7891461c99fe10c9ae34a1c044be2e2aad8f65845da951d2cf25
+  sha256: b614e3c2d3fb8b7472d12ea235b814f791601bf273137ec5822257fb5dd15399
 - relpath: src/training/application/use_cases.py
-  sha256: a1cae19c2921c8fc763976523f033f0962fbedf042ab3c6ab3d0b7d47d6dff97
+  sha256: c23232360b7abe94d51644753c54af1a07fa5a3b79c9e614b5c801dcab3786df
 - relpath: src/training/domain/entities.py
   sha256: cb49a6d2f662651be108ce2b209bd5ebaf467ff8882c8a7b58e8701d6183e775
 - relpath: src/training/domain/rules.py

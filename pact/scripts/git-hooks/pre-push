@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# pre-push — HB Track merge-readiness v2
+#
+# Bloqueia push quando hb preflight retorna BLOCK (exit 2).
+# Permite push com aviso quando retorna WARN (exit 1).
+# Passa silenciosamente quando retorna PASS (exit 0).
+#
+# Convenção de exit code v2 (nova — não é continuidade da convenção 0/!=0):
+#   0 = PASS  — seguro fazer push
+#   1 = WARN  — pode fazer push, com risco/documentação pendente
+#   2 = BLOCK — não deve fazer push
+#
+# Para pular em emergência: git push --no-verify
+#   (use apenas quando o motivo do BLOCK foi analisado e aceito conscientemente)
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+echo ""
+echo "╔══════════════════════════════════════════════╗"
+echo "║  HB Track — pre-push preflight (v2)         ║"
+echo "╚══════════════════════════════════════════════╝"
+echo ""
+
+python3 "${REPO_ROOT}/scripts/hb" preflight
+EXIT_CODE=$?
+
+echo ""
+if [ "$EXIT_CODE" -eq 0 ]; then
+    echo "✅  PASS — push autorizado."
+    exit 0
+elif [ "$EXIT_CODE" -eq 1 ]; then
+    echo "⚠️   WARN — push permitido com risco/documentação pendente."
+    echo "    Verifique _reports/preflight/latest.json para detalhes."
+    exit 0
+else
+    echo "❌  BLOCK — push bloqueado por hb preflight."
+    echo "    Corrija os problemas listados acima ou verifique:"
+    echo "    _reports/preflight/latest.json"
+    echo ""
+    echo "    Para pular (SOMENTE após análise consciente):"
+    echo "    git push --no-verify"
+    exit 1
+fi

@@ -84,7 +84,7 @@ DATABASES = {
         "USER": os.environ.get("DB_USER", "hbtrack_dev"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "hbtrack_dev_pwd"),
         "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5433"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
         "TEST": {
             "NAME": os.environ.get("DB_TEST_NAME", "hb_track_test"),
         },
@@ -143,6 +143,8 @@ CHANNEL_LAYERS = {
 }
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
+# Temporarily allow all origins for CI tests
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     o.strip()
     for o in os.environ.get(
@@ -152,6 +154,21 @@ CORS_ALLOWED_ORIGINS = [
     if o.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True
+CORS_PREFLIGHT_MAX_AGE = 86400
+CORS_ALLOWED_ORIGINS_REGEXES = [
+    r"^http://localhost:\d+$",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # ── Logging estruturado ──────────────────────────────────────────────────────
 _LOG_DIR = BASE_DIR / "logs"

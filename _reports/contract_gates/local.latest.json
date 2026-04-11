@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-10T22:58:15Z",
+  "timestamp_utc": "2026-04-11T17:11:30Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "9699da96",
+    "git_commit": "8d4246e2",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260410T225815_80b6fe"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T171130_7adc56"
   },
   "status_detail": {
     "active_gates_passed": 25,
@@ -257,7 +257,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 187
+        "duration_ms": 236
       }
     },
     {
@@ -282,7 +282,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3943
+        "duration_ms": 7914
       }
     },
     {
@@ -393,7 +393,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 18
       }
     },
     {
@@ -546,7 +546,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 155
+        "duration_ms": 134
       }
     },
     {
@@ -647,7 +647,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 161
       }
     },
     {
@@ -1019,7 +1019,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 120
+        "duration_ms": 377
       }
     },
     {
@@ -1105,7 +1105,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 889
+        "duration_ms": 768
       }
     },
     {
@@ -1128,7 +1128,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4155
+        "duration_ms": 2553
       }
     },
     {
@@ -1150,7 +1150,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2438
+        "duration_ms": 2307
       }
     },
     {
@@ -1189,7 +1189,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 651
+        "duration_ms": 701
       }
     },
     {
@@ -1198,7 +1198,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "spectral: PASS (142 aviso(s)).",
+      "summary": "spectral: PASS (140 aviso(s)).",
       "inputs": [
         "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
       ],
@@ -1210,23 +1210,6 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[hbtrack-security-global-explicit] security global deve ser declarado explicitamente (mesmo que [])",
-          "severity": "warn",
-          "path": [],
-          "range": {
-            "start": {
-              "line": 0,
-              "character": 0
-            },
-            "end": {
-              "line": 315,
-              "character": 69
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
           "message": "[oas3-schema] \"~1users\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
@@ -1235,11 +1218,11 @@
           ],
           "range": {
             "start": {
-              "line": 41,
+              "line": 46,
               "character": 9
             },
             "end": {
-              "line": 42,
+              "line": 47,
               "character": 37
             }
           }
@@ -1255,11 +1238,11 @@
           ],
           "range": {
             "start": {
-              "line": 43,
+              "line": 48,
               "character": 18
             },
             "end": {
-              "line": 44,
+              "line": 49,
               "character": 47
             }
           }
@@ -1275,11 +1258,11 @@
           ],
           "range": {
             "start": {
-              "line": 46,
+              "line": 51,
               "character": 11
             },
             "end": {
-              "line": 47,
+              "line": 52,
               "character": 41
             }
           }
@@ -1295,11 +1278,11 @@
           ],
           "range": {
             "start": {
-              "line": 48,
+              "line": 53,
               "character": 22
             },
             "end": {
-              "line": 49,
+              "line": 54,
               "character": 53
             }
           }
@@ -1315,11 +1298,11 @@
           ],
           "range": {
             "start": {
-              "line": 50,
+              "line": 55,
               "character": 37
             },
             "end": {
-              "line": 51,
+              "line": 56,
               "character": 70
             }
           }
@@ -1335,11 +1318,11 @@
           ],
           "range": {
             "start": {
-              "line": 53,
+              "line": 58,
               "character": 9
             },
             "end": {
-              "line": 54,
+              "line": 59,
               "character": 37
             }
           }
@@ -1355,11 +1338,11 @@
           ],
           "range": {
             "start": {
-              "line": 55,
+              "line": 60,
               "character": 18
             },
             "end": {
-              "line": 56,
+              "line": 61,
               "character": 47
             }
           }
@@ -1375,11 +1358,11 @@
           ],
           "range": {
             "start": {
-              "line": 57,
+              "line": 62,
               "character": 43
             },
             "end": {
-              "line": 58,
+              "line": 63,
               "character": 74
             }
           }
@@ -1395,11 +1378,11 @@
           ],
           "range": {
             "start": {
-              "line": 59,
+              "line": 64,
               "character": 38
             },
             "end": {
-              "line": 60,
+              "line": 65,
               "character": 69
             }
           }
@@ -1407,319 +1390,39 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions"
+            "/training/training-sessions"
           ],
           "range": {
             "start": {
-              "line": 62,
-              "character": 21
-            },
-            "end": {
-              "line": 63,
-              "character": 52
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}"
-          ],
-          "range": {
-            "start": {
-              "line": 64,
-              "character": 26
-            },
-            "end": {
-              "line": 65,
-              "character": 58
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/blocks"
-          ],
-          "range": {
-            "start": {
-              "line": 66,
-              "character": 33
-            },
-            "end": {
               "line": 67,
-              "character": 66
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks~1{blockId}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/blocks/{blockId}"
-          ],
-          "range": {
-            "start": {
+              "character": 30
+            },
+            "end": {
               "line": 68,
-              "character": 43
-            },
-            "end": {
+              "character": 62
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}"
+          ],
+          "range": {
+            "start": {
               "line": 69,
-              "character": 77
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1blocks~1reorder\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/blocks/reorder"
-          ],
-          "range": {
-            "start": {
-              "line": 70,
-              "character": 41
-            },
-            "end": {
-              "line": 71,
-              "character": 75
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attendance\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/attendance"
-          ],
-          "range": {
-            "start": {
-              "line": 72,
-              "character": 37
-            },
-            "end": {
-              "line": 73,
-              "character": 70
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-pre\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/wellness-pre"
-          ],
-          "range": {
-            "start": {
-              "line": 74,
-              "character": 39
-            },
-            "end": {
-              "line": 75,
-              "character": 72
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-pre~1{athleteId}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/wellness-pre/{athleteId}"
-          ],
-          "range": {
-            "start": {
-              "line": 76,
-              "character": 51
-            },
-            "end": {
-              "line": 77,
-              "character": 85
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-post\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/wellness-post"
-          ],
-          "range": {
-            "start": {
-              "line": 78,
-              "character": 40
-            },
-            "end": {
-              "line": 79,
-              "character": 73
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1wellness-post~1{athleteId}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/wellness-post/{athleteId}"
-          ],
-          "range": {
-            "start": {
-              "line": 80,
-              "character": 52
-            },
-            "end": {
-              "line": 81,
-              "character": 86
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1mesocycles\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/mesocycles"
-          ],
-          "range": {
-            "start": {
-              "line": 82,
-              "character": 14
-            },
-            "end": {
-              "line": 83,
-              "character": 45
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1mesocycles~1{id}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/mesocycles/{id}"
-          ],
-          "range": {
-            "start": {
-              "line": 84,
-              "character": 19
-            },
-            "end": {
-              "line": 85,
-              "character": 51
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1microcycles\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/microcycles"
-          ],
-          "range": {
-            "start": {
-              "line": 86,
-              "character": 15
-            },
-            "end": {
-              "line": 87,
-              "character": 46
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1microcycles~1{id}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/microcycles/{id}"
-          ],
-          "range": {
-            "start": {
-              "line": 88,
-              "character": 20
-            },
-            "end": {
-              "line": 89,
-              "character": 52
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1start\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/start"
-          ],
-          "range": {
-            "start": {
-              "line": 90,
-              "character": 32
-            },
-            "end": {
-              "line": 91,
-              "character": 65
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1complete\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/complete"
-          ],
-          "range": {
-            "start": {
-              "line": 92,
               "character": 35
             },
             "end": {
-              "line": 93,
+              "line": 70,
               "character": 68
             }
           }
@@ -1727,59 +1430,19 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1execution-records\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1blocks\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/execution-records"
+            "/training/training-sessions/{id}/blocks"
           ],
           "range": {
             "start": {
-              "line": 94,
-              "character": 44
+              "line": 71,
+              "character": 42
             },
             "end": {
-              "line": 95,
-              "character": 77
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1execution-records~1{recordId}\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/execution-records/{recordId}"
-          ],
-          "range": {
-            "start": {
-              "line": 96,
-              "character": 55
-            },
-            "end": {
-              "line": 97,
-              "character": 89
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1feedback-threads\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/feedback-threads"
-          ],
-          "range": {
-            "start": {
-              "line": 98,
-              "character": 43
-            },
-            "end": {
-              "line": 99,
+              "line": 72,
               "character": 76
             }
           }
@@ -1787,259 +1450,99 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1objectives\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1blocks~1{blockId}\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/objectives"
+            "/training/training-sessions/{id}/blocks/{blockId}"
           ],
           "range": {
             "start": {
-              "line": 100,
-              "character": 37
+              "line": 73,
+              "character": 52
             },
             "end": {
-              "line": 101,
-              "character": 70
+              "line": 74,
+              "character": 87
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1blocks~1reorder\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/attention-queue"
+            "/training/training-sessions/{id}/blocks/reorder"
           ],
           "range": {
             "start": {
-              "line": 102,
-              "character": 42
+              "line": 75,
+              "character": 50
             },
             "end": {
-              "line": 103,
-              "character": 75
+              "line": 76,
+              "character": 85
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1cancel\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1attendance\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/cancel"
+            "/training/training-sessions/{id}/attendance"
           ],
           "range": {
             "start": {
-              "line": 104,
-              "character": 33
+              "line": 77,
+              "character": 46
             },
             "end": {
-              "line": 105,
-              "character": 66
+              "line": 78,
+              "character": 80
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1publish\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1wellness-pre\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/publish"
+            "/training/training-sessions/{id}/wellness-pre"
           ],
           "range": {
             "start": {
-              "line": 106,
-              "character": 34
+              "line": 79,
+              "character": 48
             },
             "end": {
-              "line": 107,
-              "character": 67
+              "line": 80,
+              "character": 82
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1unpublish\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1wellness-pre~1{athleteId}\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/unpublish"
+            "/training/training-sessions/{id}/wellness-pre/{athleteId}"
           ],
           "range": {
             "start": {
-              "line": 108,
-              "character": 36
-            },
-            "end": {
-              "line": 109,
-              "character": 69
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1archive\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/archive"
-          ],
-          "range": {
-            "start": {
-              "line": 110,
-              "character": 34
-            },
-            "end": {
-              "line": 111,
-              "character": 67
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/recommendations"
-          ],
-          "range": {
-            "start": {
-              "line": 112,
-              "character": 42
-            },
-            "end": {
-              "line": 113,
-              "character": 75
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/recommendations/{recommendationId}/accept"
-          ],
-          "range": {
-            "start": {
-              "line": 114,
-              "character": 68
-            },
-            "end": {
-              "line": 115,
-              "character": 103
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/recommendations/{recommendationId}/dismiss"
-          ],
-          "range": {
-            "start": {
-              "line": 116,
-              "character": 69
-            },
-            "end": {
-              "line": 117,
-              "character": 104
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1ineligibility\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/ineligibility"
-          ],
-          "range": {
-            "start": {
-              "line": 118,
-              "character": 40
-            },
-            "end": {
-              "line": 119,
-              "character": 73
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/attention-queue/{itemId}/resolve"
-          ],
-          "range": {
-            "start": {
-              "line": 120,
-              "character": 59
-            },
-            "end": {
-              "line": 121,
-              "character": 94
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/attention-queue/{itemId}/dismiss"
-          ],
-          "range": {
-            "start": {
-              "line": 122,
-              "character": 59
-            },
-            "end": {
-              "line": 123,
-              "character": 94
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate\" property must not have unevaluated properties.",
-          "severity": "warn",
-          "path": [
-            "paths",
-            "/training-sessions/{id}/attention-queue/{itemId}/escalate"
-          ],
-          "range": {
-            "start": {
-              "line": 124,
+              "line": 81,
               "character": 60
             },
             "end": {
-              "line": 125,
+              "line": 82,
               "character": 95
             }
           }
@@ -2047,39 +1550,59 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1wellness-post\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training-sessions/{id}/feedback-threads/{threadId}/close"
+            "/training/training-sessions/{id}/wellness-post"
           ],
           "range": {
             "start": {
-              "line": 126,
-              "character": 60
+              "line": 83,
+              "character": 49
             },
             "end": {
-              "line": 127,
-              "character": 95
+              "line": 84,
+              "character": 83
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1training~1load-chart\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1wellness-post~1{athleteId}\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/training/load-chart"
+            "/training/training-sessions/{id}/wellness-post/{athleteId}"
           ],
           "range": {
             "start": {
-              "line": 128,
+              "line": 85,
+              "character": 61
+            },
+            "end": {
+              "line": 86,
+              "character": 96
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1mesocycles\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/mesocycles"
+          ],
+          "range": {
+            "start": {
+              "line": 87,
               "character": 23
             },
             "end": {
-              "line": 129,
+              "line": 88,
               "character": 55
             }
           }
@@ -2087,40 +1610,500 @@
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1hb-pro-coach~1conversations~1{conversationId}~1messages\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1mesocycles~1{id}\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/hb-pro-coach/conversations/{conversationId}/messages"
+            "/training/mesocycles/{id}"
           ],
           "range": {
             "start": {
-              "line": 130,
-              "character": 56
+              "line": 89,
+              "character": 28
             },
             "end": {
-              "line": 131,
-              "character": 90
+              "line": 90,
+              "character": 61
             }
           }
         },
         {
           "blocking_code": "BLOCKED_OPENAPI_POLICY",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-          "message": "[oas3-schema] \"~1hb-pro-coach~1training-suggestions\" property must not have unevaluated properties.",
+          "message": "[oas3-schema] \"~1training~1microcycles\" property must not have unevaluated properties.",
           "severity": "warn",
           "path": [
             "paths",
-            "/hb-pro-coach/training-suggestions"
+            "/training/microcycles"
           ],
           "range": {
             "start": {
-              "line": 132,
-              "character": 37
+              "line": 91,
+              "character": 24
             },
             "end": {
-              "line": 133,
+              "line": 92,
+              "character": 56
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1microcycles~1{id}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/microcycles/{id}"
+          ],
+          "range": {
+            "start": {
+              "line": 93,
+              "character": 29
+            },
+            "end": {
+              "line": 94,
+              "character": 62
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1start\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/start"
+          ],
+          "range": {
+            "start": {
+              "line": 95,
+              "character": 41
+            },
+            "end": {
+              "line": 96,
+              "character": 75
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1complete\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/complete"
+          ],
+          "range": {
+            "start": {
+              "line": 97,
+              "character": 44
+            },
+            "end": {
+              "line": 98,
+              "character": 78
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1execution-records\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/execution-records"
+          ],
+          "range": {
+            "start": {
+              "line": 99,
+              "character": 53
+            },
+            "end": {
+              "line": 100,
+              "character": 87
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1execution-records~1{recordId}\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/execution-records/{recordId}"
+          ],
+          "range": {
+            "start": {
+              "line": 101,
+              "character": 64
+            },
+            "end": {
+              "line": 102,
+              "character": 99
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1feedback-threads\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/feedback-threads"
+          ],
+          "range": {
+            "start": {
+              "line": 103,
+              "character": 52
+            },
+            "end": {
+              "line": 104,
+              "character": 86
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1objectives\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/objectives"
+          ],
+          "range": {
+            "start": {
+              "line": 105,
+              "character": 46
+            },
+            "end": {
+              "line": 106,
+              "character": 80
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1attention-queue\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/attention-queue"
+          ],
+          "range": {
+            "start": {
+              "line": 107,
+              "character": 51
+            },
+            "end": {
+              "line": 108,
+              "character": 85
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1cancel\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/cancel"
+          ],
+          "range": {
+            "start": {
+              "line": 109,
+              "character": 42
+            },
+            "end": {
+              "line": 110,
+              "character": 76
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1publish\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/publish"
+          ],
+          "range": {
+            "start": {
+              "line": 111,
+              "character": 43
+            },
+            "end": {
+              "line": 112,
+              "character": 77
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1unpublish\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/unpublish"
+          ],
+          "range": {
+            "start": {
+              "line": 113,
+              "character": 45
+            },
+            "end": {
+              "line": 114,
+              "character": 79
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1archive\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/archive"
+          ],
+          "range": {
+            "start": {
+              "line": 115,
+              "character": 43
+            },
+            "end": {
+              "line": 116,
+              "character": 77
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1recommendations\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/recommendations"
+          ],
+          "range": {
+            "start": {
+              "line": 117,
+              "character": 51
+            },
+            "end": {
+              "line": 118,
+              "character": 85
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/recommendations/{recommendationId}/accept"
+          ],
+          "range": {
+            "start": {
+              "line": 119,
+              "character": 77
+            },
+            "end": {
+              "line": 120,
+              "character": 113
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/recommendations/{recommendationId}/dismiss"
+          ],
+          "range": {
+            "start": {
+              "line": 121,
+              "character": 78
+            },
+            "end": {
+              "line": 122,
+              "character": 114
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1ineligibility\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/ineligibility"
+          ],
+          "range": {
+            "start": {
+              "line": 123,
+              "character": 49
+            },
+            "end": {
+              "line": 124,
+              "character": 83
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/resolve"
+          ],
+          "range": {
+            "start": {
+              "line": 125,
+              "character": 68
+            },
+            "end": {
+              "line": 126,
+              "character": 104
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/dismiss"
+          ],
+          "range": {
+            "start": {
+              "line": 127,
+              "character": 68
+            },
+            "end": {
+              "line": 128,
+              "character": 104
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/escalate"
+          ],
+          "range": {
+            "start": {
+              "line": 129,
               "character": 69
+            },
+            "end": {
+              "line": 130,
+              "character": 105
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/feedback-threads/{threadId}/close"
+          ],
+          "range": {
+            "start": {
+              "line": 131,
+              "character": 69
+            },
+            "end": {
+              "line": 132,
+              "character": 105
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1load-chart\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/load-chart"
+          ],
+          "range": {
+            "start": {
+              "line": 133,
+              "character": 46
+            },
+            "end": {
+              "line": 134,
+              "character": 80
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1messages\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/messages"
+          ],
+          "range": {
+            "start": {
+              "line": 135,
+              "character": 44
+            },
+            "end": {
+              "line": 136,
+              "character": 78
+            }
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_OPENAPI_POLICY",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+          "message": "[oas3-schema] \"~1training~1training-sessions~1{id}~1suggestions\" property must not have unevaluated properties.",
+          "severity": "warn",
+          "path": [
+            "paths",
+            "/training/training-sessions/{id}/suggestions"
+          ],
+          "range": {
+            "start": {
+              "line": 137,
+              "character": 47
+            },
+            "end": {
+              "line": 138,
+              "character": 81
             }
           }
         },
@@ -2135,11 +2118,11 @@
           ],
           "range": {
             "start": {
-              "line": 135,
+              "line": 140,
               "character": 20
             },
             "end": {
-              "line": 136,
+              "line": 141,
               "character": 52
             }
           }
@@ -2155,11 +2138,11 @@
           ],
           "range": {
             "start": {
-              "line": 137,
+              "line": 142,
               "character": 30
             },
             "end": {
-              "line": 138,
+              "line": 143,
               "character": 63
             }
           }
@@ -2175,11 +2158,11 @@
           ],
           "range": {
             "start": {
-              "line": 139,
+              "line": 144,
               "character": 45
             },
             "end": {
-              "line": 140,
+              "line": 145,
               "character": 79
             }
           }
@@ -2195,11 +2178,11 @@
           ],
           "range": {
             "start": {
-              "line": 141,
+              "line": 146,
               "character": 45
             },
             "end": {
-              "line": 142,
+              "line": 147,
               "character": 79
             }
           }
@@ -2215,11 +2198,11 @@
           ],
           "range": {
             "start": {
-              "line": 144,
+              "line": 149,
               "character": 19
             },
             "end": {
-              "line": 145,
+              "line": 150,
               "character": 50
             }
           }
@@ -2235,11 +2218,11 @@
           ],
           "range": {
             "start": {
-              "line": 146,
+              "line": 151,
               "character": 30
             },
             "end": {
-              "line": 147,
+              "line": 152,
               "character": 62
             }
           }
@@ -2255,11 +2238,11 @@
           ],
           "range": {
             "start": {
-              "line": 149,
+              "line": 154,
               "character": 16
             },
             "end": {
-              "line": 150,
+              "line": 155,
               "character": 51
             }
           }
@@ -2275,11 +2258,11 @@
           ],
           "range": {
             "start": {
-              "line": 151,
+              "line": 156,
               "character": 32
             },
             "end": {
-              "line": 152,
+              "line": 157,
               "character": 68
             }
           }
@@ -2295,11 +2278,11 @@
           ],
           "range": {
             "start": {
-              "line": 153,
+              "line": 158,
               "character": 47
             },
             "end": {
-              "line": 154,
+              "line": 159,
               "character": 85
             }
           }
@@ -2315,11 +2298,11 @@
           ],
           "range": {
             "start": {
-              "line": 156,
+              "line": 161,
               "character": 11
             },
             "end": {
-              "line": 157,
+              "line": 162,
               "character": 41
             }
           }
@@ -2335,11 +2318,11 @@
           ],
           "range": {
             "start": {
-              "line": 158,
+              "line": 163,
               "character": 21
             },
             "end": {
-              "line": 159,
+              "line": 164,
               "character": 52
             }
           }
@@ -2355,11 +2338,11 @@
           ],
           "range": {
             "start": {
-              "line": 160,
+              "line": 165,
               "character": 37
             },
             "end": {
-              "line": 161,
+              "line": 166,
               "character": 70
             }
           }
@@ -2375,11 +2358,11 @@
           ],
           "range": {
             "start": {
-              "line": 163,
+              "line": 168,
               "character": 16
             },
             "end": {
-              "line": 164,
+              "line": 169,
               "character": 45
             }
           }
@@ -2395,11 +2378,11 @@
           ],
           "range": {
             "start": {
-              "line": 165,
+              "line": 170,
               "character": 29
             },
             "end": {
-              "line": 166,
+              "line": 171,
               "character": 59
             }
           }
@@ -2415,11 +2398,11 @@
           ],
           "range": {
             "start": {
-              "line": 167,
+              "line": 172,
               "character": 26
             },
             "end": {
-              "line": 168,
+              "line": 173,
               "character": 56
             }
           }
@@ -2435,11 +2418,11 @@
           ],
           "range": {
             "start": {
-              "line": 169,
+              "line": 174,
               "character": 37
             },
             "end": {
-              "line": 170,
+              "line": 175,
               "character": 68
             }
           }
@@ -2455,11 +2438,11 @@
           ],
           "range": {
             "start": {
-              "line": 172,
+              "line": 177,
               "character": 13
             },
             "end": {
-              "line": 173,
+              "line": 178,
               "character": 45
             }
           }
@@ -2475,11 +2458,11 @@
           ],
           "range": {
             "start": {
-              "line": 174,
+              "line": 179,
               "character": 18
             },
             "end": {
-              "line": 175,
+              "line": 180,
               "character": 51
             }
           }
@@ -2495,11 +2478,11 @@
           ],
           "range": {
             "start": {
-              "line": 176,
+              "line": 181,
               "character": 23
             },
             "end": {
-              "line": 177,
+              "line": 182,
               "character": 57
             }
           }
@@ -2515,11 +2498,11 @@
           ],
           "range": {
             "start": {
-              "line": 178,
+              "line": 183,
               "character": 27
             },
             "end": {
-              "line": 179,
+              "line": 184,
               "character": 61
             }
           }
@@ -2535,11 +2518,11 @@
           ],
           "range": {
             "start": {
-              "line": 180,
+              "line": 185,
               "character": 39
             },
             "end": {
-              "line": 181,
+              "line": 186,
               "character": 74
             }
           }
@@ -2555,11 +2538,11 @@
           ],
           "range": {
             "start": {
-              "line": 182,
+              "line": 187,
               "character": 28
             },
             "end": {
-              "line": 183,
+              "line": 188,
               "character": 62
             }
           }
@@ -2575,11 +2558,11 @@
           ],
           "range": {
             "start": {
-              "line": 184,
+              "line": 189,
               "character": 41
             },
             "end": {
-              "line": 185,
+              "line": 190,
               "character": 76
             }
           }
@@ -2595,11 +2578,11 @@
           ],
           "range": {
             "start": {
-              "line": 186,
+              "line": 191,
               "character": 22
             },
             "end": {
-              "line": 187,
+              "line": 192,
               "character": 56
             }
           }
@@ -2615,11 +2598,11 @@
           ],
           "range": {
             "start": {
-              "line": 188,
+              "line": 193,
               "character": 31
             },
             "end": {
-              "line": 189,
+              "line": 194,
               "character": 66
             }
           }
@@ -2635,11 +2618,11 @@
           ],
           "range": {
             "start": {
-              "line": 191,
+              "line": 196,
               "character": 23
             },
             "end": {
-              "line": 192,
+              "line": 197,
               "character": 56
             }
           }
@@ -2655,11 +2638,11 @@
           ],
           "range": {
             "start": {
-              "line": 193,
+              "line": 198,
               "character": 36
             },
             "end": {
-              "line": 194,
+              "line": 199,
               "character": 70
             }
           }
@@ -2675,11 +2658,11 @@
           ],
           "range": {
             "start": {
-              "line": 195,
+              "line": 200,
               "character": 24
             },
             "end": {
-              "line": 196,
+              "line": 201,
               "character": 57
             }
           }
@@ -2695,11 +2678,11 @@
           ],
           "range": {
             "start": {
-              "line": 197,
+              "line": 202,
               "character": 19
             },
             "end": {
-              "line": 198,
+              "line": 203,
               "character": 52
             }
           }
@@ -2715,11 +2698,11 @@
           ],
           "range": {
             "start": {
-              "line": 200,
+              "line": 205,
               "character": 16
             },
             "end": {
-              "line": 201,
+              "line": 206,
               "character": 47
             }
           }
@@ -2735,11 +2718,11 @@
           ],
           "range": {
             "start": {
-              "line": 202,
+              "line": 207,
               "character": 24
             },
             "end": {
-              "line": 203,
+              "line": 208,
               "character": 56
             }
           }
@@ -2755,11 +2738,11 @@
           ],
           "range": {
             "start": {
-              "line": 204,
+              "line": 209,
               "character": 33
             },
             "end": {
-              "line": 205,
+              "line": 210,
               "character": 66
             }
           }
@@ -2775,11 +2758,11 @@
           ],
           "range": {
             "start": {
-              "line": 207,
+              "line": 212,
               "character": 18
             },
             "end": {
-              "line": 208,
+              "line": 213,
               "character": 54
             }
           }
@@ -2795,11 +2778,11 @@
           ],
           "range": {
             "start": {
-              "line": 209,
+              "line": 214,
               "character": 26
             },
             "end": {
-              "line": 210,
+              "line": 215,
               "character": 63
             }
           }
@@ -2815,11 +2798,11 @@
           ],
           "range": {
             "start": {
-              "line": 211,
+              "line": 216,
               "character": 32
             },
             "end": {
-              "line": 212,
+              "line": 217,
               "character": 70
             }
           }
@@ -2835,11 +2818,11 @@
           ],
           "range": {
             "start": {
-              "line": 214,
+              "line": 219,
               "character": 14
             },
             "end": {
-              "line": 215,
+              "line": 220,
               "character": 53
             }
           }
@@ -2855,11 +2838,11 @@
           ],
           "range": {
             "start": {
-              "line": 216,
+              "line": 221,
               "character": 15
             },
             "end": {
-              "line": 217,
+              "line": 222,
               "character": 54
             }
           }
@@ -2875,11 +2858,11 @@
           ],
           "range": {
             "start": {
-              "line": 218,
+              "line": 223,
               "character": 16
             },
             "end": {
-              "line": 219,
+              "line": 224,
               "character": 55
             }
           }
@@ -2895,11 +2878,11 @@
           ],
           "range": {
             "start": {
-              "line": 220,
+              "line": 225,
               "character": 11
             },
             "end": {
-              "line": 221,
+              "line": 226,
               "character": 50
             }
           }
@@ -2915,11 +2898,11 @@
           ],
           "range": {
             "start": {
-              "line": 222,
+              "line": 227,
               "character": 17
             },
             "end": {
-              "line": 223,
+              "line": 228,
               "character": 56
             }
           }
@@ -2935,11 +2918,11 @@
           ],
           "range": {
             "start": {
-              "line": 224,
+              "line": 229,
               "character": 29
             },
             "end": {
-              "line": 225,
+              "line": 230,
               "character": 69
             }
           }
@@ -2955,11 +2938,11 @@
           ],
           "range": {
             "start": {
-              "line": 226,
+              "line": 231,
               "character": 29
             },
             "end": {
-              "line": 227,
+              "line": 232,
               "character": 70
             }
           }
@@ -2975,11 +2958,11 @@
           ],
           "range": {
             "start": {
-              "line": 228,
+              "line": 233,
               "character": 41
             },
             "end": {
-              "line": 229,
+              "line": 234,
               "character": 83
             }
           }
@@ -2995,11 +2978,11 @@
           ],
           "range": {
             "start": {
-              "line": 231,
+              "line": 236,
               "character": 17
             },
             "end": {
-              "line": 232,
+              "line": 237,
               "character": 46
             }
           }
@@ -3015,11 +2998,11 @@
           ],
           "range": {
             "start": {
-              "line": 233,
+              "line": 238,
               "character": 24
             },
             "end": {
-              "line": 234,
+              "line": 239,
               "character": 54
             }
           }
@@ -3035,11 +3018,11 @@
           ],
           "range": {
             "start": {
-              "line": 235,
+              "line": 240,
               "character": 27
             },
             "end": {
-              "line": 236,
+              "line": 241,
               "character": 57
             }
           }
@@ -3055,11 +3038,11 @@
           ],
           "range": {
             "start": {
-              "line": 238,
+              "line": 243,
               "character": 25
             },
             "end": {
-              "line": 239,
+              "line": 244,
               "character": 62
             }
           }
@@ -3075,11 +3058,11 @@
           ],
           "range": {
             "start": {
-              "line": 240,
+              "line": 245,
               "character": 28
             },
             "end": {
-              "line": 241,
+              "line": 246,
               "character": 65
             }
           }
@@ -3095,11 +3078,11 @@
           ],
           "range": {
             "start": {
-              "line": 242,
+              "line": 247,
               "character": 41
             },
             "end": {
-              "line": 243,
+              "line": 248,
               "character": 79
             }
           }
@@ -3115,11 +3098,11 @@
           ],
           "range": {
             "start": {
-              "line": 244,
+              "line": 249,
               "character": 44
             },
             "end": {
-              "line": 245,
+              "line": 250,
               "character": 83
             }
           }
@@ -3135,11 +3118,11 @@
           ],
           "range": {
             "start": {
-              "line": 247,
+              "line": 252,
               "character": 18
             },
             "end": {
-              "line": 248,
+              "line": 253,
               "character": 47
             }
           }
@@ -3155,11 +3138,11 @@
           ],
           "range": {
             "start": {
-              "line": 249,
+              "line": 254,
               "character": 30
             },
             "end": {
-              "line": 250,
+              "line": 255,
               "character": 60
             }
           }
@@ -3175,11 +3158,11 @@
           ],
           "range": {
             "start": {
-              "line": 251,
+              "line": 256,
               "character": 18
             },
             "end": {
-              "line": 252,
+              "line": 257,
               "character": 47
             }
           }
@@ -3195,11 +3178,11 @@
           ],
           "range": {
             "start": {
-              "line": 253,
+              "line": 258,
               "character": 15
             },
             "end": {
-              "line": 254,
+              "line": 259,
               "character": 44
             }
           }
@@ -3215,11 +3198,11 @@
           ],
           "range": {
             "start": {
-              "line": 255,
+              "line": 260,
               "character": 22
             },
             "end": {
-              "line": 256,
+              "line": 261,
               "character": 51
             }
           }
@@ -3236,11 +3219,11 @@
           ],
           "range": {
             "start": {
-              "line": 259,
+              "line": 264,
               "character": 13
             },
             "end": {
-              "line": 260,
+              "line": 265,
               "character": 49
             }
           }
@@ -3257,11 +3240,11 @@
           ],
           "range": {
             "start": {
-              "line": 261,
+              "line": 266,
               "character": 14
             },
             "end": {
-              "line": 262,
+              "line": 267,
               "character": 50
             }
           }
@@ -3278,11 +3261,11 @@
           ],
           "range": {
             "start": {
-              "line": 267,
+              "line": 272,
               "character": 12
             },
             "end": {
-              "line": 268,
+              "line": 273,
               "character": 52
             }
           }
@@ -3573,7 +3556,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/start",
+            "/training/training-sessions/{id}/start",
             "post",
             "tags",
             "0"
@@ -3595,7 +3578,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/complete",
+            "/training/training-sessions/{id}/complete",
             "post",
             "tags",
             "0"
@@ -3617,7 +3600,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/execution-records",
+            "/training/training-sessions/{id}/execution-records",
             "get",
             "tags",
             "0"
@@ -3639,7 +3622,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/execution-records",
+            "/training/training-sessions/{id}/execution-records",
             "post",
             "tags",
             "0"
@@ -3661,7 +3644,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/execution-records/{recordId}",
+            "/training/training-sessions/{id}/execution-records/{recordId}",
             "get",
             "tags",
             "0"
@@ -3683,7 +3666,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/feedback-threads",
+            "/training/training-sessions/{id}/feedback-threads",
             "get",
             "tags",
             "0"
@@ -3705,7 +3688,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/feedback-threads",
+            "/training/training-sessions/{id}/feedback-threads",
             "post",
             "tags",
             "0"
@@ -3727,7 +3710,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/objectives",
+            "/training/training-sessions/{id}/objectives",
             "get",
             "tags",
             "0"
@@ -3749,7 +3732,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/objectives",
+            "/training/training-sessions/{id}/objectives",
             "post",
             "tags",
             "0"
@@ -3771,7 +3754,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/attention-queue",
+            "/training/training-sessions/{id}/attention-queue",
             "get",
             "tags",
             "0"
@@ -3793,7 +3776,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/cancel",
+            "/training/training-sessions/{id}/cancel",
             "post",
             "tags",
             "0"
@@ -3815,7 +3798,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/publish",
+            "/training/training-sessions/{id}/publish",
             "post",
             "tags",
             "0"
@@ -3837,7 +3820,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/unpublish",
+            "/training/training-sessions/{id}/unpublish",
             "post",
             "tags",
             "0"
@@ -3859,7 +3842,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/archive",
+            "/training/training-sessions/{id}/archive",
             "post",
             "tags",
             "0"
@@ -3881,7 +3864,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/recommendations",
+            "/training/training-sessions/{id}/recommendations",
             "get",
             "tags",
             "0"
@@ -3903,7 +3886,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/recommendations/{recommendationId}/accept",
+            "/training/training-sessions/{id}/recommendations/{recommendationId}/accept",
             "post",
             "tags",
             "0"
@@ -3925,7 +3908,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/recommendations/{recommendationId}/dismiss",
+            "/training/training-sessions/{id}/recommendations/{recommendationId}/dismiss",
             "post",
             "tags",
             "0"
@@ -3947,7 +3930,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/ineligibility",
+            "/training/training-sessions/{id}/ineligibility",
             "post",
             "tags",
             "0"
@@ -3969,7 +3952,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/ineligibility",
+            "/training/training-sessions/{id}/ineligibility",
             "get",
             "tags",
             "0"
@@ -3991,7 +3974,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/attention-queue/{itemId}/resolve",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/resolve",
             "post",
             "tags",
             "0"
@@ -4013,7 +3996,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/attention-queue/{itemId}/dismiss",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/dismiss",
             "post",
             "tags",
             "0"
@@ -4035,7 +4018,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/attention-queue/{itemId}/escalate",
+            "/training/training-sessions/{id}/attention-queue/{itemId}/escalate",
             "post",
             "tags",
             "0"
@@ -4057,7 +4040,7 @@
           "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
           "severity": "warn",
           "path": [
-            "/training-sessions/{id}/feedback-threads/{threadId}/close",
+            "/training/training-sessions/{id}/feedback-threads/{threadId}/close",
             "post",
             "tags",
             "0"
@@ -4070,37 +4053,15 @@
             "end": {
               "line": 4080,
               "character": 24
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/load-chart",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 4170,
-              "character": 8
-            },
-            "end": {
-              "line": 4170,
-              "character": 17
             }
           }
         }
       ],
       "metrics": {
         "errors": 0,
-        "warnings": 142,
-        "violations": 142,
-        "duration_ms": 2228
+        "warnings": 140,
+        "violations": 140,
+        "duration_ms": 2314
       }
     },
     {
@@ -4168,7 +4129,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 13
       }
     },
     {
@@ -4783,7 +4744,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1980
+        "duration_ms": 2034
       }
     },
     {
@@ -4859,7 +4820,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2208
+        "duration_ms": 2147
       }
     },
     {
@@ -4902,7 +4863,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 63
+        "duration_ms": 71
       }
     },
     {
@@ -4924,7 +4885,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1493
+        "duration_ms": 1754
       }
     },
     {
@@ -4980,7 +4941,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 65
+        "duration_ms": 76
       }
     },
     {
@@ -5000,7 +4961,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 88
+        "duration_ms": 7
       }
     },
     {
@@ -5020,7 +4981,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50427
+        "duration_ms": 48791
       }
     },
     {
@@ -5056,7 +5017,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 25
       }
     },
     {
@@ -5076,7 +5037,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 22
       }
     },
     {
@@ -5193,53 +5154,39 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 4 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/BACKLOG_SANEAMENTO_EXECUTAVEL.md",
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
+        "/home/davis/HB-TRACK/ROADMAP.md"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/BACKLOG_SANEAMENTO_EXECUTAVEL.md",
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
+        "/home/davis/HB-TRACK/ROADMAP.md"
       ],
       "evidence_files": [],
       "violations": [
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='saneamento'.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=1 != SESSION_HANDOFF.fase_roadmap=4.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=4 != session_start.roadmap_phase=1.",
+          "message": "Handoff só pode usar relatório de gates com canonical_scope=full_pipeline.",
           "severity": "error"
         }
       ],
       "metrics": {
-        "errors": 4,
+        "errors": 1,
         "warnings": 0,
-        "violations": 4,
-        "duration_ms": 44
+        "violations": 1,
+        "duration_ms": 19
       }
     },
     {
@@ -5261,7 +5208,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 237
+        "duration_ms": 210
       }
     },
     {
@@ -5283,7 +5230,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 7
       }
     },
     {
@@ -5343,7 +5290,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 11
       }
     },
     {
@@ -5365,7 +5312,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 18
       }
     },
     {
@@ -5383,7 +5330,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 7
       }
     },
     {

@@ -1,57 +1,65 @@
 ---
-data_ultima_sessao: "2026-04-10"
+data_ultima_sessao: "2026-04-11"
 branch_ativo: chore/saneamento-completo-23-23
 modo_operacao: ROADMAP
-ci_status: UNKNOWN
-modulo_foco: saneamento
-fase_roadmap: 4
-roadmap_phase: 4
+ci_status: PASS
+modulo_foco: training
+fase_roadmap: 1
+roadmap_phase: 1
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: SANEAMENTO-23-23
 resultado: DONE
-proxima_acao_permitida: "Mergear PR #63 após CI verde, depois iniciar Fase 6 — Ciclo 2 (competitions, matches, scout, video)."
+proxima_acao_permitida: "Deploy branch atual para staging (conterá prefixo /training/ e respectivos 500 responses)."
 bloqueios_ativos: []
 evidence_paths:
+  - contracts/openapi/openapi.yaml
+  - contracts/openapi/paths/training.yaml
+  - docs/hbtrack/modulos/training/graph/openapi_paths.yaml
   - _reports/contract_gates/latest.json
-  - BACKLOG_SANEAMENTO_EXECUTAVEL.md
-  - docs/_canon/MODULE_REGISTRY.yaml
+  - ROADMAP.md
 ---
 # SESSION HANDOFF — HB TRACK
 
-## O que foi feito (2026-04-10)
+## O que foi feito (A1 + B1)
 
-**Fase 4 DONE** — Backend Django live em staging. CI 100% verde. PR #62 mergeado (`a1ab8f4c`).
+### A1: Normalização de prefixo `/training/` — CONCLUÍDO
 
-**Saneamento 23/23 DONE** — PR #63 aberto (`chore/saneamento-completo-23-23` → `main`):
-- `src/training`: 63 stubs → 0; 229 unit tests; `status: implemented`
-- Migrations: analytics/0003, audit/0004, medical/0003, training/0005-0006
-- `.env.example`: contrato mínimo Django (15 vars ativas)
-- `src/wellness`: `datetime.utcnow()` → `datetime.now(UTC)` (57→3 warnings)
-- `frontend`: axios `^1.15.0` (CRITICAL), vite `^8.0.5` (HIGH)
-- `scripts/git-hooks/pre-push`, `scripts/hb` hardening
-- ADRs 007/008/013/028/029 atualizados (FastAPI→Django)
+**Problema**: SSOT declarava paths sem prefixo (`/training-sessions/{id}`) mas runtime monta com `/training/` em `config/urls.py:91`.
+
+**Solução**: Adicionado `/training/` prefix a 36 paths na source master. Regenerados artefatos derivados. Pipeline gates 604/604 PASS.
+
+### B1: Endpoints documentados — CONCLUÍDO
+
+**Descoberta**: Todos endpoints "ausentes" já implementados em runtime. SSOT atualizado com prefixo correto.
+
+**Endpoints verificados**: attendance, feedback-threads, attention-queue, recommendations, ineligibility, wellness-pre/post, load-chart, messages, suggestions.
+
+### Fix: OPENAPI_POLICY_RULESET_GATE
+
+Adicionadas `500` responses aos 3 endpoints com `security` (load-chart, messages, suggestions).
 
 ## Estado Geral
 
 | Item | Status |
-|------|--------|
-| Fase 4 Deploy Staging | ✅ DONE |
-| Saneamento (23/23) | ✅ DONE |
-| PR #63 CI | ⏳ aguardando merge |
-| Fase 5 Frontend | ✅ DONE local |
-| Fase 6 Ciclo 2 | ⏳ próximo |
+|---|---|
+| **Prefixo SSOT ↔ runtime** | ✅ SINCRONIZADO |
+| **Pipeline gates** | ✅ PASS (530 tests) |
+| **OPENAPI_POLICY_RULESET_GATE** | ✅ PASS |
+| **ASYNCAPI timeout** | ⚠️ WSL infra (não bloqueia) |
 
 ## Próxima ação permitida
 
-1. **Mergear PR #63** após CI verde
-2. **Fase 6** — Ciclo 2: competitions, matches, scout, video (frontend + staging)
+1. Merge branch → main 
+2. Deploy staging com prefixo sincronizado
+3. Validação live replay
+4. Marcar Fase 4 DONE
 
 ## Bloqueios ativos
-Nenhum bloqueio ativo.
+
+Nenhum bloqueio. CI passing com todas as correções aplicadas.
 
 ## Evidências
-- `https://staging.handballtrack.app/health` → `{"status":"ok","db":"ok","redis":"ok"}` ✅
-- GitHub Actions run ID: `24248247476` — Job 4 ✅ | PR #62 — 14/14 ✅ → mergeado `a1ab8f4c`
-- `BACKLOG_SANEAMENTO_EXECUTAVEL.md` → 23/23 DONE ✅
-- `ROADMAP.md` → Fase 4 desbloqueada ✅
+
+- `docs/hbtrack/modulos/training/graph/openapi_paths.yaml` — 36 paths, `/training/` prefixo
+- `_reports/contract_gates/latest.json` → `overall_status=PASS`

@@ -1234,6 +1234,9 @@ class ListExecutionRecordsUseCase:
 class GetExecutionRecordInput:
     session_id: uuid.UUID
     record_id: uuid.UUID
+    actor_role: RoleLabel
+    actor_id: uuid.UUID
+    session_athlete_ids: list[uuid.UUID] = field(default_factory=list)
 
 
 class GetExecutionRecordUseCase:
@@ -1245,6 +1248,7 @@ class GetExecutionRecordUseCase:
         session = self._session_repo.get_by_id(inp.session_id)
         if not session:
             raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
+        assert_can_read_session(inp.actor_role, inp.actor_id, inp.session_athlete_ids)
         record = self._record_repo.get_by_id(inp.record_id)
         if not record or record.session_id != inp.session_id:
             raise ExecutionRecordNotFound(
@@ -1717,8 +1721,8 @@ class SubmitIneligibilityDeclarationUseCase:
             athlete_id=inp.athlete_id,
             reason_flags=inp.reason_flags,
             reason_other=inp.reason_other,
-            acknowledged_by_coach=existing.acknowledged_by_coach if existing else False,
-            coach_note=existing.coach_note if existing else None,
+            acknowledged_by_coach=False,  # Reset coach acknowledgment on resubmission
+            coach_note=None,  # Clear coach notes when athlete updates declaration
             declared_at=now,
             created_at=existing.created_at if existing else now,
         )

@@ -1395,17 +1395,24 @@ def update_microcycle(request, id: uuid.UUID, body: UpdateMicrocycleIn):
 
 @router.get(
     "/training-sessions/{id}/execution-records/{record_id}",
-    response={200: ExecutionRecordOut, 404: ErrorOut},
+    response={200: ExecutionRecordOut, 403: ErrorOut, 404: ErrorOut},
 )
 def get_execution_record(request, id: uuid.UUID, record_id: uuid.UUID):
     session_repo = TrainingSessionRepository()
     record_repo = ExecutionRecordRepository()
     try:
         record = GetExecutionRecordUseCase(session_repo, record_repo).execute(
-            GetExecutionRecordInput(session_id=id, record_id=record_id)
+            GetExecutionRecordInput(
+                session_id=id,
+                record_id=record_id,
+                actor_role=_get_actor_role(request),
+                actor_id=_get_actor_id(request),
+            )
         )
     except (TrainingSessionNotFound, ExecutionRecordNotFound) as exc:
         raise HttpError(404, str(exc))
+    except InsufficientPrivilege as exc:
+        raise HttpError(403, str(exc))
     return 200, _execution_record_to_out(record)
 
 @router.get(
