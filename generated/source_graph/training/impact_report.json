@@ -29,7 +29,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/training.yaml",
-      "sha256": "f0507feccc77a2a240fb82f3c8a60fce3f63bb7f53c357b89d965484c2fccdca"
+      "sha256": "b9ba2e5c36f4c99e2ace79e9e12326c92d3958ae4ddd22f40a22ae96ecb64d54"
     },
     {
       "relpath": "contracts/schemas/training/.gitkeep",
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "98b5012d351b2738db4a2f6cd01a527de4eca7bccd449a519154605ec9f45e71"
+  "source_fingerprint": "3a06e3199cd1ee8e216fd57adbd99903a304fab9d01667079ac95f294cade548"
 }
