@@ -20,19 +20,17 @@
 extends:
   - spectral:oas
 
-# Override de regra do spectral:oas que produz falso-positivo com fragmentos
+# Downgrade de oas3-schema: spectral:oas produz falso-positivo com fragmentos
 # de referências externas ($ref: ./file.yaml#/~1path). O Spectral não resolve
 # corretamente os fragmentos JSON Pointer em $ref para path items externos,
 # gerando "unevaluated properties" em path items válidos. Downgrade para warn
 # para não bloquear o pipeline com falsos positivos.
 # Ref: https://github.com/stoplightio/spectral/issues/2354
-overrides:
-  - files:
-      - "**"
-    rules:
-      oas3-schema: warn
+# Nota: usar rule-level override em vez de overrides[].files para garantir
+# consistência entre invocação com --ruleset explícito e auto-discovery.
 
 rules:
+  oas3-schema: warn
   # ── 1. Versão OpenAPI ──────────────────────────────────────────────────────
   hbtrack-openapi-version:
     description: >
