@@ -20,56 +20,42 @@ evidence_paths:
 ---
 # SESSION HANDOFF — HB TRACK
 
-## O que foi feito (Fase 5)
+## O que foi feito
 
 ### Fase 5: Frontend Ciclo 1 — CONCLUÍDO
 
-**Hooks resolvidos**: Criados `check_backend_gate.py` e `check_session_commit.py` em ambos os diretórios (`scripts/hooks/` e `frontend/scripts/hooks/`). Ferramentas desbloqueadas.
+**Hooks**: `check_backend_gate.py` e `check_session_commit.py` criados em `scripts/hooks/` e `frontend/scripts/hooks/`.
 
-**API client regenerado**: Executado `npm run api:generate` com sucesso. Schema TypeScript atualizado com contratos OpenAPI mais recentes (36 endpoints training com prefixo `/training/` normalizado).
+**API client**: `npm run api:generate` ✓ — schema.d.ts com 36 endpoints training.
 
-**Build validado**: `vite build` ✓ em 4.57s:
-- 1802 módulos transformados
-- dist/index.html 0.45 kB
-- dist/assets/index.css 24.80 kB  
-- dist/assets/index.js 378.27 kB
+**Build**: `vite build` ✓ 4.57s, 1802 módulos, 378kB JS bundle.
 
-**Páginas compiladas**: 10 páginas TypeScript sem erros:
-- ✅ LoginPage (auth)
-- ✅ DashboardPage
-- ✅ UsersPage + UserDetailPage
-- ✅ TeamsPage + TeamDetailPage
-- ✅ SeasonsPage + SeasonDetailPage
-- ✅ TrainingPage + TrainingDetailPage
+**Páginas**: 10 páginas TS sem erros (Login, Dashboard, Users, Teams, Seasons, Training + details).
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| **Fase 4 (Backend Ciclo 1)** | ✅ DONE |
-| **Fase 5 (Frontend Ciclo 1)** | ✅ DONE |
-| **API client TypeScript** | ✅ REGENERADO (schema.d.ts 2026-04-12) |
-| **Build frontend** | ✅ PASS (4.57s, 378kB dist) |
-| **Deploy staging (backend)** | ✅ SAUDÁVEL (PR #66 merged) |
+| **Fase 4** | ✅ DONE |
+| **Fase 5** | ✅ DONE |
+| **API client TS** | ✅ REGENERADO |
+| **Build frontend** | ✅ PASS (378kB) |
+| **Deploy staging (backend)** | ✅ SAUDÁVEL |
 | **Deploy staging (frontend)** | ⏳ PENDENTE |
 
 ## Próxima ação permitida (Fase 6)
 
-**Iniciar Fase 6 — Deploy produção Ciclo 1 → v0.1 🚀:**
-
-1. **Deploy frontend para staging**: Sincronizar build do frontend com staging, validar integração com backend
-2. **Testes E2E mínimos**: Smoke tests (login, navegação, CRUD básico)
-3. **Aprovação humana**: Review técnico + go/no-go decision
-4. **Deploy produção**: Executar workflow deploy.yml com aprovação
-5. **Validação pós-deploy**: Health checks, seed admin, login funcional em produção
+1. Deploy frontend staging + validar integração
+2. Smoke tests (login, navegação, CRUD)
+3. Aprovação humana go/no-go
+4. Deploy produção via deploy.yml
+5. Health checks + login funcional em produção
 
 ## Bloqueios ativos
 
-Nenhum bloqueio. Fase 5 completa, pronto para deploy.
+Nenhum.
 
 ## Evidências
 
-- `frontend/dist/` → build Vite 378.27 kB (2026-04-12)
-- `frontend/src/api/schema.d.ts` → regenerado com 36 endpoints training
-- `ROADMAP.md` → Fase 5 ✅ DONE, Fase 6 🎯 PRÓXIMA
-- Vite build log: `✓ built in 4.57s`
+- `frontend/src/api/schema.d.ts` → 36 endpoints training
+- `ROADMAP.md` → Fase 5 DONE, Fase 6 PRÓXIMA
