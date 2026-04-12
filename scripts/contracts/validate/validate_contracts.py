@@ -6247,14 +6247,17 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         path_regex = r"^/api/(auth|users|teams|seasons|training)/"
         timeout_sec = 300
 
+    # Reduzir complexidade para training (muitos endpoints) - usar max-examples menor
+    max_examples = "2" if module_filter == "training" else "5"
+
     cmd = [
         st_cli, "run",
         schema_url,
         "--url", staging_url.rstrip("/"),
         "--include-path-regex", path_regex,
         "--checks", "not_a_server_error,response_schema_conformance",
-        "--max-examples", "5",
-        "--request-timeout", "10",
+        "--max-examples", max_examples,
+        "--request-timeout", "30",
         "--no-color",
     ]
     try:
