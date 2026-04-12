@@ -1,6 +1,6 @@
 ---
-data_ultima_sessao: "2026-04-11"
-branch_ativo: chore/saneamento-completo-23-23
+data_ultima_sessao: "2026-04-12"
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: training
@@ -10,7 +10,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: SANEAMENTO-23-23
 resultado: DONE
-proxima_acao_permitida: "Deploy branch atual para staging (conterá prefixo /training/ e respectivos 500 responses)."
+proxima_acao_permitida: "1. Re-trigger deploy workflow após fix do timeout schemathesis (120s→300s) 2. Liga compliance testing contra staging 3. Marcar Fase 4 DONE"
 bloqueios_ativos: []
 evidence_paths:
   - contracts/openapi/openapi.yaml
