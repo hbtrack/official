@@ -14,7 +14,6 @@ proxima_acao_permitida: "1. Push nginx config → trigger deploy 2. Validate fro
 bloqueios_ativos: []
 evidence_paths:
   - ROADMAP.md
-  - frontend/dist/
   - frontend/src/api/schema.d.ts
   - infra/nginx/nginx.staging.conf
   - .github/workflows/deploy.yml
