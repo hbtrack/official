@@ -6242,7 +6242,7 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
     module_filter = os.environ.get("HB_SCHEMATHESIS_MODULE", "").strip()
     if module_filter:
         path_regex = rf"^/api/{re.escape(module_filter)}/"
-        timeout_sec = 120
+        timeout_sec = 300
     else:
         path_regex = r"^/api/(auth|users|teams|seasons|training)/"
         timeout_sec = 300
