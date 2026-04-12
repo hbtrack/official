@@ -363,7 +363,9 @@ jobs:
           - users
           - teams
           - seasons
-          - training
+          - training-core
+          - training-ops
+          - training-intelligence
     env:
       HB_STAGING_URL: https://staging.handballtrack.app
       HB_SCHEMATHESIS_MODULE: ${{ matrix.module }}

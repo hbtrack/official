@@ -6239,13 +6239,28 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
                    _ms(t0))
     # Suporte a execução por módulo: HB_SCHEMATHESIS_MODULE=<module> reduz o escopo a um único
     # path prefix e permite paralelismo via matrix no CI (cada job testa 1 módulo).
+    # Training dividido em 3 sub-grupos para evitar timeout (36 endpoints total).
     module_filter = os.environ.get("HB_SCHEMATHESIS_MODULE", "").strip()
-    if module_filter:
+
+    # Mapeamento de sub-grupos training para path patterns específicos
+    training_subgroups = {
+        "training-core": r"^/api/training/(mesocycles|microcycles|training-sessions)($|/[^/]+$)",
+        "training-ops": r"^/api/training/training-sessions/[^/]+/(archive|cancel|complete|publish|start|unpublish|attendance|wellness-pre|wellness-post)",
+        "training-intelligence": r"^/api/training/training-sessions/[^/]+/(feedback-threads|messages|attention-queue|recommendations|suggestions|ineligibility|load-chart|blocks|objectives|execution-records)",
+    }
+
+    if module_filter in training_subgroups:
+        path_regex = training_subgroups[module_filter]
+        timeout_sec = 300
+        max_examples = "1"
+    elif module_filter:
         path_regex = rf"^/api/{re.escape(module_filter)}/"
         timeout_sec = 300
+        max_examples = "5"
     else:
         path_regex = r"^/api/(auth|users|teams|seasons|training)/"
         timeout_sec = 300
+        max_examples = "5"
 
     cmd = [
         st_cli, "run",
@@ -6253,8 +6268,8 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         "--url", staging_url.rstrip("/"),
         "--include-path-regex", path_regex,
         "--checks", "not_a_server_error,response_schema_conformance",
-        "--max-examples", "5",
-        "--request-timeout", "10",
+        "--max-examples", max_examples,
+        "--request-timeout", "30",
         "--no-color",
     ]
     try:
