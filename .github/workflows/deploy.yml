@@ -333,7 +333,7 @@ jobs:
             echo "🌱 Aplicando seed de dados de demonstração em staging..."
             # Executar seed_demo dentro do container de forma idempotente
             docker compose -f infra/docker-compose.prod.yml exec -T api \
-              python manage.py seed_demo --skip-if-exists 2>&1 || true
+              python manage.py seed_demo 2>&1 || true
             echo "✅ Seed demo concluído (ou já existia)"
 
       - name: Diagnóstico — logs container api (em caso de falha)
