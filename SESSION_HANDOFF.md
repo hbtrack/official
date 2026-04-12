@@ -1,65 +1,61 @@
 ---
 data_ultima_sessao: "2026-04-12"
-branch_ativo: main
+branch_ativo: feat/phase-6-frontend-staging-deploy
 modo_operacao: ROADMAP
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: training
-fase_roadmap: 1
-roadmap_phase: 1
+fase_roadmap: 6
+roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: SANEAMENTO-23-23
-resultado: DONE
-proxima_acao_permitida: "1. Re-trigger deploy workflow após fix do timeout schemathesis (120s→300s) 2. Liga compliance testing contra staging 3. Marcar Fase 4 DONE"
+task_id: FASE-6-DEPLOY-STAGING
+resultado: PENDENTE
+proxima_acao_permitida: "1. Push nginx config → trigger deploy 2. Validate frontend staging 3. Smoke tests 4. Prep production"
 bloqueios_ativos: []
 evidence_paths:
-  - contracts/openapi/openapi.yaml
-  - contracts/openapi/paths/training.yaml
-  - docs/hbtrack/modulos/training/graph/openapi_paths.yaml
-  - _reports/contract_gates/latest.json
   - ROADMAP.md
+  - frontend/src/api/schema.d.ts
+  - infra/nginx/nginx.staging.conf
+  - .github/workflows/deploy.yml
 ---
 # SESSION HANDOFF — HB TRACK
 
-## O que foi feito (A1 + B1)
+## O que foi feito
 
-### A1: Normalização de prefixo `/training/` — CONCLUÍDO
+### Fase 5: Frontend Ciclo 1 — CONCLUÍDO
 
-**Problema**: SSOT declarava paths sem prefixo (`/training-sessions/{id}`) mas runtime monta com `/training/` em `config/urls.py:91`.
+**Hooks**: `check_backend_gate.py` e `check_session_commit.py` criados em `scripts/hooks/` e `frontend/scripts/hooks/`.
 
-**Solução**: Adicionado `/training/` prefix a 36 paths na source master. Regenerados artefatos derivados. Pipeline gates 604/604 PASS.
+**API client**: `npm run api:generate` ✓ — schema.d.ts com 36 endpoints training.
 
-### B1: Endpoints documentados — CONCLUÍDO
+**Build**: `vite build` ✓ 4.57s, 1802 módulos, 378kB JS bundle.
 
-**Descoberta**: Todos endpoints "ausentes" já implementados em runtime. SSOT atualizado com prefixo correto.
-
-**Endpoints verificados**: attendance, feedback-threads, attention-queue, recommendations, ineligibility, wellness-pre/post, load-chart, messages, suggestions.
-
-### Fix: OPENAPI_POLICY_RULESET_GATE
-
-Adicionadas `500` responses aos 3 endpoints com `security` (load-chart, messages, suggestions).
+**Páginas**: 10 páginas TS sem erros (Login, Dashboard, Users, Teams, Seasons, Training + details).
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| **Prefixo SSOT ↔ runtime** | ✅ SINCRONIZADO |
-| **Pipeline gates** | ✅ PASS (530 tests) |
-| **OPENAPI_POLICY_RULESET_GATE** | ✅ PASS |
-| **ASYNCAPI timeout** | ⚠️ WSL infra (não bloqueia) |
+| **Fase 4** | ✅ DONE |
+| **Fase 5** | ✅ DONE |
+| **API client TS** | ✅ REGENERADO |
+| **Build frontend** | ✅ PASS (378kB) |
+| **Deploy staging (backend)** | ✅ SAUDÁVEL |
+| **Deploy staging (frontend)** | ⏳ PENDENTE |
 
-## Próxima ação permitida
+## Próxima ação permitida (Fase 6)
 
-1. Merge branch → main 
-2. Deploy staging com prefixo sincronizado
-3. Validação live replay
-4. Marcar Fase 4 DONE
+1. Deploy frontend staging + validar integração
+2. Smoke tests (login, navegação, CRUD)
+3. Aprovação humana go/no-go
+4. Deploy produção via deploy.yml
+5. Health checks + login funcional em produção
 
 ## Bloqueios ativos
 
-Nenhum bloqueio. CI passing com todas as correções aplicadas.
+Nenhum.
 
 ## Evidências
 
-- `docs/hbtrack/modulos/training/graph/openapi_paths.yaml` — 36 paths, `/training/` prefixo
-- `_reports/contract_gates/latest.json` → `overall_status=PASS`
+- `frontend/src/api/schema.d.ts` → 36 endpoints training
+- `ROADMAP.md` → Fase 5 DONE, Fase 6 PRÓXIMA

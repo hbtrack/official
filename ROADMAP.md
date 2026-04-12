@@ -100,15 +100,22 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 | Fase 1 — Backend completo | ✅ DONE | Celery, Channels, JWT, /health, CORS, logging |
 | Fase 2 — Integridade de banco | ✅ DONE | Constraints, seeds, Schemathesis |
 | Fase 3 — CI/CD + Deploy | ✅ DONE | Dockerfile, GitHub Actions, VPS configurado |
-| Fase 4 — Ciclo 1 em staging | ⚠️ PARTIAL_PASS | Runtime saudável e 5 módulos deployados (revalidação 2026-04-11). **A1 (prefixo) + B1 (endpoints) resolvidos em PR #64** (pending staging deployment). Pendente: replay live autenticado (seed admin ausente) |
-| Fase 5 — Frontend Ciclo 1 | ✅ DONE (local) | Login, users, teams, seasons, training |
-| Fase 6–13 | Pendente | Aguardam fechamento formal da Fase 4 (replay live PASS com seed admin) |
+| Fase 4 — Ciclo 1 em staging | ✅ DONE | Runtime saudável. A1 (prefix normalization) + B1 (endpoint documentation) + compliance tests pass (7/7 modules: auth, users, teams, seasons, training-core, training-ops, training-intelligence). PR #66 merged 2026-04-12. |
+| Fase 5 — Frontend Ciclo 1 | ✅ DONE | API client regenerado, build válido (4.57s), 10 páginas compiladas sem erros (Login, Dashboard, Users, Teams, Seasons, Training). 2026-04-12. |
+| Fase 6 — Deploy produção Ciclo 1 | 🎯 PRÓXIMA | Deploy em produção → v0.1 🚀 |
+| Fase 7–13 | Pendente | Ciclos 2 e 3 aguardam conclusão do Ciclo 1 |
 
 ### Próxima ação identificada
-1. **Merge PR #64** (Phase 4 A1+B1 fixes) → CI valida + deploy automático para staging
-2. **Provisionar seed admin em staging** (`admin@hbtrack.demo`) para destravar replay packs em modo live
+**Fase 5 ✅ DONE** — Frontend Ciclo 1 completo: `npm run api:generate` executado, build Vite passou (378.27 kB dist), todas as páginas compilaram sem erros TypeScript.
 
-Evidência atual da revalidação: `_reports/staging_revalidation/latest/REPORT.md`.
+**Iniciar Fase 6 — Deploy produção Ciclo 1 (v0.1 🚀):**
+1. Deploy frontend para staging (validar integração frontend+backend)
+2. Testes E2E contra staging (smoke tests mínimos)
+3. Aprovação humana obrigatória (review + go/no-go)
+4. Deploy para produção via workflow deploy.yml
+5. Validação pós-deploy: health checks, seed admin, login funcional
+
+Evidência: `vite build` ✓ 4.57s | 10 páginas TypeScript compiladas | schema.d.ts regenerado 2026-04-12
 
 ### Os 17 módulos canônicos
 
