@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-12"
-branch_ativo: main
+branch_ativo: feat/phase-6-frontend-staging-deploy
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
