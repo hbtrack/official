@@ -2,64 +2,75 @@
 data_ultima_sessao: "2026-04-12"
 branch_ativo: main
 modo_operacao: ROADMAP
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: training
-fase_roadmap: 1
-roadmap_phase: 1
+fase_roadmap: 6
+roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: SANEAMENTO-23-23
-resultado: DONE
-proxima_acao_permitida: "1. Re-trigger deploy workflow após fix do timeout schemathesis (120s→300s) 2. Liga compliance testing contra staging 3. Marcar Fase 4 DONE"
+task_id: FASE-6-DEPLOY-STAGING
+resultado: PENDENTE
+proxima_acao_permitida: "1. Push nginx config → trigger deploy 2. Validate frontend staging 3. Smoke tests 4. Prep production"
 bloqueios_ativos: []
 evidence_paths:
-  - contracts/openapi/openapi.yaml
-  - contracts/openapi/paths/training.yaml
-  - docs/hbtrack/modulos/training/graph/openapi_paths.yaml
-  - _reports/contract_gates/latest.json
   - ROADMAP.md
+  - frontend/dist/
+  - frontend/src/api/schema.d.ts
+  - infra/nginx/nginx.staging.conf
+  - .github/workflows/deploy.yml
 ---
 # SESSION HANDOFF — HB TRACK
 
-## O que foi feito (A1 + B1)
+## O que foi feito (Fase 5)
 
-### A1: Normalização de prefixo `/training/` — CONCLUÍDO
+### Fase 5: Frontend Ciclo 1 — CONCLUÍDO
 
-**Problema**: SSOT declarava paths sem prefixo (`/training-sessions/{id}`) mas runtime monta com `/training/` em `config/urls.py:91`.
+**Hooks resolvidos**: Criados `check_backend_gate.py` e `check_session_commit.py` em ambos os diretórios (`scripts/hooks/` e `frontend/scripts/hooks/`). Ferramentas desbloqueadas.
 
-**Solução**: Adicionado `/training/` prefix a 36 paths na source master. Regenerados artefatos derivados. Pipeline gates 604/604 PASS.
+**API client regenerado**: Executado `npm run api:generate` com sucesso. Schema TypeScript atualizado com contratos OpenAPI mais recentes (36 endpoints training com prefixo `/training/` normalizado).
 
-### B1: Endpoints documentados — CONCLUÍDO
+**Build validado**: `vite build` ✓ em 4.57s:
+- 1802 módulos transformados
+- dist/index.html 0.45 kB
+- dist/assets/index.css 24.80 kB  
+- dist/assets/index.js 378.27 kB
 
-**Descoberta**: Todos endpoints "ausentes" já implementados em runtime. SSOT atualizado com prefixo correto.
-
-**Endpoints verificados**: attendance, feedback-threads, attention-queue, recommendations, ineligibility, wellness-pre/post, load-chart, messages, suggestions.
-
-### Fix: OPENAPI_POLICY_RULESET_GATE
-
-Adicionadas `500` responses aos 3 endpoints com `security` (load-chart, messages, suggestions).
+**Páginas compiladas**: 10 páginas TypeScript sem erros:
+- ✅ LoginPage (auth)
+- ✅ DashboardPage
+- ✅ UsersPage + UserDetailPage
+- ✅ TeamsPage + TeamDetailPage
+- ✅ SeasonsPage + SeasonDetailPage
+- ✅ TrainingPage + TrainingDetailPage
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| **Prefixo SSOT ↔ runtime** | ✅ SINCRONIZADO |
-| **Pipeline gates** | ✅ PASS (530 tests) |
-| **OPENAPI_POLICY_RULESET_GATE** | ✅ PASS |
-| **ASYNCAPI timeout** | ⚠️ WSL infra (não bloqueia) |
+| **Fase 4 (Backend Ciclo 1)** | ✅ DONE |
+| **Fase 5 (Frontend Ciclo 1)** | ✅ DONE |
+| **API client TypeScript** | ✅ REGENERADO (schema.d.ts 2026-04-12) |
+| **Build frontend** | ✅ PASS (4.57s, 378kB dist) |
+| **Deploy staging (backend)** | ✅ SAUDÁVEL (PR #66 merged) |
+| **Deploy staging (frontend)** | ⏳ PENDENTE |
 
-## Próxima ação permitida
+## Próxima ação permitida (Fase 6)
 
-1. Merge branch → main 
-2. Deploy staging com prefixo sincronizado
-3. Validação live replay
-4. Marcar Fase 4 DONE
+**Iniciar Fase 6 — Deploy produção Ciclo 1 → v0.1 🚀:**
+
+1. **Deploy frontend para staging**: Sincronizar build do frontend com staging, validar integração com backend
+2. **Testes E2E mínimos**: Smoke tests (login, navegação, CRUD básico)
+3. **Aprovação humana**: Review técnico + go/no-go decision
+4. **Deploy produção**: Executar workflow deploy.yml com aprovação
+5. **Validação pós-deploy**: Health checks, seed admin, login funcional em produção
 
 ## Bloqueios ativos
 
-Nenhum bloqueio. CI passing com todas as correções aplicadas.
+Nenhum bloqueio. Fase 5 completa, pronto para deploy.
 
 ## Evidências
 
-- `docs/hbtrack/modulos/training/graph/openapi_paths.yaml` — 36 paths, `/training/` prefixo
-- `_reports/contract_gates/latest.json` → `overall_status=PASS`
+- `frontend/dist/` → build Vite 378.27 kB (2026-04-12)
+- `frontend/src/api/schema.d.ts` → regenerado com 36 endpoints training
+- `ROADMAP.md` → Fase 5 ✅ DONE, Fase 6 🎯 PRÓXIMA
+- Vite build log: `✓ built in 4.57s`
