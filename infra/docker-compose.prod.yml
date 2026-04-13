@@ -4,7 +4,7 @@
 # Requer: arquivo .env no mesmo diretório (ver infra/env/.env.production.template)
 # ──────────────────────────────────────────────────────────────────────────────
 
-name: hbtrack-prod
+name: ${COMPOSE_PROJECT_NAME:-hbtrack-prod}
 
 services:
 
@@ -140,8 +140,8 @@ services:
     image: nginx:1.27-alpine
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx/${NGINX_CONF:-nginx.conf}:/etc/nginx/nginx.conf:ro
       - certbot_www:/var/www/certbot:ro
