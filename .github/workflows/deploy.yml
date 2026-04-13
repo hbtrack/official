@@ -429,7 +429,17 @@ jobs:
     needs: approve
     steps:
       - uses: actions/checkout@v4
+      - name: Verificar se produção está configurada
+        id: check-prod
+        run: |
+          if [ -z "${{ secrets.VPS_HOST_PRODUCTION }}" ]; then
+            echo "⚠️ VPS_HOST_PRODUCTION não configurado — skip deploy de produção"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Deploy to production via SSH
+        if: steps.check-prod.outputs.skip != 'true'
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST_PRODUCTION }}
@@ -437,13 +447,15 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/hbtrack/production
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             # Salvar SHA anterior para rollback
             PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
             echo "$PREV_SHA" > .last_sha
-            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_tag }}|" .env
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${SHORT_SHA}|" .env
             docker compose -f infra/docker-compose.prod.yml pull
             docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
       - name: Health check — production
+        if: steps.check-prod.outputs.skip != 'true'
         id: healthcheck
         run: |
           echo "Aguardando produção inicializar..."
@@ -459,7 +471,7 @@ jobs:
           echo "❌ Health check falhou — iniciando rollback"
           exit 1
       - name: Rollback automático em caso de falha
-        if: failure() && steps.healthcheck.outcome == 'failure'
+        if: failure() && steps.healthcheck.outcome == 'failure' && steps.check-prod.outputs.skip != 'true'
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST_PRODUCTION }}
