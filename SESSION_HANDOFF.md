@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-13"
-branch_ativo: chore/add-frontend-images
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
