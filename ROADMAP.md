@@ -1,5 +1,5 @@
 # ROADMAP — HB Track
-> Versão: 1.1.1 | Data: 2026-04-10 (snapshot revalidado localmente) | Decisões: D1-A · D2-C · D3-A
+> Versão: 1.2.0 | Data: 2026-04-13 (pós-deploy pipeline fix) | Decisões: D1-A · D2-C · D3-A
 > Arquitetura: Software Architect + Systems Engineer · HB Track CDD Pipeline
 
 ---
@@ -61,14 +61,14 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 
 ---
 
-## Estado atual (snapshot 2026-04-10)
+## Estado atual (snapshot 2026-04-13)
 
 ### Revalidação local desta atualização
-- `python3 scripts/contracts/validate/validate_contracts.py --profile precommit` → PASS em 2026-04-10
-- `python3 scripts/hb preflight` → PASS em 2026-04-10/11
-- `_reports/contract_gates/latest.json` → `overall_status=PASS`
-- `_reports/preflight/latest.json` → `final_decision=PASS`
-- `hb ci --profile pr` executado via `preflight` → PASS (`1840 passed`, `27 skipped`, `4 deselected`; frontend `12/12`; build Vite PASS)
+- Deploy pipeline run `24353854704` → **ALL 13 JOBS SUCCESS** (2026-04-13)
+- PR #69 merged: fix `seed_demo` invalid flag (squash → `4ddc81e7`)
+- PR #70 merged: guard production job when `VPS_HOST_PRODUCTION` unconfigured (squash → `a946a4b5`)
+- Staging: deploy automático funcional, 7/7 Contract Conformance modules PASS
+- Production: Job 7 skip gracioso (secret não configurado — esperado)
 
 ### O que já existe e está validado
 | Camada | Status | Detalhe |
@@ -87,7 +87,7 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 | Dockerfile | ✅ Multi-stage | `Dockerfile` (backend) + `Dockerfile.frontend` |
 | CI/CD | ✅ Operacional | `ci.yml` + `deploy.yml` (GitHub Actions) |
 | Frontend | ✅ Ciclo 1 completo | React/Vite + shadcn/ui + openapi-fetch |
-| Deploy VPS (staging) | ✅ RUNTIME SAUDÁVEL | Revalidado 2026-04-11: `/health` 200, nginx/1.27.5, DB+Redis ok, OpenAPI 3.1.0 publicada (82 paths / 127 ops); evidência em `_reports/staging_revalidation/latest/` |
+| Deploy VPS (staging) | ✅ RUNTIME SAUDÁVEL | Pipeline completo: validate → test → build → deploy → contract conformance (7/7) → approve → production (guarded). PRs #69 #70 merged 2026-04-13 |
 | Seed / fixtures | ✅ Operacional | `manage.py seed_demo` |
 | CORS | ✅ Configurado | `django-cors-headers` por ambiente |
 | JWT Auth | ✅ Operacional | HS256 (dev) / RS256 (prod) |
@@ -102,20 +102,27 @@ O HB Track é construído em 4 versões com geração de valor incremental. O cr
 | Fase 3 — CI/CD + Deploy | ✅ DONE | Dockerfile, GitHub Actions, VPS configurado |
 | Fase 4 — Ciclo 1 em staging | ✅ DONE | Runtime saudável. A1 (prefix normalization) + B1 (endpoint documentation) + compliance tests pass (7/7 modules: auth, users, teams, seasons, training-core, training-ops, training-intelligence). PR #66 merged 2026-04-12. |
 | Fase 5 — Frontend Ciclo 1 | ✅ DONE | API client regenerado, build válido (4.57s), 10 páginas compiladas sem erros (Login, Dashboard, Users, Teams, Seasons, Training). 2026-04-12. |
-| Fase 6 — Deploy produção Ciclo 1 | 🎯 PRÓXIMA | Deploy em produção → v0.1 🚀 |
+| Fase 6 — Deploy produção Ciclo 1 | 🔧 EM PROGRESSO | Pipeline fix done (PRs #69 #70). Staging validado. Falta: configurar VPS produção + secret + deploy |
 | Fase 7–13 | Pendente | Ciclos 2 e 3 aguardam conclusão do Ciclo 1 |
 
 ### Próxima ação identificada
-**Fase 5 ✅ DONE** — Frontend Ciclo 1 completo: `npm run api:generate` executado, build Vite passou (378.27 kB dist), todas as páginas compilaram sem erros TypeScript.
+**Fase 6 — EM PROGRESSO** — Deploy produção Ciclo 1 (v0.1)
 
-**Iniciar Fase 6 — Deploy produção Ciclo 1 (v0.1 🚀):**
-1. Deploy frontend para staging (validar integração frontend+backend)
-2. Testes E2E contra staging (smoke tests mínimos)
-3. Aprovação humana obrigatória (review + go/no-go)
-4. Deploy para produção via workflow deploy.yml
-5. Validação pós-deploy: health checks, seed admin, login funcional
+**Concluído:**
+- [x] Deploy frontend para staging (nginx.staging.conf + Dockerfile.frontend)
+- [x] Deploy pipeline completo: 13/13 jobs SUCCESS (validate → test → build → staging → conformance → approve → production)
+- [x] Fix: `seed_demo` invalid flag (PR #69)
+- [x] Fix: production job guard when `VPS_HOST_PRODUCTION` unconfigured (PR #70)
+- [x] Contract Conformance: 7/7 modules PASS contra staging live
+- [x] QA staging já coberto por Fase 4 (runtime saudável) + pipeline automático (health + conformance)
 
-Evidência: `vite build` ✓ 4.57s | 10 páginas TypeScript compiladas | schema.d.ts regenerado 2026-04-12
+**Próximo passo — 6.2 Preparar produção:**
+1. Configurar VPS produção: diretório `/opt/hbtrack/production/`, .env com SECRET_KEY + JWT RS256 keys
+2. Criar secret `VPS_HOST_PRODUCTION` no GitHub repo
+3. Disparar deploy produção via pipeline (aprovação humana obrigatória)
+4. Pós-deploy: health check + login funcional + UptimeRobot
+
+Evidência: deploy pipeline run `24353854704` ALL SUCCESS | PRs #69 #70 merged 2026-04-13
 
 ### Os 17 módulos canônicos
 
