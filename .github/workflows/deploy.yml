@@ -461,7 +461,9 @@ jobs:
           host: ${{ secrets.VPS_HOST_PRODUCTION }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: mkdir -p /opt/hbtrack/production
+          script: |
+            mkdir -p /opt/hbtrack/production
+            chmod 755 /opt/hbtrack/production
 
       - name: Sincronizar infra para o servidor produção
         if: steps.check-prod.outputs.skip != 'true'
