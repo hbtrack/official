@@ -282,10 +282,12 @@ jobs:
               docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
             fi
 
-            # Gerar certificado SSL se ausente (porta 80 livre após down)
+            # Gerar certificado SSL se ausente
             if ! docker run --rm -v hbtrack-staging_certbot_conf:/etc/letsencrypt alpine \
                 test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null; then
               echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
+              # Liberar porta 80 caso produção esteja rodando no mesmo VPS
+              COMPOSE_PROJECT_NAME=hbtrack-production docker compose -f infra/docker-compose.prod.yml stop nginx 2>/dev/null || true
               docker run --rm \
                 -v hbtrack-staging_certbot_conf:/etc/letsencrypt \
                 -v hbtrack-staging_certbot_www:/var/www/certbot \
@@ -297,6 +299,8 @@ jobs:
                 --email suporte@handballtrack.app \
                 -d staging.handballtrack.app
               echo "✅ Certificado SSL gerado com sucesso"
+              # Reiniciar nginx de produção se estava rodando
+              COMPOSE_PROJECT_NAME=hbtrack-production docker compose -f infra/docker-compose.prod.yml start nginx 2>/dev/null || true
             else
               echo "✅ Certificado SSL existente — mantendo"
             fi
@@ -537,10 +541,12 @@ jobs:
             echo "🔄 Deploy produção — parando containers, preservando dados..."
             docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
 
-            # Gerar certificado SSL se ausente (porta 80 livre após down)
+            # Gerar certificado SSL se ausente
             if ! docker run --rm -v hbtrack-production_certbot_conf:/etc/letsencrypt alpine \
                 test -f /etc/letsencrypt/live/handballtrack.app/fullchain.pem 2>/dev/null; then
               echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
+              # Liberar porta 80 caso staging esteja rodando no mesmo VPS
+              COMPOSE_PROJECT_NAME=hbtrack-staging docker compose -f infra/docker-compose.prod.yml stop nginx 2>/dev/null || true
               docker run --rm \
                 -v hbtrack-production_certbot_conf:/etc/letsencrypt \
                 -v hbtrack-production_certbot_www:/var/www/certbot \
@@ -553,6 +559,8 @@ jobs:
                 -d handballtrack.app \
                 -d www.handballtrack.app
               echo "✅ Certificado SSL gerado com sucesso"
+              # Reiniciar nginx de staging se estava rodando
+              COMPOSE_PROJECT_NAME=hbtrack-staging docker compose -f infra/docker-compose.prod.yml start nginx 2>/dev/null || true
             else
               echo "✅ Certificado SSL existente — mantendo"
             fi

@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-13"
-branch_ativo: feat/production-deploy-provisioning
+branch_ativo: fix/certbot-port-conflict
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
