@@ -297,9 +297,10 @@ jobs:
                 --non-interactive \
                 --agree-tos \
                 --email suporte@handballtrack.app \
-                -d staging.handballtrack.app
-              echo "✅ Certificado SSL gerado com sucesso"
-              # Reiniciar nginx de produção se estava rodando
+                -d staging.handballtrack.app \
+              && echo "✅ Certificado SSL gerado com sucesso" \
+              || echo "⚠️ Certbot falhou — continuando deploy sem SSL (renovação manual necessária)"
+              # Sempre reiniciar nginx de produção, mesmo se certbot falhou
               COMPOSE_PROJECT_NAME=hbtrack-production docker compose -f infra/docker-compose.prod.yml start nginx 2>/dev/null || true
             else
               echo "✅ Certificado SSL existente — mantendo"
@@ -557,9 +558,10 @@ jobs:
                 --agree-tos \
                 --email suporte@handballtrack.app \
                 -d handballtrack.app \
-                -d www.handballtrack.app
-              echo "✅ Certificado SSL gerado com sucesso"
-              # Reiniciar nginx de staging se estava rodando
+                -d www.handballtrack.app \
+              && echo "✅ Certificado SSL gerado com sucesso" \
+              || echo "⚠️ Certbot falhou — continuando deploy sem SSL (renovação manual necessária)"
+              # Sempre reiniciar nginx de staging, mesmo se certbot falhou
               COMPOSE_PROJECT_NAME=hbtrack-staging docker compose -f infra/docker-compose.prod.yml start nginx 2>/dev/null || true
             else
               echo "✅ Certificado SSL existente — mantendo"
