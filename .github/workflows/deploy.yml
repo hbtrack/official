@@ -454,6 +454,15 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Criar diretório de produção no servidor
+        if: steps.check-prod.outputs.skip != 'true'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: mkdir -p /opt/hbtrack/production
+
       - name: Sincronizar infra para o servidor produção
         if: steps.check-prod.outputs.skip != 'true'
         uses: appleboy/scp-action@v0.1.7
