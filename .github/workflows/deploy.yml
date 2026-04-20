@@ -283,12 +283,12 @@ jobs:
             fi
 
             # Gerar certificado SSL se ausente (porta 80 livre após down)
-            if ! docker run --rm -v hbtrack-prod_certbot_conf:/etc/letsencrypt alpine \
+            if ! docker run --rm -v hbtrack-staging_certbot_conf:/etc/letsencrypt alpine \
                 test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null; then
               echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
               docker run --rm \
-                -v hbtrack-prod_certbot_conf:/etc/letsencrypt \
-                -v hbtrack-prod_certbot_www:/var/www/certbot \
+                -v hbtrack-staging_certbot_conf:/etc/letsencrypt \
+                -v hbtrack-staging_certbot_www:/var/www/certbot \
                 -p 80:80 \
                 certbot/certbot certonly \
                 --standalone \
@@ -317,8 +317,10 @@ jobs:
       - name: Health check — staging
         run: |
           echo "Aguardando staging inicializar..."
+          HEALTH_URL="${{ vars.STAGING_URL }}/health"
+          # Se staging usa porta não-padrão, tentar ambas
           for i in $(seq 1 24); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ vars.STAGING_URL }}/health" || echo "000")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${HEALTH_URL}" || echo "000")
             if [ "$STATUS" = "200" ]; then
               echo "✅ Staging OK (tentativa $i)"
               exit 0
@@ -536,19 +538,20 @@ jobs:
             docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
 
             # Gerar certificado SSL se ausente (porta 80 livre após down)
-            if ! docker run --rm -v hbtrack-prod_certbot_conf:/etc/letsencrypt alpine \
+            if ! docker run --rm -v hbtrack-production_certbot_conf:/etc/letsencrypt alpine \
                 test -f /etc/letsencrypt/live/handballtrack.app/fullchain.pem 2>/dev/null; then
               echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
               docker run --rm \
-                -v hbtrack-prod_certbot_conf:/etc/letsencrypt \
-                -v hbtrack-prod_certbot_www:/var/www/certbot \
+                -v hbtrack-production_certbot_conf:/etc/letsencrypt \
+                -v hbtrack-production_certbot_www:/var/www/certbot \
                 -p 80:80 \
                 certbot/certbot certonly \
                 --standalone \
                 --non-interactive \
                 --agree-tos \
                 --email suporte@handballtrack.app \
-                -d handballtrack.app
+                -d handballtrack.app \
+                -d www.handballtrack.app
               echo "✅ Certificado SSL gerado com sucesso"
             else
               echo "✅ Certificado SSL existente — mantendo"
@@ -583,20 +586,6 @@ jobs:
           done
           echo "❌ Health check falhou — iniciando rollback"
           exit 1
-
-      - name: Seed demo data — production (primeiro deploy)
-        if: steps.check-prod.outputs.skip != 'true' && success()
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST_PRODUCTION }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/hbtrack/production
-            echo "🌱 Aplicando seed de dados de demonstração em produção..."
-            docker compose -f infra/docker-compose.prod.yml exec -T api \
-              python manage.py seed_demo 2>&1 || true
-            echo "✅ Seed demo concluído (ou já existia)"
 
       - name: Rollback automático em caso de falha
         if: failure() && steps.healthcheck.outcome == 'failure' && steps.check-prod.outputs.skip != 'true'
