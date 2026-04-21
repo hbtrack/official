@@ -2,64 +2,66 @@
 data_ultima_sessao: "2026-04-21"
 branch_ativo: refactor/training-decomposition
 modo_operacao: ROADMAP
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: training
 fase_roadmap: 4
 roadmap_phase: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-PHASE4-DEPLOY-PORT-GUARD
+task_id: ROADMAP-PHASE4-TRAINING-DECOMPOSITION
 resultado: PENDENTE
-proxima_acao_permitida: "Validar deploy verde após merge da correção de port guard"
+proxima_acao_permitida: "Iniciar Fase 3 — decomposição application/use_cases.py"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "generated/source_graph/users/users.bundle.yaml"
-  - "compiled_context/users/FT-014.json"
-  - "compiled_context/users/FT-015.json"
-  - "compiled_context/users/FT-016.json"
-  - "compiled_context/users/FT-017.json"
+  - "generated/source_graph/training/training.bundle.yaml"
+  - "compiled_context/training/FT-001.json"
+  - "docs/hbtrack/modulos/training/graph/endpoints.yaml"
+  - "docs/hbtrack/modulos/training/graph/module_manifest.yaml"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-**Sessão 2026-04-21 — CI fixes PR #77 + Reimplementação Frontend (CDD Batch 01)**
+**Sessão 2026-04-21 — Refatoração training: Fases 0.5, 1, 2 (branch refactor/training-decomposition)**
 
-Gates finais: `FRONTEND_CONTRACT_GATE` PASS + `DERIVED_DRIFT_GATE` PASS.
+Fases concluídas e validadas conforme `.dev/decisões/rafatora_training.md`:
 
-Artefatos implementados:
-- `AppLayout.tsx` — Shell: sidebar, drawer mobile, top bar, 6 grupos nav, 17 módulos, RBAC
-- `LoginPage.tsx` — Logo, tagline, Eye/EyeOff, loading, error, redirect
-- `ForgotPasswordPage.tsx` + `ResetPasswordPage.tsx` + `ConfirmResetPage.tsx` — Fluxo completo
-- `App.tsx` — Rotas: /forgot-password, /reset-password, /confirm-reset, /conta-acesso
-- `useAuth.ts` — useForgotPassword, useResetPassword (corpo correto per contrato)
-- `schema.d.ts` — Regenerado via `npm run api:generate`
-- `src/users/api.py` — HttpError convertido para (status, ProblemOut)
-- `generated/source_graph/users/` — Regenerado
+- **Fase 0.5**: snapshot contratual — `test_public_surface` 8 PASS, `test_route_inventory` 2 PASS
+- **Fase 1** (Fases 1.1–1.8): `api.py` (1606 linhas) → pacote `api/` com 12 sub-routers:
+  - 53 handlers distribuídos em `sessions`, `blocks`, `attendance`, `wellness`, `planning`,
+    `execution`, `feedback`, `attention`, `recommendations`, `eligibility`, `analytics`, `chat`
+  - `mappers.py` (282 linhas), `deps.py`, `errors.py` canônicos
+  - `__init__.py` thin aggregator (`add_router` ×12)
+  - Gate fixes: `endpoints.yaml` (53 `runtime_handler_ref`), `module_manifest.yaml`,
+    source graph + context bundle regenerados, `check_architecture_docs.py` aceita `api/`,
+    `test_training_codegen_parity` agrega sub-arquivos
+- **Fase 2**: `AccessContext` em `application/common/access.py`, `CursorCodec` em `paging.py`,
+  `get_cursor_codec()` em `deps.py`, 18 testes unitários PASS
 
-**Sessão 2026-04-20 — Contratos UX**
-
-5 contratos canônicos: UX_BRAND, UX_SHELL, AUTH_EXPERIENCE, NAVIGATION_VISIBILITY, FRONTEND_CONTRACT.
+Gates: 287 passed, 0 failed (training + pipeline_gates + parity).
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| FRONTEND_CONTRACT_GATE | ✅ PASS |
-| DERIVED_DRIFT_GATE | ✅ PASS |
-| CI Frontend Build + Tests | ✅ PASS |
-| CI Tests (backend) | ✅ PASS |
-| PR #77 | Aguardando merge |
+| Fase 0.5 | ✅ CONCLUÍDA |
+| Fase 1 (api/ split) | ✅ CONCLUÍDA |
+| Fase 2 (AccessContext + CursorCodec) | ✅ CONCLUÍDA |
+| test_paging_no_django_imports | ⏳ pendente (Addendum 2.2) |
+| Fase 3 (application/ split) | ⏳ não iniciada |
+| training suite (287 tests) | ✅ PASS |
 
 ## Evidências
 
-- `_reports/contract_gates/latest.json` — overall_status: PASS
-- HANDOFF_COHERENCE_GATE: PASS
+- `generated/source_graph/training/training.bundle.yaml` — atualizado
+- `docs/hbtrack/modulos/training/graph/endpoints.yaml` — 53 refs corrigidas
+- `_reports/contract_gates/stage-artifact.local.latest.json` — PASS
 
 ## Próxima ação permitida
 
-`npm run dev` em `frontend/` → testar fluxo login → dashboard → sidebar → /forgot-password.
+1. Adicionar `test_paging_no_django_imports` em `src/training/tests/unit/test_layer_separation.py`
+2. Iniciar Fase 3 — decomposição `application/use_cases.py` → 9 subpacotes × 3 arquivos
 
 ## Bloqueios ativos
 

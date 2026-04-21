@@ -477,7 +477,9 @@ def check_module_registry_coherence(root: Path) -> CheckResult:
         status = data.get("status", "scaffold")
         module_src = src_path / module
         has_src = module_src.exists()
-        has_api = (module_src / "api.py").exists() if has_src else False
+        has_api = (
+            (module_src / "api.py").exists() or (module_src / "api" / "__init__.py").exists()
+        ) if has_src else False
         has_migrations = (module_src / "migrations").exists() if has_src else False
         has_tests = (module_src / "tests").exists() if has_src else False
 
@@ -487,7 +489,7 @@ def check_module_registry_coherence(root: Path) -> CheckResult:
             if not has_src:
                 missing.append("src/<module>/")
             elif not has_api:
-                missing.append("src/<module>/api.py")
+                missing.append("src/<module>/api.py (or api/)")
             if not has_migrations:
                 missing.append("src/<module>/migrations/")
             if not has_tests:
@@ -504,7 +506,7 @@ def check_module_registry_coherence(root: Path) -> CheckResult:
                 violations.append(module)
                 details.append(
                     f"FAIL [{module}] status='{status}' mas possui "
-                    "src/<module>/api.py + migrations/ + tests/ — deveria ser 'implemented' ou superior."
+                    "src/<module>/api.py (or api/) + migrations/ + tests/ — deveria ser 'implemented' ou superior."
                 )
 
     if violations:

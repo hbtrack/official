@@ -1,0 +1,197 @@
+"""planning sub-router — training.api.
+
+Endpoints:
+  GET   /mesocycles
+  POST  /mesocycles
+  GET   /mesocycles/{id}
+  PATCH /mesocycles/{id}
+  GET   /microcycles
+  POST  /microcycles
+  GET   /microcycles/{id}
+  PATCH /microcycles/{id}
+"""
+
+import uuid
+from typing import Optional
+
+from django.db import DataError, IntegrityError
+from ninja import Router
+from ninja.errors import HttpError
+
+from ..application.use_cases import (
+    CreateMesocycleInput,
+    CreateMesocycleUseCase,
+    CreateMicrocycleInput,
+    CreateMicrocycleUseCase,
+    GetMesocycleInput,
+    GetMesocycleUseCase,
+    GetMicrocycleInput,
+    GetMicrocycleUseCase,
+    ListMesocyclesInput,
+    ListMesocyclesUseCase,
+    ListMicrocyclesInput,
+    ListMicrocyclesUseCase,
+    UpdateMesocycleInput,
+    UpdateMesocycleUseCase,
+    UpdateMicrocycleInput,
+    UpdateMicrocycleUseCase,
+)
+from ..infrastructure.repository import MesocycleRepository, MicrocycleRepository
+from ..schemas import (
+    CreateMesocycleIn,
+    CreateMicrocycleIn,
+    ErrorOut,
+    MesocycleListOut,
+    MesocycleOut,
+    MicrocycleListOut,
+    MicrocycleOut,
+    UpdateMesocycleIn,
+    UpdateMicrocycleIn,
+)
+from .deps import _get_actor_role
+from .errors import map_exceptions
+from .mappers import _mesocycle_to_out, _microcycle_to_out
+
+router = Router()
+
+
+# ---------------------------------------------------------------------------
+# Mesocycles
+# ---------------------------------------------------------------------------
+
+@router.get("/mesocycles", response={200: MesocycleListOut, 403: ErrorOut})
+@map_exceptions
+def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
+    repo = MesocycleRepository()
+    items = ListMesocyclesUseCase(repo).execute(
+        ListMesocyclesInput(organization_id=organization_id)
+    )
+    return 200, MesocycleListOut(items=[_mesocycle_to_out(m) for m in items])
+
+
+@router.post("/mesocycles", response={201: MesocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
+@map_exceptions
+def create_mesocycle(request, body: CreateMesocycleIn):
+    repo = MesocycleRepository()
+    meso = CreateMesocycleUseCase(repo).execute(
+        CreateMesocycleInput(
+            actor_role=_get_actor_role(request),
+            organization_id=body.organization_id,
+            name=body.name,
+            started_at=body.started_at,
+            ended_at=body.ended_at,
+            season_id=body.season_id,
+            team_id=body.team_id,
+            objective=body.objective,
+            notes=body.notes,
+        )
+    )
+    return 201, _mesocycle_to_out(meso)
+
+
+@router.get("/mesocycles/{id}", response={200: MesocycleOut, 404: ErrorOut})
+@map_exceptions
+def get_mesocycle(request, id: uuid.UUID):
+    repo = MesocycleRepository()
+    meso = GetMesocycleUseCase(repo).execute(GetMesocycleInput(id=id))
+    return 200, _mesocycle_to_out(meso)
+
+
+@router.patch("/mesocycles/{id}", response={200: MesocycleOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@map_exceptions
+def update_mesocycle(request, id: uuid.UUID, body: UpdateMesocycleIn):
+    repo = MesocycleRepository()
+    meso = UpdateMesocycleUseCase(repo).execute(
+        UpdateMesocycleInput(
+            id=id,
+            actor_role=_get_actor_role(request),
+            name=body.name,
+            started_at=body.started_at,
+            ended_at=body.ended_at,
+            season_id=body.season_id,
+            team_id=body.team_id,
+            objective=body.objective,
+            notes=body.notes,
+        )
+    )
+    return 200, _mesocycle_to_out(meso)
+
+
+# ---------------------------------------------------------------------------
+# Microcycles
+# ---------------------------------------------------------------------------
+
+@router.get("/microcycles", response={200: MicrocycleListOut, 403: ErrorOut})
+@map_exceptions
+def list_microcycles(
+    request,
+    organization_id: Optional[uuid.UUID] = None,
+    mesocycle_id: Optional[uuid.UUID] = None,
+):
+    repo = MicrocycleRepository()
+    items = ListMicrocyclesUseCase(repo).execute(
+        ListMicrocyclesInput(
+            organization_id=organization_id,
+            mesocycle_id=mesocycle_id,
+        )
+    )
+    return 200, MicrocycleListOut(items=[_microcycle_to_out(m) for m in items])
+
+
+@router.post(
+    "/microcycles", response={201: MicrocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut}
+)
+@map_exceptions
+def create_microcycle(request, body: CreateMicrocycleIn):
+    repo = MicrocycleRepository()
+    micro = CreateMicrocycleUseCase(repo).execute(
+        CreateMicrocycleInput(
+            actor_role=_get_actor_role(request),
+            organization_id=body.organization_id,
+            mesocycle_id=body.mesocycle_id,
+            week_number=body.week_number,
+            started_at=body.started_at,
+            ended_at=body.ended_at,
+            team_id=body.team_id,
+            name=body.name,
+            objective=body.objective,
+            planned_sessions_count=body.planned_sessions_count,
+            notes=body.notes,
+        )
+    )
+    return 201, _microcycle_to_out(micro)
+
+
+@router.get("/microcycles/{id}", response={200: MicrocycleOut, 404: ErrorOut})
+@map_exceptions
+def get_microcycle(request, id: uuid.UUID):
+    repo = MicrocycleRepository()
+    micro = GetMicrocycleUseCase(repo).execute(GetMicrocycleInput(id=id))
+    return 200, _microcycle_to_out(micro)
+
+
+@router.patch(
+    "/microcycles/{id}", response={200: MicrocycleOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut}
+)
+@map_exceptions
+def update_microcycle(request, id: uuid.UUID, body: UpdateMicrocycleIn):
+    repo = MicrocycleRepository()
+    micro = UpdateMicrocycleUseCase(repo).execute(
+        UpdateMicrocycleInput(
+            id=id,
+            actor_role=_get_actor_role(request),
+            week_number=body.week_number,
+            started_at=body.started_at,
+            ended_at=body.ended_at,
+            team_id=body.team_id,
+            name=body.name,
+            objective=body.objective,
+            planned_sessions_count=body.planned_sessions_count,
+            notes=body.notes,
+        )
+    )
+    return 200, _microcycle_to_out(micro)
+
+
+def register(parent: Router) -> None:
+    parent.add_router("", router)

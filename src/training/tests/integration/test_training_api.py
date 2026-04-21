@@ -85,12 +85,11 @@ class TestAttendanceEndpoints:
         athlete_id = uuid.UUID("20000000-0000-0000-0000-000000000001")
         session = _create_session(session_at=datetime.now(tz=timezone.utc) + timedelta(hours=5))
 
-        training_api = sys.modules.get("training.api")
-        if training_api is None:
-            import training.api as training_api
+        import training.api as training_api
+        import training.api.attendance as _attendance_mod
 
-        monkeypatch.setattr(training_api, "_get_actor_role", lambda req: training_api.RoleLabel.ATHLETE)
-        monkeypatch.setattr(training_api, "_get_actor_id", lambda req: athlete_id)
+        monkeypatch.setattr(_attendance_mod, "_get_actor_role", lambda req: training_api.RoleLabel.ATHLETE)
+        monkeypatch.setattr(_attendance_mod, "_get_actor_id", lambda req: athlete_id)
 
         allowed = client.post(
             f"/api/training/training-sessions/{session.id}/attendance",
@@ -455,12 +454,11 @@ class TestRecommendationsAndIneligibilityEndpoints:
         athlete_id = uuid.UUID("30000000-0000-0000-0000-000000000001")
         session = _create_session(status=TrainingSessionStatus.PUBLISHED)
 
-        training_api = sys.modules.get("training.api")
-        if training_api is None:
-            import training.api as training_api
+        import training.api as training_api
+        import training.api.eligibility as _eligibility_mod
 
-        monkeypatch.setattr(training_api, "_get_actor_role", lambda req: training_api.RoleLabel.ATHLETE)
-        monkeypatch.setattr(training_api, "_get_actor_id", lambda req: athlete_id)
+        monkeypatch.setattr(_eligibility_mod, "_get_actor_role", lambda req: training_api.RoleLabel.ATHLETE)
+        monkeypatch.setattr(_eligibility_mod, "_get_actor_id", lambda req: athlete_id)
 
         submit_resp = client.post(
             f"/api/training/training-sessions/{session.id}/ineligibility",

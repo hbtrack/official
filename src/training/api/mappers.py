@@ -1,21 +1,14 @@
-"""
-Helpers compartilhados pela camada HTTP (training.api).
+"""Helpers de conversão domínio → schema HTTP (training.api).
 
-Reúne:
-- Extração de ator (role/id) a partir do request autenticado.
-- Serializers domínio → schema (`_<entity>_to_out`).
-- Utilitários de contexto de feedback threads.
+Contém os 17 helpers _*_to_out que serializam entidades de domínio
+para os schemas Pydantic da camada HTTP.
 
-Fase 1.2 da refatoração estrutural: extração do bloco de helpers
-do antigo api.py monolítico sem alteração de comportamento.
+Extraído de api/_shared.py na Fase 1.4 da refatoração estrutural.
 """
 from __future__ import annotations
 
 import uuid
 
-from ninja.errors import HttpError
-
-from ..domain.rules import RoleLabel
 from ..schemas import (
     AthleteIneligibilityDeclarationOut,
     AttendanceRecordOut,
@@ -32,32 +25,6 @@ from ..schemas import (
     WellnessPreOut,
 )
 
-
-# ---------------------------------------------------------------------------
-# Auth stubs — substituir por integração real com identity_access
-# ---------------------------------------------------------------------------
-
-def _get_actor_role(request) -> RoleLabel:
-    """Extrai RoleLabel do JWT validado."""
-    role = getattr(request, "_actor_role", None)
-    if role:
-        try:
-            return RoleLabel(role)
-        except ValueError:
-            return RoleLabel.MEMBER
-    raise HttpError(401, "Unauthenticated")
-
-
-def _get_actor_id(request) -> uuid.UUID:
-    actor_id = getattr(request, "_actor_id", None)
-    if actor_id:
-        return uuid.UUID(str(actor_id))
-    raise HttpError(401, "Unauthenticated")
-
-
-# ---------------------------------------------------------------------------
-# Helpers de conversão
-# ---------------------------------------------------------------------------
 
 def _session_to_out(s) -> TrainingSessionOut:
     return TrainingSessionOut(

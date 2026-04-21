@@ -23,11 +23,9 @@ from typing import Any
 _SNAPSHOT_PATH = Path(__file__).parent / "_route_snapshot.json"
 
 
-def _current_inventory() -> list[dict[str, Any]]:
-    from training.api import router
-
-    inventory: list[dict[str, Any]] = []
-    for path, path_view in router.path_operations.items():
+def _collect_operations(r: Any, inventory: list[dict[str, Any]]) -> None:
+    """Percorre recursivamente o Router e sub-roteadores coletando operações."""
+    for path, path_view in r.path_operations.items():
         for op in path_view.operations:
             inventory.append(
                 {
@@ -40,6 +38,18 @@ def _current_inventory() -> list[dict[str, Any]]:
                     ),
                 }
             )
+    for entry in r._routers:
+        # Ninja armazena (path, router) sem kwargs adicionais
+        sub_path, sub_router = entry[0], entry[1]  # suporta 2-tuple e 3-tuple
+        _ = sub_path  # caminho foi registrado como "" — rotas já têm path completo
+        _collect_operations(sub_router, inventory)
+
+
+def _current_inventory() -> list[dict[str, Any]]:
+    from training.api import router
+
+    inventory: list[dict[str, Any]] = []
+    _collect_operations(router, inventory)
     inventory.sort(key=lambda r: (r["path"], r["methods"]))
     return inventory
 

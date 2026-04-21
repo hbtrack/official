@@ -1,7 +1,7 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-04-21T07:44:00Z`
-- Pipeline status: `PASS`
+- Generated at: `2026-04-21T21:26:38Z`
+- Pipeline status: `FAIL`
 
 | Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |
 |---|---|---|---:|---:|---:|---|

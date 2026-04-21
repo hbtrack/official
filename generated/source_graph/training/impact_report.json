@@ -17,7 +17,7 @@
     "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
   ],
   "impacted_runtime": [
-    "src/training/api.py",
+    "src/training/api/__init__.py",
     "src/training/domain/entities.py",
     "src/training/domain/rules.py",
     "src/training/application/use_cases.py"
@@ -141,7 +141,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
-      "sha256": "866fc431a6a7f057710dcb3e654a07cb5c3f8275fa554bdc59a4a015387169ea"
+      "sha256": "62c65a7a5176278bbf7d0106e72855e953dc90693805f02a1073267caf362137"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
@@ -153,19 +153,19 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-      "sha256": "0ba0183c615b9bebd43c95063fcba3bb8947515377baa2748c4bd40c36208cf8"
+      "sha256": "e7d8dc9c3da0aead90dbadef6eb9dac2219d4613085bf676239c50bf5728f687"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/test_obligations.yaml",
       "sha256": "5fadae9a1f794d00c6b6de66b08cc93aa121d8ff237f662dcc6cd489653ca5cc"
     },
     {
-      "relpath": "src/training/api.py",
-      "sha256": "b614e3c2d3fb8b7472d12ea235b814f791601bf273137ec5822257fb5dd15399"
+      "relpath": "src/training/api/__init__.py",
+      "sha256": "3c2e8d1b85ddb42a873506463cf796c932f3f2f63807904ca62442bdb010b0be"
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "c23232360b7abe94d51644753c54af1a07fa5a3b79c9e614b5c801dcab3786df"
+      "sha256": "04c1114166f0c89183b3a9ef035f871286f3e63e815e69054a5ce61eab298bbf"
     },
     {
       "relpath": "src/training/domain/entities.py",
@@ -173,7 +173,7 @@
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "7fb1784f3a02d4e1b5d087d51d5c1d79da2db2196626ce285b39bf77ccf61c7b"
+      "sha256": "0c47fae9f1dc4ac86a2a92bb701651f34627abba8536846a69452b5b2ee41f9c"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "3a06e3199cd1ee8e216fd57adbd99903a304fab9d01667079ac95f294cade548"
+  "source_fingerprint": "1cb92fc3c976cb50984dcceb1b5db255d428ca6225cece14fd044594ecb2decf"
 }

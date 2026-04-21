@@ -104,7 +104,7 @@
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "8249c4ae7d237bdecd233fa38db48584945b22b25fbdb910614a09375fb0915d"
+      "sha256": "4cb924448859da7f82c13e740837e83012cd4ec16a41898e9626c3833eb7bb4f"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -112,11 +112,11 @@
     },
     {
       "relpath": "generated/source_graph/training/training.openapi_contract_view.yaml",
-      "sha256": "76ddc0740800771724988db36f7650f9b1fcfa32861d287593e78b2bc07332ef"
+      "sha256": "fe0123ff191e402f691716e050dbdaa17e008c8aab142ce975e6b85862889299"
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "b801b9fcc31d534af55b4d28682567eb9d7c891db83d010ba8a3ea3597a8860b"
+      "sha256": "62cd43753e989d1a61c87d9065a5ef62fc91ef17bd170f25cc392afe6d773be7"
     }
   ],
   "module": "training",
@@ -147,12 +147,12 @@
     "status": "implemented"
   },
   "runtime_surfaces": {
-    "api_router": "src/training/api.py",
+    "api_router": "src/training/api/__init__.py",
     "domain_entity": "src/training/domain/entities.py",
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "b30bc88e575133682f2fedc81f1975c2d1b0cff679307e8195f6a6e635b4a69d",
+  "source_fingerprint": "6b0c5a7967a0ab0854597e34a92c6525d97b22859f5c0e891e0f0e6e3bac7243",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -768,7 +768,7 @@
         "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
       ],
       "impacted_runtime": [
-        "src/training/api.py",
+        "src/training/api/__init__.py",
         "src/training/domain/entities.py",
         "src/training/domain/rules.py",
         "src/training/application/use_cases.py"
@@ -783,7 +783,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "3a06e3199cd1ee8e216fd57adbd99903a304fab9d01667079ac95f294cade548"
+      "source_fingerprint": "1cb92fc3c976cb50984dcceb1b5db255d428ca6225cece14fd044594ecb2decf"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -953,7 +953,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_training_sessions",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#list_training_sessions",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListTrainingSessionsUseCase"
         },
         {
@@ -978,7 +978,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#create_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateTrainingSessionUseCase"
         },
         {
@@ -1004,7 +1004,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#get_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetTrainingSessionUseCase"
         },
         {
@@ -1030,7 +1030,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#update_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateTrainingSessionUseCase"
         },
         {
@@ -1054,7 +1054,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#delete_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#delete_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteTrainingSessionUseCase"
         },
         {
@@ -1079,7 +1079,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#publish_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#publish_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1104,7 +1104,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#unpublish_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#unpublish_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1129,7 +1129,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#start_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#start_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1154,7 +1154,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#complete_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#complete_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1179,7 +1179,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#cancel_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#cancel_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1204,7 +1204,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#archive_training_session",
+          "runtime_handler_ref": "../../../../../src/training/api/sessions.py#archive_training_session",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
         },
         {
@@ -1230,7 +1230,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_blocks",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#list_session_blocks",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionBlocksUseCase"
         },
         {
@@ -1256,7 +1256,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#add_session_block",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#add_session_block",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#AddSessionBlockUseCase"
         },
         {
@@ -1282,7 +1282,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_session_block",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#get_session_block",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetSessionBlockUseCase"
         },
         {
@@ -1308,7 +1308,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_session_block",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#update_session_block",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateSessionBlockUseCase"
         },
         {
@@ -1332,7 +1332,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#delete_session_block",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#delete_session_block",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteSessionBlockUseCase"
         },
         {
@@ -1357,7 +1357,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#reorder_session_blocks",
+          "runtime_handler_ref": "../../../../../src/training/api/blocks.py#reorder_session_blocks",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ReorderSessionBlocksUseCase"
         },
         {
@@ -1383,7 +1383,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_attendance",
+          "runtime_handler_ref": "../../../../../src/training/api/attendance.py#list_session_attendance",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionAttendanceUseCase"
         },
         {
@@ -1408,7 +1408,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#record_session_attendance",
+          "runtime_handler_ref": "../../../../../src/training/api/attendance.py#record_session_attendance",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#RecordSessionAttendanceUseCase"
         },
         {
@@ -1436,7 +1436,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#submit_wellness_pre",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#submit_wellness_pre",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPreUseCase"
         },
         {
@@ -1462,7 +1462,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_wellness_pre",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#get_wellness_pre",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPreUseCase"
         },
         {
@@ -1489,7 +1489,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_wellness_pre",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#update_wellness_pre",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPreUseCase"
         },
         {
@@ -1517,7 +1517,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#submit_wellness_post",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#submit_wellness_post",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPostUseCase"
         },
         {
@@ -1543,7 +1543,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_wellness_post",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#get_wellness_post",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPostUseCase"
         },
         {
@@ -1570,7 +1570,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_wellness_post",
+          "runtime_handler_ref": "../../../../../src/training/api/wellness.py#update_wellness_post",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPostUseCase"
         },
         {
@@ -1593,7 +1593,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_mesocycles",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_mesocycles",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMesocyclesUseCase"
         },
         {
@@ -1618,7 +1618,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_mesocycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_mesocycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMesocycleUseCase"
         },
         {
@@ -1642,7 +1642,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_mesocycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_mesocycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMesocycleUseCase"
         },
         {
@@ -1667,7 +1667,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_mesocycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_mesocycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMesocycleUseCase"
         },
         {
@@ -1690,7 +1690,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_microcycles",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_microcycles",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMicrocyclesUseCase"
         },
         {
@@ -1715,7 +1715,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_microcycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_microcycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMicrocycleUseCase"
         },
         {
@@ -1739,7 +1739,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_microcycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_microcycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMicrocycleUseCase"
         },
         {
@@ -1764,7 +1764,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#update_microcycle",
+          "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_microcycle",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMicrocycleUseCase"
         },
         {
@@ -1790,7 +1790,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_execution_records",
+          "runtime_handler_ref": "../../../../../src/training/api/execution.py#list_execution_records",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListExecutionRecordsUseCase"
         },
         {
@@ -1815,7 +1815,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_execution_record",
+          "runtime_handler_ref": "../../../../../src/training/api/execution.py#create_execution_record",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateExecutionRecordUseCase"
         },
         {
@@ -1841,7 +1841,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_execution_record",
+          "runtime_handler_ref": "../../../../../src/training/api/execution.py#get_execution_record",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetExecutionRecordUseCase"
         },
         {
@@ -1867,7 +1867,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_feedback_threads",
+          "runtime_handler_ref": "../../../../../src/training/api/feedback.py#list_feedback_threads",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListFeedbackThreadsUseCase"
         },
         {
@@ -1894,7 +1894,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_feedback_thread",
+          "runtime_handler_ref": "../../../../../src/training/api/feedback.py#create_feedback_thread",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateFeedbackThreadUseCase"
         },
         {
@@ -1918,7 +1918,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#close_feedback_thread",
+          "runtime_handler_ref": "../../../../../src/training/api/feedback.py#close_feedback_thread",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CloseFeedbackThreadUseCase"
         },
         {
@@ -1944,7 +1944,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_session_objectives",
+          "runtime_handler_ref": "../../../../../src/training/api/execution.py#list_session_objectives",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionObjectivesUseCase"
         },
         {
@@ -1969,7 +1969,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#create_session_objective",
+          "runtime_handler_ref": "../../../../../src/training/api/execution.py#create_session_objective",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateSessionObjectiveUseCase"
         },
         {
@@ -1993,7 +1993,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_attention_queue_items",
+          "runtime_handler_ref": "../../../../../src/training/api/attention.py#list_attention_queue_items",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListAttentionQueueItemsUseCase"
         },
         {
@@ -2017,7 +2017,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#resolve_attention_queue_item",
+          "runtime_handler_ref": "../../../../../src/training/api/attention.py#resolve_attention_queue_item",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ResolveAttentionQueueItemUseCase"
         },
         {
@@ -2041,7 +2041,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#dismiss_attention_queue_item",
+          "runtime_handler_ref": "../../../../../src/training/api/attention.py#dismiss_attention_queue_item",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissAttentionQueueItemUseCase"
         },
         {
@@ -2065,7 +2065,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#escalate_attention_queue_item",
+          "runtime_handler_ref": "../../../../../src/training/api/attention.py#escalate_attention_queue_item",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#EscalateAttentionQueueItemUseCase"
         },
         {
@@ -2089,7 +2089,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_recommendations",
+          "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#list_recommendations",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListRecommendationsUseCase"
         },
         {
@@ -2113,7 +2113,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#accept_recommendation",
+          "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#accept_recommendation",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#AcceptRecommendationUseCase"
         },
         {
@@ -2137,7 +2137,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#dismiss_recommendation",
+          "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#dismiss_recommendation",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissRecommendationUseCase"
         },
         {
@@ -2161,7 +2161,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_ineligibility_status",
+          "runtime_handler_ref": "../../../../../src/training/api/eligibility.py#get_ineligibility_status",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetIneligibilityStatusUseCase"
         },
         {
@@ -2186,7 +2186,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#submit_ineligibility_declaration",
+          "runtime_handler_ref": "../../../../../src/training/api/eligibility.py#submit_ineligibility_declaration",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitIneligibilityDeclarationUseCase"
         },
         {
@@ -2209,7 +2209,7 @@
           "roles_denied": [
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#get_load_chart",
+          "runtime_handler_ref": "../../../../../src/training/api/analytics.py#get_load_chart",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#GetLoadChartUseCase"
         },
         {
@@ -2233,7 +2233,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#list_chat_messages",
+          "runtime_handler_ref": "../../../../../src/training/api/chat.py#list_chat_messages",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#ListChatMessagesUseCase"
         },
         {
@@ -2257,7 +2257,7 @@
             "athlete",
             "member"
           ],
-          "runtime_handler_ref": "../../../../../src/training/api.py#submit_training_suggestion",
+          "runtime_handler_ref": "../../../../../src/training/api/chat.py#submit_training_suggestion",
           "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitTrainingSuggestionUseCase"
         }
       ]
@@ -2283,7 +2283,7 @@
         "roles_denied": [
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#list_mesocycles",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_mesocycles",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMesocyclesUseCase"
       },
       {
@@ -2308,7 +2308,7 @@
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#create_mesocycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_mesocycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMesocycleUseCase"
       },
       {
@@ -2332,7 +2332,7 @@
         "roles_denied": [
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#get_mesocycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_mesocycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMesocycleUseCase"
       },
       {
@@ -2357,7 +2357,7 @@
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#update_mesocycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_mesocycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMesocycleUseCase"
       },
       {
@@ -2380,7 +2380,7 @@
         "roles_denied": [
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#list_microcycles",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_microcycles",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMicrocyclesUseCase"
       },
       {
@@ -2405,7 +2405,7 @@
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#create_microcycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_microcycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMicrocycleUseCase"
       },
       {
@@ -2429,7 +2429,7 @@
         "roles_denied": [
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#get_microcycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_microcycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMicrocycleUseCase"
       },
       {
@@ -2454,7 +2454,7 @@
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/training/api.py#update_microcycle",
+        "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_microcycle",
         "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMicrocycleUseCase"
       }
     ],

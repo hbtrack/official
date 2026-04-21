@@ -6,7 +6,7 @@ endpoints:
   method: GET
   path: /training-sessions
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_training_sessions
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#list_training_sessions
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListTrainingSessionsUseCase
   roles_allowed:
   - admin
@@ -26,7 +26,7 @@ endpoints:
   method: POST
   path: /training-sessions
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#create_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -46,7 +46,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#get_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -66,7 +66,7 @@ endpoints:
   method: PATCH
   path: /training-sessions/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#update_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -87,7 +87,7 @@ endpoints:
   method: DELETE
   path: /training-sessions/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/delete
-  runtime_handler_ref: ../../../../../src/training/api.py#delete_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#delete_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#DeleteTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -106,7 +106,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/publish
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/publish/post
-  runtime_handler_ref: ../../../../../src/training/api.py#publish_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#publish_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -126,7 +126,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/unpublish
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/unpublish/post
-  runtime_handler_ref: ../../../../../src/training/api.py#unpublish_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#unpublish_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -146,7 +146,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/start
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/start/post
-  runtime_handler_ref: ../../../../../src/training/api.py#start_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#start_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -166,7 +166,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/complete
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/complete/post
-  runtime_handler_ref: ../../../../../src/training/api.py#complete_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#complete_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -186,7 +186,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/cancel
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/cancel/post
-  runtime_handler_ref: ../../../../../src/training/api.py#cancel_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#cancel_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -206,7 +206,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/archive
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/archive/post
-  runtime_handler_ref: ../../../../../src/training/api.py#archive_training_session
+  runtime_handler_ref: ../../../../../src/training/api/sessions.py#archive_training_session
   use_case_ref: ../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase
   roles_allowed:
   - admin
@@ -226,7 +226,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/blocks
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_session_blocks
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#list_session_blocks
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListSessionBlocksUseCase
   roles_allowed:
   - admin
@@ -246,7 +246,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/blocks
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/post
-  runtime_handler_ref: ../../../../../src/training/api.py#add_session_block
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#add_session_block
   use_case_ref: ../../../../../src/training/application/use_cases.py#AddSessionBlockUseCase
   roles_allowed:
   - admin
@@ -267,7 +267,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/blocks/{blockId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_session_block
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#get_session_block
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetSessionBlockUseCase
   roles_allowed:
   - admin
@@ -287,7 +287,7 @@ endpoints:
   method: PATCH
   path: /training-sessions/{id}/blocks/{blockId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_session_block
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#update_session_block
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateSessionBlockUseCase
   roles_allowed:
   - admin
@@ -308,7 +308,7 @@ endpoints:
   method: DELETE
   path: /training-sessions/{id}/blocks/{blockId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/{blockId}/delete
-  runtime_handler_ref: ../../../../../src/training/api.py#delete_session_block
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#delete_session_block
   use_case_ref: ../../../../../src/training/application/use_cases.py#DeleteSessionBlockUseCase
   roles_allowed:
   - admin
@@ -327,7 +327,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/blocks/reorder
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/blocks/reorder/post
-  runtime_handler_ref: ../../../../../src/training/api.py#reorder_session_blocks
+  runtime_handler_ref: ../../../../../src/training/api/blocks.py#reorder_session_blocks
   use_case_ref: ../../../../../src/training/application/use_cases.py#ReorderSessionBlocksUseCase
   roles_allowed:
   - admin
@@ -347,7 +347,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/attendance
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attendance/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_session_attendance
+  runtime_handler_ref: ../../../../../src/training/api/attendance.py#list_session_attendance
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListSessionAttendanceUseCase
   roles_allowed:
   - admin
@@ -367,7 +367,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/attendance
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attendance/post
-  runtime_handler_ref: ../../../../../src/training/api.py#record_session_attendance
+  runtime_handler_ref: ../../../../../src/training/api/attendance.py#record_session_attendance
   use_case_ref: ../../../../../src/training/application/use_cases.py#RecordSessionAttendanceUseCase
   roles_allowed:
   - admin
@@ -387,7 +387,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/wellness-pre
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/post
-  runtime_handler_ref: ../../../../../src/training/api.py#submit_wellness_pre
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#submit_wellness_pre
   use_case_ref: ../../../../../src/training/application/use_cases.py#SubmitWellnessPreUseCase
   roles_allowed:
   - admin
@@ -409,7 +409,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/wellness-pre/{athleteId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/{athleteId}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_wellness_pre
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#get_wellness_pre
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetWellnessPreUseCase
   roles_allowed:
   - admin
@@ -429,7 +429,7 @@ endpoints:
   method: PATCH
   path: /training-sessions/{id}/wellness-pre/{athleteId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-pre/{athleteId}/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_wellness_pre
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#update_wellness_pre
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateWellnessPreUseCase
   roles_allowed:
   - admin
@@ -450,7 +450,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/wellness-post
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/post
-  runtime_handler_ref: ../../../../../src/training/api.py#submit_wellness_post
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#submit_wellness_post
   use_case_ref: ../../../../../src/training/application/use_cases.py#SubmitWellnessPostUseCase
   roles_allowed:
   - admin
@@ -472,7 +472,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/wellness-post/{athleteId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/{athleteId}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_wellness_post
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#get_wellness_post
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetWellnessPostUseCase
   roles_allowed:
   - admin
@@ -492,7 +492,7 @@ endpoints:
   method: PATCH
   path: /training-sessions/{id}/wellness-post/{athleteId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/wellness-post/{athleteId}/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_wellness_post
+  runtime_handler_ref: ../../../../../src/training/api/wellness.py#update_wellness_post
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateWellnessPostUseCase
   roles_allowed:
   - admin
@@ -513,7 +513,7 @@ endpoints:
   method: GET
   path: /mesocycles
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/mesocycles/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_mesocycles
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#list_mesocycles
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListMesocyclesUseCase
   roles_allowed:
   - admin
@@ -531,7 +531,7 @@ endpoints:
   method: POST
   path: /mesocycles
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/mesocycles/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_mesocycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#create_mesocycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateMesocycleUseCase
   roles_allowed:
   - admin
@@ -551,7 +551,7 @@ endpoints:
   method: GET
   path: /mesocycles/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/mesocycles/{id}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_mesocycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#get_mesocycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetMesocycleUseCase
   roles_allowed:
   - admin
@@ -570,7 +570,7 @@ endpoints:
   method: PATCH
   path: /mesocycles/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/mesocycles/{id}/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_mesocycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#update_mesocycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateMesocycleUseCase
   roles_allowed:
   - admin
@@ -590,7 +590,7 @@ endpoints:
   method: GET
   path: /microcycles
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/microcycles/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_microcycles
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#list_microcycles
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListMicrocyclesUseCase
   roles_allowed:
   - admin
@@ -608,7 +608,7 @@ endpoints:
   method: POST
   path: /microcycles
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/microcycles/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_microcycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#create_microcycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateMicrocycleUseCase
   roles_allowed:
   - admin
@@ -628,7 +628,7 @@ endpoints:
   method: GET
   path: /microcycles/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/microcycles/{id}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_microcycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#get_microcycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetMicrocycleUseCase
   roles_allowed:
   - admin
@@ -647,7 +647,7 @@ endpoints:
   method: PATCH
   path: /microcycles/{id}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/microcycles/{id}/patch
-  runtime_handler_ref: ../../../../../src/training/api.py#update_microcycle
+  runtime_handler_ref: ../../../../../src/training/api/planning.py#update_microcycle
   use_case_ref: ../../../../../src/training/application/use_cases.py#UpdateMicrocycleUseCase
   roles_allowed:
   - admin
@@ -667,7 +667,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/execution-records
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_execution_records
+  runtime_handler_ref: ../../../../../src/training/api/execution.py#list_execution_records
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListExecutionRecordsUseCase
   roles_allowed:
   - admin
@@ -687,7 +687,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/execution-records
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_execution_record
+  runtime_handler_ref: ../../../../../src/training/api/execution.py#create_execution_record
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateExecutionRecordUseCase
   roles_allowed:
   - admin
@@ -707,7 +707,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/execution-records/{recordId}
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/execution-records/{recordId}/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_execution_record
+  runtime_handler_ref: ../../../../../src/training/api/execution.py#get_execution_record
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetExecutionRecordUseCase
   roles_allowed:
   - admin
@@ -727,7 +727,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/feedback-threads
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_feedback_threads
+  runtime_handler_ref: ../../../../../src/training/api/feedback.py#list_feedback_threads
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListFeedbackThreadsUseCase
   roles_allowed:
   - admin
@@ -747,7 +747,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/feedback-threads
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_feedback_thread
+  runtime_handler_ref: ../../../../../src/training/api/feedback.py#create_feedback_thread
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateFeedbackThreadUseCase
   roles_allowed:
   - admin
@@ -768,7 +768,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/feedback-threads/{threadId}/close
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/feedback-threads/{threadId}/close/post
-  runtime_handler_ref: ../../../../../src/training/api.py#close_feedback_thread
+  runtime_handler_ref: ../../../../../src/training/api/feedback.py#close_feedback_thread
   use_case_ref: ../../../../../src/training/application/use_cases.py#CloseFeedbackThreadUseCase
   roles_allowed:
   - admin
@@ -787,7 +787,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/objectives
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/objectives/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_session_objectives
+  runtime_handler_ref: ../../../../../src/training/api/execution.py#list_session_objectives
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListSessionObjectivesUseCase
   roles_allowed:
   - admin
@@ -807,7 +807,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/objectives
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/objectives/post
-  runtime_handler_ref: ../../../../../src/training/api.py#create_session_objective
+  runtime_handler_ref: ../../../../../src/training/api/execution.py#create_session_objective
   use_case_ref: ../../../../../src/training/application/use_cases.py#CreateSessionObjectiveUseCase
   roles_allowed:
   - admin
@@ -827,7 +827,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/attention-queue
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_attention_queue_items
+  runtime_handler_ref: ../../../../../src/training/api/attention.py#list_attention_queue_items
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListAttentionQueueItemsUseCase
   roles_allowed:
   - admin
@@ -846,7 +846,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/attention-queue/{itemId}/resolve
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/resolve/post
-  runtime_handler_ref: ../../../../../src/training/api.py#resolve_attention_queue_item
+  runtime_handler_ref: ../../../../../src/training/api/attention.py#resolve_attention_queue_item
   use_case_ref: ../../../../../src/training/application/use_cases.py#ResolveAttentionQueueItemUseCase
   roles_allowed:
   - admin
@@ -865,7 +865,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/attention-queue/{itemId}/dismiss
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/dismiss/post
-  runtime_handler_ref: ../../../../../src/training/api.py#dismiss_attention_queue_item
+  runtime_handler_ref: ../../../../../src/training/api/attention.py#dismiss_attention_queue_item
   use_case_ref: ../../../../../src/training/application/use_cases.py#DismissAttentionQueueItemUseCase
   roles_allowed:
   - admin
@@ -884,7 +884,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/attention-queue/{itemId}/escalate
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/attention-queue/{itemId}/escalate/post
-  runtime_handler_ref: ../../../../../src/training/api.py#escalate_attention_queue_item
+  runtime_handler_ref: ../../../../../src/training/api/attention.py#escalate_attention_queue_item
   use_case_ref: ../../../../../src/training/application/use_cases.py#EscalateAttentionQueueItemUseCase
   roles_allowed:
   - admin
@@ -903,7 +903,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/recommendations
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_recommendations
+  runtime_handler_ref: ../../../../../src/training/api/recommendations.py#list_recommendations
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListRecommendationsUseCase
   roles_allowed:
   - admin
@@ -922,7 +922,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/recommendations/{recommendationId}/accept
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/{recommendationId}/accept/post
-  runtime_handler_ref: ../../../../../src/training/api.py#accept_recommendation
+  runtime_handler_ref: ../../../../../src/training/api/recommendations.py#accept_recommendation
   use_case_ref: ../../../../../src/training/application/use_cases.py#AcceptRecommendationUseCase
   roles_allowed:
   - admin
@@ -941,7 +941,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/recommendations/{recommendationId}/dismiss
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/recommendations/{recommendationId}/dismiss/post
-  runtime_handler_ref: ../../../../../src/training/api.py#dismiss_recommendation
+  runtime_handler_ref: ../../../../../src/training/api/recommendations.py#dismiss_recommendation
   use_case_ref: ../../../../../src/training/application/use_cases.py#DismissRecommendationUseCase
   roles_allowed:
   - admin
@@ -960,7 +960,7 @@ endpoints:
   method: GET
   path: /training-sessions/{id}/ineligibility
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/ineligibility/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_ineligibility_status
+  runtime_handler_ref: ../../../../../src/training/api/eligibility.py#get_ineligibility_status
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetIneligibilityStatusUseCase
   roles_allowed:
   - admin
@@ -979,7 +979,7 @@ endpoints:
   method: POST
   path: /training-sessions/{id}/ineligibility
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training-sessions/{id}/ineligibility/post
-  runtime_handler_ref: ../../../../../src/training/api.py#submit_ineligibility_declaration
+  runtime_handler_ref: ../../../../../src/training/api/eligibility.py#submit_ineligibility_declaration
   use_case_ref: ../../../../../src/training/application/use_cases.py#SubmitIneligibilityDeclarationUseCase
   roles_allowed:
   - admin
@@ -999,7 +999,7 @@ endpoints:
   method: GET
   path: /training/load-chart
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/training/load-chart/get
-  runtime_handler_ref: ../../../../../src/training/api.py#get_load_chart
+  runtime_handler_ref: ../../../../../src/training/api/analytics.py#get_load_chart
   use_case_ref: ../../../../../src/training/application/use_cases.py#GetLoadChartUseCase
   roles_allowed:
   - admin
@@ -1017,7 +1017,7 @@ endpoints:
   method: GET
   path: /hb-pro-coach/conversations/{conversationId}/messages
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/hb-pro-coach/conversations/{conversationId}/messages/get
-  runtime_handler_ref: ../../../../../src/training/api.py#list_chat_messages
+  runtime_handler_ref: ../../../../../src/training/api/chat.py#list_chat_messages
   use_case_ref: ../../../../../src/training/application/use_cases.py#ListChatMessagesUseCase
   roles_allowed:
   - admin
@@ -1036,7 +1036,7 @@ endpoints:
   method: POST
   path: /hb-pro-coach/training-suggestions
   openapi_ref: ../../../../../contracts/openapi/paths/training.yaml#/hb-pro-coach/training-suggestions/post
-  runtime_handler_ref: ../../../../../src/training/api.py#submit_training_suggestion
+  runtime_handler_ref: ../../../../../src/training/api/chat.py#submit_training_suggestion
   use_case_ref: ../../../../../src/training/application/use_cases.py#SubmitTrainingSuggestionUseCase
   roles_allowed:
   - admin

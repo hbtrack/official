@@ -1,7 +1,7 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-21T10:06:34.745617+00:00",
-  "branch": "fix/deploy-port-guard-agnostic",
+  "session_timestamp": "2026-04-21T21:52:27.477085+00:00",
+  "branch": "refactor/training-decomposition",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -372,11 +372,29 @@
       "sha256": "92fc9e5fda9064503fad0e130065f85aa4233e0f041e6c16c5924d22b6946b35",
       "created_at": "2026-04-21T05:08:20.168433+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "SESSION_HANDOFF.md",
+      "sha256": "1ac50e69fa37f76e5c7553a5955a9f4acdf8c6dbbb09f73458cc341a0f8fcf1f",
+      "created_at": "2026-04-21T19:02:04.372497+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
+      "sha256": "62c65a7a5176278bbf7d0106e72855e953dc90693805f02a1073267caf362137",
+      "created_at": "2026-04-21T21:49:36.506229+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
+      "sha256": "e7d8dc9c3da0aead90dbadef6eb9dac2219d4613085bf676239c50bf5728f687",
+      "created_at": "2026-04-21T21:49:49.462276+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-21T10:08:20.168281+00:00",
+  "hook_validated_at": "2026-04-21T19:08:25.095140+00:00",
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 4
