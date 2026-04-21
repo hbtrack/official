@@ -9,8 +9,8 @@ roadmap_phase: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: ROADMAP-PHASE4-TRAINING-DECOMPOSITION
-resultado: PENDENTE
-proxima_acao_permitida: "Iniciar Fase 4 — SessionAccessPolicy + TrainingServices"
+resultado: DONE
+proxima_acao_permitida: "Iniciar Fase 5 — cobertura de testes de regressão + documentação interna"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
@@ -19,6 +19,71 @@ evidence_paths:
   - "docs/hbtrack/modulos/training/graph/endpoints.yaml"
   - "docs/hbtrack/modulos/training/graph/module_manifest.yaml"
 ---
+# SESSION HANDOFF — HB TRACK
+
+## O que foi feito
+
+**Sessão 2026-04-21 — Refatoração training: Fase 4 (branch refactor/training-decomposition)**
+
+Fases concluídas e validadas conforme `.dev/decisões/rafatora_training.md`:
+
+- **Fase 0.5–3**: concluídas em sessões anteriores (ver commits anteriores)
+- **Fase 4** (commit `1422d446`): SessionAccessPolicy + SessionGuard + TrainingServices
+
+### Detalhes da Fase 4
+
+**4.1–4.2 — `src/training/domain/policies/session_access.py`** (novo):
+- `SessionAccessPolicy`: 6 métodos (`require_readable`, `require_mutable`,
+  `require_in_progress`, `require_valid_transition`, `require_write_access`,
+  `require_deletable`) — consolida 9+ funções `assert_*` do `domain/rules.py`
+- `SessionGuard`: 6 métodos (`load_for_update`, `load_for_in_progress`,
+  `load_for_transition`, `load_for_read`, `load_for_delete`, `load_with_write_access`)
+  — elimina padrão repetido "load → NotFound → policy.require_* → return"
+
+**4.3 — 10 UseCases refatorados para usar SessionGuard**:
+  `TransitionTrainingSessionUseCase`, `DeleteTrainingSessionUseCase`,
+  `UpdateTrainingSessionUseCase`, `GetTrainingSessionUseCase`,
+  `AddSessionBlockUseCase`, `UpdateSessionBlockUseCase`, `DeleteSessionBlockUseCase`,
+  `ReorderSessionBlocksUseCase`, `CreateExecutionRecordUseCase`,
+  `CreateSessionObjectiveUseCase`
+
+**4.4 — `src/training/application/common/services.py`** (novo):
+- `TrainingServices`: 47 factory methods + `session_guard()` + `session_block_repo()`
+- Regra enforçada: nenhum atributo de repositório na instância (somente métodos)
+
+**4.5 — 12 handlers em `src/training/api/` refatorados**:
+  sessions, blocks, execution, wellness, attendance, feedback, chat,
+  eligibility, recommendations, attention, planning, analytics
+- `grep -c "Repository()" src/training/api/*.py` = **0** (critério de done atingido)
+
+**Testes**: `test_phase4_policy_guard_services.py` — 38 novos testes
+- Total: **328 passed, 19 skipped** (eram 290 antes)
+
+## Estado Geral
+
+| Item | Status |
+|---|---|
+| Fase 0.5 | ✅ CONCLUÍDA |
+| Fase 1 (api/ split) | ✅ CONCLUÍDA |
+| Fase 2 (AccessContext + CursorCodec) | ✅ CONCLUÍDA |
+| Addendum 2.2 (paging framework-agnostic) | ✅ CONCLUÍDA |
+| Fase 3 (application/ split) | ✅ CONCLUÍDA (commit f616db7b) |
+| Fase 4 (SessionAccessPolicy + TrainingServices) | ✅ CONCLUÍDA (commit 1422d446) |
+| training suite | ✅ 328 passed, 19 skipped |
+| Repository() em api/*.py | ✅ 0 ocorrências |
+
+## Evidências
+
+- `_reports/contract_gates/precommit.latest.json` — PASS (todos os gates)
+- commit `1422d446` — 20 files changed, 1053 insertions(+), 297 deletions(-)
+- hb verify exitcode 0 (ROADMAP mode, phase 4)
+
+## Próxima Sessão
+
+Fase 5 — cobertura de testes de regressão para os novos componentes e/ou próximas
+fases do ROADMAP. Verificar `ROADMAP.md` para Critério de Done da Fase 4 completo
+e pré-condições para Fase 5.
+
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
