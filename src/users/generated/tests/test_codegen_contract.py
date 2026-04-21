@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: users
-# source_fingerprint: 6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a
+# source_fingerprint: 67c24b3cd6d6764888f80334f9503421261becadce6b6fa96ae42adee2d8eb16
 
 from __future__ import annotations
 
@@ -22,6 +22,7 @@ def _make_user_profile(**overrides):
         "first_name": "test-first_name",
         "last_name": "test-last_name",
         "display_name": "test-display_name",
+        "avatar_url": "test-avatar_url",
         "role_label": "admin",
         "status_label": "ACTIVE",
         "position_label": "test-position_label",

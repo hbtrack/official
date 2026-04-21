@@ -68,6 +68,83 @@ endpoints:
       - 401
       - 500
 
+  - operation_id: authForgotPassword
+    method: POST
+    path: /auth/forgot-password
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1forgot-password/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_forgot_password"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#ForgotPasswordUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 202
+      - 400
+      - 429
+      - 500
+
+  - operation_id: authResetPassword
+    method: POST
+    path: /auth/reset-password
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1reset-password/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_reset_password"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#ValidatePasswordResetUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 410
+
+  - operation_id: authNewPassword
+    method: POST
+    path: /auth/new-password
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1new-password/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_new_password"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#SetNewPasswordUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 202
+      - 400
+      - 410
+
+  - operation_id: authConfirmReset
+    method: POST
+    path: /auth/confirm-reset
+    openapi_ref: "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1confirm-reset/post"
+    runtime_handler_ref: "../../../../../src/identity_access/api.py#auth_confirm_reset"
+    use_case_ref: "../../../../../src/identity_access/application/use_cases.py#ConfirmPasswordResetUseCase"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    roles_denied: []
+    owner_scoped_roles: []
+    response_codes:
+      - 200
+      - 400
+      - 404
+
   - operation_id: authGetCurrentSession
     method: GET
     path: /auth/me

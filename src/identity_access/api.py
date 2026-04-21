@@ -10,8 +10,9 @@ Django Ninja Router do módulo identity_access.
 Implementa EXATAMENTE os endpoints de contracts/openapi/paths/identity_access.yaml.
 PERMISSIONS_IDENTITY_ACCESS.md governa RBAC por operação.
 
-9 operações:
-  authLogin, authLogout, authRefreshToken, authGetCurrentSession,
+13 operações:
+  authLogin, authLogout, authRefreshToken, authForgotPassword,
+  authResetPassword, authNewPassword, authConfirmReset, authGetCurrentSession,
   listActiveSessions, revokeSession,
   listUserRoles, assignRole, revokeRole
 
@@ -23,6 +24,7 @@ OWASP API Security Top 10 (2023):
   API5/BFLA: role verificado server-side em cada operação sensível
 """
 
+import os
 from typing import Optional
 from uuid import UUID
 
@@ -36,6 +38,10 @@ from .application.use_cases import (
     ListUserRolesUseCase,
     LoginUseCase,
     LogoutUseCase,
+    ForgotPasswordUseCase,
+    ValidatePasswordResetUseCase,
+    SetNewPasswordUseCase,
+    ConfirmPasswordResetUseCase,
     RefreshTokenUseCase,
     RevokeRoleUseCase,
     RevokeSessionUseCase,
@@ -51,10 +57,18 @@ from .infrastructure.repository import IdentityAccessRepository
 from .schemas import (
     AssignRoleIn,
     AuthSessionOut,
+    ConfirmResetIn,
+    ConfirmResetOut,
+    ForgotPasswordIn,
+    ForgotPasswordOut,
     LoginIn,
     LoginOut,
+    NewPasswordIn,
+    NewPasswordOut,
     PaginatedSessionsOut,
     ProblemOut,
+    ResetPasswordIn,
+    ResetPasswordOut,
     RefreshIn,
     RefreshOut,
     UserRolesOut,
@@ -144,6 +158,88 @@ def auth_refresh(request, body: RefreshIn):
     except (ValueError, SessionRevoked, SessionExpired) as exc:
         return 401, _problem(401, "Unauthorized", str(exc))
     return 200, {"accessToken": access_token, "refreshToken": refresh_token}
+
+
+@router.post(
+    "/forgot-password",
+    response={202: ForgotPasswordOut, 400: ProblemOut, 429: ProblemOut, 500: ProblemOut},
+    auth=None,
+    operation_id="authForgotPassword",
+    summary="Request password reset",
+)
+def auth_forgot_password(request, body: ForgotPasswordIn):
+    """POST /auth/forgot-password — authForgotPassword. security: []"""
+    if not body.email:
+        return 400, _problem(400, "Bad Request", "email é obrigatório.")
+    try:
+        payload = ForgotPasswordUseCase(_get_repo()).execute(
+            email=body.email,
+            frontend_url=os.environ.get("FRONTEND_URL", "http://localhost:5173"),
+        )
+    except ValueError as exc:
+        return 400, _problem(400, "Bad Request", str(exc))
+    return 202, payload
+
+
+@router.post(
+    "/reset-password",
+    response={200: ResetPasswordOut, 400: ProblemOut, 410: ProblemOut},
+    auth=None,
+    operation_id="authResetPassword",
+    summary="Validate password reset token",
+)
+def auth_reset_password(request, body: ResetPasswordIn):
+    """POST /auth/reset-password — authResetPassword. security: []"""
+    if not body.token:
+        return 400, _problem(400, "Bad Request", "token é obrigatório.")
+    try:
+        payload = ValidatePasswordResetUseCase(_get_repo()).execute(token=body.token)
+    except ValueError as exc:
+        return 410, _problem(410, "Gone", str(exc))
+    return 200, payload
+
+
+@router.post(
+    "/new-password",
+    response={202: NewPasswordOut, 400: ProblemOut, 410: ProblemOut},
+    auth=None,
+    operation_id="authNewPassword",
+    summary="Set new password from reset token",
+)
+def auth_new_password(request, body: NewPasswordIn):
+    """POST /auth/new-password — authNewPassword. security: []"""
+    try:
+        payload = SetNewPasswordUseCase(_get_repo()).execute(
+            token=body.token,
+            new_password=body.newPassword,
+            confirm_password=body.confirmPassword,
+        )
+    except ValueError as exc:
+        title = str(exc)
+        if "token" in title.lower():
+            return 410, _problem(410, "Gone", title)
+        return 400, _problem(400, "Bad Request", title)
+    return 202, payload
+
+
+@router.post(
+    "/confirm-reset",
+    response={200: ConfirmResetOut, 400: ProblemOut, 404: ProblemOut},
+    auth=None,
+    operation_id="authConfirmReset",
+    summary="Confirm password reset completion",
+)
+def auth_confirm_reset(request, body: ConfirmResetIn):
+    """POST /auth/confirm-reset — authConfirmReset. security: []"""
+    try:
+        payload = ConfirmPasswordResetUseCase(_get_repo()).execute(
+            reset_request_id=body.resetRequestId,
+        )
+    except LookupError as exc:
+        return 404, _problem(404, "Not Found", str(exc))
+    except ValueError as exc:
+        return 400, _problem(400, "Bad Request", str(exc))
+    return 200, payload
 
 # ── FT-012: Gestão de Sessões ─────────────────────────────────────────────────
 

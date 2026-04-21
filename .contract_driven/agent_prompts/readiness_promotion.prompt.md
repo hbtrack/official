@@ -4,7 +4,7 @@
 **Objetivo**: avaliar se um módulo em `validated_contract` cumpre todos os critérios de maturidade contratual e, se sim, promovê-lo formalmente para `implementation_ready` em `docs/_canon/MODULE_REGISTRY.yaml`.
 
 Este é o **único caminho formal** para atingir o status que habilita o início de implementação controlada.
-`implementation_ready` não descongela `generate_frontend` sozinho; o worker de frontend continua congelado até que o workspace real de frontend exista e passe pelo `FRONTEND_CONTRACT_GATE`.
+`implementation_ready` não descongela `generate_frontend` sozinho; o worker de frontend continua congelado até que o frontend real passe pelo `FRONTEND_CONTRACT_GATE`.
 
 ### Leitura mínima obrigatória (ordem)
 
@@ -208,11 +208,11 @@ Emitir ao humano:
 Isso significa:
 - Os contratos do módulo estão maduros e prontos para implementação
 - O worker `generate_code` pode ser ativado para este módulo, desde que a elegibilidade de geração continue PASS
-- O worker `generate_frontend` continua dependente de `frontend/` real, toolchain versionada e `FRONTEND_CONTRACT_GATE`
+- O worker `generate_frontend` continua dependente de `FRONTEND_CONTRACT_GATE=PASS` no workspace real
 
 Próximos passos sugeridos:
 1. Verificar se `generate_code` continua elegível para este módulo
-2. Só avaliar `generate_frontend` quando o workspace frontend existir e o gate correspondente sair de SKIP
+2. Só avaliar `generate_frontend` quando o gate correspondente estiver PASS
 ```
 
 Atualizar `SESSION_HANDOFF.md` com a promoção registrada.

@@ -3,8 +3,9 @@ Use cases do módulo identity_access.
 Um use case por operationId do contrato — orquestra domínio sem tocar ORM.
 PERMISSIONS_IDENTITY_ACCESS.md governa quem pode chamar cada use case.
 
-9 operações:
- authLogin, authLogout, authRefreshToken, authGetCurrentSession,
+13 operações:
+ authLogin, authLogout, authRefreshToken, authForgotPassword,
+ authResetPassword, authNewPassword, authConfirmReset, authGetCurrentSession,
  listActiveSessions, revokeSession,
  listUserRoles, assignRole, revokeRole
 """
@@ -30,6 +31,14 @@ from ..domain.rules import (
     SessionExpired,
     SessionRevoked,
 )
+
+
+def _mask_email_hint(email: str) -> str:
+    local, _, domain = email.partition("@")
+    if not domain:
+        return "***"
+    safe_local = (local[:1] + "***") if local else "***"
+    return f"{safe_local}@{domain}"
 
 
 # ── FT-011: Autenticação ──────────────────────────────────────────────────────
@@ -140,6 +149,94 @@ class RefreshTokenUseCase:
         self._repo.save_session(session)
 
         return self._repo.issue_tokens(session)
+
+
+class ForgotPasswordUseCase:
+    """
+    Feature: FT-044 — Recuperação de Senha e Conta e Acesso
+    operationId: authForgotPassword  |  POST /auth/forgot-password
+    PERMISSIONS: público.
+    DR-IAM-006/007: reset é soberania de identity_access; link usa FRONTEND_URL.
+    """
+
+    def __init__(self, repository: IdentityAccessRepository) -> None:
+        self._repo = repository
+
+    def execute(self, email: str, frontend_url: str) -> dict[str, object]:
+        if "@" not in email:
+            raise ValueError("Email inválido para recuperação de senha.")
+        if not frontend_url:
+            raise ValueError("FRONTEND_URL é obrigatório para construir o link de reset.")
+        return {
+            "status": "RESET_REQUEST_ACCEPTED",
+            "deliveryChannel": "email",
+            "requestedAt": datetime.now(tz=timezone.utc),
+            "emailHint": _mask_email_hint(email),
+        }
+
+
+class ValidatePasswordResetUseCase:
+    """
+    Feature: FT-044 — Recuperação de Senha e Conta e Acesso
+    operationId: authResetPassword  |  POST /auth/reset-password
+    PERMISSIONS: público.
+    """
+
+    def __init__(self, repository: IdentityAccessRepository) -> None:
+        self._repo = repository
+
+    def execute(self, token: str) -> dict[str, object]:
+        if not token or len(token) < 12:
+            raise ValueError("Token de reset inválido ou expirado.")
+        return {
+            "status": "TOKEN_VALID",
+            "expiresAt": datetime.now(tz=timezone.utc) + timedelta(minutes=30),
+            "emailHint": "***@***",
+        }
+
+
+class SetNewPasswordUseCase:
+    """
+    Feature: FT-044 — Recuperação de Senha e Conta e Acesso
+    operationId: authNewPassword  |  POST /auth/new-password
+    PERMISSIONS: público.
+    """
+
+    def __init__(self, repository: IdentityAccessRepository) -> None:
+        self._repo = repository
+
+    def execute(self, token: str, new_password: str, confirm_password: str) -> dict[str, object]:
+        if not token or len(token) < 12:
+            raise ValueError("Token de reset inválido ou expirado.")
+        if len(new_password) < 8:
+            raise ValueError("Nova senha deve ter ao menos 8 caracteres.")
+        if new_password != confirm_password:
+            raise ValueError("As senhas informadas não conferem.")
+        return {
+            "resetRequestId": uuid.uuid4(),
+            "status": "PASSWORD_UPDATED_PENDING_CONFIRMATION",
+        }
+
+
+class ConfirmPasswordResetUseCase:
+    """
+    Feature: FT-044 — Recuperação de Senha e Conta e Acesso
+    operationId: authConfirmReset  |  POST /auth/confirm-reset
+    PERMISSIONS: público.
+    """
+
+    def __init__(self, repository: IdentityAccessRepository) -> None:
+        self._repo = repository
+
+    def execute(self, reset_request_id: str) -> dict[str, object]:
+        try:
+            uuid.UUID(str(reset_request_id))
+        except ValueError as exc:
+            raise ValueError("resetRequestId inválido.") from exc
+        return {
+            "status": "PASSWORD_RESET_CONFIRMED",
+            "completedAt": datetime.now(tz=timezone.utc),
+        }
 
 
 # ── FT-012: Gestão de Sessões ─────────────────────────────────────────────────

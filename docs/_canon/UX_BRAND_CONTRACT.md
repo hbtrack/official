@@ -38,12 +38,12 @@ Todos os assets oficiais de marca do frontend devem ser consumidos a partir de `
 - `generated/images/hbicon.ico`
 
 ### Regras
-- É proibido substituir a marca por texto cru "HB Track" em staging aprovado ou produção.
+- É proibido substituir a marca por texto cru “HB Track” em staging aprovado ou produção.
 - É proibido duplicar assets de marca fora do diretório canônico sem decisão formal.
 - O favicon oficial deve ser `generated/images/hbicon.ico`.
 
 ## 4. Microcopy institucional da auth
-- tagline oficial inicial: "Dados que decidem jogos"
+- tagline oficial inicial: “Dados que decidem jogos”
 
 ## 5. Paleta canônica
 ### Família principal
@@ -82,76 +82,3 @@ Uma tela só pode ser aprovada se:
 - usar tokens canônicos
 - respeitar a escala visual do app
 - respeitar light/dark mode quando aplicável
-
-### Regras
-
-- E proibido substituir a marca por texto cru `HB Track` em staging aprovado ou producao.
-- E proibido duplicar logos em paths paralelos sem decisao documental.
-- O favicon oficial deve ser `generated/images/hbicon.ico`.
-
-## 4. Paleta canonica
-
-### Familia principal
-
-- `brand-25` a `brand-950`
-
-### Familias auxiliares
-
-- `gray-25` a `gray-950`
-- `success-25` a `success-950`
-- `error-25` a `error-950`
-- `warning-25` a `warning-950`
-- `orange-25` a `orange-950`
-
-### Tokens especificos de handebol
-
-- `court`
-- `goal-area`
-- `shot-success`
-- `shot-miss`
-- `save`
-- `turnover`
-- `load-deficit`
-- `load-optimal`
-- `load-excess`
-
-### Regras
-
-- Componentes devem consumir tokens, nao hex solto em JSX, salvo excecao documentada.
-- Tokens semanticos devem existir em light e dark mode.
-
-## 5. Escala visual do app
-
-### Regra geral
-
-- Nenhum titulo de app deve exceder 18px sem justificativa documental.
-- A UI deve priorizar controle, legibilidade e densidade.
-
-### Classes conceituais obrigatorias
-
-- `app-title`
-- `app-subtitle`
-- `app-card`
-- `app-card-header`
-- `app-card-title`
-- `app-card-body`
-- `app-card-footer`
-- `app-section-title`
-- `app-section-description`
-- `app-table-header`
-
-## 6. Modo claro/escuro
-
-- O sistema deve suportar dark mode.
-- A marca deve possuir variacoes compativeis.
-- Nenhuma tela critica pode depender exclusivamente do modo claro.
-
-## 7. Criterios de aceite
-
-Uma tela so pode ser aprovada se:
-
-- usar tipografia oficial
-- usar assets oficiais de marca
-- usar tokens canonicos
-- respeitar a escala visual do app
-- respeitar light/dark mode quando aplicavel

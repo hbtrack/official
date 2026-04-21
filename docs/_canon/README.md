@@ -62,18 +62,22 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 26 | `DEPLOY_PIPELINE.md` | Pipeline de deploy: estágios, aprovações, rollback (ADR-027) |
 | 27 | `RUNTIME_CONTRACT_MONITORING_POLICY.md` | Política de monitoramento de contratos em runtime (ADR-029) |
 | 28 | `FRONTEND_CONTRACT.md` | Contrato de frontend: componentes, eventos, integração com backend (ADR-030) |
-| 29 | `FEATURE_REGISTRY.yaml` | Registro de features e sua maturidade |
-| 30 | `IR_TO_SURFACE_MAPPING.yaml` | Mapeamento de IR (Intermediate Representation) para superfícies expostas |
-| 31 | `AGENT_INSTRUCTIONS.md` | Instruções de boot permanente para agentes — carregado em toda sessão |
-| 32 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-034) |
-| 33 | `SURVIVAL_SUITE_POLICY.md` | Política da suíte de sobrevivência — testes obrigatórios antes de mudança em gates/profiles/schemas |
-| 34 | `C4_COMPONENTS_BACKEND.md` | C4 — Componentes do backend: detalhamento dos 17 módulos, camadas internas e dependências (current-state) |
-| 35 | `RUNTIME_CURRENT_STATE.md` | Inventário factual do runtime atual: o que existe, o que é só contrato, o que é target-state (current-state) |
-| 36 | `INTEGRATION_FLOWS.md` | Flows críticos de integração cross-módulo: auth, training→wellness→analytics, notifications, video/scout, ai_ingestion (governance) |
-| 37 | `ADR_INDEX.md` | Índice unificado de todas as ADRs com status, supersession e tema — referência rápida sem ambiguidade |
-| 38 | `SOURCE_AUTHORITY_GRAPH.yaml` | Grafo de autoridade de fontes — define hierarquia entre SSOT canônicas e derivadas |
-| 39 | `SYNC_MANIFEST.yaml` | Manifesto de sincronização determinístico entre source graphs e artefatos derivados por módulo |
-| 40 | `DOC_USAGE_MANIFEST.yaml` | Manifesto de uso de documentos — rastreia ownership e freshness das doc-rules por módulo |
+| 29 | `UX_BRAND_CONTRACT.md` | Contrato visual canônico: marca, tipografia, tokens, dark mode e assets oficiais |
+| 30 | `UX_SHELL_CONTRACT.md` | Contrato da shell autenticada: sidebar, drawer mobile, top bar, contexto operacional e user menu |
+| 31 | `AUTH_EXPERIENCE_CONTRACT.md` | Contrato da experiência de autenticação: login, recuperação de senha, estados e redirects |
+| 32 | `NAVIGATION_VISIBILITY_CONTRACT.md` | Contrato de navegação e visibilidade: agrupamento, rollout visual, roles e contexto |
+| 33 | `FEATURE_REGISTRY.yaml` | Registro de features e sua maturidade |
+| 34 | `IR_TO_SURFACE_MAPPING.yaml` | Mapeamento de IR (Intermediate Representation) para superfícies expostas |
+| 35 | `AGENT_INSTRUCTIONS.md` | Instruções de boot permanente para agentes — carregado em toda sessão |
+| 36 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-034) |
+| 37 | `SURVIVAL_SUITE_POLICY.md` | Política da suíte de sobrevivência — testes obrigatórios antes de mudança em gates/profiles/schemas |
+| 38 | `C4_COMPONENTS_BACKEND.md` | C4 — Componentes do backend: detalhamento dos 17 módulos, camadas internas e dependências (current-state) |
+| 39 | `RUNTIME_CURRENT_STATE.md` | Inventário factual do runtime atual: o que existe, o que é só contrato, o que é target-state (current-state) |
+| 40 | `INTEGRATION_FLOWS.md` | Flows críticos de integração cross-módulo: auth, training→wellness→analytics, notifications, video/scout, ai_ingestion (governance) |
+| 41 | `ADR_INDEX.md` | Índice unificado de todas as ADRs com status, supersession e tema — referência rápida sem ambiguidade |
+| 42 | `SOURCE_AUTHORITY_GRAPH.yaml` | Grafo de autoridade de fontes — define hierarquia entre SSOT canônicas e derivadas |
+| 43 | `SYNC_MANIFEST.yaml` | Manifesto de sincronização determinístico entre source graphs e artefatos derivados por módulo |
+| 44 | `DOC_USAGE_MANIFEST.yaml` | Manifesto de uso de documentos — rastreia ownership e freshness das doc-rules por módulo |
 
 ### Subdiretórios Autorizados
 

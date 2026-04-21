@@ -17,6 +17,7 @@ Registrar as regras de negócio do módulo `identity_access`.
 ## Fonte do domínio
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
+- `docs/_canon/AUTH_EXPERIENCE_CONTRACT.md`
 - `contracts/schemas/identity_access/auth_session.schema.json`
 - `docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md`
 
@@ -28,6 +29,8 @@ Registrar as regras de negócio do módulo `identity_access`.
 | DR-IAM-003 | `sessionScopeLabel`, `authMethodLabel` e `roleLabels` compõem o contexto técnico de autorização e não podem ser deduzidos de atributos esportivos como posição ou categoria. | `AuthSession` | `SYSTEM_SCOPE.md` + authority matrix | Técnica ≠ esporte |
 | DR-IAM-004 | `mfaRequired`, `mfaSatisfied`, `issuedAt`, `expiresAt` e `revokedAt` descrevem explicitamente o ciclo de vida da sessão. | `AuthSession` | Schema local | Estado de sessão rastreável |
 | DR-IAM-005 | Consentimentos, refresh e revogação devem ser governados aqui, nunca em `users`, `teams` ou módulos operacionais. | `AuthSession` | Authority matrix `must_not_infer` | Boundary obrigatório |
+| DR-IAM-006 | Solicitação, validação, troca de senha e confirmação final do fluxo de recuperação pertencem exclusivamente a `identity_access`, incluindo política de token, não enumeração de contas e expiração. | `PasswordResetFlow` | `AUTH_EXPERIENCE_CONTRACT.md` | Boundary obrigatório |
+| DR-IAM-007 | O link de recuperação enviado ao usuário deve ser construído a partir de `FRONTEND_URL`, e o envio transacional baseline do target-state usa `Resend`. | `PasswordResetFlow` | `AUTH_EXPERIENCE_CONTRACT.md` | Integração explícita, sem inferência |
 
 ## Limites de inferência
 - Não modelar `birth_date`, `height`, `position`, `injury_history_summary` ou qualquer dado de perfil/saúde neste módulo.

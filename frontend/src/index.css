@@ -1,9 +1,85 @@
 @import "tailwindcss";
 
+/* ── Tipografia oficial (UX_BRAND_CONTRACT) ────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ── Tokens de marca (UX_BRAND_CONTRACT) ──────────────────────── */
+    --brand-50: #eff6ff;
+    --brand-100: #dbeafe;
+    --brand-200: #bfdbfe;
+    --brand-300: #93c5fd;
+    --brand-400: #60a5fa;
+    --brand-500: #3b82f6;
+    --brand-600: #2563eb;
+    --brand-700: #1d4ed8;
+    --brand-800: #1e40af;
+    --brand-900: #1e3a8a;
+
+    /* ── Tons de cinza ────────────────────────────────────────────── */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+
+    /* ── Feedback ─────────────────────────────────────────────────── */
+    --success-50: #f0fdf4;
+    --success-500: #22c55e;
+    --success-700: #15803d;
+
+    --error-50: #fef2f2;
+    --error-500: #ef4444;
+    --error-700: #b91c1c;
+
+    --warning-50: #fffbeb;
+    --warning-500: #f59e0b;
+    --warning-700: #b45309;
+
+    --orange-50: #fff7ed;
+    --orange-500: #f97316;
+    --orange-700: #c2410c;
+
+    /* ── Tokens semânticos de handebol (UX_BRAND_CONTRACT) ────────── */
+    --court: #e0f2fe;
+    --goal-area: #bae6fd;
+    --shot-success: #16a34a;
+    --shot-miss: #dc2626;
+    --save: #2563eb;
+    --turnover: #92400e;
+    --load-deficit: #f59e0b;
+    --load-optimal: #22c55e;
+    --load-excess: #ef4444;
+
+    /* ── Shell ────────────────────────────────────────────────────── */
+    --sidebar-width: 256px;
+    --sidebar-collapsed-width: 64px;
+    --topbar-height: 64px;
+  }
+
+  /* ── Dark mode (UX_BRAND_CONTRACT) ─────────────────────────────── */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --gray-50: #111827;
+      --gray-100: #1f2937;
+      --gray-900: #f9fafb;
+    }
+  }
+
+  html {
+    font-family: Inter, Manrope, system-ui, sans-serif;
+  }
+
+  code,
+  pre,
+  kbd {
+    font-family: "JetBrains Mono", monospace;
   }
 
   body {

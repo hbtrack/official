@@ -32,14 +32,14 @@ Inclui:
 - botão principal
 - tratamento visual de erro
 - loading state
-- link "Esqueceu a senha?"
+- link “Esqueceu a senha?”
 
 ### Branding
 - light mode usa `generated/images/auth-logo.svg`
 - dark mode usa `generated/images/auth-logo-dark.svg`
 
 ### Tagline oficial
-- "Dados que decidem jogos"
+- “Dados que decidem jogos”
 
 ### Comportamento
 - o botão principal só habilita com formulário válido

@@ -798,27 +798,29 @@ gates:
   - gate_id: FRONTEND_CONTRACT_GATE
     order: 15J
     name: "Frontend Contract Gate"
-    blocking: false
-    severity: MEDIUM
+    blocking: true
+    severity: HIGH
     parallelizable: true
     applies_when: "frontend/ directory exists"
     depends_on: [OPENAPI_ROOT_MODULE_SYNC_GATE]
     description: >
-      Verifica que o frontend consome apenas contratos definidos no OpenAPI.
-      Checa: (1) schema.d.ts gerado do OpenAPI e atualizado;
-      (2) ausência de endpoints hardcoded fora de api/hooks/;
-      (3) tipos de API derivam de schema.d.ts (sem interfaces duplicadas);
-      (4) package.json inclui script gen:api.
-      SKIP_NOT_APPLICABLE quando frontend/ não existe (pré-implementação).
+      Verifica conformidade do frontend real com o contrato técnico e os contratos
+      de UX/UI. Checa: (1) schema.d.ts gerado do OpenAPI e atualizado;
+      (2) ausência de chamadas HTTP fora de api/hooks/;
+      (3) assets oficiais de marca consumidos a partir de generated/images;
+      (4) shell autenticada do primeiro batch com sidebar colapsável, drawer com
+      overlay/Escape, breadcrumbs, command palette, notificações, avatar circular,
+      user menu, logout e contexto operacional;
+      (5) auth flow com tagline oficial, login + forgot/reset/new-password/confirm-reset
+      e readiness de envio real por Resend usando FRONTEND_URL;
+      (6) navegação alinhada à taxonomia exata do primeiro batch, incluindo
+      `Conta e Acesso`, módulos ativos, módulos disabled e capabilities da top bar;
+      (7) readiness soberana de avatar com baseline Cloudinary.
+      SKIP_NOT_APPLICABLE quando frontend/ não existe.
       Spec normativa: docs/_canon/FRONTEND_CONTRACT.md
-    blocking_codes: [BLOCKED_CONTRACT_CONFLICT]
-    status: deferred
-    deferred_reason: >
-      Não implementado em validate_contracts.py. O diretório frontend/ não existe
-      (pré-implementação, Fase 5 do ROADMAP). O gate sempre retornaria SKIP_NOT_APPLICABLE
-      até a Fase 5 criar o frontend React. Decisão FASE 1: manter como deferred até
-      que frontend/ seja criado e o gate seja implementado junto com o código.
-    deferred_since: "2026-03-23"
+    blocking_codes: [BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE, BLOCKED_MISSING_CANON_ARTIFACT]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
 
   - gate_id: READINESS_SUMMARY_GATE
     order: 16

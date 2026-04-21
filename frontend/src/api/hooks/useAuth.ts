@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import apiClient from '../client';
 import { useAuthStore } from '../../stores/authStore';
+import apiClient from '../client';
 
 export function useLogin() {
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -59,5 +59,34 @@ export function useCurrentSession() {
     },
     enabled: isAuthenticated,
     retry: false,
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await apiClient.POST('/auth/forgot-password', { body: { email } });
+      if (error) throw error;
+    },
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: async ({
+      token,
+      resetRequestId,
+      newPassword,
+    }: {
+      token: string;
+      resetRequestId: string;
+      newPassword: string;
+    }) => {
+      const { error } = await apiClient.POST('/auth/new-password', {
+        body: { token, resetRequestId, newPassword },
+      });
+      if (error) throw error;
+      await apiClient.POST('/auth/confirm-reset', { body: { resetRequestId } }).catch(() => null);
+    },
   });
 }

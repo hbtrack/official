@@ -93,6 +93,7 @@ class CreateUserInput:
     last_name: str | None = None
     position_label: str | None = None
     preferred_language: str | None = None
+    avatar_url: str | None = None
     preference_tags: list[str] | None = None
     team_ids: list[UUID] | None = None
     season_ids: list[UUID] | None = None
@@ -121,6 +122,7 @@ class CreateUserUseCase:
             status_label=UserStatus.PENDING_ACTIVATION,  # DEC-USERS-002
             position_label=inp.position_label,
             preferred_language=inp.preferred_language,
+            avatar_url=inp.avatar_url,
             preference_tags=list(dict.fromkeys(inp.preference_tags or [])),
             team_ids=list(dict.fromkeys(inp.team_ids or [])),
             season_ids=list(dict.fromkeys(inp.season_ids or [])),
@@ -183,6 +185,7 @@ class PatchUserInput:
     status_label: UserStatus | None = None
     position_label: str | None = None
     preferred_language: str | None = None
+    avatar_url: str | None = None
     preference_tags: list[str] | None = None
     team_ids: list[UUID] | None = None
     season_ids: list[UUID] | None = None
@@ -234,6 +237,8 @@ class PatchUserUseCase:
             profile.position_label = inp.position_label
         if inp.preferred_language is not None:
             profile.preferred_language = inp.preferred_language
+        if inp.avatar_url is not None:
+            profile.avatar_url = inp.avatar_url
         if inp.preference_tags is not None:
             # INV-USR-002: uniqueItems
             profile.preference_tags = list(dict.fromkeys(inp.preference_tags))

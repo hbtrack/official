@@ -61,4 +61,4 @@ Estado apurado 2026-03-23 (FASE 1):
 | `SURFACE_PROMOTION_COHERENCE_GATE` | Adicionado ao registry (order 20B1) |
 | `SCOPE_BOUNDARY_GATE` | `integrated_in_validate_contracts: false` — passo pré-contrato externo |
 | `ARCH_DECISION_PRESENCE_GATE` | `status: deferred` — implementar quando priorizado |
-| `FRONTEND_CONTRACT_GATE` | `status: deferred` — implementar junto com Fase 5 (frontend/) |
+| `FRONTEND_CONTRACT_GATE` | `status: active` — valida frontend real contra stack, branding, shell, auth e navegação |

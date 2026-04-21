@@ -34,6 +34,12 @@
       "maxLength": 120,
       "description": "Canonical human-readable profile label."
     },
+    "avatarUrl": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2048,
+      "description": "Processed avatar URL for product shell display. If absent, UI must fallback to initials."
+    },
     "roleLabel": {
       "type": "string",
       "minLength": 1,
@@ -96,6 +102,7 @@
       "firstName": "Ana",
       "lastName": "Silva",
       "displayName": "Ana Silva",
+      "avatarUrl": "https://res.cloudinary.com/hbtrack/image/upload/t_profile_avatar/ana-silva",
       "roleLabel": "athlete",
       "positionLabel": "Left Wing",
       "preferredLanguage": "pt-BR",

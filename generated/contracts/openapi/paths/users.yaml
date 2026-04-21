@@ -153,6 +153,11 @@
                 type: string
                 maxLength: 16
                 description: UI language preference (DR-USR-005).
+              avatarUrl:
+                type: string
+                format: uri
+                maxLength: 2048
+                description: Processed avatar URL for shell display (DR-USR-006).
               preferenceTags:
                 type: array
                 items:
@@ -321,6 +326,11 @@
               preferredLanguage:
                 type: string
                 maxLength: 16
+              avatarUrl:
+                type: string
+                format: uri
+                maxLength: 2048
+                description: Processed avatar URL for shell display (DR-USR-006).
               preferenceTags:
                 type: array
                 items:
