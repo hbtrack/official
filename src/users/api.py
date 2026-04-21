@@ -16,7 +16,6 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Router
-from ninja.errors import HttpError
 
 from .application.use_cases import (
     CreateUserInput,
@@ -50,19 +49,23 @@ router = Router(tags=["users"])
 # Helpers JWT (stubs — substituir por integração real com identity_access)
 # ---------------------------------------------------------------------------
 
-def _get_actor_id(request) -> UUID:
-    """Extrai sub do JWT — stub retorna UUID fixo para desenvolvimento."""
+def _problem_out(status: int, title: str, detail: str = "") -> ProblemOut:
+    """RFC 9457 Problem Details — alinhado com identity_access._problem()."""
+    return ProblemOut(type="about:blank", title=title, status=status, detail=detail or None)
+
+def _get_actor_id(request) -> UUID | None:
+    """Extrai sub do JWT — retorna None se ausente."""
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return UUID(str(actor_id))
-    raise HttpError(401, "Unauthenticated")
+    return None
 
-def _get_actor_role(request) -> RoleLabel:
-    """Extrai role do JWT claims."""
+def _get_actor_role(request) -> RoleLabel | None:
+    """Extrai role do JWT claims — retorna None se ausente."""
     role = getattr(request, "_actor_role", None)
     if role:
         return RoleLabel(role)
-    raise HttpError(401, "Unauthenticated")
+    return None
 
 def _get_actor_team_ids(request) -> list[UUID]:
     """Extrai teamIds do JWT claims (DR-USR-003)."""
@@ -107,6 +110,8 @@ def list_users(
     """Lista perfis de usuário com paginação cursor-based (OWASP API4:2023)."""
     actor_id = _get_actor_id(request)
     actor_role = _get_actor_role(request)
+    if actor_id is None or actor_role is None:
+        return 401, _problem_out(401, "Unauthorized", "Token ausente ou inválido.")
     actor_team_ids = _get_actor_team_ids(request)
 
     role_filter: RoleLabel | None = None
@@ -114,7 +119,7 @@ def list_users(
         try:
             role_filter = RoleLabel(roleLabel)
         except ValueError:
-            raise HttpError(400, f"roleLabel '{roleLabel}' inválido")
+            return 400, _problem_out(400, "Bad Request", f"roleLabel '{roleLabel}' inválido")
 
     inp = ListUsersInput(
         actor_id=actor_id,
@@ -133,7 +138,7 @@ def list_users(
             nextPageToken=result.next_page_token,
         )
     except InsufficientPrivilege as e:
-        raise HttpError(403, str(e))
+        return 403, _problem_out(403, "Forbidden", str(e))
 
 # ---------------------------------------------------------------------------
 # POST /users — createUser (FT-015)
@@ -148,11 +153,13 @@ def list_users(
 def create_user(request, body: CreateUserIn):
     """Cria novo perfil de usuário (admin/coordinator only — PERM-USR-002)."""
     actor_role = _get_actor_role(request)
+    if actor_role is None:
+        return 401, _problem_out(401, "Unauthorized", "Token ausente ou inválido.")
 
     try:
         role_label = RoleLabel(body.roleLabel)
     except ValueError:
-        raise HttpError(400, f"roleLabel '{body.roleLabel}' inválido")
+        return 400, _problem_out(400, "Bad Request", f"roleLabel '{body.roleLabel}' inválido")
 
     inp = CreateUserInput(
         actor_role=actor_role,
@@ -172,11 +179,11 @@ def create_user(request, body: CreateUserIn):
         profile = CreateUserUseCase(UsersRepository()).execute(inp)
         return 201, _profile_to_out(profile)
     except InsufficientPrivilege as e:
-        raise HttpError(403, str(e))
+        return 403, _problem_out(403, "Forbidden", str(e))
     except UserConflict as e:
-        raise HttpError(409, str(e))
+        return 409, _problem_out(409, "Conflict", str(e))
     except ValueError as e:
-        raise HttpError(400, str(e))
+        return 400, _problem_out(400, "Bad Request", str(e))
 
 # ---------------------------------------------------------------------------
 # GET /users/{userId} — getUser (FT-016)
@@ -192,6 +199,8 @@ def get_user(request, userId: UUID):
     """Retorna perfil completo de um usuário (BOLA — OWASP API1:2023)."""
     actor_id = _get_actor_id(request)
     actor_role = _get_actor_role(request)
+    if actor_id is None or actor_role is None:
+        return 401, _problem_out(401, "Unauthorized", "Token ausente ou inválido.")
     actor_team_ids = _get_actor_team_ids(request)
 
     inp = GetUserInput(
@@ -204,9 +213,9 @@ def get_user(request, userId: UUID):
         profile = GetUserUseCase(UsersRepository()).execute(inp)
         return 200, _profile_to_out(profile)
     except UserNotFound as e:
-        raise HttpError(404, str(e))
+        return 404, _problem_out(404, "Not Found", str(e))
     except InsufficientPrivilege as e:
-        raise HttpError(403, str(e))
+        return 403, _problem_out(403, "Forbidden", str(e))
 
 # ---------------------------------------------------------------------------
 # PATCH /users/{userId} — patchUser (FT-017)
@@ -222,6 +231,8 @@ def patch_user(request, userId: UUID, body: PatchUserIn):
     """Atualiza parcialmente o perfil de um usuário (BOLA + BFLA — PERM-USR-003..009)."""
     actor_id = _get_actor_id(request)
     actor_role = _get_actor_role(request)
+    if actor_id is None or actor_role is None:
+        return 401, _problem_out(401, "Unauthorized", "Token ausente ou inválido.")
 
     # Validar roleLabel se fornecido
     role_label: RoleLabel | None = None
@@ -229,7 +240,7 @@ def patch_user(request, userId: UUID, body: PatchUserIn):
         try:
             role_label = RoleLabel(body.roleLabel)
         except ValueError:
-            raise HttpError(400, f"roleLabel '{body.roleLabel}' inválido")
+            return 400, _problem_out(400, "Bad Request", f"roleLabel '{body.roleLabel}' inválido")
 
     # Validar statusLabel se fornecido
     status_label: UserStatus | None = None
@@ -237,7 +248,7 @@ def patch_user(request, userId: UUID, body: PatchUserIn):
         try:
             status_label = UserStatus(body.statusLabel)
         except ValueError:
-            raise HttpError(400, f"statusLabel '{body.statusLabel}' inválido")
+            return 400, _problem_out(400, "Bad Request", f"statusLabel '{body.statusLabel}' inválido")
 
     inp = PatchUserInput(
         actor_id=actor_id,
@@ -259,10 +270,10 @@ def patch_user(request, userId: UUID, body: PatchUserIn):
         profile = PatchUserUseCase(UsersRepository()).execute(inp)
         return 200, _profile_to_out(profile)
     except UserNotFound as e:
-        raise HttpError(404, str(e))
+        return 404, _problem_out(404, "Not Found", str(e))
     except InsufficientPrivilege as e:
-        raise HttpError(403, str(e))
+        return 403, _problem_out(403, "Forbidden", str(e))
     except AuthnFieldForbidden as e:
-        raise HttpError(400, str(e))
+        return 400, _problem_out(400, "Bad Request", str(e))
     except ValueError as e:
-        raise HttpError(400, str(e))
+        return 400, _problem_out(400, "Bad Request", str(e))

@@ -63,6 +63,9 @@ export default function App() {
             {/* Planejamento Técnico */}
             <Route path="/training" element={<TrainingPage />} />
             <Route path="/training/:id" element={<TrainingDetailPage />} />
+
+            {/* Administração */}
+            <Route path="/conta-acesso" element={<div className="p-6"><h1 className="text-xl font-semibold text-gray-900">Conta e Acesso</h1><p className="text-gray-500 mt-2">Em implementação.</p></div>} />
           </Route>
         </Route>
       </Routes>

@@ -17,7 +17,6 @@ export function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const token = searchParams.get('token') ?? '';
-    const resetRequestId = searchParams.get('requestId') ?? '';
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +33,7 @@ export function ResetPasswordPage() {
         if (!isFormValid) return;
         setErrorMsg('');
         resetMutation.mutate(
-            { token, resetRequestId, newPassword },
+            { token, newPassword, confirmPassword },
             {
                 onSuccess: () => setPageState('senha redefinida com sucesso'),
                 onError: (err: unknown) => {

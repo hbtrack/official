@@ -75,18 +75,21 @@ export function useResetPassword() {
   return useMutation({
     mutationFn: async ({
       token,
-      resetRequestId,
       newPassword,
+      confirmPassword,
     }: {
       token: string;
-      resetRequestId: string;
       newPassword: string;
+      confirmPassword: string;
     }) => {
-      const { error } = await apiClient.POST('/auth/new-password', {
-        body: { token, resetRequestId, newPassword },
+      const { data, error } = await apiClient.POST('/auth/new-password', {
+        body: { token, newPassword, confirmPassword },
       });
       if (error) throw error;
-      await apiClient.POST('/auth/confirm-reset', { body: { resetRequestId } }).catch(() => null);
+      const resetRequestId = (data as { resetRequestId?: string } | undefined)?.resetRequestId;
+      if (resetRequestId) {
+        await apiClient.POST('/auth/confirm-reset', { body: { resetRequestId } }).catch(() => null);
+      }
     },
   });
 }

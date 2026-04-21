@@ -46,9 +46,7 @@ import { useState, useEffect, useCallback, Fragment } from 'react';
 import { useAuthStore } from '../../stores/authStore';
 import { useLogout } from '../../api/hooks/useAuth';
 
-const navItems = [
-  // ── Tipos ──────────────────────────────────────────────────────────────────
-  type AllowedRole = 'admin' | 'coordinator' | 'coach' | 'athlete' | 'member';
+type AllowedRole = 'admin' | 'coordinator' | 'coach' | 'athlete' | 'member';
 
 interface NavItem {
   to: string;
