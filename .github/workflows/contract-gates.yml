@@ -26,7 +26,10 @@ jobs:
         run: |
           bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
       - name: Run actionlint
-        run: ./actionlint -shellcheck '' -color .github/workflows/contract-gates.yml .github/workflows/ci.yml .github/workflows/_reusable-ci.yml
+        # Lint TODOS os workflows (.github/workflows/*.yml). Rationale: o
+        # actionlint pega bugs de sintaxe/expressão antes do runtime; a lista
+        # hardcoded antiga deixava deploy.yml fora do gate.
+        run: ./actionlint -shellcheck '' -color .github/workflows/*.yml
 
   # ── Detectar se há mudança em paths de governança (usado pelos jobs abaixo) ──
   detect-governance-change:
