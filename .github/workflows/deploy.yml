@@ -334,11 +334,15 @@ jobs:
                 docker stop "${CID}" >/dev/null 2>&1 || true
               done
             }
-            if [ "${STAGING_HTTP_PORT}" = "80" ] || [ "${STAGING_HTTPS_PORT}" = "443" ]; then
+            if [ "${STAGING_HTTP_PORT}" = "80" ]; then
               free_port 80
+            else
+              echo "ℹ️ STAGING_HTTP_PORT=${STAGING_HTTP_PORT} (não-pública) — port guard 80 skip"
+            fi
+            if [ "${STAGING_HTTPS_PORT}" = "443" ]; then
               free_port 443
             else
-              echo "ℹ️ Staging em portas não-públicas (${STAGING_HTTP_PORT}/${STAGING_HTTPS_PORT}) — port guard skip"
+              echo "ℹ️ STAGING_HTTPS_PORT=${STAGING_HTTPS_PORT} (não-pública) — port guard 443 skip"
             fi
 
             # Gerar certificado SSL se ausente
@@ -363,9 +367,11 @@ jobs:
               echo "✅ Certificado SSL existente — mantendo"
             fi
 
-            # Re-confirma portas livres logo antes do up
-            if [ "${STAGING_HTTP_PORT}" = "80" ] || [ "${STAGING_HTTPS_PORT}" = "443" ]; then
+            # Re-confirma portas livres logo antes do up (independente por porta)
+            if [ "${STAGING_HTTP_PORT}" = "80" ]; then
               free_port 80
+            fi
+            if [ "${STAGING_HTTPS_PORT}" = "443" ]; then
               free_port 443
             fi
 
