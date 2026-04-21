@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-21"
-branch_ativo: chore/fix-image-path
+branch_ativo: fix/deploy-port-guard-agnostic
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
@@ -8,9 +8,9 @@ fase_roadmap: 4
 roadmap_phase: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-PHASE4-CI-FIXES
+task_id: ROADMAP-PHASE4-DEPLOY-PORT-GUARD
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI passar após push de compiled_context/users/"
+proxima_acao_permitida: "Validar deploy verde após merge da correção de port guard"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
