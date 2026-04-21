@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-04-21"
+data_ultima_sessao: "2026-04-22"
 branch_ativo: refactor/training-decomposition
 modo_operacao: ROADMAP
 ci_status: PASS
@@ -10,7 +10,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: ROADMAP-PHASE4-TRAINING-DECOMPOSITION
 resultado: PENDENTE
-proxima_acao_permitida: "Iniciar Fase 3 — decomposição application/use_cases.py"
+proxima_acao_permitida: "Iniciar Fase 4 — SessionAccessPolicy + TrainingServices"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
@@ -23,23 +23,22 @@ evidence_paths:
 
 ## O que foi feito
 
-**Sessão 2026-04-21 — Refatoração training: Fases 0.5, 1, 2 (branch refactor/training-decomposition)**
+**Sessão 2026-04-22 — Refatoração training: Fase 3 (branch refactor/training-decomposition)**
 
 Fases concluídas e validadas conforme `.dev/decisões/rafatora_training.md`:
 
 - **Fase 0.5**: snapshot contratual — `test_public_surface` 8 PASS, `test_route_inventory` 2 PASS
-- **Fase 1** (Fases 1.1–1.8): `api.py` (1606 linhas) → pacote `api/` com 12 sub-routers:
-  - 53 handlers distribuídos em `sessions`, `blocks`, `attendance`, `wellness`, `planning`,
-    `execution`, `feedback`, `attention`, `recommendations`, `eligibility`, `analytics`, `chat`
-  - `mappers.py` (282 linhas), `deps.py`, `errors.py` canônicos
-  - `__init__.py` thin aggregator (`add_router` ×12)
-  - Gate fixes: `endpoints.yaml` (53 `runtime_handler_ref`), `module_manifest.yaml`,
-    source graph + context bundle regenerados, `check_architecture_docs.py` aceita `api/`,
-    `test_training_codegen_parity` agrega sub-arquivos
-- **Fase 2**: `AccessContext` em `application/common/access.py`, `CursorCodec` em `paging.py`,
-  `get_cursor_codec()` em `deps.py`, 18 testes unitários PASS
-
-Gates: 287 passed, 0 failed (training + pipeline_gates + parity).
+- **Fase 1** (Fases 1.1–1.8): `api.py` (1606 linhas) → pacote `api/` com 12 sub-routers (commit anterior)
+- **Fase 2**: `AccessContext` + `CursorCodec` em `application/common/` (commit anterior)
+- **Addendum 2.2**: `TestApplicationLayerPurity::test_paging_no_django_imports` (commit anterior)
+- **Fase 3** (commit `f616db7b`): `application/use_cases.py` (1849 linhas, 48 UseCases) → 9 subpacotes:
+  - `sessions/`, `blocks/`, `wellness/`, `attendance/`, `execution/`,
+    `planning/`, `communication/`, `eligibility/`, `analytics/`
+  - Cada subpacote: `__init__.py` + `dto.py` + `queries.py` + `commands.py`
+  - `use_cases.py` substituído por shim (165 linhas) — re-exports sem quebrar consumers
+  - `domain/policies/feedback_context.py`: consolida `_feedback_context_type` e `_feedback_context_ref_id`
+  - `test_application_layout.py`: 3 classes de teste (surface pública, tamanho dto, framework-agnóstico)
+  - 290 passed, 19 skipped — hb verify PASS — pre-commit PASS
 
 ## Estado Geral
 
@@ -48,20 +47,26 @@ Gates: 287 passed, 0 failed (training + pipeline_gates + parity).
 | Fase 0.5 | ✅ CONCLUÍDA |
 | Fase 1 (api/ split) | ✅ CONCLUÍDA |
 | Fase 2 (AccessContext + CursorCodec) | ✅ CONCLUÍDA |
-| test_paging_no_django_imports | ⏳ pendente (Addendum 2.2) |
-| Fase 3 (application/ split) | ⏳ não iniciada |
-| training suite (287 tests) | ✅ PASS |
+| Addendum 2.2 (paging framework-agnostic) | ✅ CONCLUÍDA |
+| Fase 3 (application/ split) | ✅ CONCLUÍDA (commit f616db7b) |
+| Fase 4 (SessionAccessPolicy + TrainingServices) | ⏳ não iniciada |
+| training suite (290 tests) | ✅ PASS |
 
 ## Evidências
 
 - `generated/source_graph/training/training.bundle.yaml` — atualizado
 - `docs/hbtrack/modulos/training/graph/endpoints.yaml` — 53 refs corrigidas
-- `_reports/contract_gates/stage-artifact.local.latest.json` — PASS
+- `_reports/contract_gates/precommit.latest.json` — PASS
+- commit `f616db7b` — 40 files changed, 2404 insertions(+), 1857 deletions(-)
 
 ## Próxima ação permitida
 
-1. Adicionar `test_paging_no_django_imports` em `src/training/tests/unit/test_layer_separation.py`
-2. Iniciar Fase 3 — decomposição `application/use_cases.py` → 9 subpacotes × 3 arquivos
+Iniciar Fase 4 — `SessionAccessPolicy` + `TrainingServices` conforme `rafatora_training.md`.
+
+Procedimento obrigatório antes do commit da Fase 4:
+```
+python3 scripts/hb verify --task-type execute_roadmap_phase --module training --roadmap-phase 4
+```
 
 ## Bloqueios ativos
 
