@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 # CODEGEN CUTOVER — generated use cases linked
-from .generated.application import use_cases as _gen_use_cases  # noqa: F401
-from .generated.infrastructure import repository as _gen_repository  # noqa: F401
+from ..generated.application import use_cases as _gen_use_cases  # noqa: F401
+from ..generated.infrastructure import repository as _gen_repository  # noqa: F401
 
 
 """
@@ -20,7 +20,7 @@ from django.db import DataError, IntegrityError
 from ninja import Router
 from ninja.errors import HttpError
 
-from .application.use_cases import (
+from ..application.use_cases import (
     AddSessionBlockUseCase,
     AddSessionBlockInput,
     AcceptRecommendationInput,
@@ -118,8 +118,8 @@ from .application.use_cases import (
     UpdateTrainingSessionUseCase,
     UpdateTrainingSessionInput,
 )
-from .domain.entities import TrainingSessionStatus
-from .domain.rules import (
+from ..domain.entities import TrainingSessionStatus
+from ..domain.rules import (
     AttentionQueueConflict,
     AttentionQueueItemNotFound,
     DuplicateWellnessEntry,
@@ -140,7 +140,7 @@ from .domain.rules import (
     WellnessEntryNotFound,
     WellnessWindowClosed,
 )
-from .infrastructure.repository import (
+from ..infrastructure.repository import (
     AttentionQueueRepository,
     AthleteIneligibilityDeclarationRepository,
     AttendanceRepository,
@@ -155,7 +155,7 @@ from .infrastructure.repository import (
     WellnessPostRepository,
     WellnessPreRepository,
 )
-from .schemas import (
+from ..schemas import (
     AddSessionBlockIn,
     AcceptRecommendationIn,
     AttendanceListOut,
