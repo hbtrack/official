@@ -14,37 +14,37 @@
  *   Notificações | Command palette | Breadcrumbs | User menu
  */
 
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Users,
-  Shield,
-  Calendar,
-  Dumbbell,
-  Trophy,
-  Swords,
-  Crosshair,
-  Video,
   Activity,
-  Stethoscope,
   BarChart2,
-  FileText,
+  Bell,
   Brain,
-  UserCog,
-  ClipboardList,
-  LogOut,
-  Menu,
-  X,
+  Calendar,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
+  Crosshair,
+  Dumbbell,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Menu,
   Search,
-  Bell,
-  ChevronDown,
+  Shield,
+  Stethoscope,
+  Swords,
+  Trophy,
   UserCircle,
+  UserCog,
+  Users,
+  Video,
+  X,
 } from 'lucide-react';
-import { useState, useEffect, useCallback, Fragment } from 'react';
-import { useAuthStore } from '../../stores/authStore';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useLogout } from '../../api/hooks/useAuth';
+import { useAuthStore } from '../../stores/authStore';
 
 type AllowedRole = 'admin' | 'coordinator' | 'coach' | 'athlete' | 'member';
 

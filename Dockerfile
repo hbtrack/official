@@ -28,8 +28,11 @@ RUN python -m venv /app/.venv \
 # ── Stage 2: runtime ──────────────────────────────────────────────────────────
 FROM python:3.12-slim AS runtime
 
+ARG HB_BUILD_SHA=unknown
+
 LABEL org.opencontainers.image.source="https://github.com/hbtrack/hb-track"
 LABEL org.opencontainers.image.description="HB Track — Backend API"
+LABEL org.opencontainers.image.revision="${HB_BUILD_SHA}"
 
 # Apenas runtime libs (libpq para psycopg2)
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -57,6 +60,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:/app"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV HB_BUILD_SHA="${HB_BUILD_SHA}"
 
 # Porta padrão do serviço
 EXPOSE 8000
