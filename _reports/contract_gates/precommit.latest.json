@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-21T07:27:25Z",
+  "timestamp_utc": "2026-04-21T07:45:20Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "precommit",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T072725_ab6b3d"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T074520_6e5c70"
   },
   "status_detail": {
-    "active_gates_passed": 22,
+    "active_gates_passed": 24,
     "skip_count": 38,
     "critical_gates": [
       {
@@ -175,7 +175,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -239,7 +239,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -261,7 +261,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 49
       }
     },
     {
@@ -286,7 +286,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 772
+        "duration_ms": 677
       }
     },
     {
@@ -397,7 +397,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 16
       }
     },
     {
@@ -1018,7 +1018,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 30
       }
     },
     {
@@ -1104,7 +1104,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 753
+        "duration_ms": 793
       }
     },
     {
@@ -1127,7 +1127,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1088
+        "duration_ms": 1118
       }
     },
     {
@@ -1149,7 +1149,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1237
+        "duration_ms": 1377
       }
     },
     {
@@ -1188,7 +1188,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 558
+        "duration_ms": 563
       }
     },
     {
@@ -4140,7 +4140,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 2059
+        "duration_ms": 1844
       }
     },
     {
@@ -4823,7 +4823,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1797
+        "duration_ms": 1720
       }
     },
     {
@@ -4899,7 +4899,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2857
+        "duration_ms": 1571
       }
     },
     {
@@ -4942,7 +4942,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 56
       }
     },
     {
@@ -4964,7 +4964,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1458
+        "duration_ms": 1376
       }
     },
     {
@@ -5020,7 +5020,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 63
+        "duration_ms": 60
       }
     },
     {
@@ -5121,7 +5121,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 226
+        "duration_ms": 250
       }
     },
     {
@@ -5288,11 +5288,11 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -5314,25 +5314,12 @@
         "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=1 != SESSION_HANDOFF.fase_roadmap=4.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=4 != session_start.roadmap_phase=1.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 2,
+        "errors": 0,
         "warnings": 0,
-        "violations": 2,
-        "duration_ms": 7
+        "violations": 0,
+        "duration_ms": 8
       }
     },
     {
@@ -5354,7 +5341,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 168
+        "duration_ms": 166
       }
     },
     {
@@ -5376,7 +5363,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -5476,7 +5463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -5661,11 +5648,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 23 PASS, 38 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

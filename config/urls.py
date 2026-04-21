@@ -126,7 +126,12 @@ def health_check(request):
         redis_status = "error"
         http_status = 503
 
-    payload = json.dumps({"status": "ok" if http_status == 200 else "degraded", "db": db_status, "redis": redis_status})
+    payload = json.dumps({
+        "status": "ok" if http_status == 200 else "degraded",
+        "db": db_status,
+        "redis": redis_status,
+        "buildSha": os.environ.get("HB_BUILD_SHA", "unknown"),
+    })
     return HttpResponse(payload, content_type="application/json", status=http_status)
 
 

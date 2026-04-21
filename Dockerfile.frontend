@@ -14,8 +14,11 @@ RUN npm ci --legacy-peer-deps
 
 # Copy source and build
 COPY frontend/ .
+COPY generated/images/ /generated/images/
 ARG VITE_API_URL=/api
+ARG VITE_APP_VERSION=unknown
 ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_APP_VERSION=${VITE_APP_VERSION}
 RUN npm run build
 
 # ─── Nginx stage ────────────────────────────────────────

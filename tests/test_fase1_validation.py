@@ -20,6 +20,14 @@ class TestHealthEndpoint:
         response = client.get("/health")
         data = response.json()
         assert data.get("status") == "ok"
+        assert "buildSha" in data
+
+    def test_health_response_reports_build_sha(self, monkeypatch):
+        monkeypatch.setenv("HB_BUILD_SHA", "test-build-sha")
+        client = Client()
+        response = client.get("/health")
+        data = response.json()
+        assert data.get("buildSha") == "test-build-sha"
 
 
 @pytest.mark.django_db
@@ -156,4 +164,3 @@ class TestConstraintViolation:
         assert response.status_code == 422, (
             f"Esperado 422 para week_number=0, got {response.status_code}"
         )
-
