@@ -10,19 +10,10 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone, timedelta
-from enum import StrEnum
 from typing import Optional
 
+from .common.enums import RoleLabel  # SSOT; re-exportado para compat
 from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
-
-
-class RoleLabel(StrEnum):
-    """5 roles canônicos — ADR-008."""
-    ADMIN = "admin"
-    COORDINATOR = "coordinator"
-    COACH = "coach"
-    ATHLETE = "athlete"
-    MEMBER = "member"
 
 
 # ---------------------------------------------------------------------------
