@@ -9,6 +9,10 @@ from __future__ import annotations
 
 import uuid
 
+from ..domain.policies.feedback_context import (
+    feedback_context_ref_id as _feedback_context_ref_id,
+    feedback_context_type as _feedback_context_type,
+)
 from ..schemas import (
     AthleteIneligibilityDeclarationOut,
     AttendanceRecordOut,
@@ -190,29 +194,6 @@ def _microcycle_to_out(micro) -> MicrocycleOut:
         planned_sessions_count=micro.planned_sessions_count,
         notes=micro.notes,
     )
-
-
-def _feedback_context_type(thread) -> str:
-    if thread.subject in {"SESSION", "BLOCK", "OBJECTIVE", "ATHLETE", "EVIDENCE", "GROUP"}:
-        return thread.subject
-    if thread.block_id is not None:
-        return "BLOCK"
-    if thread.objective_id is not None:
-        return "OBJECTIVE"
-    if thread.athlete_id is not None:
-        return "ATHLETE"
-    return "SESSION"
-
-
-def _feedback_context_ref_id(thread) -> uuid.UUID:
-    context_type = _feedback_context_type(thread)
-    if context_type == "BLOCK" and thread.block_id is not None:
-        return thread.block_id
-    if context_type == "OBJECTIVE" and thread.objective_id is not None:
-        return thread.objective_id
-    if context_type == "ATHLETE" and thread.athlete_id is not None:
-        return thread.athlete_id
-    return thread.session_id
 
 
 def _feedback_thread_to_out(thread) -> FeedbackThreadOut:
