@@ -1,53 +1,103 @@
 ---
-data_ultima_sessao: "2026-04-13"
-branch_ativo: main
-modo_operacao: ROADMAP
-ci_status: UNKNOWN
-modulo_foco: training
+data_ultima_sessao: "2026-04-20"
+branch_ativo: chore/fix-image-path
+modo_operacao: CDD
+ci_status: PASS
+modulo_foco: frontend
 fase_roadmap: 6
-roadmap_phase: 6
-task_type: execute_roadmap_phase
-boot_profile_id: roadmap_execution
-task_id: FASE-6-QA-STAGING
-resultado: PENDENTE
-proxima_acao_permitida: "1. Validar frontend staging 2. Smoke tests login+CRUD 3. Prep banco producao 4. Configurar VPS_HOST_PRODUCTION"
+task_type: contract_revision
+boot_profile_id: contract_execution
+task_id: UX-CONTRACTS-BATCH-001
+resultado: DONE
+proxima_acao_permitida: "Implementar shell frontend baseada nos novos contratos UX"
 bloqueios_ativos: []
 evidence_paths:
-  - ROADMAP.md
-  - .github/workflows/deploy.yml
-  - _reports/contract_gates/precommit.latest.json
+  - "_reports/contract_gates/stage-artifact.local.latest.json"
+  - "docs/_canon/UX_BRAND_CONTRACT.md"
+  - "docs/_canon/UX_SHELL_CONTRACT.md"
+  - "docs/_canon/AUTH_EXPERIENCE_CONTRACT.md"
+  - "docs/_canon/NAVIGATION_VISIBILITY_CONTRACT.md"
+  - "docs/_canon/FRONTEND_CONTRACT.md"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-### Fase 6: Deploy Produção Ciclo 1 — EM PROGRESSO
+### Batch de Atualização de Contratos UX (2026-04-20)
 
-**Pipeline fix (2026-04-13):**
-- PR #69 merged: fix `seed_demo` invalid `--skip-if-exists` flag
-- PR #70 merged: guard production job when `VPS_HOST_PRODUCTION` unconfigured
-- Deploy pipeline run `24353854704`: 13/13 jobs SUCCESS
+**Contratos atualizados: 5 artefatos canônicos**
 
-**Deploy pipeline status:**
-- Jobs 1-6: ALL SUCCESS (validate → test → build → staging → conformance 7/7 → approve)
-- Job 7 (production): SUCCESS — skip gracioso (secret não configurado)
+1. ✅ `docs/_canon/UX_BRAND_CONTRACT.md` — Identidade visual normativa
+   - Tipografia oficial (Inter, Manrope, JetBrains Mono)
+   - Assets canonizados em `generated/images`
+   - Paleta oficial (brand, gray, success, error, warning, orange)
+   - Tokens específicos de handebol (court, goal-area, etc)
+   - Escala visual e dark/light mode normativo
 
-**Secrets verificados:**
-- `VPS_HOST_STAGING`: ✅ configurado
-- `VPS_HOST_PRODUCTION`: ❌ não existe (precisa ser criado para deploy produção)
+2. ✅ `docs/_canon/UX_SHELL_CONTRACT.md` — Shell autenticada
+   - Sidebar colapsável + drawer mobile
+   - Top bar com breadcrumbs, command palette, notificações, avatar
+   - Pipeline de avatar com Cloudinary (target-state)
+   - Contexto operacional (equipe/temporada)
+   - Taxonomia estrutural em 6 seções
+
+3. ✅ `docs/_canon/AUTH_EXPERIENCE_CONTRACT.md` — Experiência de autenticação
+   - Login, forgot/reset password com email real
+   - Provider: Resend para envio transacional
+   - Estados obrigatórios (loading, credenciais inválidas, etc)
+   - Redirect pós-login obrigatório
+
+4. ✅ `docs/_canon/NAVIGATION_VISIBILITY_CONTRACT.md` — Navegação e visibilidade
+   - Taxonomia visual em 6 seções (Início, Organização, Planejamento Técnico, etc)
+   - Estado inicial: 6 módulos ativos, 11 desabilitados
+   - Mapeamento visual de módulos transversais (identity_access → "Conta e Acesso")
+   - Capabilities obrigatórias na top bar
+
+5. ✅ `docs/_canon/FRONTEND_CONTRACT.md` — Regras normativas atualizadas
+   - Nova regra R6: Conformidade com contratos visuais
+   - Nova regra R7: Assets oficiais de `generated/images`
+   - Nova regra R8: Shell mínima do primeiro batch
+   - Nova regra R9: Integrações-base (Cloudinary + Resend)
+   - Nova regra R10: Navegação conforme NAVIGATION_VISIBILITY_CONTRACT
 
 ## Estado Geral
 
-| Item | Status |
-|---|---|
-| **Fase 4** | ✅ DONE |
-| **Fase 5** | ✅ DONE |
-| **Fase 6 - Pipeline** | ✅ CORRIGIDO (PRs #69 #70) |
-| **Fase 6 - Staging deploy** | ✅ FUNCIONAL |
-| **Fase 6 - Contract Conformance** | ✅ 7/7 PASS |
-| **Fase 6 - QA staging** | ⏳ PENDENTE |
-| **Fase 6 - Banco produção** | ⏳ PENDENTE |
-| **Fase 6 - Deploy produção** | ⏳ PENDENTE |
+| Item | Status | Detalhes |
+|---|---|---|
+| **Contratos atualizados** | ✅ DONE | 5/5 artefatos registrados |
+| **Contract gates** | ✅ PASS | stage-artifact.local.latest.json PASS |
+| **Axiom integrity** | ✅ PASS | Sem violações axiomáticas |
+| **Path canonicality** | ✅ PASS | Todos em `docs/_canon/` |
+| **UI doc validation** | ✅ PASS | Validação de estrutura |
+| **Cross-module boundary** | ✅ PASS | Sem overflow de escopo |
+
+## Evidências
+
+- Report: `/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json`
+- Hash: 5 artefatos `hb artifact`-registrados
+- Gates acionados: 6 PASS + 51 SKIP (não aplicáveis)
+- Timestamp: 2026-04-20 22:09 UTC
+
+## Próxima ação permitida
+
+**Implementar a shell frontend baseada nos novos contratos UX.**
+
+- Stack: React + Vite + Zustand + React Query + Tailwind CSS
+- Primeira entrega: Shell mínima com sidebar + drawer + top bar
+- Integração: Avatar pipeline (Cloudinary) + Auth flow (Resend)
+- Navegação: 6 ativos + 11 disabled conforme NAVIGATION_VISIBILITY_CONTRACT
+- Target-state: Front-end completamente conformante aos 5 contratos visuais canônicos
+
+## Bloqueios ativos
+
+Nenhum.
+
+## Notas de contexto
+
+- Os contratos visuais são artefatos globais (cross-cutting), não vinculados a módulo específico
+- O modo de operação foi CDD (Contract-Driven Development) para manter rigor normativo
+- Todos os 5 contratos foram atualizados para versão 1.0.0 final, status "active"
+- O handoff está pronto para a próxima fase de implementação de frontend
 
 ## Próxima ação permitida (Fase 6 cont.)
 
