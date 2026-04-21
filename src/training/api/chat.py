@@ -9,15 +9,10 @@ import uuid
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     ListChatMessagesInput,
-    ListChatMessagesUseCase,
     SubmitTrainingSuggestionInput,
-    SubmitTrainingSuggestionUseCase,
-)
-from ..infrastructure.repository import (
-    FeedbackThreadRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     ErrorOut,
@@ -38,9 +33,8 @@ router = Router()
 )
 @map_exceptions
 def list_chat_messages(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    feedback_thread_repo = FeedbackThreadRepository()
-    threads = ListChatMessagesUseCase(session_repo, feedback_thread_repo).execute(
+    svc = TrainingServices()
+    threads = svc.list_chat_messages_uc().execute(
         ListChatMessagesInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -55,9 +49,8 @@ def list_chat_messages(request, id: uuid.UUID):
 )
 @map_exceptions
 def submit_training_suggestion(request, id: uuid.UUID, body: SubmitTrainingSuggestionIn):
-    session_repo = TrainingSessionRepository()
-    feedback_thread_repo = FeedbackThreadRepository()
-    thread = SubmitTrainingSuggestionUseCase(session_repo, feedback_thread_repo).execute(
+    svc = TrainingServices()
+    thread = svc.submit_training_suggestion_uc().execute(
         SubmitTrainingSuggestionInput(
             session_id=id,
             actor_role=_get_actor_role(request),

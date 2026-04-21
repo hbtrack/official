@@ -4,11 +4,10 @@ from typing import Optional
 
 from ...application.common.paging import CursorCodec
 from ...domain.entities import TrainingSession
+from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     InsufficientPrivilege,
     RoleLabel,
-    TrainingSessionNotFound,
-    assert_can_read_session,
 )
 from ...infrastructure.repository import TrainingSessionRepository
 from .dto import (
@@ -66,10 +65,9 @@ class ListTrainingSessionsUseCase:
 class GetTrainingSessionUseCase:
     def __init__(self, repo: TrainingSessionRepository):
         self._repo = repo
+        self._guard = SessionGuard(repo)
 
     def execute(self, inp: GetTrainingSessionInput) -> TrainingSession:
-        session = self._repo.get_by_id(inp.id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.id} não encontrada")
-        assert_can_read_session(inp.actor_role, inp.actor_id, inp.session_athlete_ids)
-        return session
+        return self._guard.load_for_read(
+            inp.id, inp.actor_role, inp.actor_id, inp.session_athlete_ids
+        )

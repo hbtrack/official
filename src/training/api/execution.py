@@ -12,22 +12,13 @@ import uuid
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     CreateExecutionRecordInput,
-    CreateExecutionRecordUseCase,
     CreateSessionObjectiveInput,
-    CreateSessionObjectiveUseCase,
     GetExecutionRecordInput,
-    GetExecutionRecordUseCase,
     ListExecutionRecordsInput,
-    ListExecutionRecordsUseCase,
     ListSessionObjectivesInput,
-    ListSessionObjectivesUseCase,
-)
-from ..infrastructure.repository import (
-    ExecutionRecordRepository,
-    SessionObjectiveRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     CreateExecutionRecordIn,
@@ -55,9 +46,8 @@ router = Router()
 )
 @map_exceptions
 def list_execution_records(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    record_repo = ExecutionRecordRepository()
-    records = ListExecutionRecordsUseCase(session_repo, record_repo).execute(
+    svc = TrainingServices()
+    records = svc.list_execution_records_uc().execute(
         ListExecutionRecordsInput(session_id=id)
     )
     return 200, ExecutionRecordListOut(data=[_execution_record_to_out(r) for r in records])
@@ -69,9 +59,8 @@ def list_execution_records(request, id: uuid.UUID):
 )
 @map_exceptions
 def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordIn):
-    session_repo = TrainingSessionRepository()
-    record_repo = ExecutionRecordRepository()
-    record = CreateExecutionRecordUseCase(session_repo, record_repo).execute(
+    svc = TrainingServices()
+    record = svc.create_execution_record_uc().execute(
         CreateExecutionRecordInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -97,9 +86,8 @@ def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordI
 )
 @map_exceptions
 def get_execution_record(request, id: uuid.UUID, record_id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    record_repo = ExecutionRecordRepository()
-    record = GetExecutionRecordUseCase(session_repo, record_repo).execute(
+    svc = TrainingServices()
+    record = svc.get_execution_record_uc().execute(
         GetExecutionRecordInput(
             session_id=id,
             record_id=record_id,
@@ -120,9 +108,8 @@ def get_execution_record(request, id: uuid.UUID, record_id: uuid.UUID):
 )
 @map_exceptions
 def list_session_objectives(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    obj_repo = SessionObjectiveRepository()
-    objs = ListSessionObjectivesUseCase(session_repo, obj_repo).execute(
+    svc = TrainingServices()
+    objs = svc.list_session_objectives_uc().execute(
         ListSessionObjectivesInput(session_id=id)
     )
     return 200, SessionObjectiveListOut(data=[_session_objective_to_out(o) for o in objs])
@@ -134,9 +121,8 @@ def list_session_objectives(request, id: uuid.UUID):
 )
 @map_exceptions
 def create_session_objective(request, id: uuid.UUID, body: CreateSessionObjectiveIn):
-    session_repo = TrainingSessionRepository()
-    obj_repo = SessionObjectiveRepository()
-    obj = CreateSessionObjectiveUseCase(session_repo, obj_repo).execute(
+    svc = TrainingServices()
+    obj = svc.create_session_objective_uc().execute(
         CreateSessionObjectiveInput(
             session_id=id,
             actor_role=_get_actor_role(request),

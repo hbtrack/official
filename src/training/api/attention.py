@@ -12,19 +12,12 @@ from typing import Optional
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     DismissAttentionQueueItemInput,
-    DismissAttentionQueueItemUseCase,
     EscalateAttentionQueueItemInput,
-    EscalateAttentionQueueItemUseCase,
     ListAttentionQueueItemsInput,
-    ListAttentionQueueItemsUseCase,
     ResolveAttentionQueueItemInput,
-    ResolveAttentionQueueItemUseCase,
-)
-from ..infrastructure.repository import (
-    AttentionQueueRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     AttentionQueueItemOut,
@@ -52,9 +45,8 @@ def list_attention_queue_items(
     severity: Optional[str] = None,
     resolved: bool = False,
 ):
-    session_repo = TrainingSessionRepository()
-    queue_repo = AttentionQueueRepository()
-    items = ListAttentionQueueItemsUseCase(session_repo, queue_repo).execute(
+    svc = TrainingServices()
+    items = svc.list_attention_queue_items_uc().execute(
         ListAttentionQueueItemsInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -73,9 +65,8 @@ def list_attention_queue_items(
 def resolve_attention_queue_item(
     request, id: uuid.UUID, item_id: uuid.UUID, body: ResolveAttentionQueueItemIn
 ):
-    session_repo = TrainingSessionRepository()
-    queue_repo = AttentionQueueRepository()
-    item = ResolveAttentionQueueItemUseCase(session_repo, queue_repo).execute(
+    svc = TrainingServices()
+    item = svc.resolve_attention_queue_item_uc().execute(
         ResolveAttentionQueueItemInput(
             session_id=id,
             item_id=item_id,
@@ -95,9 +86,8 @@ def resolve_attention_queue_item(
 def dismiss_attention_queue_item(
     request, id: uuid.UUID, item_id: uuid.UUID, body: DismissAttentionQueueItemIn
 ):
-    session_repo = TrainingSessionRepository()
-    queue_repo = AttentionQueueRepository()
-    item = DismissAttentionQueueItemUseCase(session_repo, queue_repo).execute(
+    svc = TrainingServices()
+    item = svc.dismiss_attention_queue_item_uc().execute(
         DismissAttentionQueueItemInput(
             session_id=id,
             item_id=item_id,
@@ -117,9 +107,8 @@ def dismiss_attention_queue_item(
 def escalate_attention_queue_item(
     request, id: uuid.UUID, item_id: uuid.UUID, body: EscalateAttentionQueueItemIn
 ):
-    session_repo = TrainingSessionRepository()
-    queue_repo = AttentionQueueRepository()
-    item = EscalateAttentionQueueItemUseCase(session_repo, queue_repo).execute(
+    svc = TrainingServices()
+    item = svc.escalate_attention_queue_item_uc().execute(
         EscalateAttentionQueueItemInput(
             session_id=id,
             item_id=item_id,

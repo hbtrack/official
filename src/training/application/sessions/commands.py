@@ -4,16 +4,10 @@ import uuid
 from datetime import datetime, timezone
 
 from ...domain.entities import TrainingSession, TrainingSessionStatus
+from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
-    CAN_ARCHIVE_SESSION,
-    InsufficientPrivilege,
-    TrainingSessionNotFound,
     assert_can_create_session,
-    assert_can_delete_session,
-    assert_can_modify_session,
-    assert_session_mutable,
     assert_session_not_historical,
-    assert_valid_transition,
 )
 from ...infrastructure.repository import TrainingSessionRepository
 from .dto import (
@@ -72,16 +66,10 @@ class TransitionTrainingSessionUseCase:
 
     def __init__(self, repo: TrainingSessionRepository):
         self._repo = repo
+        self._guard = SessionGuard(repo)
 
     def execute(self, inp: TransitionTrainingSessionInput) -> TrainingSession:
-        session = self._repo.get_by_id(inp.id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        if inp.target_status == TrainingSessionStatus.ARCHIVED:
-            if inp.actor_role not in CAN_ARCHIVE_SESSION:
-                raise InsufficientPrivilege("Apenas admin/coordinator podem arquivar sessões")
-        assert_valid_transition(session.status, inp.target_status)
+        session = self._guard.load_for_transition(inp.id, inp.target_status, inp.actor_role)
         session.status = inp.target_status
         session.updated_at = datetime.now(tz=timezone.utc)
         return self._repo.save(session)
@@ -90,17 +78,10 @@ class TransitionTrainingSessionUseCase:
 class DeleteTrainingSessionUseCase:
     def __init__(self, repo: TrainingSessionRepository):
         self._repo = repo
+        self._guard = SessionGuard(repo)
 
     def execute(self, inp: DeleteTrainingSessionInput) -> None:
-        session = self._repo.get_by_id(inp.id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.id} não encontrada")
-        assert_can_delete_session(inp.actor_role)
-        # DR-TRAIN-027: sessões IN_PROGRESS não podem ser excluídas fisicamente
-        if session.status == TrainingSessionStatus.IN_PROGRESS:
-            raise InsufficientPrivilege(
-                "DR-TRAIN-027: sessão IN_PROGRESS não pode ser excluída — use cancelamento lógico"
-            )
+        session = self._guard.load_for_delete(inp.id, inp.actor_role)
         now = datetime.now(tz=timezone.utc)
         session.deleted_at = now
         session.deleted_reason = inp.deleted_reason
@@ -111,13 +92,10 @@ class DeleteTrainingSessionUseCase:
 class UpdateTrainingSessionUseCase:
     def __init__(self, repo: TrainingSessionRepository):
         self._repo = repo
+        self._guard = SessionGuard(repo)
 
     def execute(self, inp: UpdateTrainingSessionInput) -> TrainingSession:
-        session = self._repo.get_by_id(inp.id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        assert_session_mutable(session.status)
+        session = self._guard.load_for_update(inp.id, inp.actor_role)
         assert_session_not_historical(session.session_at)
         if inp.session_at is not None:
             session.session_at = inp.session_at

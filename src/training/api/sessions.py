@@ -19,22 +19,16 @@ from typing import Optional
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     CreateTrainingSessionInput,
-    CreateTrainingSessionUseCase,
     DeleteTrainingSessionInput,
-    DeleteTrainingSessionUseCase,
     GetTrainingSessionInput,
-    GetTrainingSessionUseCase,
     ListTrainingSessionsInput,
-    ListTrainingSessionsUseCase,
     TransitionTrainingSessionInput,
-    TransitionTrainingSessionUseCase,
     UpdateTrainingSessionInput,
-    UpdateTrainingSessionUseCase,
 )
 from ..domain.entities import TrainingSessionStatus
-from ..infrastructure.repository import TrainingSessionRepository
 from ..schemas import (
     CreateTrainingSessionIn,
     ErrorOut,
@@ -70,8 +64,8 @@ def list_training_sessions(
 ):
     access = resolve_access(request)  # AccessContext — Fase 2; use cases ainda consomem campos soltos
     codec = get_cursor_codec()
-    repo = TrainingSessionRepository()
-    result = ListTrainingSessionsUseCase(repo, cursor_codec=codec).execute(
+    svc = TrainingServices()
+    result = svc.list_training_sessions_uc(codec).execute(
         ListTrainingSessionsInput(
             actor_role=access.role,
             actor_id=access.actor_id,
@@ -101,8 +95,8 @@ def list_training_sessions(
 )
 @map_exceptions
 def create_training_session(request, body: CreateTrainingSessionIn):
-    repo = TrainingSessionRepository()
-    session = CreateTrainingSessionUseCase(repo).execute(
+    svc = TrainingServices()
+    session = svc.create_training_session_uc().execute(
         CreateTrainingSessionInput(
             actor_role=_get_actor_role(request),
             actor_id=_get_actor_id(request),
@@ -142,8 +136,8 @@ def create_training_session(request, body: CreateTrainingSessionIn):
 )
 @map_exceptions
 def get_training_session(request, id: uuid.UUID):
-    repo = TrainingSessionRepository()
-    session = GetTrainingSessionUseCase(repo).execute(
+    svc = TrainingServices()
+    session = svc.get_training_session_uc().execute(
         GetTrainingSessionInput(
             id=id,
             actor_role=_get_actor_role(request),
@@ -165,8 +159,8 @@ def get_training_session(request, id: uuid.UUID):
 )
 @map_exceptions
 def update_training_session(request, id: uuid.UUID, body: UpdateTrainingSessionIn):
-    repo = TrainingSessionRepository()
-    session = UpdateTrainingSessionUseCase(repo).execute(
+    svc = TrainingServices()
+    session = svc.update_training_session_uc().execute(
         UpdateTrainingSessionInput(
             id=id,
             actor_role=_get_actor_role(request),
@@ -203,8 +197,8 @@ def update_training_session(request, id: uuid.UUID, body: UpdateTrainingSessionI
 )
 @map_exceptions
 def delete_training_session(request, id: uuid.UUID, deleted_reason: str = ""):
-    repo = TrainingSessionRepository()
-    DeleteTrainingSessionUseCase(repo).execute(
+    svc = TrainingServices()
+    svc.delete_training_session_uc().execute(
         DeleteTrainingSessionInput(
             id=id,
             actor_role=_get_actor_role(request),
@@ -219,8 +213,8 @@ def delete_training_session(request, id: uuid.UUID, deleted_reason: str = ""):
 # ---------------------------------------------------------------------------
 
 def _do_transition(request, id: uuid.UUID, target_status: TrainingSessionStatus) -> TransitionOut:
-    repo = TrainingSessionRepository()
-    session = TransitionTrainingSessionUseCase(repo).execute(
+    svc = TrainingServices()
+    session = svc.transition_training_session_uc().execute(
         TransitionTrainingSessionInput(
             id=id,
             target_status=target_status,

@@ -4,12 +4,10 @@ import uuid
 from datetime import datetime, timezone
 
 from ...domain.entities import SessionBlock, SessionBlockIntensity, SessionBlockPhase
+from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     SessionBlockNotFound,
-    TrainingSessionNotFound,
-    assert_can_modify_session,
     assert_elastic_sum_rule,
-    assert_session_mutable,
 )
 from ...infrastructure.repository import SessionBlockRepository, TrainingSessionRepository
 from .dto import (
@@ -24,13 +22,10 @@ class AddSessionBlockUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, block_repo: SessionBlockRepository):
         self._session_repo = session_repo
         self._block_repo = block_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: AddSessionBlockInput) -> SessionBlock:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        assert_session_mutable(session.status)
+        session = self._guard.load_for_update(inp.session_id, inp.actor_role)
         # INV-TRAIN-083
         current_total = self._block_repo.total_duration_for_session(inp.session_id)
         assert_elastic_sum_rule(session.duration_planned_minutes, current_total, inp.duration_minutes)
@@ -57,13 +52,10 @@ class UpdateSessionBlockUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, block_repo: SessionBlockRepository):
         self._session_repo = session_repo
         self._block_repo = block_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: UpdateSessionBlockInput) -> SessionBlock:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        assert_session_mutable(session.status)
+        session = self._guard.load_for_update(inp.session_id, inp.actor_role)
         block = self._block_repo.get_by_id(inp.block_id)
         if not block:
             raise SessionBlockNotFound(f"Bloco {inp.block_id} não encontrado")
@@ -94,13 +86,10 @@ class DeleteSessionBlockUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, block_repo: SessionBlockRepository):
         self._session_repo = session_repo
         self._block_repo = block_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: DeleteSessionBlockInput) -> None:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        assert_session_mutable(session.status)
+        self._guard.load_for_update(inp.session_id, inp.actor_role)
         block = self._block_repo.get_by_id(inp.block_id)
         if not block:
             raise SessionBlockNotFound(f"Bloco {inp.block_id} não encontrado")
@@ -111,13 +100,10 @@ class ReorderSessionBlocksUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, block_repo: SessionBlockRepository):
         self._session_repo = session_repo
         self._block_repo = block_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: ReorderSessionBlocksInput) -> list[SessionBlock]:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        assert_session_mutable(session.status)
+        self._guard.load_for_update(inp.session_id, inp.actor_role)
         existing = self._block_repo.list_by_session(inp.session_id)
         existing_ids = {b.id for b in existing}
         if set(inp.block_ids) != existing_ids:

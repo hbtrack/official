@@ -14,21 +14,13 @@ import uuid
 from ninja import Router
 from ninja.errors import HttpError
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     AddSessionBlockInput,
-    AddSessionBlockUseCase,
     DeleteSessionBlockInput,
-    DeleteSessionBlockUseCase,
     ListSessionBlocksInput,
-    ListSessionBlocksUseCase,
     ReorderSessionBlocksInput,
-    ReorderSessionBlocksUseCase,
     UpdateSessionBlockInput,
-    UpdateSessionBlockUseCase,
-)
-from ..infrastructure.repository import (
-    SessionBlockRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     AddSessionBlockIn,
@@ -51,9 +43,8 @@ router = Router()
 )
 @map_exceptions
 def list_session_blocks(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    block_repo = SessionBlockRepository()
-    blocks = ListSessionBlocksUseCase(session_repo, block_repo).execute(
+    svc = TrainingServices()
+    blocks = svc.list_session_blocks_uc().execute(
         ListSessionBlocksInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -76,9 +67,8 @@ def list_session_blocks(request, id: uuid.UUID):
 )
 @map_exceptions
 def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
-    session_repo = TrainingSessionRepository()
-    block_repo = SessionBlockRepository()
-    block = AddSessionBlockUseCase(session_repo, block_repo).execute(
+    svc = TrainingServices()
+    block = svc.add_session_block_uc().execute(
         AddSessionBlockInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -103,7 +93,7 @@ def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
 )
 def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
     from ..domain.rules import SessionBlockNotFound
-    block_repo = SessionBlockRepository()
+    block_repo = TrainingServices().session_block_repo()
     block = block_repo.get_by_id(block_id)
     if not block or block.session_id != id:
         raise SessionBlockNotFound("Bloco não encontrado")
@@ -116,9 +106,8 @@ def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
 )
 @map_exceptions
 def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: UpdateSessionBlockIn):
-    session_repo = TrainingSessionRepository()
-    block_repo = SessionBlockRepository()
-    block = UpdateSessionBlockUseCase(session_repo, block_repo).execute(
+    svc = TrainingServices()
+    block = svc.update_session_block_uc().execute(
         UpdateSessionBlockInput(
             session_id=id,
             block_id=block_id,
@@ -142,9 +131,8 @@ def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: Upda
 )
 @map_exceptions
 def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    block_repo = SessionBlockRepository()
-    DeleteSessionBlockUseCase(session_repo, block_repo).execute(
+    svc = TrainingServices()
+    svc.delete_session_block_uc().execute(
         DeleteSessionBlockInput(
             session_id=id,
             block_id=block_id,
@@ -160,9 +148,8 @@ def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
 )
 @map_exceptions
 def reorder_session_blocks(request, id: uuid.UUID, body: ReorderSessionBlocksIn):
-    session_repo = TrainingSessionRepository()
-    block_repo = SessionBlockRepository()
-    blocks = ReorderSessionBlocksUseCase(session_repo, block_repo).execute(
+    svc = TrainingServices()
+    blocks = svc.reorder_session_blocks_uc().execute(
         ReorderSessionBlocksInput(
             session_id=id,
             actor_role=_get_actor_role(request),

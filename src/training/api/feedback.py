@@ -11,17 +11,11 @@ from typing import Optional
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     CloseFeedbackThreadInput,
-    CloseFeedbackThreadUseCase,
     CreateFeedbackThreadInput,
-    CreateFeedbackThreadUseCase,
     ListFeedbackThreadsInput,
-    ListFeedbackThreadsUseCase,
-)
-from ..infrastructure.repository import (
-    FeedbackThreadRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     CloseFeedbackThreadIn,
@@ -48,9 +42,8 @@ def list_feedback_threads(
     contextType: Optional[str] = None,
     athleteId: Optional[uuid.UUID] = None,
 ):
-    session_repo = TrainingSessionRepository()
-    thread_repo = FeedbackThreadRepository()
-    items = ListFeedbackThreadsUseCase(session_repo, thread_repo).execute(
+    svc = TrainingServices()
+    items = svc.list_feedback_threads_uc().execute(
         ListFeedbackThreadsInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -67,9 +60,8 @@ def list_feedback_threads(
 )
 @map_exceptions
 def create_feedback_thread(request, id: uuid.UUID, body: CreateFeedbackThreadIn):
-    session_repo = TrainingSessionRepository()
-    thread_repo = FeedbackThreadRepository()
-    thread = CreateFeedbackThreadUseCase(session_repo, thread_repo).execute(
+    svc = TrainingServices()
+    thread = svc.create_feedback_thread_uc().execute(
         CreateFeedbackThreadInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -95,9 +87,8 @@ def create_feedback_thread(request, id: uuid.UUID, body: CreateFeedbackThreadIn)
 def close_feedback_thread(
     request, id: uuid.UUID, thread_id: uuid.UUID, body: CloseFeedbackThreadIn
 ):
-    session_repo = TrainingSessionRepository()
-    thread_repo = FeedbackThreadRepository()
-    thread = CloseFeedbackThreadUseCase(session_repo, thread_repo).execute(
+    svc = TrainingServices()
+    thread = svc.close_feedback_thread_uc().execute(
         CloseFeedbackThreadInput(
             session_id=id,
             thread_id=thread_id,

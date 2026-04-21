@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-04-22"
+data_ultima_sessao: "2026-04-21"
 branch_ativo: refactor/training-decomposition
 modo_operacao: ROADMAP
 ci_status: PASS

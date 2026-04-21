@@ -11,17 +11,11 @@ from typing import Optional
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     AcceptRecommendationInput,
-    AcceptRecommendationUseCase,
     DismissRecommendationInput,
-    DismissRecommendationUseCase,
     ListRecommendationsInput,
-    ListRecommendationsUseCase,
-)
-from ..infrastructure.repository import (
-    RecommendationRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     AcceptRecommendationIn,
@@ -43,9 +37,8 @@ router = Router()
 )
 @map_exceptions
 def list_recommendations(request, id: uuid.UUID, status: Optional[str] = None):
-    session_repo = TrainingSessionRepository()
-    recommendation_repo = RecommendationRepository()
-    items = ListRecommendationsUseCase(session_repo, recommendation_repo).execute(
+    svc = TrainingServices()
+    items = svc.list_recommendations_uc().execute(
         ListRecommendationsInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -63,9 +56,8 @@ def list_recommendations(request, id: uuid.UUID, status: Optional[str] = None):
 def accept_recommendation(
     request, id: uuid.UUID, rec_id: uuid.UUID, body: AcceptRecommendationIn | None = None
 ):
-    session_repo = TrainingSessionRepository()
-    recommendation_repo = RecommendationRepository()
-    recommendation = AcceptRecommendationUseCase(session_repo, recommendation_repo).execute(
+    svc = TrainingServices()
+    recommendation = svc.accept_recommendation_uc().execute(
         AcceptRecommendationInput(
             session_id=id,
             recommendation_id=rec_id,
@@ -85,9 +77,8 @@ def accept_recommendation(
 def dismiss_recommendation(
     request, id: uuid.UUID, rec_id: uuid.UUID, body: DismissRecommendationIn
 ):
-    session_repo = TrainingSessionRepository()
-    recommendation_repo = RecommendationRepository()
-    recommendation = DismissRecommendationUseCase(session_repo, recommendation_repo).execute(
+    svc = TrainingServices()
+    recommendation = svc.dismiss_recommendation_uc().execute(
         DismissRecommendationInput(
             session_id=id,
             recommendation_id=rec_id,

@@ -18,25 +18,17 @@ from django.db import DataError, IntegrityError
 from ninja import Router
 from ninja.errors import HttpError
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     CreateMesocycleInput,
-    CreateMesocycleUseCase,
     CreateMicrocycleInput,
-    CreateMicrocycleUseCase,
     GetMesocycleInput,
-    GetMesocycleUseCase,
     GetMicrocycleInput,
-    GetMicrocycleUseCase,
     ListMesocyclesInput,
-    ListMesocyclesUseCase,
     ListMicrocyclesInput,
-    ListMicrocyclesUseCase,
     UpdateMesocycleInput,
-    UpdateMesocycleUseCase,
     UpdateMicrocycleInput,
-    UpdateMicrocycleUseCase,
 )
-from ..infrastructure.repository import MesocycleRepository, MicrocycleRepository
 from ..schemas import (
     CreateMesocycleIn,
     CreateMicrocycleIn,
@@ -62,8 +54,8 @@ router = Router()
 @router.get("/mesocycles", response={200: MesocycleListOut, 403: ErrorOut})
 @map_exceptions
 def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
-    repo = MesocycleRepository()
-    items = ListMesocyclesUseCase(repo).execute(
+    svc = TrainingServices()
+    items = svc.list_mesocycles_uc().execute(
         ListMesocyclesInput(organization_id=organization_id)
     )
     return 200, MesocycleListOut(items=[_mesocycle_to_out(m) for m in items])
@@ -72,8 +64,8 @@ def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
 @router.post("/mesocycles", response={201: MesocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 @map_exceptions
 def create_mesocycle(request, body: CreateMesocycleIn):
-    repo = MesocycleRepository()
-    meso = CreateMesocycleUseCase(repo).execute(
+    svc = TrainingServices()
+    meso = svc.create_mesocycle_uc().execute(
         CreateMesocycleInput(
             actor_role=_get_actor_role(request),
             organization_id=body.organization_id,
@@ -92,16 +84,16 @@ def create_mesocycle(request, body: CreateMesocycleIn):
 @router.get("/mesocycles/{id}", response={200: MesocycleOut, 404: ErrorOut})
 @map_exceptions
 def get_mesocycle(request, id: uuid.UUID):
-    repo = MesocycleRepository()
-    meso = GetMesocycleUseCase(repo).execute(GetMesocycleInput(id=id))
+    svc = TrainingServices()
+    meso = svc.get_mesocycle_uc().execute(GetMesocycleInput(id=id))
     return 200, _mesocycle_to_out(meso)
 
 
 @router.patch("/mesocycles/{id}", response={200: MesocycleOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 @map_exceptions
 def update_mesocycle(request, id: uuid.UUID, body: UpdateMesocycleIn):
-    repo = MesocycleRepository()
-    meso = UpdateMesocycleUseCase(repo).execute(
+    svc = TrainingServices()
+    meso = svc.update_mesocycle_uc().execute(
         UpdateMesocycleInput(
             id=id,
             actor_role=_get_actor_role(request),
@@ -128,8 +120,8 @@ def list_microcycles(
     organization_id: Optional[uuid.UUID] = None,
     mesocycle_id: Optional[uuid.UUID] = None,
 ):
-    repo = MicrocycleRepository()
-    items = ListMicrocyclesUseCase(repo).execute(
+    svc = TrainingServices()
+    items = svc.list_microcycles_uc().execute(
         ListMicrocyclesInput(
             organization_id=organization_id,
             mesocycle_id=mesocycle_id,
@@ -143,8 +135,8 @@ def list_microcycles(
 )
 @map_exceptions
 def create_microcycle(request, body: CreateMicrocycleIn):
-    repo = MicrocycleRepository()
-    micro = CreateMicrocycleUseCase(repo).execute(
+    svc = TrainingServices()
+    micro = svc.create_microcycle_uc().execute(
         CreateMicrocycleInput(
             actor_role=_get_actor_role(request),
             organization_id=body.organization_id,
@@ -165,8 +157,8 @@ def create_microcycle(request, body: CreateMicrocycleIn):
 @router.get("/microcycles/{id}", response={200: MicrocycleOut, 404: ErrorOut})
 @map_exceptions
 def get_microcycle(request, id: uuid.UUID):
-    repo = MicrocycleRepository()
-    micro = GetMicrocycleUseCase(repo).execute(GetMicrocycleInput(id=id))
+    svc = TrainingServices()
+    micro = svc.get_microcycle_uc().execute(GetMicrocycleInput(id=id))
     return 200, _microcycle_to_out(micro)
 
 
@@ -175,8 +167,8 @@ def get_microcycle(request, id: uuid.UUID):
 )
 @map_exceptions
 def update_microcycle(request, id: uuid.UUID, body: UpdateMicrocycleIn):
-    repo = MicrocycleRepository()
-    micro = UpdateMicrocycleUseCase(repo).execute(
+    svc = TrainingServices()
+    micro = svc.update_microcycle_uc().execute(
         UpdateMicrocycleInput(
             id=id,
             actor_role=_get_actor_role(request),

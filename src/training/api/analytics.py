@@ -9,13 +9,9 @@ import uuid
 from ninja import Router
 from ninja.errors import HttpError
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     GetLoadChartInput,
-    GetLoadChartUseCase,
-)
-from ..infrastructure.repository import (
-    ExecutionRecordRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import ErrorOut, LoadChartEntryOut, LoadChartOut
 from .deps import _get_actor_role
@@ -30,9 +26,8 @@ router = Router()
 )
 @map_exceptions
 def get_load_chart(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    execution_record_repo = ExecutionRecordRepository()
-    result = GetLoadChartUseCase(session_repo, execution_record_repo).execute(
+    svc = TrainingServices()
+    result = svc.get_load_chart_uc().execute(
         GetLoadChartInput(
             session_id=id,
             actor_role=_get_actor_role(request),

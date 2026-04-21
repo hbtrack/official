@@ -8,13 +8,8 @@ from ...domain.entities import (
     ExecutionType,
     SessionObjective,
     SessionObjectiveOrigin,
-    TrainingSessionStatus,
 )
-from ...domain.rules import (
-    InsufficientPrivilege,
-    TrainingSessionNotFound,
-    assert_can_modify_session,
-)
+from ...domain.policies.session_access import SessionGuard
 from ...infrastructure.repository import (
     ExecutionRecordRepository,
     SessionObjectiveRepository,
@@ -27,14 +22,10 @@ class CreateExecutionRecordUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, record_repo: ExecutionRecordRepository):
         self._session_repo = session_repo
         self._record_repo = record_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: CreateExecutionRecordInput) -> ExecutionRecord:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
-        if session.status != TrainingSessionStatus.IN_PROGRESS:
-            raise InsufficientPrivilege("ExecutionRecord requer sessão IN_PROGRESS")
+        self._guard.load_for_in_progress(inp.session_id, inp.actor_role)
         now = datetime.now(tz=timezone.utc)
         record = ExecutionRecord(
             id=uuid.uuid4(),
@@ -61,12 +52,10 @@ class CreateSessionObjectiveUseCase:
     def __init__(self, session_repo: TrainingSessionRepository, obj_repo: SessionObjectiveRepository):
         self._session_repo = session_repo
         self._obj_repo = obj_repo
+        self._guard = SessionGuard(session_repo)
 
     def execute(self, inp: CreateSessionObjectiveInput) -> SessionObjective:
-        session = self._session_repo.get_by_id(inp.session_id)
-        if not session:
-            raise TrainingSessionNotFound(f"Sessão {inp.session_id} não encontrada")
-        assert_can_modify_session(inp.actor_role)
+        self._guard.load_with_write_access(inp.session_id, inp.actor_role)
         now = datetime.now(tz=timezone.utc)
         obj = SessionObjective(
             id=uuid.uuid4(),

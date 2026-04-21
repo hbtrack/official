@@ -10,15 +10,10 @@ import uuid
 from ninja import Router
 from ninja.errors import HttpError
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     ListSessionAttendanceInput,
-    ListSessionAttendanceUseCase,
     RecordSessionAttendanceInput,
-    RecordSessionAttendanceUseCase,
-)
-from ..infrastructure.repository import (
-    AttendanceRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     AttendanceListOut,
@@ -39,9 +34,8 @@ router = Router()
 )
 @map_exceptions
 def list_session_attendance(request, id: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    attendance_repo = AttendanceRepository()
-    records = ListSessionAttendanceUseCase(session_repo, attendance_repo).execute(
+    svc = TrainingServices()
+    records = svc.list_session_attendance_uc().execute(
         ListSessionAttendanceInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -57,9 +51,8 @@ def list_session_attendance(request, id: uuid.UUID):
 )
 @map_exceptions
 def record_session_attendance(request, id: uuid.UUID, body: RecordSessionAttendanceIn):
-    session_repo = TrainingSessionRepository()
-    attendance_repo = AttendanceRepository()
-    record = RecordSessionAttendanceUseCase(session_repo, attendance_repo).execute(
+    svc = TrainingServices()
+    record = svc.record_session_attendance_uc().execute(
         RecordSessionAttendanceInput(
             session_id=id,
             athlete_id=body.athlete_id,

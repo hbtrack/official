@@ -13,24 +13,14 @@ import uuid
 
 from ninja import Router
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     GetWellnessPostInput,
-    GetWellnessPostUseCase,
     GetWellnessPreInput,
-    GetWellnessPreUseCase,
     SubmitWellnessPostInput,
-    SubmitWellnessPostUseCase,
     SubmitWellnessPreInput,
-    SubmitWellnessPreUseCase,
     UpdateWellnessPostInput,
-    UpdateWellnessPostUseCase,
     UpdateWellnessPreInput,
-    UpdateWellnessPreUseCase,
-)
-from ..infrastructure.repository import (
-    TrainingSessionRepository,
-    WellnessPostRepository,
-    WellnessPreRepository,
 )
 from ..schemas import (
     ErrorOut,
@@ -65,9 +55,8 @@ router = Router()
 )
 @map_exceptions
 def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPreRepository()
-    wellness = SubmitWellnessPreUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.submit_wellness_pre_uc().execute(
         SubmitWellnessPreInput(
             session_id=id,
             athlete_id=body.athlete_id,
@@ -90,9 +79,8 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
 )
 @map_exceptions
 def get_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPreRepository()
-    wellness = GetWellnessPreUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.get_wellness_pre_uc().execute(
         GetWellnessPreInput(
             session_id=id,
             athlete_id=athleteId,
@@ -109,9 +97,8 @@ def get_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID):
 )
 @map_exceptions
 def update_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID, body: UpdateWellnessPreIn):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPreRepository()
-    wellness = UpdateWellnessPreUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.update_wellness_pre_uc().execute(
         UpdateWellnessPreInput(
             session_id=id,
             athlete_id=athleteId,
@@ -145,9 +132,8 @@ def update_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID, body: Upda
 )
 @map_exceptions
 def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPostRepository()
-    wellness = SubmitWellnessPostUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.submit_wellness_post_uc().execute(
         SubmitWellnessPostInput(
             session_id=id,
             athlete_id=body.athlete_id,
@@ -168,9 +154,8 @@ def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
 )
 @map_exceptions
 def get_wellness_post(request, id: uuid.UUID, athleteId: uuid.UUID):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPostRepository()
-    wellness = GetWellnessPostUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.get_wellness_post_uc().execute(
         GetWellnessPostInput(
             session_id=id,
             athlete_id=athleteId,
@@ -189,9 +174,8 @@ def get_wellness_post(request, id: uuid.UUID, athleteId: uuid.UUID):
 def update_wellness_post(
     request, id: uuid.UUID, athleteId: uuid.UUID, body: UpdateWellnessPostIn
 ):
-    session_repo = TrainingSessionRepository()
-    wellness_repo = WellnessPostRepository()
-    wellness = UpdateWellnessPostUseCase(session_repo, wellness_repo).execute(
+    svc = TrainingServices()
+    wellness = svc.update_wellness_post_uc().execute(
         UpdateWellnessPostInput(
             session_id=id,
             athlete_id=athleteId,

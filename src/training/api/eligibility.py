@@ -11,15 +11,10 @@ from typing import Optional
 from ninja import Router
 from ninja.errors import HttpError
 
+from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     GetIneligibilityStatusInput,
-    GetIneligibilityStatusUseCase,
     SubmitIneligibilityDeclarationInput,
-    SubmitIneligibilityDeclarationUseCase,
-)
-from ..infrastructure.repository import (
-    AthleteIneligibilityDeclarationRepository,
-    TrainingSessionRepository,
 )
 from ..schemas import (
     AthleteIneligibilityDeclarationOut,
@@ -39,9 +34,8 @@ router = Router()
 )
 @map_exceptions
 def get_ineligibility_status(request, id: uuid.UUID, athleteId: Optional[uuid.UUID] = None):
-    session_repo = TrainingSessionRepository()
-    ineligibility_repo = AthleteIneligibilityDeclarationRepository()
-    declaration = GetIneligibilityStatusUseCase(session_repo, ineligibility_repo).execute(
+    svc = TrainingServices()
+    declaration = svc.get_ineligibility_status_uc().execute(
         GetIneligibilityStatusInput(
             session_id=id,
             actor_role=_get_actor_role(request),
@@ -66,11 +60,8 @@ def get_ineligibility_status(request, id: uuid.UUID, athleteId: Optional[uuid.UU
 def submit_ineligibility_declaration(
     request, id: uuid.UUID, body: SubmitIneligibilityDeclarationIn
 ):
-    session_repo = TrainingSessionRepository()
-    ineligibility_repo = AthleteIneligibilityDeclarationRepository()
-    declaration = SubmitIneligibilityDeclarationUseCase(
-        session_repo, ineligibility_repo
-    ).execute(
+    svc = TrainingServices()
+    declaration = svc.submit_ineligibility_declaration_uc().execute(
         SubmitIneligibilityDeclarationInput(
             session_id=id,
             actor_role=_get_actor_role(request),
