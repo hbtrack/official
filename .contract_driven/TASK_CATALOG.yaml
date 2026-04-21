@@ -210,7 +210,7 @@ task_catalog:
       Requer: status=validated_contract + pipeline PASS + sem decisões abertas + todas as expected_surfaces presentes.
       Habilita a materialização controlada do módulo.
       Não implica módulo implementado; estados pós-readiness vivem no MODULE_REGISTRY (`implemented`, `staging_validated`, `released`).
-      `generate_frontend` continua frozen até frontend/ existir, a toolchain real estar versionada e o FRONTEND_CONTRACT_GATE sair de SKIP.
+      `generate_frontend` continua frozen até o frontend real passar no `FRONTEND_CONTRACT_GATE` e receber sign-off explícito.
 
   # Grupo: Decisões Arquiteturais
   architecture_review:
@@ -284,8 +284,8 @@ task_catalog:
     description: "[FUTURO] Gerar componentes frontend a partir de UI Contract. Aguarda sign-off."
     profile_id: null
     stage_allowed: []
-    reason_frozen: "Frontend real ainda não existe no workspace; contrato segue como target-state"
-    unblock_condition: "Quando frontend/ existir com paths canonizados, package.json declarar a toolchain frontend real, FRONTEND_CONTRACT_GATE sair de SKIP_NOT_APPLICABLE e houver sign-off explícito para descongelar o worker"
+    reason_frozen: "Frontend real existe, mas a reimplementação canônica ainda não passou no FRONTEND_CONTRACT_GATE"
+    unblock_condition: "Quando FRONTEND_CONTRACT_GATE passar contra o workspace real e houver sign-off explícito para descongelar o worker"
 
   # Grupo: Execução de Fases do ROADMAP (implementação — modo distinto do CDD)
   execute_roadmap_phase:

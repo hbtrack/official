@@ -168,6 +168,280 @@
             schema:
               $ref: ../components/schemas/shared/problem.yaml
 
+/auth/forgot-password:
+  post:
+    tags: [identity_access]
+    summary: Request password reset
+    description: >
+      Solicita a recuperação de senha e dispara email transacional com link
+      seguro para o frontend oficial.
+
+      Regras aplicadas:
+      - DR-IAM-006: fluxo de recuperação é soberania de identity_access
+      - DR-IAM-007: link de reset deve ser construído com FRONTEND_URL
+      - INV-IAM-005: resposta não deve enumerar existência de conta
+      - baseline inicial de entrega transacional: Resend
+    operationId: authForgotPassword
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [email]
+            additionalProperties: false
+            properties:
+              email:
+                type: string
+                format: email
+                maxLength: 254
+    responses:
+      "202":
+        description: Solicitação recebida com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status, deliveryChannel, requestedAt]
+              additionalProperties: false
+              properties:
+                status:
+                  type: string
+                  enum: [RESET_REQUEST_ACCEPTED]
+                deliveryChannel:
+                  type: string
+                  enum: [email]
+                requestedAt:
+                  type: string
+                  format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                emailHint:
+                  type: string
+                  maxLength: 120
+      "400":
+        description: Email ausente ou malformado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflito com estado atual (solicitação duplicada ou concorrência no fluxo de reset)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "429":
+        description: Muitas tentativas de reset no mesmo período
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Falha no envio transacional ou erro interno
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
+/auth/reset-password:
+  post:
+    tags: [identity_access]
+    summary: Validate password reset token
+    description: >
+      Valida o token recebido no link de recuperação para permitir a abertura
+      segura da tela de nova senha.
+
+      Regras aplicadas:
+      - DR-IAM-006: validação de token de reset é soberania de identity_access
+      - INV-IAM-005: token inválido ou expirado não deve revelar dados extras
+    operationId: authResetPassword
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [token]
+            additionalProperties: false
+            properties:
+              token:
+                type: string
+                minLength: 12
+                maxLength: 512
+    responses:
+      "200":
+        description: Token válido para abertura da tela de nova senha
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status, expiresAt]
+              additionalProperties: false
+              properties:
+                status:
+                  type: string
+                  enum: [TOKEN_VALID]
+                expiresAt:
+                  type: string
+                  format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                emailHint:
+                  type: string
+                  maxLength: 120
+      "400":
+        description: Token ausente ou malformado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflito com estado atual (token já validado anteriormente ou nova senha já foi definida)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "410":
+        description: Token inválido ou expirado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
+/auth/new-password:
+  post:
+    tags: [identity_access]
+    summary: Set new password from reset token
+    description: >
+      Define a nova senha a partir de um token de reset válido.
+
+      Regras aplicadas:
+      - DR-IAM-006: troca de senha via reset é soberania de identity_access
+      - INV-IAM-005: token deve ser de uso único e expirar
+    operationId: authNewPassword
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [token, newPassword, confirmPassword]
+            additionalProperties: false
+            properties:
+              token:
+                type: string
+                minLength: 12
+                maxLength: 512
+              newPassword:
+                type: string
+                minLength: 8
+                maxLength: 128
+                writeOnly: true
+              confirmPassword:
+                type: string
+                minLength: 8
+                maxLength: 128
+                writeOnly: true
+    responses:
+      "202":
+        description: Nova senha aceita e aguardando confirmação final de UX
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resetRequestId, status]
+              additionalProperties: false
+              properties:
+                resetRequestId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                status:
+                  type: string
+                  enum: [PASSWORD_UPDATED_PENDING_CONFIRMATION]
+      "400":
+        description: Senha inválida ou confirmação divergente
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflito com estado atual (nova senha já foi definida ou solicitação já concluída)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "410":
+        description: Token inválido ou expirado
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
+/auth/confirm-reset:
+  post:
+    tags: [identity_access]
+    summary: Confirm password reset completion
+    description: >
+      Confirma a etapa final do reset para sustentar a tela final de sucesso
+      da experiência de autenticação.
+
+      Regras aplicadas:
+      - DR-IAM-006: confirmação final do reset é soberania de identity_access
+      - DR-IAM-007: fluxo sustenta a experiência oficial de auth do produto
+    operationId: authConfirmReset
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [resetRequestId]
+            additionalProperties: false
+            properties:
+              resetRequestId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    responses:
+      "200":
+        description: Reset confirmado com sucesso
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status, completedAt]
+              additionalProperties: false
+              properties:
+                status:
+                  type: string
+                  enum: [PASSWORD_RESET_CONFIRMED]
+                completedAt:
+                  type: string
+                  format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+      "400":
+        description: Payload inválido
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Solicitação de reset não encontrada
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflito com estado atual (reset já confirmado ou invalidado)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+
 /auth/me:
   get:
     tags: [identity_access]

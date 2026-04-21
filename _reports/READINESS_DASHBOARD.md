@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-04-11T17:16:59Z | run_id: `20260411T171659_8de9ee` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-04-21T07:44:00Z | run_id: `20260421T074400_ac4a4a` | health: **100/100** | overall: **PASS**
 
 ## Modulos
 
@@ -60,6 +60,7 @@
 | SPECTRAL_LINTING_GATE | PASS | sim |
 | ARAZZO_COMPLETENESS_GATE | PASS | sim |
 | UI_DOC_VALIDATION_GATE | PASS | sim |
+| FRONTEND_CONTRACT_GATE | PASS | sim |
 | DERIVED_DRIFT_GATE | PASS | sim |
 | ADVERSARIAL_ANALYSIS_GATE | PASS | nao |
 | FEATURE_READINESS_GATE | PASS | nao |

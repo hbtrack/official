@@ -79,7 +79,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -137,7 +137,7 @@
     "domain_rules": "src/seasons/domain/rules.py",
     "use_cases": "src/seasons/application/use_cases.py"
   },
-  "source_fingerprint": "0d883cc03180a081e1ea6d3284b99a46ecf6188b2d471589defbfaa207cd42de",
+  "source_fingerprint": "e4637517788c443f42643665ac3bf2381533e9908b07274f0f0df6544b829e19",
   "source_graph": {
     "entities": {
       "Season": {

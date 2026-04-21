@@ -61,6 +61,56 @@ class RefreshOut(Schema):
     accessToken: str
     refreshToken: str
 
+# ── Password reset ───────────────────────────────────────────────────────────
+
+class ForgotPasswordIn(Schema):
+    """POST /auth/forgot-password."""
+    email: str
+
+
+class ForgotPasswordOut(Schema):
+    """202 em POST /auth/forgot-password."""
+    status: str
+    deliveryChannel: str
+    requestedAt: datetime
+    emailHint: Optional[str] = None
+
+
+class ResetPasswordIn(Schema):
+    """POST /auth/reset-password."""
+    token: str
+
+
+class ResetPasswordOut(Schema):
+    """200 em POST /auth/reset-password."""
+    status: str
+    expiresAt: datetime
+    emailHint: Optional[str] = None
+
+
+class NewPasswordIn(Schema):
+    """POST /auth/new-password."""
+    token: str
+    newPassword: str
+    confirmPassword: str
+
+
+class NewPasswordOut(Schema):
+    """202 em POST /auth/new-password."""
+    resetRequestId: UUID
+    status: str
+
+
+class ConfirmResetIn(Schema):
+    """POST /auth/confirm-reset."""
+    resetRequestId: UUID
+
+
+class ConfirmResetOut(Schema):
+    """200 em POST /auth/confirm-reset."""
+    status: str
+    completedAt: datetime
+
 # ── Role management ───────────────────────────────────────────────────────────
 
 class UserRolesOut(Schema):

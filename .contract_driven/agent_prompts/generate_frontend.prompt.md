@@ -2,8 +2,8 @@
 task_type: generate_frontend
 version: "1.0.0"
 status: FROZEN
-frozen_reason: "Frontend paths não canonizados - awaiting real workspace structure"
-requires: [ADR-030, FRONTEND_CONTRACT.md, OPENAPI_ROOT_MODULE_SYNC_GATE=PASS]
+frozen_reason: "Frontend real existe, mas a reimplementação canônica ainda não passou no FRONTEND_CONTRACT_GATE"
+requires: [ADR-030, FRONTEND_CONTRACT.md, UX_BRAND_CONTRACT.md, UX_SHELL_CONTRACT.md, AUTH_EXPERIENCE_CONTRACT.md, NAVIGATION_VISIBILITY_CONTRACT.md, OPENAPI_ROOT_MODULE_SYNC_GATE=PASS]
 stack: react_vite_typescript
 ---
 
@@ -12,14 +12,13 @@ stack: react_vite_typescript
 ⚠️ **WORKER CONGELADO** ⚠️
 
 Este worker está temporariamente congelado até que:
-1. `frontend/` exista no workspace com paths canonizados
-2. `package.json` declare a toolchain frontend real (React/Vite/Vitest/Playwright)
-3. `FRONTEND_CONTRACT.md` seja validado empiricamente
-4. `FRONTEND_CONTRACT_GATE` deixe de ser `SKIP_NOT_APPLICABLE`
+1. `FRONTEND_CONTRACT.md` seja validado empiricamente
+2. `FRONTEND_CONTRACT_GATE` passe contra o workspace real
+3. haja sign-off explícito para descongelar o worker
 
-**Não executar este worker até implementação da estrutura de frontend no workspace.**
+**Não executar este worker enquanto o frontend real permanecer fora do contrato canônico.**
 
-> **Nota**: Paths mencionados neste prompt (ex: `frontend/src/`) descrevem o target-state. Enquanto `frontend/` não existir no repo, este prompt serve apenas como especificação operacional congelada.
+> **Nota**: Paths mencionados neste prompt (ex: `frontend/src/`) descrevem o target-state de implementação. O workspace real já existe, mas ainda precisa convergir aos contratos e ao `FRONTEND_CONTRACT_GATE`.
 
 ---
 
@@ -33,6 +32,10 @@ Antes de executar este worker, verificar:
 4. **FEATURE_REGISTRY.yaml** contém a feature alvo com status `validated` ou superior
 5. `contracts/openapi/openapi.yaml` está atualizado
 6. `frontend/` e `package.json` com scripts/toolchain frontend reais existem no workspace
+7. `contracts/openapi/paths/identity_access.yaml` materializa forgot/reset/new-password/confirm-reset quando a tarefa tocar auth/shell base
+8. `.env.example` declara `FRONTEND_URL`, `RESEND_*` e `CLOUDINARY_*` como readiness ativa do target-state
+9. A superfície soberana de perfil expõe campo canônico de avatar
+10. `FRONTEND_CONTRACT_GATE` está `PASS`
 
 Se qualquer pré-requisito estiver ausente → emitir bloqueio correspondente e parar.
 
@@ -57,7 +60,10 @@ contracts/openapi/paths/<module>.yaml         # endpoints do módulo
 contracts/openapi/components/schemas/         # schemas de response/request
 docs/_canon/FEATURE_REGISTRY.yaml            # feature → endpoints → descrição
 docs/_canon/FRONTEND_CONTRACT.md             # regras de organização e stack
-docs/_canon/DESIGN_SYSTEM.md                # tokens de design (se existir)
+docs/_canon/UX_BRAND_CONTRACT.md            # branding, tipografia, tokens, assets
+docs/_canon/UX_SHELL_CONTRACT.md            # shell oficial autenticada
+docs/_canon/AUTH_EXPERIENCE_CONTRACT.md     # auth experience normativa
+docs/_canon/NAVIGATION_VISIBILITY_CONTRACT.md # taxonomia visual e rollout
 ```
 
 ---
@@ -68,11 +74,26 @@ Antes de gerar código, verificar se `frontend/src/api/schema.d.ts` existe e est
 
 ```bash
 # Se não existir ou estiver desatualizado:
-npx openapi-typescript contracts/openapi/openapi.yaml \
-  --output frontend/src/api/schema.d.ts
+npm run api:generate
 ```
 
 O path de output é sempre `frontend/src/api/schema.d.ts`. Nunca editar este arquivo manualmente.
+
+---
+
+## Regra transversal — Shell/Auth do primeiro batch
+
+Se a tarefa tocar `App.tsx`, layouts compartilhados, auth pages ou navegação base, a implementação deve refletir exatamente o primeiro batch canônico:
+
+- grupos: `Início`, `Organização`, `Planejamento Técnico`, `Jogo e Competição`, `Performance e Saúde`, `Administração`
+- módulos ativos: `Dashboard`, `Teams`, `Seasons`, `Training`, `Users`, `Conta e Acesso`
+- módulos visíveis porém desabilitados: `Competitions`, `Matches`, `Scout`, `Video`, `Wellness`, `Medical`, `Exercises`, `Analytics`, `Reports`, `AI Ingestion`, `Audit`
+- top bar: `Breadcrumbs`, `Command palette`, `Notificações`, `User menu`
+- auth: `generated/images/auth-logo.svg`, `generated/images/auth-logo-dark.svg`, tagline `Dados que decidem jogos`
+- avatar: renderizar avatar processado quando disponível e fallback para iniciais apenas quando necessário
+- reset de senha: alinhar o frontend ao fluxo real com `Resend` e `FRONTEND_URL`
+
+Qualquer desvio dessa matriz deve ser tratado como bloqueio, não como liberdade de implementação.
 
 ---
 
@@ -235,6 +256,7 @@ Antes de concluir, verificar:
 - [ ] Páginas em `frontend/src/features/<module>/pages/` criadas
 - [ ] Nenhum tipo de API definido manualmente (tudo via `schema.d.ts`)
 - [ ] Nenhuma chamada HTTP fora dos hooks
+- [ ] Shell/auth do primeiro batch respeitam a matriz visual canônica quando a tarefa tocar essas superfícies
 - [ ] Testes unitários criados para componentes principais
 - [ ] Ao menos 1 teste E2E do fluxo principal
 

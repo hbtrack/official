@@ -52,6 +52,7 @@ class UserProfile:
     status_label: UserStatus = UserStatus.PENDING_ACTIVATION
     position_label: str | None = None
     preferred_language: str | None = None
+    avatar_url: str | None = None
     preference_tags: list[str] = field(default_factory=list)
     team_ids: list[UUID] = field(default_factory=list)
     season_ids: list[UUID] = field(default_factory=list)

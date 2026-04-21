@@ -31,6 +31,14 @@ properties:
     minLength: 1
     maxLength: 120
     description: Canonical human-readable profile label. INV-USR-001.
+  avatarUrl:
+    type: string
+    format: uri
+    maxLength: 2048
+    description: 'Processed avatar URL for product shell display. If absent, UI
+      must fallback to initials (DR-USR-006).
+
+      '
   roleLabel:
     type: string
     enum:

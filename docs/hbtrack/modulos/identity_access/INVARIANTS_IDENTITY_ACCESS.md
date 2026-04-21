@@ -28,6 +28,7 @@ Invariantes são condições que devem permanecer verdadeiras independentemente 
 | INV-IAM-002 | `roleLabels` é coleção sem duplicidade. | `AuthSession` | Schema local | `uniqueItems` + auditoria de payload |
 | INV-IAM-003 | `issuedAt < expiresAt`, e `revokedAt`, quando presente, deve ser maior ou igual a `issuedAt`. | `AuthSession` | Regra temporal do módulo | Teste de contrato |
 | INV-IAM-004 | `identity_access` não pode conter `birth_date`, `height`, `dominant_hand`, `position` ou `injury_history_summary`. | `AuthSession` | `BOUNDARY_USERS_IDENTITY_ACCESS_GATE` | Gate de boundary |
+| INV-IAM-005 | O fluxo de recuperação de senha não pode vazar existência de conta via resposta síncrona; links de reset devem ser de uso único e vinculados ao frontend oficial. | `PasswordResetFlow` | `AUTH_EXPERIENCE_CONTRACT.md` | Revisão contratual + testes de integração |
 
 ## Relação com outros documentos
 - `docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md`

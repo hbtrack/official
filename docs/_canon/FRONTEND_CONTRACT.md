@@ -1,22 +1,30 @@
 ---
 doc_type: canon
-version: "1.1.0"
+version: "1.2.0"
 status: active
 decision_ref: D7
 adr_ref: ADR-030
 state_semantics: target-state
+owner: product-owner
+related_docs:
+  - docs/_canon/UX_BRAND_CONTRACT.md
+  - docs/_canon/UX_SHELL_CONTRACT.md
+  - docs/_canon/AUTH_EXPERIENCE_CONTRACT.md
+  - docs/_canon/NAVIGATION_VISIBILITY_CONTRACT.md
 ---
 
 # FRONTEND_CONTRACT.md
 
 ## 0. Status Operacional Atual
 
-Este documento descreve o **target-state normativo** do frontend. O worker `generate_frontend` permanece `frozen` enquanto:
+Este documento descreve o **target-state normativo** do frontend.
 
-- `frontend/` não existir no workspace com paths canonizados
-- `package.json` não declarar a toolchain frontend real (React/Vite/Vitest/Playwright)
-- o `FRONTEND_CONTRACT_GATE` continuar em `SKIP_NOT_APPLICABLE`
-- não houver validação empírica do contrato sobre a estrutura real
+O contrato de frontend agora cobre duas camadas complementares:
+
+- stack, geração de client, organização de pastas, hooks e testes;
+- conformidade visual e operacional com branding, shell, auth experience e navigation visibility.
+
+Regra operacional: pages, layouts, shared/components e assets só podem ser aprovados quando estiverem simultaneamente conformes ao contrato técnico e aos contratos visuais.
 
 ## 1. Decisão de Plataforma (D7 = Opção D)
 
@@ -31,15 +39,16 @@ Este documento descreve o **target-state normativo** do frontend. O worker `gene
 
 | Componente | Tecnologia |
 |-----------|-----------|
-| Framework | React 18 + Vite |
+| Framework | React + Vite |
 | Linguagem | TypeScript |
-| Roteamento | React Router v6 |
+| Roteamento | React Router |
 | Estado global | Zustand |
+| Estado servidor | TanStack Query |
 | HTTP client | openapi-fetch |
 | Testes unitários | Vitest + Testing Library |
 | Testes E2E | Playwright |
 | Estilo | Tailwind CSS |
-| Componentes | shadcn/ui |
+| Componentes | Tailwind CSS + primitives reutilizáveis |
 
 ## 3. Regra Fundamental — Frontend consome apenas contratos OpenAPI
 
@@ -49,7 +58,7 @@ Todo cliente HTTP é **gerado automaticamente** a partir do contrato:
 
 ```bash
 # Gerar tipos TypeScript e cliente a partir do OpenAPI
-npx openapi-typescript contracts/openapi/openapi.yaml -o frontend/src/api/schema.d.ts
+npm run api:generate
 # client.ts instancia openapi-fetch usando os tipos gerados em schema.d.ts
 ```
 
@@ -109,15 +118,51 @@ Toda feature implementada requer:
 - Testes unitários dos componentes principais (Vitest + Testing Library)
 - Ao menos 1 teste E2E do fluxo principal (Playwright)
 
+### R6 — Conformidade com contratos visuais
+Layouts, pages e shared/components devem obedecer:
+- docs/_canon/UX_BRAND_CONTRACT.md
+- docs/_canon/UX_SHELL_CONTRACT.md
+- docs/_canon/AUTH_EXPERIENCE_CONTRACT.md
+- docs/_canon/NAVIGATION_VISIBILITY_CONTRACT.md
+
+### R7 — Assets oficiais
+Todos os assets oficiais de marca devem ser consumidos a partir de `generated/images`.
+
+### R8 — Shell mínima obrigatória do primeiro batch
+O primeiro batch da shell reimplementada deve incluir:
+- sidebar desktop colapsável
+- drawer mobile
+- top bar com breadcrumbs
+- command palette
+- notificações
+- avatar e user menu
+- auth flow completo
+
+### R9 — Integrações-base de experiência do target-state
+O frontend deve ser projetado para operar com as integrações-base do target-state:
+- Cloudinary para pipeline de avatar
+- Resend para envio transacional do fluxo de recuperação de senha
+
+### R10 — Navegação do primeiro batch
+A shell inicial deve refletir exatamente o estado definido em `NAVIGATION_VISIBILITY_CONTRACT.md`, incluindo:
+- módulos ativos
+- módulos disabled
+- capabilities da top bar
+- label visual "Conta e Acesso"
+
 ## 6. Gate — FRONTEND_CONTRACT_GATE
 
 O gate verifica que:
 1. `frontend/src/api/schema.d.ts` foi gerado do OpenAPI e está atualizado
 2. Nenhum endpoint hardcoded em componentes (apenas via hooks)
 3. Tipos de API derivam de `schema.d.ts` (sem interfaces duplicadas)
-4. `package.json` inclui script `gen:api` para regenerar o cliente
+4. `frontend/package.json` inclui script `api:generate` para regenerar o client
+5. A shell canônica está materializada e usa branding oficial
+6. Não há branding improvisado fora dos assets canonizados
+7. O auth flow mínimo exigido existe e segue o contrato de experiência
+8. A navegação respeita agrupamento, visibilidade e rollout do contrato de navegação
 
-Se `frontend/` não existir, o gate deve permanecer `SKIP_NOT_APPLICABLE` e o worker continua congelado.
+Se `frontend/` não existir, o gate permanece `SKIP_NOT_APPLICABLE`.
 
 Gate registrado em: `docs/_canon/gates/GATES_REGISTRY.yaml`
 
@@ -136,7 +181,7 @@ O worker recebe:
 ```
 Contrato OpenAPI atualizado
     ↓
-Rodar: npx openapi-typescript → regenera schema.d.ts
+Rodar: npm run api:generate → regenera schema.d.ts
     ↓
 generate_frontend worker gera components/pages/hooks
     ↓

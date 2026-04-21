@@ -78,7 +78,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -136,7 +136,7 @@
     "unit_tests": "src/medical/tests/unit/test_medical_domain.py",
     "use_cases": "src/medical/application/use_cases.py"
   },
-  "source_fingerprint": "9a8dd251c878bc4270123858fbc7bb352ad6cf5afaefc7df0f11054d30c67254",
+  "source_fingerprint": "bbabf5e62dafcfd707a2f6291bed10d404d967380428268afb4d605e8f7bb629",
   "source_graph": {
     "entities": {
       "MedicalRecord": {

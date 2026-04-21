@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: identity_access
-# source_fingerprint: 063d6729f6342adb3322a0e588c2441e3408f491ca931a0b14f6cfc80d0b5282
+# source_fingerprint: 3cbb85fb5ad42c0bc87d71ad90397123507eb2f38f63a0d97ab87908b024d9e4
 
 from __future__ import annotations
 
@@ -35,6 +35,46 @@ class AuthLogout:
 
 
 class AuthRefreshToken:
+    def __init__(self, repo: AuthSessionRepository):
+        self.repo = repo
+
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AuthSession:
+        entity = AuthSession(id=uuid.uuid4(), **kwargs)
+        entity.validate_invariants()
+        return self.repo.save(entity)
+
+
+class AuthForgotPassword:
+    def __init__(self, repo: AuthSessionRepository):
+        self.repo = repo
+
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AuthSession:
+        entity = AuthSession(id=uuid.uuid4(), **kwargs)
+        entity.validate_invariants()
+        return self.repo.save(entity)
+
+
+class AuthResetPassword:
+    def __init__(self, repo: AuthSessionRepository):
+        self.repo = repo
+
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AuthSession:
+        entity = AuthSession(id=uuid.uuid4(), **kwargs)
+        entity.validate_invariants()
+        return self.repo.save(entity)
+
+
+class AuthNewPassword:
+    def __init__(self, repo: AuthSessionRepository):
+        self.repo = repo
+
+    def execute(self, role: str, requester_id: UUID, **kwargs) -> AuthSession:
+        entity = AuthSession(id=uuid.uuid4(), **kwargs)
+        entity.validate_invariants()
+        return self.repo.save(entity)
+
+
+class AuthConfirmReset:
     def __init__(self, repo: AuthSessionRepository):
         self.repo = repo
 

@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: identity_access
-# source_fingerprint: 063d6729f6342adb3322a0e588c2441e3408f491ca931a0b14f6cfc80d0b5282
+# source_fingerprint: 3cbb85fb5ad42c0bc87d71ad90397123507eb2f38f63a0d97ab87908b024d9e4
 
 from __future__ import annotations
 
@@ -17,6 +17,10 @@ from .application.use_cases import (
     AuthLogin,
     AuthLogout,
     AuthRefreshToken,
+    AuthForgotPassword,
+    AuthResetPassword,
+    AuthNewPassword,
+    AuthConfirmReset,
     AuthGetCurrentSession,
     ListActiveSessions,
     RevokeSession,
@@ -32,6 +36,10 @@ _repo = AuthSessionRepository()
 _auth_login_uc = AuthLogin(_repo)
 _auth_logout_uc = AuthLogout(_repo)
 _auth_refresh_token_uc = AuthRefreshToken(_repo)
+_auth_forgot_password_uc = AuthForgotPassword(_repo)
+_auth_reset_password_uc = AuthResetPassword(_repo)
+_auth_new_password_uc = AuthNewPassword(_repo)
+_auth_confirm_reset_uc = AuthConfirmReset(_repo)
 _auth_get_current_session_uc = AuthGetCurrentSession(_repo)
 _list_active_sessions_uc = ListActiveSessions(_repo)
 _revoke_session_uc = RevokeSession(_repo)
@@ -83,6 +91,50 @@ def auth_refresh_token(request: HttpRequest):
         uid = _uid(request)
         # TODO: parse payload → _auth_refresh_token_uc.execute(role=role, ...)
         raise NotImplementedError('auth_refresh_token')
+    except ValueError as exc:
+        return 422, ErrorOut(detail=str(exc))
+
+
+@router.post('/auth/forgot-password', response={200: AuthSessionOut})
+def auth_forgot_password(request: HttpRequest):
+    try:
+        role = _role(request)
+        uid = _uid(request)
+        # TODO: parse payload → _auth_forgot_password_uc.execute(role=role, ...)
+        raise NotImplementedError('auth_forgot_password')
+    except ValueError as exc:
+        return 422, ErrorOut(detail=str(exc))
+
+
+@router.post('/auth/reset-password', response={200: AuthSessionOut})
+def auth_reset_password(request: HttpRequest):
+    try:
+        role = _role(request)
+        uid = _uid(request)
+        # TODO: parse payload → _auth_reset_password_uc.execute(role=role, ...)
+        raise NotImplementedError('auth_reset_password')
+    except ValueError as exc:
+        return 422, ErrorOut(detail=str(exc))
+
+
+@router.post('/auth/new-password', response={200: AuthSessionOut})
+def auth_new_password(request: HttpRequest):
+    try:
+        role = _role(request)
+        uid = _uid(request)
+        # TODO: parse payload → _auth_new_password_uc.execute(role=role, ...)
+        raise NotImplementedError('auth_new_password')
+    except ValueError as exc:
+        return 422, ErrorOut(detail=str(exc))
+
+
+@router.post('/auth/confirm-reset', response={200: AuthSessionOut, 404: ErrorOut})
+def auth_confirm_reset(request: HttpRequest):
+    try:
+        role = _role(request)
+        uid = _uid(request)
+        # TODO: parse payload → _auth_confirm_reset_uc.execute(role=role, ...)
+        raise NotImplementedError('auth_confirm_reset')
     except ValueError as exc:
         return 422, ErrorOut(detail=str(exc))
 

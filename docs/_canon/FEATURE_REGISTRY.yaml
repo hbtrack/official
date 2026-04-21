@@ -15,7 +15,7 @@
 # -------------------------------------------------------------------------
 
 version: "1.0.0"
-last_updated: "2026-03-23"
+last_updated: "2026-04-20"
 
 features:
   # ------------------------------------------------------------------
@@ -225,6 +225,23 @@ features:
       - POST /auth/users/{userId}/roles
       - DELETE /auth/users/{userId}/roles/{roleLabel}
     status: implemented
+    contracts:
+      - contracts/openapi/paths/identity_access.yaml
+
+  - id: FT-044
+    name: "Recuperação de Senha e Conta e Acesso"
+    module: identity_access
+    description: >
+      Usuário solicita reset de senha, recebe email transacional com link
+      seguro e redefine a senha via fluxo forgot/reset/new password/confirm
+      reset. A experiência sustenta a superfície visual "Conta e Acesso"
+      da shell e usa `FRONTEND_URL` + provider baseline Resend.
+    endpoints:
+      - POST /auth/forgot-password
+      - POST /auth/reset-password
+      - POST /auth/new-password
+      - POST /auth/confirm-reset
+    status: validated
     contracts:
       - contracts/openapi/paths/identity_access.yaml
 

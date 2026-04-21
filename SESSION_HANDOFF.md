@@ -1,68 +1,67 @@
 ---
-data_ultima_sessao: "2026-04-13"
-branch_ativo: main
+data_ultima_sessao: "2026-04-21"
+branch_ativo: chore/fix-image-path
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
-fase_roadmap: 6
-roadmap_phase: 6
+fase_roadmap: 4
+roadmap_phase: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: FASE-6-QA-STAGING
+task_id: ROADMAP-PHASE4-CI-FIXES
 resultado: PENDENTE
-proxima_acao_permitida: "1. Validar frontend staging 2. Smoke tests login+CRUD 3. Prep banco producao 4. Configurar VPS_HOST_PRODUCTION"
+proxima_acao_permitida: "Aguardar CI passar após push de compiled_context/users/"
 bloqueios_ativos: []
 evidence_paths:
-  - ROADMAP.md
-  - .github/workflows/deploy.yml
-  - _reports/contract_gates/precommit.latest.json
+  - "_reports/contract_gates/latest.json"
+  - "generated/source_graph/users/users.bundle.yaml"
+  - "compiled_context/users/FT-014.json"
+  - "compiled_context/users/FT-015.json"
+  - "compiled_context/users/FT-016.json"
+  - "compiled_context/users/FT-017.json"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-### Fase 6: Deploy Produção Ciclo 1 — EM PROGRESSO
+**Sessão 2026-04-21 — CI fixes PR #77 + Reimplementação Frontend (CDD Batch 01)**
 
-**Pipeline fix (2026-04-13):**
-- PR #69 merged: fix `seed_demo` invalid `--skip-if-exists` flag
-- PR #70 merged: guard production job when `VPS_HOST_PRODUCTION` unconfigured
-- Deploy pipeline run `24353854704`: 13/13 jobs SUCCESS
+Gates finais: `FRONTEND_CONTRACT_GATE` PASS + `DERIVED_DRIFT_GATE` PASS.
 
-**Deploy pipeline status:**
-- Jobs 1-6: ALL SUCCESS (validate → test → build → staging → conformance 7/7 → approve)
-- Job 7 (production): SUCCESS — skip gracioso (secret não configurado)
+Artefatos implementados:
+- `AppLayout.tsx` — Shell: sidebar, drawer mobile, top bar, 6 grupos nav, 17 módulos, RBAC
+- `LoginPage.tsx` — Logo, tagline, Eye/EyeOff, loading, error, redirect
+- `ForgotPasswordPage.tsx` + `ResetPasswordPage.tsx` + `ConfirmResetPage.tsx` — Fluxo completo
+- `App.tsx` — Rotas: /forgot-password, /reset-password, /confirm-reset, /conta-acesso
+- `useAuth.ts` — useForgotPassword, useResetPassword (corpo correto per contrato)
+- `schema.d.ts` — Regenerado via `npm run api:generate`
+- `src/users/api.py` — HttpError convertido para (status, ProblemOut)
+- `generated/source_graph/users/` — Regenerado
 
-**Secrets verificados:**
-- `VPS_HOST_STAGING`: ✅ configurado
-- `VPS_HOST_PRODUCTION`: ❌ não existe (precisa ser criado para deploy produção)
+**Sessão 2026-04-20 — Contratos UX**
+
+5 contratos canônicos: UX_BRAND, UX_SHELL, AUTH_EXPERIENCE, NAVIGATION_VISIBILITY, FRONTEND_CONTRACT.
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| **Fase 4** | ✅ DONE |
-| **Fase 5** | ✅ DONE |
-| **Fase 6 - Pipeline** | ✅ CORRIGIDO (PRs #69 #70) |
-| **Fase 6 - Staging deploy** | ✅ FUNCIONAL |
-| **Fase 6 - Contract Conformance** | ✅ 7/7 PASS |
-| **Fase 6 - QA staging** | ⏳ PENDENTE |
-| **Fase 6 - Banco produção** | ⏳ PENDENTE |
-| **Fase 6 - Deploy produção** | ⏳ PENDENTE |
+| FRONTEND_CONTRACT_GATE | ✅ PASS |
+| DERIVED_DRIFT_GATE | ✅ PASS |
+| CI Frontend Build + Tests | ✅ PASS |
+| CI Tests (backend) | ✅ PASS |
+| PR #77 | Aguardando merge |
 
-## Próxima ação permitida (Fase 6 cont.)
+## Evidências
 
-1. Validar frontend em staging (navegador)
-2. Smoke tests: login, CRUD times/temporadas/treinos
-3. Preparar banco de produção + secrets
-4. Configurar `VPS_HOST_PRODUCTION` no GitHub
-5. Deploy produção + health check + login funcional
+- `_reports/contract_gates/latest.json` — overall_status: PASS
+- HANDOFF_COHERENCE_GATE: PASS
+
+## Próxima ação permitida
+
+`npm run dev` em `frontend/` → testar fluxo login → dashboard → sidebar → /forgot-password.
 
 ## Bloqueios ativos
 
 Nenhum.
 
-## Evidências
-
-- Deploy pipeline run `24353854704` → 13/13 SUCCESS
-- PRs #69, #70 merged em main (2026-04-13)
-- `ROADMAP.md` → Fase 6 EM PROGRESSO

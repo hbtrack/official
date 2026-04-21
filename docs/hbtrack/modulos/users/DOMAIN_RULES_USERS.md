@@ -28,11 +28,13 @@ Registrar as regras de negócio do módulo `users`.
 | DR-USR-003 | `teamIds` e `seasonIds` materializam vínculos explícitos do usuário com equipes e temporadas; esses vínculos não podem ser inferidos de sessão, attendance ou analytics. | `UserProfile` | Authority matrix `team_season_relationships` | Relação contratada, não heurística |
 | DR-USR-004 | `positionLabel` e demais atributos esportivos descrevem contexto esportivo do usuário e nunca autorização de acesso. | `UserProfile` | `SYSTEM_SCOPE.md` + boundary gate | Evita drift entre perfil e authz |
 | DR-USR-005 | `preferredLanguage` e `preferenceTags` são preferências operacionais do usuário e não podem carregar estado de segurança, consentimento técnico ou credenciais. | `UserProfile` | Schema local | Preferência não substitui policy |
+| DR-USR-006 | `avatarUrl` representa o avatar processado para exibição na shell do produto. O campo pertence a `users`; pipeline externo e storage técnico não podem mover sessão, credenciais ou RBAC para o perfil. | `UserProfile` | `UX_SHELL_CONTRACT.md` + ADR-021 | Fallback visual para iniciais quando ausente |
 
 ## Limites de inferência
 - Não inferir `password_policy`, `session`, `mfa`, `jwt`, `oauth` ou qualquer regra de autenticação neste módulo.
 - Não deduzir vínculo esportivo a partir de UI, login recente ou histórico operacional sem campo contratual.
 - Não usar `roleLabel` como atalho para autorização técnica fora de `identity_access`.
+- Não persistir secret, public_id bruto ou credencial de provider de mídia em `avatarUrl`.
 
 ## Source Graph
 - Entidades: [graph/entity_graph.yaml](graph/entity_graph.yaml)

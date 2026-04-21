@@ -45,20 +45,32 @@ def test_module_registry_policy_declares_full_lifecycle_order():
         assert policy["status_semantics"][status]
 
 
-def test_generate_frontend_stays_frozen_until_real_workspace_exists():
+def test_generate_frontend_stays_frozen_until_contract_gate_passes():
     catalog = yaml.safe_load((ROOT / ".contract_driven" / "TASK_CATALOG.yaml").read_text(encoding="utf-8"))
     entry = catalog["task_catalog"]["generate_frontend"]
     condition = entry["unblock_condition"]
 
     assert entry["status"] == "frozen"
     for expected in (
-        "frontend/",
-        "package.json",
         "FRONTEND_CONTRACT_GATE",
-        "SKIP_NOT_APPLICABLE",
+        "passar",
         "sign-off",
     ):
         assert expected in condition
+
+
+def test_frontend_contract_gate_is_active_and_registered():
+    registry = yaml.safe_load((ROOT / "docs" / "_canon" / "gates" / "GATES_REGISTRY.yaml").read_text(encoding="utf-8"))
+    gate = next(item for item in registry["gates"] if item["gate_id"] == "FRONTEND_CONTRACT_GATE")
+    validator = (ROOT / "scripts" / "contracts" / "validate" / "validate_contracts.py").read_text(encoding="utf-8")
+
+    assert gate["status"] == "active"
+    assert gate["blocking"] is True
+    assert "BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE" in gate["blocking_codes"]
+    assert "(\"FRONTEND_CONTRACT_GATE\", lambda: _g_frontend_contract(root))" in validator
+    assert "\"FRONTEND_CONTRACT_GATE\"," in validator
+    for expected in ("command palette", "Conta e Acesso", "Resend", "Cloudinary"):
+        assert expected in gate["description"] or expected in validator
 
 
 def test_active_taxonomy_docs_use_17_modules():

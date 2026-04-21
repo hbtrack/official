@@ -29,6 +29,7 @@ class UserProfileOut(Schema):
     statusLabel: Optional[str] = None
     positionLabel: Optional[str] = None
     preferredLanguage: Optional[str] = None
+    avatarUrl: Optional[str] = None
     preferenceTags: list[str] = []
     teamIds: list[UUID] = []
     seasonIds: list[UUID] = []
@@ -42,6 +43,7 @@ class CreateUserIn(Schema):
     lastName: Optional[str] = None
     positionLabel: Optional[str] = None
     preferredLanguage: Optional[str] = None
+    avatarUrl: Optional[str] = None
     preferenceTags: list[str] = []
     teamIds: list[UUID] = []
     seasonIds: list[UUID] = []
@@ -55,6 +57,7 @@ class PatchUserIn(Schema):
     statusLabel: Optional[str] = None
     positionLabel: Optional[str] = None
     preferredLanguage: Optional[str] = None
+    avatarUrl: Optional[str] = None
     preferenceTags: Optional[list[str]] = None
     teamIds: Optional[list[UUID]] = None
     seasonIds: Optional[list[UUID]] = None

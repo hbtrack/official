@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-11T13:41:09Z",
+  "timestamp_utc": "2026-04-21T07:42:35Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "f8bdb4ae",
+    "git_commit": "3223548d",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "local",
     "stage": "session-start",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T134109_e6dfc9"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T074235_0a03bf"
   },
   "status_detail": {
-    "active_gates_passed": 2,
-    "skip_count": 57,
+    "active_gates_passed": 4,
+    "skip_count": 58,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -166,12 +166,16 @@
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "FRONTEND_CONTRACT_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "DERIVED_DRIFT_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -235,7 +239,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -257,7 +261,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 41
       }
     },
     {
@@ -837,6 +841,24 @@
       }
     },
     {
+      "gate_id": "FRONTEND_CONTRACT_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
       "gate_id": "DERIVED_DRIFT_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
@@ -1000,48 +1022,37 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/ROADMAP.md"
+        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/ROADMAP.md"
+        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
+        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=1.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=1 != session_start.roadmap_phase=3.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 2,
+        "errors": 0,
         "warnings": 0,
-        "violations": 2,
+        "violations": 0,
         "duration_ms": 8
       }
     },
@@ -1064,7 +1075,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 224
+        "duration_ms": 165
       }
     },
     {
@@ -1357,11 +1368,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 3 PASS, 58 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

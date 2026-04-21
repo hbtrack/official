@@ -77,7 +77,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -93,11 +93,11 @@
     },
     {
       "relpath": "generated/source_graph/users/users.bundle.yaml",
-      "sha256": "c72af3b552202515c4dfb647493ae7b979aac46a2270ce77a9acf4821f2997a6"
+      "sha256": "4f84a1ce74b58da4fc7b7342cc9f07a52b17e6d2c4e50243933c98f279f6ce00"
     },
     {
       "relpath": "generated/source_graph/users/users.schema_contract_view.yaml",
-      "sha256": "9dca449c61c1d89f6bad1ae6e22b4ba8b0acd00af5019c9ef4d342f4dbefedd7"
+      "sha256": "ed576d104b426778eac35078bb3667dac3ecd6b06bad5f71adf6ef6299920520"
     },
     {
       "relpath": "generated/source_graph/users/users.openapi_contract_view.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "relpath": "generated/source_graph/users/impact_report.json",
-      "sha256": "12244fb794502786293a6c769e597d6d377ab91992302c2eaf8db40fdd9ed73d"
+      "sha256": "dfa80350165ad6e0df39ad041ded4891eff6c1ffea528119816dbe09f3c8b4bf"
     }
   ],
   "module": "users",
@@ -137,7 +137,7 @@
     "domain_rules": "src/users/domain/rules.py",
     "use_cases": "src/users/application/use_cases.py"
   },
-  "source_fingerprint": "2abc198efa002b2a2c1bc9799d6a4d9e33c599dab6ae91ff59059b4b51d57274",
+  "source_fingerprint": "2628e7093b65eefadc98346d0dee26ad5a2d63fcb64755ea85875ce34b79fcf6",
   "source_graph": {
     "entities": {
       "UserProfile": {
@@ -184,6 +184,10 @@
           {
             "id": "INV-USR-004",
             "rule": "Boundary: credenciais e sessão pertencem exclusivamente a identity_access."
+          },
+          {
+            "id": "INV-USR-005",
+            "rule": "avatarUrl não pode carregar credencial, segredo ou estado de authn/authz."
           }
         ],
         "runtime_entity_ref": "../../../../../src/users/domain/entities.py#UserProfile",
@@ -231,6 +235,18 @@
             "name": "displayName",
             "required": true,
             "runtime_name": "display_name",
+            "type": "string"
+          },
+          {
+            "constraints": [
+              "nullable: true",
+              "maxLength: 2048",
+              "DR-USR-006: avatar processado para shell; fallback visual para iniciais quando ausente",
+              "INV-USR-005: não carregar credencial, segredo ou estado authn/authz"
+            ],
+            "name": "avatarUrl",
+            "required": false,
+            "runtime_name": "avatar_url",
             "type": "string"
           },
           {
@@ -402,7 +418,7 @@
         "seasonIds referenciam módulo seasons — boundary explicitado em DR-USR-003.",
         "Credenciais, sessão, MFA, JWT e refresh token pertencem exclusivamente a identity_access (INV-USR-003, INV-USR-004)."
       ],
-      "source_fingerprint": "a176c15d948edff3898d8f8cf930d5c6e0ce102f35ea1e8e0ca31cf032f2f587"
+      "source_fingerprint": "4f8fe31d9e62241ef6c0d159c6f6cbe9bee35750380a257a071a00fbc78c0195"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -695,6 +711,18 @@
             },
             {
               "constraints": [
+                "nullable: true",
+                "maxLength: 2048",
+                "DR-USR-006: avatar processado para shell; fallback visual para iniciais quando ausente",
+                "INV-USR-005: não carregar credencial, segredo ou estado authn/authz"
+              ],
+              "name": "avatarUrl",
+              "required": false,
+              "runtime_name": "avatar_url",
+              "type": "string"
+            },
+            {
+              "constraints": [
                 "ADR-008: 5 atores canônicos do sistema",
                 "DR-USR-002: papel funcional/esportivo, não autoriza acesso técnico",
                 "INV-USR-001: obrigatório no perfil estável"
@@ -839,6 +867,18 @@
           "name": "displayName",
           "required": true,
           "runtime_name": "display_name",
+          "type": "string"
+        },
+        {
+          "constraints": [
+            "nullable: true",
+            "maxLength: 2048",
+            "DR-USR-006: avatar processado para shell; fallback visual para iniciais quando ausente",
+            "INV-USR-005: não carregar credencial, segredo ou estado authn/authz"
+          ],
+          "name": "avatarUrl",
+          "required": false,
+          "runtime_name": "avatar_url",
           "type": "string"
         },
         {

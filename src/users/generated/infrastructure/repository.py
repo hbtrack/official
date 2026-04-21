@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: users
-# source_fingerprint: 6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a
+# source_fingerprint: 67c24b3cd6d6764888f80334f9503421261becadce6b6fa96ae42adee2d8eb16
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ def _user_profile_from_model(model: UserProfileModel) -> UserProfile:
         first_name=model.first_name,
         last_name=model.last_name,
         display_name=model.display_name,
+        avatar_url=model.avatar_url,
         role_label=model.role_label,
         status_label=model.status_label,
         position_label=model.position_label,
@@ -40,6 +41,7 @@ class UserProfileRepository:
             "first_name": user_profile.first_name,
             "last_name": user_profile.last_name,
             "display_name": user_profile.display_name,
+            "avatar_url": user_profile.avatar_url,
             "role_label": user_profile.role_label,
             "status_label": user_profile.status_label,
             "position_label": user_profile.position_label,

@@ -25,11 +25,11 @@
   "inputs": [
     {
       "relpath": "contracts/openapi/components/schemas/users/user_profile.yaml",
-      "sha256": "52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884"
+      "sha256": "001f882dc57b52bbfdac81d9d9722393eace1664a6339d58213c827d850253d2"
     },
     {
       "relpath": "contracts/openapi/paths/users.yaml",
-      "sha256": "3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe"
+      "sha256": "a43b824fb723023489cdd560002035acbc5f73942858caf3b281fa0a6956f5e9"
     },
     {
       "relpath": "contracts/schemas/users/.gitkeep",
@@ -37,7 +37,7 @@
     },
     {
       "relpath": "contracts/schemas/users/user_profile.schema.json",
-      "sha256": "e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d"
+      "sha256": "548ea4c238bb28dc425006ba1bb09cd81c7acd9a3a9536bec62c5754cf311560"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -65,11 +65,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
-      "sha256": "e905388365dde3a6f053e57373d4c822c68b36bd8c81a7850b4b2140d40643cc"
+      "sha256": "6826c71d3f2193fb7c6a45d1c3688e3f8ab83a5799c0ecb1a8721114ef8678c1"
     },
     {
       "relpath": "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
-      "sha256": "4da036dbf5d372a4d63a494c4985e3ca962268404487e856dd6b34ca27881956"
+      "sha256": "f0ec3b9df6cce930be191b4bf443c4db0308c93d64dfad0eccbf278439a8d9c8"
     },
     {
       "relpath": "docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md",
@@ -93,7 +93,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/users/graph/entity_graph.yaml",
-      "sha256": "113d89c0234fef894bec0c7871c72115ab275771ed3b745535b0e36c0473be72"
+      "sha256": "92fc9e5fda9064503fad0e130065f85aa4233e0f041e6c16c5924d22b6946b35"
     },
     {
       "relpath": "docs/hbtrack/modulos/users/graph/errors.yaml",
@@ -109,15 +109,15 @@
     },
     {
       "relpath": "src/users/api.py",
-      "sha256": "aaf96528dc55930bc400fb74392ca99ab400130a5f072ad501301d835a4fe7a0"
+      "sha256": "6541de6c98015c76aec4e9a4e0f045c0e5ef0aab4e47f566bc8d32bbb9cb5832"
     },
     {
       "relpath": "src/users/application/use_cases.py",
-      "sha256": "a2187cfa853eba3cb16adfc87103e12743a1a0bb44ec345a2d81b1171bd29909"
+      "sha256": "3612f95258e5a8f7a6f0cad5f7d24ea189e97573ecf67d73aa15cc8a9b2a6f87"
     },
     {
       "relpath": "src/users/domain/entities.py",
-      "sha256": "2b47da53aa7e616a6f89ee0e027ba95620bc6da35c921ca068b48eb6549c7cd2"
+      "sha256": "5d2746a7200024e05c63df4bf8fb0eca7bf55a9e330fcfddf64536c69d0c83f6"
     },
     {
       "relpath": "src/users/domain/rules.py",
@@ -142,5 +142,5 @@
     "generated/source_graph/users/users.openapi_contract_view.yaml",
     "generated/source_graph/users/impact_report.json"
   ],
-  "source_fingerprint": "a176c15d948edff3898d8f8cf930d5c6e0ce102f35ea1e8e0ca31cf032f2f587"
+  "source_fingerprint": "4f8fe31d9e62241ef6c0d159c6f6cbe9bee35750380a257a071a00fbc78c0195"
 }

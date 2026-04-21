@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: users
-# source_fingerprint: 6d52d6b863eef073bed9e41a671a5c2a42deccee4d3281f49c8255da6d514b4a
+# source_fingerprint: 67c24b3cd6d6764888f80334f9503421261becadce6b6fa96ae42adee2d8eb16
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ class UserProfileOut(Schema):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     display_name: str
+    avatar_url: Optional[str] = None
     role_label: str
     status_label: Optional[str] = None
     position_label: Optional[str] = None
@@ -34,6 +35,7 @@ class UserProfileOut(Schema):
             first_name=entity.first_name,
             last_name=entity.last_name,
             display_name=entity.display_name,
+            avatar_url=entity.avatar_url,
             role_label=entity.role_label,
             status_label=entity.status_label,
             position_label=entity.position_label,
@@ -57,6 +59,7 @@ class CreateUserProfileIn(Schema):
     roleLabel: str
     positionLabel: Optional[str] = None
     preferredLanguage: Optional[str] = None
+    avatarUrl: Optional[str] = None
     preferenceTags: Optional[List[str]] = None
     teamIds: Optional[List[UUID]] = None
     seasonIds: Optional[List[UUID]] = None
@@ -69,6 +72,7 @@ class UpdateUserProfileIn(Schema):
     roleLabel: Optional[str] = None
     positionLabel: Optional[str] = None
     preferredLanguage: Optional[str] = None
+    avatarUrl: Optional[str] = None
     preferenceTags: Optional[List[str]] = None
     teamIds: Optional[List[UUID]] = None
     seasonIds: Optional[List[UUID]] = None

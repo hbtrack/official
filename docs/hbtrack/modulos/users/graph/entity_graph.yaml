@@ -41,6 +41,15 @@ entities:
         constraints:
           - "minLength: 1"
           - "INV-USR-001: obrigatório no perfil estável"
+      - name: avatarUrl
+        runtime_name: avatar_url
+        required: false
+        type: string
+        constraints:
+          - "nullable: true"
+          - "maxLength: 2048"
+          - "DR-USR-006: avatar processado para shell; fallback visual para iniciais quando ausente"
+          - "INV-USR-005: não carregar credencial, segredo ou estado authn/authz"
       - name: roleLabel
         runtime_name: role_label
         required: true
@@ -125,3 +134,5 @@ entities:
         rule: "Campos de authn/authz (password_hash, jwt, mfa, etc.) nunca pertencem a UserProfile."
       - id: INV-USR-004
         rule: "Boundary: credenciais e sessão pertencem exclusivamente a identity_access."
+      - id: INV-USR-005
+        rule: "avatarUrl não pode carregar credencial, segredo ou estado de authn/authz."

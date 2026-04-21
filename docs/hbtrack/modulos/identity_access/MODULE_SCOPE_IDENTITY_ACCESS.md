@@ -17,4 +17,7 @@ schemas_ref: "../../../../contracts/schemas/identity_access/"
 - Qualquer responsabilidade fora da taxonomia canônica deve ser formalizada via ADR antes de existir.
 
 ## Dependências e integrações
-- Descrever integrações relevantes quando existirem (sem inferência).
+- Emissão/validação de JWT via infraestrutura soberana do módulo.
+- Fluxo de recuperação de senha com email transacional via provider baseline `Resend`.
+- Construção de links de recuperação com `FRONTEND_URL` do ambiente.
+- Boundary com `users`: perfil e avatar pertencem a `users`; sessão, reset e RBAC pertencem a `identity_access`.

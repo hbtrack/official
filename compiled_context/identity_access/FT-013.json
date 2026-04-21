@@ -69,7 +69,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -85,7 +85,7 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.bundle.yaml",
-      "sha256": "18719f6da05713da929dee8442ab95bd7178ffb2c008f0937511b96626a374be"
+      "sha256": "866d9f15de877c762f74d35a1c4dac16842f5eb3375262a2f46a5858f222e910"
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.schema_contract_view.yaml",
@@ -93,11 +93,11 @@
     },
     {
       "relpath": "generated/source_graph/identity_access/identity_access.openapi_contract_view.yaml",
-      "sha256": "be3c75a6594174184663813cef7e7cc569b9ba6f006fed265b80bbff2750ea4b"
+      "sha256": "05b77a0b802072f18104ce380764e5f73da23a360ac2a38a2fe6ac29f6557bd7"
     },
     {
       "relpath": "generated/source_graph/identity_access/impact_report.json",
-      "sha256": "d1ba2402c2a77c3ee6b0b0152d9baa87e071f39d7ec614a98280a34c6f1ce1aa"
+      "sha256": "db8f85f80ea25b15ef106ceb1a4cca0a585b82cd1ff1dbd34751fd694416d11f"
     }
   ],
   "module": "identity_access",
@@ -129,7 +129,7 @@
     "domain_rules": "src/identity_access/domain/rules.py",
     "use_cases": "src/identity_access/application/use_cases.py"
   },
-  "source_fingerprint": "975a4c1efaac87f0e7b3e792fa440c12996b6961bf5bb48bb6fb030536d767e5",
+  "source_fingerprint": "f6fea151ddde96764a153eb5cd20bb87cca3068650256e3c68746585f49e771c",
   "source_graph": {
     "entities": {
       "AuthSession": {
@@ -403,7 +403,7 @@
         "JWT signing key management é infraestrutura — fora do escopo do source graph de domínio.",
         "BOUNDARY_USERS_IDENTITY_ACCESS_GATE valida que birth_date, height, position não aparecem neste módulo (INV-IAM-004)."
       ],
-      "source_fingerprint": "c17bbb2afc7875908b9c1133722dcee2287a54fddaeb779fcf722c48bbf77fb0"
+      "source_fingerprint": "24d30bf851b8fe22ac90a351a956abb92012681f9973ebb6a535ca89a736a777"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -633,6 +633,95 @@
           "roles_denied": [],
           "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_refresh",
           "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#RefreshTokenUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1forgot-password/post",
+          "operation_id": "authForgotPassword",
+          "owner_scoped_roles": [],
+          "path": "/auth/forgot-password",
+          "response_codes": [
+            202,
+            400,
+            429,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_forgot_password",
+          "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ForgotPasswordUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1reset-password/post",
+          "operation_id": "authResetPassword",
+          "owner_scoped_roles": [],
+          "path": "/auth/reset-password",
+          "response_codes": [
+            200,
+            400,
+            410
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_reset_password",
+          "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ValidatePasswordResetUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1new-password/post",
+          "operation_id": "authNewPassword",
+          "owner_scoped_roles": [],
+          "path": "/auth/new-password",
+          "response_codes": [
+            202,
+            400,
+            410
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_new_password",
+          "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#SetNewPasswordUseCase"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1confirm-reset/post",
+          "operation_id": "authConfirmReset",
+          "owner_scoped_roles": [],
+          "path": "/auth/confirm-reset",
+          "response_codes": [
+            200,
+            400,
+            404
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "roles_denied": [],
+          "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_confirm_reset",
+          "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ConfirmPasswordResetUseCase"
         },
         {
           "method": "GET",

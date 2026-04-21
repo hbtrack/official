@@ -43,6 +43,7 @@ class UserProfileModel(models.Model):
     )
     position_label = models.CharField(max_length=80, blank=True, default="")
     preferred_language = models.CharField(max_length=16, blank=True, default="")
+    avatar_url = models.URLField(max_length=2048, blank=True, default="")
     # Arrays armazenados como JSON (portável sem postgres ArrayField)
     preference_tags = models.JSONField(default=list, blank=True)
     team_ids = models.JSONField(default=list, blank=True)

@@ -253,7 +253,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions": {
+    "/training/training-sessions": {
         parameters: {
             query?: never;
             header?: never;
@@ -279,7 +279,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}": {
+    "/training/training-sessions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -300,7 +300,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/blocks": {
+    "/training/training-sessions/{id}/blocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -324,7 +324,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/blocks/{blockId}": {
+    "/training/training-sessions/{id}/blocks/{blockId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -352,7 +352,7 @@ export interface paths {
         patch: operations["updateSessionBlock"];
         trace?: never;
     };
-    "/training-sessions/{id}/blocks/reorder": {
+    "/training/training-sessions/{id}/blocks/reorder": {
         parameters: {
             query?: never;
             header?: never;
@@ -382,7 +382,7 @@ export interface paths {
         patch: operations["updateTrainingSession"];
         trace?: never;
     };
-    "/training-sessions/{id}/attendance": {
+    "/training/training-sessions/{id}/attendance": {
         parameters: {
             query?: never;
             header?: never;
@@ -406,7 +406,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/wellness-pre": {
+    "/training/training-sessions/{id}/wellness-pre": {
         parameters: {
             query?: never;
             header?: never;
@@ -427,7 +427,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/wellness-pre/{athleteId}": {
+    "/training/training-sessions/{id}/wellness-pre/{athleteId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -453,7 +453,7 @@ export interface paths {
         patch: operations["updateWellnessPre"];
         trace?: never;
     };
-    "/training-sessions/{id}/wellness-post": {
+    "/training/training-sessions/{id}/wellness-post": {
         parameters: {
             query?: never;
             header?: never;
@@ -474,7 +474,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/wellness-post/{athleteId}": {
+    "/training/training-sessions/{id}/wellness-post/{athleteId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -500,7 +500,7 @@ export interface paths {
         patch: operations["updateWellnessPost"];
         trace?: never;
     };
-    "/mesocycles": {
+    "/training/mesocycles": {
         parameters: {
             query?: never;
             header?: never;
@@ -526,7 +526,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/mesocycles/{id}": {
+    "/training/mesocycles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -551,7 +551,7 @@ export interface paths {
         patch: operations["updateMesocycle"];
         trace?: never;
     };
-    "/microcycles": {
+    "/training/microcycles": {
         parameters: {
             query?: never;
             header?: never;
@@ -577,7 +577,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/microcycles/{id}": {
+    "/training/microcycles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -602,7 +602,7 @@ export interface paths {
         patch: operations["updateMicrocycle"];
         trace?: never;
     };
-    "/training-sessions/{id}/start": {
+    "/training/training-sessions/{id}/start": {
         parameters: {
             query?: never;
             header?: never;
@@ -622,7 +622,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/complete": {
+    "/training/training-sessions/{id}/complete": {
         parameters: {
             query?: never;
             header?: never;
@@ -642,7 +642,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/execution-records": {
+    "/training/training-sessions/{id}/execution-records": {
         parameters: {
             query?: never;
             header?: never;
@@ -666,7 +666,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/execution-records/{recordId}": {
+    "/training/training-sessions/{id}/execution-records/{recordId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -686,7 +686,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/feedback-threads": {
+    "/training/training-sessions/{id}/feedback-threads": {
         parameters: {
             query?: never;
             header?: never;
@@ -710,7 +710,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/objectives": {
+    "/training/training-sessions/{id}/objectives": {
         parameters: {
             query?: never;
             header?: never;
@@ -734,7 +734,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/attention-queue": {
+    "/training/training-sessions/{id}/attention-queue": {
         parameters: {
             query?: never;
             header?: never;
@@ -754,7 +754,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/cancel": {
+    "/training/training-sessions/{id}/cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -774,7 +774,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/publish": {
+    "/training/training-sessions/{id}/publish": {
         parameters: {
             query?: never;
             header?: never;
@@ -794,7 +794,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/unpublish": {
+    "/training/training-sessions/{id}/unpublish": {
         parameters: {
             query?: never;
             header?: never;
@@ -814,7 +814,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/archive": {
+    "/training/training-sessions/{id}/archive": {
         parameters: {
             query?: never;
             header?: never;
@@ -834,7 +834,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/recommendations": {
+    "/training/training-sessions/{id}/recommendations": {
         parameters: {
             query?: never;
             header?: never;
@@ -854,7 +854,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/recommendations/{recommendationId}/accept": {
+    "/training/training-sessions/{id}/recommendations/{recommendationId}/accept": {
         parameters: {
             query?: never;
             header?: never;
@@ -874,7 +874,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/recommendations/{recommendationId}/dismiss": {
+    "/training/training-sessions/{id}/recommendations/{recommendationId}/dismiss": {
         parameters: {
             query?: never;
             header?: never;
@@ -894,7 +894,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/ineligibility": {
+    "/training/training-sessions/{id}/ineligibility": {
         parameters: {
             query?: never;
             header?: never;
@@ -918,7 +918,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/attention-queue/{itemId}/resolve": {
+    "/training/training-sessions/{id}/attention-queue/{itemId}/resolve": {
         parameters: {
             query?: never;
             header?: never;
@@ -938,7 +938,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/attention-queue/{itemId}/dismiss": {
+    "/training/training-sessions/{id}/attention-queue/{itemId}/dismiss": {
         parameters: {
             query?: never;
             header?: never;
@@ -958,7 +958,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/attention-queue/{itemId}/escalate": {
+    "/training/training-sessions/{id}/attention-queue/{itemId}/escalate": {
         parameters: {
             query?: never;
             header?: never;
@@ -978,7 +978,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training-sessions/{id}/feedback-threads/{threadId}/close": {
+    "/training/training-sessions/{id}/feedback-threads/{threadId}/close": {
         parameters: {
             query?: never;
             header?: never;
@@ -998,7 +998,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/training/load-chart": {
+    "/training/training-sessions/{id}/load-chart": {
         parameters: {
             query?: never;
             header?: never;
@@ -1006,8 +1006,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get aggregated load and readiness chart data
-         * @description Returns aggregated training load and readiness data for periodization planning. Inspired by ATL/CTL model (D-UI-SP-04). Desktop-only view (D-UI-16 escritório context). Either teamId or athleteId is required (not both). OWASP API1:2023 (BOLA): data scoped to caller's organization and team. OWASP API4:2023: date range limited to max 365 days.
+         * Get load chart for a training session
+         * @description Returns planned vs actual load data for a specific training session. Includes session-level summary and per-record entries. OWASP API1:2023 (BOLA): session access scoped to caller's organization.
          */
         get: operations["getLoadChart"];
         put?: never;
@@ -1018,7 +1018,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/hb-pro-coach/conversations/{conversationId}/messages": {
+    "/training/training-sessions/{id}/messages": {
         parameters: {
             query?: never;
             header?: never;
@@ -1026,8 +1026,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List chat messages for a conversation
-         * @description Returns paginated chat history for the given conversation. OWASP API1:2023 (BOLA): athlete can only access own conversation. OWASP API4:2023: pageSize capped at 100 server-side. D-UI-20: default page size = 20 (last 20 messages loaded on open).
+         * List messages (feedback threads) for a training session
+         * @description Returns feedback threads associated with a training session, serving as the session message feed. Reuses FeedbackThread domain model. OWASP API1:2023 (BOLA): session access scoped to caller's organization.
          */
         get: operations["listChatMessages"];
         put?: never;
@@ -1038,7 +1038,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/hb-pro-coach/training-suggestions": {
+    "/training/training-sessions/{id}/suggestions": {
         parameters: {
             query?: never;
             header?: never;
@@ -1048,8 +1048,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Submit a training suggestion to the athlete's coach
-         * @description HB Pro Coach submits an AI-generated training suggestion for coach review. Generates async notification to coach (AsyncAPI training.suggestion.created event). OWASP API1:2023 (BOLA): athleteId must match authenticated user. OWASP API3:2023 (BOPLA): allowlist enforced. Idempotency key supported to prevent duplicate suggestions on retry.
+         * Submit a training suggestion for a session
+         * @description Creates a feedback thread representing a training suggestion for the session. Simplified from original HB Pro Coach virtual assistant design. OWASP API1:2023 (BOLA): session access scoped to caller's organization.
          */
         post: operations["submitTrainingSuggestion"];
         delete?: never;
@@ -1953,6 +1953,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request password reset
+         * @description Solicita a recuperação de senha e dispara email transacional com link seguro para o frontend oficial.
+         *     Regras aplicadas: - DR-IAM-006: fluxo de recuperação é soberania de identity_access - DR-IAM-007: link de reset deve ser construído com FRONTEND_URL - INV-IAM-005: resposta não deve enumerar existência de conta - baseline inicial de entrega transacional: Resend
+         */
+        post: operations["authForgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate password reset token
+         * @description Valida o token recebido no link de recuperação para permitir a abertura segura da tela de nova senha.
+         *     Regras aplicadas: - DR-IAM-006: validação de token de reset é soberania de identity_access - INV-IAM-005: token inválido ou expirado não deve revelar dados extras
+         */
+        post: operations["authResetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/new-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set new password from reset token
+         * @description Define a nova senha a partir de um token de reset válido.
+         *     Regras aplicadas: - DR-IAM-006: troca de senha via reset é soberania de identity_access - INV-IAM-005: token deve ser de uso único e expirar
+         */
+        post: operations["authNewPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/confirm-reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm password reset completion
+         * @description Confirma a etapa final do reset para sustentar a tela final de sucesso da experiência de autenticação.
+         *     Regras aplicadas: - DR-IAM-006: confirmação final do reset é soberania de identity_access - DR-IAM-007: fluxo sustenta a experiência oficial de auth do produto
+         */
+        post: operations["authConfirmReset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/me": {
         parameters: {
             query?: never;
@@ -2394,6 +2478,11 @@ export interface components {
             lastName?: string;
             /** @description Canonical human-readable profile label. INV-USR-001. */
             displayName: string;
+            /**
+             * Format: uri
+             * @description Processed avatar URL for product shell display. If absent, UI must fallback to initials (DR-USR-006).
+             */
+            avatarUrl?: string;
             /**
              * @description Functional role mapped to the 5 canonical actors (DR-USR-002). Does NOT represent RBAC permissions — those are governed by identity_access.
              * @enum {string}
@@ -3066,147 +3155,6 @@ export interface components {
             createdAt: string;
         };
         /**
-         * @example {
-         *       "mode": "team",
-         *       "teamId": "550e8400-e29b-41d4-a716-446655440010",
-         *       "range": "7d",
-         *       "points": [
-         *         {
-         *           "date": "2026-03-11",
-         *           "sessionCount": 1,
-         *           "loadValue": 72.5,
-         *           "readinessAvg": 78.4,
-         *           "athletesWithAlert": 0,
-         *           "sessions": [
-         *             {
-         *               "sessionId": "550e8400-e29b-41d4-a716-446655440001",
-         *               "title": "Treino técnico — ataque posicional",
-         *               "durationActualMinutes": 90
-         *             }
-         *           ]
-         *         },
-         *         {
-         *           "date": "2026-03-12",
-         *           "sessionCount": 0,
-         *           "loadValue": 0,
-         *           "readinessAvg": null,
-         *           "athletesWithAlert": 0,
-         *           "sessions": []
-         *         },
-         *         {
-         *           "date": "2026-03-13",
-         *           "sessionCount": 1,
-         *           "loadValue": 95,
-         *           "readinessAvg": 65.2,
-         *           "athletesWithAlert": 2,
-         *           "sessions": [
-         *             {
-         *               "sessionId": "550e8400-e29b-41d4-a716-446655440002",
-         *               "title": "Treino físico — resistência aeróbia",
-         *               "durationActualMinutes": 110
-         *             }
-         *           ]
-         *         }
-         *       ],
-         *       "generatedAt": "2026-03-17T14:00:00Z"
-         *     }
-         */
-        load_chart: {
-            /**
-             * @description Aggregation mode. 'team' = team average; 'athlete' = individual.
-             * @enum {string}
-             */
-            mode: "TEAM" | "ATHLETE";
-            /**
-             * Format: uuid
-             * @description Populated when mode=team.
-             */
-            teamId?: string;
-            /**
-             * Format: uuid
-             * @description Populated when mode=athlete.
-             */
-            athleteId?: string;
-            /**
-             * @description Time window of the chart data.
-             * @enum {string}
-             */
-            range: "PERIOD_7D" | "PERIOD_30D" | "SEASON";
-            /**
-             * Format: uuid
-             * @description Populated when range=season.
-             */
-            seasonId?: string;
-            /** @description Ordered list of daily data points (ascending by date). Proxy for ATL (Acute Training Load) × readiness (D-UI-SP-04). */
-            points: {
-                /**
-                 * Format: date
-                 * @description ISO 8601 date (UTC). One entry per calendar day.
-                 */
-                date: string;
-                /** @description Number of COMPLETED sessions on this date. */
-                sessionCount: number;
-                /** @description Proxy load value for this date. Computed as sum(durationActualMinutes × intensityFactor) across all COMPLETED sessions. intensityFactor derived from focus_physical_pct. */
-                loadValue: number;
-                /** @description Average readiness score across all athletes with wellness_pre on this date. Null if no check-ins. */
-                readinessAvg: number | null;
-                /** @description Number of athletes with an ACTIVE attention_queue_item on this date. */
-                athletesWithAlert?: number;
-                /** @description Mini-cards for the session detail popover (UIF-005 [2]). */
-                sessions?: {
-                    /** Format: uuid */
-                    sessionId: string;
-                    title: string;
-                    durationActualMinutes: number;
-                }[];
-            }[];
-            /**
-             * Format: date-time
-             * @description Server-side timestamp of computation. Client uses for cache invalidation.
-             */
-            generatedAt: string;
-        };
-        /**
-         * Athlete Chat Message
-         * @description Chat message in training context
-         */
-        athlete_chat_message: {
-            messageId: string;
-            athleteId: string;
-            text: string;
-            /** Format: date-time */
-            timestamp?: string;
-        };
-        training_suggestion: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            athleteId: string;
-            /** @description Human-readable name of the suggested training session. */
-            trainingName: string;
-            /** @description Suggested duration in minutes. */
-            duration: number;
-            /** @description List of training objectives for the session. */
-            objectives?: string[];
-            /** @description AI-generated justification/context for the suggestion. */
-            context?: string;
-            /**
-             * @description Coach review status.
-             * @enum {string}
-             */
-            status: "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "EDITED_AND_APPROVED";
-            /**
-             * Format: date-time
-             * @description RFC-3339 UTC timestamp.
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description When the coach reviewed the suggestion.
-             */
-            reviewedAt?: string;
-        };
-        /**
          * WellnessEntry
          * @description Entrada de questionário diário de wellness de um atleta.
          *     wellness é soberano deste agregado (DR-WELL-001): readiness, fadiga, sono, dor autorreferida, recuperação e questionários diários.
@@ -3610,17 +3558,31 @@ export interface components {
         };
         /**
          * Ingestion Job
-         * @description Job for ingestingexternal data
+         * @description External data ingestion execution shape for the ai_ingestion module.
          */
         ingestion_job: {
             /** Format: uuid */
-            jobId: string;
-            /** @enum {string} */
-            status: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
+            id: string;
+            sourceLabel: string;
+            /** @description Examples: batch, webhook, file-drop. */
+            ingestionMode: string;
             /** Format: date-time */
-            createdAt: string;
+            receivedAt: string;
             /** Format: date-time */
-            updatedAt?: string;
+            completedAt?: string | null;
+            payloadSchemaRef?: string;
+            mappingProfile?: string;
+            idempotencyKey?: string;
+            executionBindingLabel?: string;
+            /** @description Human-readable status of the ingestion job (e.g. queued, processing, completed, failed). */
+            statusLabel: string;
+            /** @description Error message if the job failed; null otherwise. */
+            errorMessage?: string | null;
+            /**
+             * Format: uuid
+             * @description Reference to the original job when this is a retry.
+             */
+            originJobId?: string | null;
         };
         /**
          * AuthSession
@@ -3881,6 +3843,11 @@ export interface operations {
                     positionLabel?: string;
                     /** @description UI language preference (DR-USR-005). */
                     preferredLanguage?: string;
+                    /**
+                     * Format: uri
+                     * @description Processed avatar URL for shell display (DR-USR-006).
+                     */
+                    avatarUrl?: string;
                     /** @description Operational preference tags (INV-USR-002). No security state. */
                     preferenceTags?: string[];
                     /** @description Explicit team bindings (DR-USR-003). Not inferred from session. */
@@ -4030,6 +3997,11 @@ export interface operations {
                     /** @description Sports context only. Does not affect authz (DR-USR-004). */
                     positionLabel?: string;
                     preferredLanguage?: string;
+                    /**
+                     * Format: uri
+                     * @description Processed avatar URL for shell display (DR-USR-006).
+                     */
+                    avatarUrl?: string;
                     /** @description INV-USR-002 — uniqueItems required. */
                     preferenceTags?: string[];
                     /** @description DR-USR-003 — explicit bindings only; not inferred. */
@@ -9124,38 +9096,41 @@ export interface operations {
     };
     getLoadChart: {
         parameters: {
-            query?: {
-                /** @description Required when querying team data. Mutually exclusive with athleteId. */
-                teamId?: string;
-                /** @description Required when querying individual athlete data. Mutually exclusive with teamId. */
-                athleteId?: string;
-                /** @description Time range for chart data. 'season' uses current active season boundaries. */
-                range?: "7d" | "30d" | "season";
-                /** @description Required when range=season. Identifies the season to query. */
-                seasonId?: string;
-            };
+            query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Training session ID. */
+                id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Load chart data */
+            /** @description Load chart data for the session */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["load_chart"];
-                };
-            };
-            /** @description Validation error (e.g., neither teamId nor athleteId provided, or both provided) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["problem"];
+                    "application/json": {
+                        /** Format: uuid */
+                        sessionId: string;
+                        /** @description Planned load value for the session. */
+                        plannedLoad?: number;
+                        /** @description Actual load recorded during the session. */
+                        actualLoadRecorded?: number;
+                        entries: {
+                            /** Format: uuid */
+                            entryId: string;
+                            /** Format: date-time */
+                            recordedAt: string;
+                            plannedValue?: number;
+                            actualValue?: number;
+                            plannedUnit?: string;
+                            actualUnit?: string;
+                            notes?: string;
+                        }[];
+                    };
                 };
             };
             /** @description Unauthenticated */
@@ -9167,7 +9142,7 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Forbidden — caller not authorized for requested team/athlete data */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9176,7 +9151,7 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Team, athlete, or season not found */
+            /** @description Training session not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -9198,33 +9173,24 @@ export interface operations {
     };
     listChatMessages: {
         parameters: {
-            query?: {
-                /** @description Page number (1-based). */
-                page?: number;
-                /** @description Number of messages per page. Max 100 (OWASP API4:2023). */
-                pageSize?: number;
-            };
+            query?: never;
             header?: never;
             path: {
-                /** @description Unique identifier of the athlete conversation. */
-                conversationId: string;
+                /** @description Training session ID. */
+                id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Paginated list of chat messages (oldest → newest within page) */
+            /** @description List of feedback threads for the session */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        items: components["schemas"]["athlete_chat_message"][];
-                        /** @description Total number of messages in the conversation. */
-                        total: number;
-                        page: number;
-                        pageSize: number;
+                        data: components["schemas"]["feedback_thread"][];
                     };
                 };
             };
@@ -9237,7 +9203,7 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Forbidden — caller does not own this conversation (OWASP BOLA) */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9246,7 +9212,7 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Conversation not found */
+            /** @description Training session not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -9269,39 +9235,36 @@ export interface operations {
     submitTrainingSuggestion: {
         parameters: {
             query?: never;
-            header?: {
-                /** @description Client idempotency key to prevent duplicate submissions on retry. */
-                "Idempotency-Key"?: string;
+            header?: never;
+            path: {
+                /** @description Training session ID. */
+                id: string;
             };
-            path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
                 "application/json": {
-                    /** Format: uuid */
+                    /**
+                     * Format: uuid
+                     * @description Athlete for whom the suggestion is made.
+                     */
                     athleteId: string;
-                    /** @description Human-readable name for the suggested session. */
-                    trainingName: string;
-                    /** @description Suggested duration in minutes. */
-                    duration: number;
-                    /** @description List of training objectives. */
-                    objectives?: string[];
-                    /** @description AI-generated justification for the suggestion (Feature Store context). */
-                    context?: string;
+                    /** @description Subject of the suggestion. */
+                    subject: string;
+                    /** @description Body text of the suggestion. */
+                    body: string;
                 };
             };
         };
         responses: {
-            /** @description Training suggestion created and coach notification dispatched */
+            /** @description Training suggestion created as feedback thread */
             201: {
                 headers: {
-                    /** @description URI of the created training suggestion */
-                    Location?: string;
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["training_suggestion"];
+                    "application/json": components["schemas"]["feedback_thread"];
                 };
             };
             /** @description Validation error */
@@ -9313,16 +9276,7 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Unauthenticated */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["problem"];
-                };
-            };
-            /** @description Forbidden — athleteId does not match authenticated user (OWASP BOLA) */
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -9331,7 +9285,16 @@ export interface operations {
                     "application/problem+json": components["schemas"]["problem"];
                 };
             };
-            /** @description Duplicate idempotency key — suggestion already submitted */
+            /** @description Training session not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Conflict — duplicate suggestion */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -12893,7 +12856,7 @@ export interface operations {
                             statusLabel: "queued" | "processing" | "completed" | "failed";
                             errorMessage?: string;
                             /** Format: date-time */
-                            completedAt: string;
+                            completedAt?: string;
                         })[];
                         nextPageToken: string;
                     };
@@ -13064,7 +13027,7 @@ export interface operations {
                          * Format: date-time
                          * @description When job finished (success or failure).
                          */
-                        completedAt: string;
+                        completedAt?: string;
                     };
                 };
             };
@@ -13139,7 +13102,7 @@ export interface operations {
                         /** @enum {string} */
                         statusLabel: "queued" | "processing" | "completed" | "failed" | "cancelled";
                         /** Format: date-time */
-                        completedAt: string;
+                        completedAt?: string;
                     };
                 };
             };
@@ -13688,6 +13651,255 @@ export interface operations {
             };
             /** @description Refresh token inválido, expirado ou já utilizado */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+        };
+    };
+    authForgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Solicitação recebida com sucesso */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "RESET_REQUEST_ACCEPTED";
+                        /** @enum {string} */
+                        deliveryChannel: "email";
+                        /** Format: date-time */
+                        requestedAt: string;
+                        emailHint?: string;
+                    };
+                };
+            };
+            /** @description Email ausente ou malformado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Conflito com estado atual (solicitação duplicada ou concorrência no fluxo de reset) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Muitas tentativas de reset no mesmo período */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Falha no envio transacional ou erro interno */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+        };
+    };
+    authResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Token válido para abertura da tela de nova senha */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "TOKEN_VALID";
+                        /** Format: date-time */
+                        expiresAt: string;
+                        emailHint?: string;
+                    };
+                };
+            };
+            /** @description Token ausente ou malformado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Conflito com estado atual (token já validado anteriormente ou nova senha já foi definida) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Token inválido ou expirado */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+        };
+    };
+    authNewPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    token: string;
+                    newPassword: string;
+                    confirmPassword: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Nova senha aceita e aguardando confirmação final de UX */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        resetRequestId: string;
+                        /** @enum {string} */
+                        status: "PASSWORD_UPDATED_PENDING_CONFIRMATION";
+                    };
+                };
+            };
+            /** @description Senha inválida ou confirmação divergente */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Conflito com estado atual (nova senha já foi definida ou solicitação já concluída) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Token inválido ou expirado */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+        };
+    };
+    authConfirmReset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    resetRequestId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Reset confirmado com sucesso */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "PASSWORD_RESET_CONFIRMED";
+                        /** Format: date-time */
+                        completedAt: string;
+                    };
+                };
+            };
+            /** @description Payload inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Solicitação de reset não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["problem"];
+                };
+            };
+            /** @description Conflito com estado atual (reset já confirmado ou invalidado) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
