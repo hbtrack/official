@@ -29,7 +29,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/identity_access.yaml",
-      "sha256": "4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa"
+      "sha256": "67cb8ec0643b609cdfa7436a084d68a326e77bf79fec088caac75c16f02df0dd"
     },
     {
       "relpath": "contracts/schemas/identity_access/.gitkeep",
@@ -65,19 +65,19 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
-      "sha256": "4d6737f71f7728523cf0343e78530a09387f2390b38546af54a471e2f44c9205"
+      "sha256": "0c3c0ca93f24da241df2a7c1b0269d2df9f7d16edbc8ed1016a1a31bc5033146"
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md",
-      "sha256": "8198ef84a735a843fdee6fdbf427b4437f483184e93a4d0cb30eefb63b9a6d39"
+      "sha256": "bf41902dde51189ff930522ad72b8cb0b3f39311279f2ee79918aa77041f8700"
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md",
-      "sha256": "75d36cecd7ae1065ae91903315c3dfa723127216bbf4b9eb45887962ed7b1b3a"
+      "sha256": "6a120fda193cd3caf5a5655baea28617c9440f52e9b8e9c3375dc200185187b0"
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
-      "sha256": "c5ddad36f61e8e7e5cf3150708711ff017a2ec228299c55eb54535906879313e"
+      "sha256": "006eecee561ce02115b495c3f95e42f8a45e612bd6ae34a537eceb36ee121306"
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/README.md",
@@ -89,7 +89,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/graph/endpoints.yaml",
-      "sha256": "13ea1ca51ff8daa6c72e63ed3821dc20dacb87bcdcee8637d959cedf1b15ffc2"
+      "sha256": "6ae390763d22e8a0c85a51566298b65ad286663ba07ff160653f512cc86c9095"
     },
     {
       "relpath": "docs/hbtrack/modulos/identity_access/graph/entity_graph.yaml",
@@ -109,11 +109,11 @@
     },
     {
       "relpath": "src/identity_access/api.py",
-      "sha256": "2d9cb2bddf54788cf60300bb703a0b66a02eaa46161c61f15701c7063ca111af"
+      "sha256": "7aa15292fa5d4837ac52a0aad313edb6fc0b675d0f26a522a5d35e8c9614c65b"
     },
     {
       "relpath": "src/identity_access/application/use_cases.py",
-      "sha256": "f8cc6906fc536828258094a7ea53a7203112760032f3fd0adfa3b26ad6942bb5"
+      "sha256": "a06e1ff6412ece0ce21e43c18491672d588a34f404d626fb84d33872e9827fb1"
     },
     {
       "relpath": "src/identity_access/domain/entities.py",
@@ -143,5 +143,5 @@
     "generated/source_graph/identity_access/identity_access.openapi_contract_view.yaml",
     "generated/source_graph/identity_access/impact_report.json"
   ],
-  "source_fingerprint": "c17bbb2afc7875908b9c1133722dcee2287a54fddaeb779fcf722c48bbf77fb0"
+  "source_fingerprint": "24d30bf851b8fe22ac90a351a956abb92012681f9973ebb6a535ca89a736a777"
 }

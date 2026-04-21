@@ -81,7 +81,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -139,7 +139,7 @@
     "domain_rules": "src/teams/domain/rules.py",
     "use_cases": "src/teams/application/use_cases.py"
   },
-  "source_fingerprint": "d84a0a6fd71b8151fd47c1e58d6dc05beab70537d10efa331e70f327310a8e8c",
+  "source_fingerprint": "f1aa513c6c33573890d2b77b9042d317dce2052edf51548a79e20142480511b0",
   "source_graph": {
     "entities": {
       "Team": {

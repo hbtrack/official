@@ -1,16 +1,16 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-11T13:22:29.859092+00:00",
-  "branch": "chore/saneamento-completo-23-23",
+  "session_timestamp": "2026-04-21T05:06:30.315562+00:00",
+  "branch": "chore/fix-image-path",
   "pipeline_version": "1.0.0",
-  "boot_profile_id": "roadmap_execution",
-  "task_type": "execute_roadmap_phase",
+  "boot_profile_id": "contract_execution",
+  "task_type": "contract_revision",
   "stage": 2,
-  "write_scope": "roadmap",
-  "worker_id": "execute_roadmap_phase",
+  "write_scope": "contracts",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
-  "operation_mode": "ROADMAP",
+  "operation_mode": "CDD",
   "stage0_validation_results": {
     "task_type_valid": true,
     "module_valid": true,
@@ -114,9 +114,10 @@
     },
     {
       "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
-      "sha256": "2390eb77428f5604556dfb7002520f05e907bce0036506c4c97d8aa796795cc2",
+      "sha256": "8f9b5f42060ff4e116f7f79ae11388f216e8991eb9c903a8fe16b9554dc675e5",
       "created_at": "2026-04-08T23:38:03.900279+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T05:07:54.375777+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/video/graph/openapi_paths.yaml",
@@ -174,9 +175,10 @@
     },
     {
       "path": "contracts/openapi/paths/identity_access.yaml",
-      "sha256": "4517f71c3c6ff362b9ccf56bb3935d084e8f552ed4d3d68972b1b5bda86e12fa",
+      "sha256": "ce2bdf021e39287bd7c0c3f26560ae4b500aac4e8e5264351cd20c4a31ff161e",
       "created_at": "2026-04-08T23:39:34.119071+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T02:48:57.981858+00:00"
     },
     {
       "path": "contracts/openapi/paths/matches.yaml",
@@ -229,9 +231,10 @@
     },
     {
       "path": "contracts/openapi/paths/users.yaml",
-      "sha256": "3084591e2073753ba4990ac72207db8b99842df7b639cd1d566bb78406189afe",
+      "sha256": "a43b824fb723023489cdd560002035acbc5f73942858caf3b281fa0a6956f5e9",
       "created_at": "2026-04-08T23:40:23.572733+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T05:07:50.956781+00:00"
     },
     {
       "path": "contracts/openapi/paths/video.yaml",
@@ -285,21 +288,94 @@
     },
     {
       "path": "contracts/openapi/openapi.yaml",
-      "sha256": "e6fe633c0005bd3879a9ba71bcde4db221b66b4946bfd5d7b03174f7f8468b54",
+      "sha256": "59234a6fe95bd50f7ba213752baea3976fac7853d1144b261476ed566deb4a67",
       "created_at": "2026-04-11T13:44:00.368267+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T05:07:36.432720+00:00"
     },
     {
       "path": "contracts/openapi/baseline/openapi_baseline.json",
       "sha256": "2e4d53a28e070ca8bf5c27becd7c748f9be285ef6dc7cecb94a1c33b794930c8",
       "created_at": "2026-04-11T14:00:12.773083+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/UX_BRAND_CONTRACT.md",
+      "sha256": "8206448cab9749dcc8e72f9a6acafb2750ec891a1f8904ba93b9b03e2a03c90b",
+      "created_at": "2026-04-21T01:09:41.568691+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/UX_SHELL_CONTRACT.md",
+      "sha256": "800bbd5d4d15c9c670e44fa18df4952c0f95f0d0fc7e90fd09d01a321c0230ee",
+      "created_at": "2026-04-21T01:09:59.079277+00:00"
+    },
+    {
+      "path": "contracts/schemas/users/user_profile.schema.json",
+      "sha256": "548ea4c238bb28dc425006ba1bb09cd81c7acd9a3a9536bec62c5754cf311560",
+      "created_at": "2026-04-21T02:35:06.383404+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T02:48:35.705982+00:00"
+    },
+    {
+      "path": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "sha256": "001f882dc57b52bbfdac81d9d9722393eace1664a6339d58213c827d850253d2",
+      "created_at": "2026-04-21T02:35:33.383401+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-21T02:48:48.467173+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
+      "sha256": "0c3c0ca93f24da241df2a7c1b0269d2df9f7d16edbc8ed1016a1a31bc5033146",
+      "created_at": "2026-04-21T05:07:57.789921+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/INVARIANTS_IDENTITY_ACCESS.md",
+      "sha256": "bf41902dde51189ff930522ad72b8cb0b3f39311279f2ee79918aa77041f8700",
+      "created_at": "2026-04-21T05:08:00.924539+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md",
+      "sha256": "6a120fda193cd3caf5a5655baea28617c9440f52e9b8e9c3375dc200185187b0",
+      "created_at": "2026-04-21T05:08:04.076199+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
+      "sha256": "006eecee561ce02115b495c3f95e42f8a45e612bd6ae34a537eceb36ee121306",
+      "created_at": "2026-04-21T05:08:07.321899+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/graph/endpoints.yaml",
+      "sha256": "6ae390763d22e8a0c85a51566298b65ad286663ba07ff160653f512cc86c9095",
+      "created_at": "2026-04-21T05:08:10.623830+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
+      "sha256": "6826c71d3f2193fb7c6a45d1c3688e3f8ab83a5799c0ecb1a8721114ef8678c1",
+      "created_at": "2026-04-21T05:08:13.725139+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/users/INVARIANTS_USERS.md",
+      "sha256": "f0ec3b9df6cce930be191b4bf443c4db0308c93d64dfad0eccbf278439a8d9c8",
+      "created_at": "2026-04-21T05:08:16.851930+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/users/graph/entity_graph.yaml",
+      "sha256": "92fc9e5fda9064503fad0e130065f85aa4233e0f041e6c16c5924d22b6946b35",
+      "created_at": "2026-04-21T05:08:20.168433+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-12T11:34:14.031599+00:00",
-  "module": "training",
-  "module_focus": "training",
-  "roadmap_phase": 6
+  "hook_validated_at": "2026-04-21T05:09:23.218432+00:00",
+  "module": "identity_access",
+  "module_focus": "identity_access"
 }

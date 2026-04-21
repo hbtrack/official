@@ -85,7 +85,7 @@
   "inputs": [
     {
       "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
-      "sha256": "b5f91816da37dd81551c63ddb32bf7d528db4ea606a7fe28c99f64b9b69512b8"
+      "sha256": "4db6e031bf7f3747ead3268f7cd82880e886488cd74c1ba7be0a526aa8b5da71"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -144,7 +144,7 @@
     "unit_tests": "src/exercises/tests/unit/test_exercises.py",
     "use_cases": "src/exercises/application/use_cases.py"
   },
-  "source_fingerprint": "d0dc195f268ec94dab96bc8bd5ec45eee6a4207b6e8038828a10643b7f8f906e",
+  "source_fingerprint": "9cbd2caa10a408e6673d2cb3b73a1aed3d2191cccaf903bba2d2aad1b7ce715d",
   "source_graph": {
     "entities": {
       "Exercise": {

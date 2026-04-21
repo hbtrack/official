@@ -88,4 +88,8 @@ Nenhum.
 - Os contratos visuais são artefatos globais (cross-cutting)
 - `generate_frontend` worker está FROZEN — frontend implementado manualmente
 - `schema.d.ts` não foi editado manualmente; regenerar com `npm run api:generate` se necessário
-- CANON_ALLOWLIST_GATE e outros gates pré-existentes (não escopo desta sessão) continuam com falhas estruturais que requerem handoff separado
+- CANON_ALLOWLIST_GATE: ✅ resolvido (4 UX contracts adicionados à TOPLEVEL_ALLOWLIST hardcoded em validate_contracts.py)
+- OPENAPI_POLICY_RULESET_GATE: ✅ resolvido (patterns uuid_v4/timestamp_utc + responses 409 em 4 endpoints auth/* no source master de identity_access)
+- CROSS_SPEC_ALIGNMENT_GATE: ✅ resolvido (derivados regenerados via pipeline: compile_contracts → compile_api_policy → repair_manifests → compile_source_graph → compile_context_bundle)
+- HANDOFF_COHERENCE_GATE: ✅ resolvido (corrigido auto-referência deadlock em validate_contracts.py — gate agora exclui a si mesmo do cross-check de overall_status)
+- Gate report final: `_reports/contract_gates/latest.json` → `overall_status: PASS | canonical_scope: full_pipeline | blocking_fails: 0`

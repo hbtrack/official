@@ -31,16 +31,17 @@
     "contracts": [
       "contracts/openapi/paths/identity_access.yaml"
     ],
-    "description": "Admin gerencia o binding de roles RBAC canônicos (ADR-008): consulta, atribui e revoga roles de usuários. Proteção de invariante: o último admin da plataforma não pode ter o role revogado.",
+    "description": "Usuário solicita reset de senha, recebe email transacional com link seguro e redefine a senha via fluxo forgot/reset/new password/confirm reset. A experiência sustenta a superfície visual \"Conta e Acesso\" da shell e usa `FRONTEND_URL` + provider baseline Resend.",
     "endpoints": [
-      "GET /auth/users/{userId}/roles",
-      "POST /auth/users/{userId}/roles",
-      "DELETE /auth/users/{userId}/roles/{roleLabel}"
+      "POST /auth/forgot-password",
+      "POST /auth/reset-password",
+      "POST /auth/new-password",
+      "POST /auth/confirm-reset"
     ],
-    "id": "FT-013",
-    "name": "Gestão de Roles RBAC",
-    "slug": "gestão-de-roles-rbac",
-    "status": "implemented"
+    "id": "FT-044",
+    "name": "Recuperação de Senha e Conta e Acesso",
+    "slug": "recuperação-de-senha-e-conta-e-acesso",
+    "status": "validated"
   },
   "implementation_targets": {
     "canonical_runtime": [
@@ -248,132 +249,7 @@
         ]
       }
     },
-    "errors": [
-      {
-        "http_status": 401,
-        "id": "ERR-IAM-401-UNAUTHENTICATED",
-        "kind": "transport",
-        "operations": [
-          "authLogout",
-          "authGetCurrentSession",
-          "listActiveSessions",
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ],
-        "source_ref": "../../../../../src/identity_access/domain/rules.py#AuthError"
-      },
-      {
-        "exception_ref": "../../../../../src/identity_access/domain/rules.py#SessionRevoked",
-        "http_status": 401,
-        "id": "ERR-IAM-401-SESSION-REVOKED",
-        "kind": "domain",
-        "notes": "INV-IAM-003: sessão revogada (revokedAt preenchido)",
-        "operations": [
-          "authLogout",
-          "authGetCurrentSession",
-          "listActiveSessions",
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ]
-      },
-      {
-        "exception_ref": "../../../../../src/identity_access/domain/rules.py#SessionExpired",
-        "http_status": 401,
-        "id": "ERR-IAM-401-SESSION-EXPIRED",
-        "kind": "domain",
-        "notes": "INV-IAM-003: sessão expirada (expiresAt no passado)",
-        "operations": [
-          "authLogout",
-          "authGetCurrentSession",
-          "listActiveSessions",
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ]
-      },
-      {
-        "exception_ref": "../../../../../src/identity_access/domain/rules.py#InsufficientPrivilege",
-        "http_status": 403,
-        "id": "ERR-IAM-403-INSUFFICIENT-PRIVILEGE",
-        "kind": "domain",
-        "notes": "DR-IAM-001: operações de gestão de sessões e roles requerem role admin",
-        "operations": [
-          "listActiveSessions",
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ]
-      },
-      {
-        "exception_ref": "../../../../../src/identity_access/domain/rules.py#InvalidRole",
-        "http_status": 400,
-        "id": "ERR-IAM-400-INVALID-ROLE",
-        "kind": "domain",
-        "notes": "DR-IAM-003: roleLabel não é canônico (admin|coordinator|coach|athlete|member)",
-        "operations": [
-          "assignRole",
-          "revokeRole"
-        ]
-      },
-      {
-        "http_status": 400,
-        "id": "ERR-IAM-400-VALIDATION",
-        "kind": "domain",
-        "notes": "INV-IAM-001: campos obrigatórios ausentes; INV-IAM-002: roleLabels com duplicatas",
-        "operations": [
-          "authLogin",
-          "authRefreshToken",
-          "assignRole"
-        ],
-        "source_ref": "../../../../../src/identity_access/domain/entities.py#validate_invariants"
-      },
-      {
-        "http_status": 404,
-        "id": "ERR-IAM-404-NOT-FOUND",
-        "kind": "domain",
-        "notes": "Sessão ou usuário não encontrado",
-        "operations": [
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ],
-        "source_ref": "../../../../../src/identity_access/application/use_cases.py#RevokeSessionUseCase"
-      },
-      {
-        "exception_ref": "../../../../../src/identity_access/domain/rules.py#LastAdminProtection",
-        "http_status": 409,
-        "id": "ERR-IAM-409-LAST-ADMIN",
-        "kind": "domain",
-        "notes": "DR-IAM-005: o último admin da plataforma não pode ter role revogado",
-        "operations": [
-          "revokeRole"
-        ]
-      },
-      {
-        "http_status": 500,
-        "id": "ERR-IAM-500-INTERNAL",
-        "kind": "transport",
-        "operations": [
-          "authLogin",
-          "authLogout",
-          "authRefreshToken",
-          "authGetCurrentSession",
-          "listActiveSessions",
-          "revokeSession",
-          "listUserRoles",
-          "assignRole",
-          "revokeRole"
-        ],
-        "source_ref": "../../../../../src/identity_access/api.py#auth_login"
-      }
-    ],
+    "errors": [],
     "impact_report": {
       "blocked_partial_update": true,
       "impacted_contracts": [
@@ -883,83 +759,93 @@
     },
     "operations": [
       {
-        "method": "GET",
-        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/get",
-        "operation_id": "listUserRoles",
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1forgot-password/post",
+        "operation_id": "authForgotPassword",
         "owner_scoped_roles": [],
-        "path": "/auth/users/{userId}/roles",
+        "path": "/auth/forgot-password",
         "response_codes": [
-          200,
-          401,
-          403,
-          404,
+          202,
+          400,
+          429,
           500
         ],
         "roles_allowed": [
-          "admin"
-        ],
-        "roles_denied": [
+          "admin",
           "coordinator",
           "coach",
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/identity_access/api.py#list_user_roles",
-        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ListUserRolesUseCase"
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_forgot_password",
+        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ForgotPasswordUseCase"
       },
       {
         "method": "POST",
-        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles/post",
-        "operation_id": "assignRole",
+        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1reset-password/post",
+        "operation_id": "authResetPassword",
         "owner_scoped_roles": [],
-        "path": "/auth/users/{userId}/roles",
+        "path": "/auth/reset-password",
         "response_codes": [
-          201,
+          200,
           400,
-          401,
-          403,
-          404,
-          409,
-          500
+          410
         ],
         "roles_allowed": [
-          "admin"
-        ],
-        "roles_denied": [
+          "admin",
           "coordinator",
           "coach",
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/identity_access/api.py#assign_role",
-        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#AssignRoleUseCase"
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_reset_password",
+        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ValidatePasswordResetUseCase"
       },
       {
-        "method": "DELETE",
-        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1users~1{userId}~1roles~1{roleLabel}/delete",
-        "operation_id": "revokeRole",
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1new-password/post",
+        "operation_id": "authNewPassword",
         "owner_scoped_roles": [],
-        "path": "/auth/users/{userId}/roles/{roleLabel}",
+        "path": "/auth/new-password",
         "response_codes": [
-          204,
+          202,
           400,
-          401,
-          403,
-          404,
-          409,
-          500
+          410
         ],
         "roles_allowed": [
-          "admin"
-        ],
-        "roles_denied": [
+          "admin",
           "coordinator",
           "coach",
           "athlete",
           "member"
         ],
-        "runtime_handler_ref": "../../../../../src/identity_access/api.py#revoke_role",
-        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#RevokeRoleUseCase"
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_new_password",
+        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#SetNewPasswordUseCase"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/identity_access.yaml#/auth~1confirm-reset/post",
+        "operation_id": "authConfirmReset",
+        "owner_scoped_roles": [],
+        "path": "/auth/confirm-reset",
+        "response_codes": [
+          200,
+          400,
+          404
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "roles_denied": [],
+        "runtime_handler_ref": "../../../../../src/identity_access/api.py#auth_confirm_reset",
+        "use_case_ref": "../../../../../src/identity_access/application/use_cases.py#ConfirmPasswordResetUseCase"
       }
     ],
     "schema_contract_view": {
@@ -1254,7 +1140,7 @@
       "docs/hbtrack/modulos/identity_access/DOMAIN_RULES_IDENTITY_ACCESS.md",
       "contracts/openapi/paths/identity_access.yaml"
     ],
-    "expected_output": "compiled_context/identity_access/FT-013.json",
+    "expected_output": "compiled_context/identity_access/FT-044.json",
     "required_commands": [
       "python3 scripts/compile/compile_source_graph.py --module identity_access --check --format json",
       "python3 scripts/compile/compile_context_bundle.py --module identity_access --check --format json",

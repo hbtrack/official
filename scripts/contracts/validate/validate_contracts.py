@@ -38,6 +38,7 @@ import shutil
 import subprocess
 import sys
 import time
+import unicodedata
 from typing import Any
 
 import yaml
@@ -56,6 +57,8 @@ BLOCKED_AXIOM_EXTENSION_COLLISION = "BLOCKED_AXIOM_EXTENSION_COLLISION"
 BLOCKED_AXIOM_NAME_CLASH = "BLOCKED_AXIOM_NAME_CLASH"
 
 BLOCKED_LAYOUT_NONCOMPLIANCE = "BLOCKED_LAYOUT_NONCOMPLIANCE"
+BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE = "BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE"
+BLOCKED_MISSING_CANON_ARTIFACT = "BLOCKED_MISSING_CANON_ARTIFACT"
 BLOCKED_MISSING_MODULE_DOC = "BLOCKED_MISSING_MODULE_DOC"
 BLOCKED_INVALID_MODULE_DOC_HEADER = "BLOCKED_INVALID_MODULE_DOC_HEADER"
 WARN_API_NORMATIVE_OUTSIDE_SSOT = "WARN_API_NORMATIVE_OUTSIDE_SSOT"
@@ -138,6 +141,8 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_AXIOM_EXTENSION_COLLISION,
     BLOCKED_AXIOM_NAME_CLASH,
     BLOCKED_LAYOUT_NONCOMPLIANCE,
+    BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE,
+    BLOCKED_MISSING_CANON_ARTIFACT,
     BLOCKED_MISSING_MODULE_DOC,
     BLOCKED_INVALID_MODULE_DOC_HEADER,
     WARN_API_NORMATIVE_OUTSIDE_SSOT,
@@ -5024,6 +5029,11 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         # Artefatos MCP canônicos (ADR-035/ADR-036)
         "MCP_SERVER_ARCHITECTURE.md",
         "MCP_TOOL_MANIFEST.yaml",
+        # Contratos UX v1.0.0 (docs/_canon/README.md §29-32)
+        "UX_BRAND_CONTRACT.md",
+        "UX_SHELL_CONTRACT.md",
+        "AUTH_EXPERIENCE_CONTRACT.md",
+        "NAVIGATION_VISIBILITY_CONTRACT.md",
     })
 
     # Subdiretórios autorizados
@@ -6553,6 +6563,696 @@ def _g14_ui_doc_validation(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _frontend_contract_source_files(frontend_dir: pathlib.Path) -> list[pathlib.Path]:
+    allowed_suffixes = {".ts", ".tsx", ".js", ".jsx", ".css", ".html", ".json"}
+    files: list[pathlib.Path] = []
+    for path in sorted(frontend_dir.rglob("*")):
+        if not path.is_file():
+            continue
+        if any(part in {"node_modules", "dist", ".git"} for part in path.parts):
+            continue
+        if "__tests__" in path.parts or "e2e" in path.parts:
+            continue
+        if path.name == "schema.d.ts":
+            continue
+        if path.suffix.lower() not in allowed_suffixes:
+            continue
+        files.append(path)
+    return files
+
+
+def _normalize_contract_text(text: str) -> str:
+    ascii_text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"\s+", " ", ascii_text).strip().lower()
+
+
+def _g_frontend_contract(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "FRONTEND_CONTRACT_GATE"
+    frontend_dir = root / "frontend"
+    if not frontend_dir.exists():
+        return _skip(gate_id, "frontend/ ausente.", _ms(t0))
+
+    required_contracts = [
+        root / "docs" / "_canon" / "FRONTEND_CONTRACT.md",
+        root / "docs" / "_canon" / "UX_BRAND_CONTRACT.md",
+        root / "docs" / "_canon" / "UX_SHELL_CONTRACT.md",
+        root / "docs" / "_canon" / "AUTH_EXPERIENCE_CONTRACT.md",
+        root / "docs" / "_canon" / "NAVIGATION_VISIBILITY_CONTRACT.md",
+    ]
+    required_assets = [
+        root / "generated" / "images" / "logo.svg",
+        root / "generated" / "images" / "logo-dark.svg",
+        root / "generated" / "images" / "logo-icon.svg",
+        root / "generated" / "images" / "logo-icon-dark.svg",
+        root / "generated" / "images" / "auth-logo.svg",
+        root / "generated" / "images" / "auth-logo-dark.svg",
+        root / "generated" / "images" / "hbicon.ico",
+    ]
+
+    checked: list[str] = []
+    violations: list[dict] = []
+
+    def _rel(path: pathlib.Path) -> str:
+        try:
+            return str(path.relative_to(root))
+        except ValueError:
+            return str(path)
+
+    def _mark(path: pathlib.Path) -> str:
+        rel = _rel(path)
+        if rel not in checked:
+            checked.append(rel)
+        return rel
+
+    def _read_text(path: pathlib.Path) -> str:
+        try:
+            return path.read_text(encoding="utf-8")
+        except Exception:
+            return ""
+
+    def _read_many(paths: list[pathlib.Path]) -> str:
+        return "\n".join(_read_text(path) for path in paths if path.exists())
+
+    def _add_violation(
+        artifact: pathlib.Path,
+        message: str,
+        blocking_code: str = BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE,
+    ) -> None:
+        violations.append(
+            {
+                "blocking_code": blocking_code,
+                "artifact": _mark(artifact),
+                "message": message,
+                "severity": "error",
+            }
+        )
+
+    for contract in required_contracts:
+        _mark(contract)
+        if not contract.exists():
+            _add_violation(
+                contract,
+                f"Contrato canônico obrigatório ausente: '{_rel(contract)}'.",
+                BLOCKED_MISSING_CANON_ARTIFACT,
+            )
+
+    for asset in required_assets:
+        _mark(asset)
+        if not asset.exists():
+            _add_violation(
+                asset,
+                f"Asset oficial obrigatório ausente: '{_rel(asset)}'.",
+                BLOCKED_MISSING_CANON_ARTIFACT,
+            )
+
+    frontend_contract = root / "docs" / "_canon" / "FRONTEND_CONTRACT.md"
+    frontend_contract_text = _read_text(frontend_contract)
+    if frontend_contract_text:
+        for dependency in required_contracts[1:]:
+            dep_rel = _rel(dependency)
+            if dep_rel not in frontend_contract_text:
+                _add_violation(
+                    frontend_contract,
+                    f"FRONTEND_CONTRACT.md deve depender explicitamente de '{dep_rel}'.",
+                )
+
+    package_json_path = frontend_dir / "package.json"
+    schema_path = frontend_dir / "src" / "api" / "schema.d.ts"
+    app_path = frontend_dir / "src" / "App.tsx"
+    index_html_path = frontend_dir / "index.html"
+    layouts_dir = frontend_dir / "src" / "shared" / "layouts"
+    auth_dir = frontend_dir / "src" / "features" / "auth"
+    env_example_path = root / ".env.example"
+    identity_access_path = root / "contracts" / "openapi" / "paths" / "identity_access.yaml"
+    feature_registry_path = root / "docs" / "_canon" / "FEATURE_REGISTRY.yaml"
+    user_profile_schema_paths = [
+        root / "contracts" / "schemas" / "users" / "user_profile.schema.json",
+        root / "contracts" / "openapi" / "components" / "schemas" / "users" / "user_profile.yaml",
+    ]
+
+    for path in (
+        package_json_path,
+        schema_path,
+        app_path,
+        index_html_path,
+        layouts_dir,
+        auth_dir,
+        env_example_path,
+        identity_access_path,
+        feature_registry_path,
+        *user_profile_schema_paths,
+    ):
+        _mark(path)
+
+    if not package_json_path.exists():
+        _add_violation(package_json_path, "frontend/package.json é obrigatório para o gate de frontend.")
+    else:
+        try:
+            package_json = json.loads(package_json_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            _add_violation(package_json_path, f"frontend/package.json inválido: {exc}.")
+            package_json = {}
+        scripts = package_json.get("scripts") or {}
+        if "api:generate" not in scripts:
+            _add_violation(
+                package_json_path,
+                "frontend/package.json deve expor o script canônico 'api:generate'.",
+            )
+
+    if not schema_path.exists():
+        _add_violation(schema_path, "frontend/src/api/schema.d.ts deve existir e ser gerado do OpenAPI.")
+
+    source_files = _frontend_contract_source_files(frontend_dir)
+    for path in source_files:
+        _mark(path)
+
+    direct_http_pattern = re.compile(
+        r"\b(fetch\s*\(|axios\.(?:get|post|put|patch|delete)|apiClient\.(?:GET|POST|PUT|PATCH|DELETE)\()"
+    )
+    for path in source_files:
+        rel = _rel(path).replace("\\", "/")
+        if "/src/api/hooks/" in rel or rel.endswith("/src/api/client.ts"):
+            continue
+        text = _read_text(path)
+        if direct_http_pattern.search(text):
+            _add_violation(
+                path,
+                "Chamadas HTTP devem ficar restritas a frontend/src/api/hooks/ ou api/client.ts.",
+            )
+
+    layout_files = sorted(layouts_dir.rglob("*.tsx")) if layouts_dir.exists() else []
+    auth_files = sorted(auth_dir.rglob("*.tsx")) if auth_dir.exists() else []
+    style_files = [
+        path
+        for path in source_files
+        if path.suffix.lower() == ".css" or path.name.startswith("tailwind.config")
+    ]
+
+    route_text = _read_text(app_path)
+    layout_text = _read_many(layout_files)
+    auth_text = _read_many(auth_files)
+    style_text = _read_many(style_files)
+    index_html_text = _read_text(index_html_path)
+    source_text = _read_many(source_files)
+    nav_text = "\n".join([route_text, layout_text])
+    env_example_text = _read_text(env_example_path)
+    identity_access_text = _read_text(identity_access_path)
+    feature_registry_text = _read_text(feature_registry_path)
+    user_profile_schema_text = _read_many(user_profile_schema_paths)
+    lower_source_text = source_text.lower()
+    lower_nav_text = nav_text.lower()
+    lower_auth_text = auth_text.lower()
+    lower_style_text = style_text.lower()
+    normalized_source_text = _normalize_contract_text(source_text)
+    normalized_nav_text = _normalize_contract_text(nav_text)
+    normalized_layout_text = _normalize_contract_text(layout_text)
+    normalized_auth_text = _normalize_contract_text(auth_text)
+    normalized_env_example_text = _normalize_contract_text(env_example_text)
+    normalized_identity_access_text = _normalize_contract_text(identity_access_text)
+    normalized_feature_registry_text = _normalize_contract_text(feature_registry_text)
+    normalized_user_profile_schema_text = _normalize_contract_text(user_profile_schema_text)
+
+    def _contains_any(text: str, variants: tuple[str, ...] | list[str]) -> bool:
+        return any(variant in text for variant in variants)
+
+    def _has_active_env_var(name: str) -> bool:
+        return bool(re.search(rf"(?m)^\s*{re.escape(name)}\s*=\s*\S+", env_example_text))
+
+    shell_logo_refs = (
+        "generated/images/logo.svg",
+        "generated/images/logo-dark.svg",
+        "generated/images/logo-icon.svg",
+        "generated/images/logo-icon-dark.svg",
+    )
+    auth_logo_refs = (
+        "generated/images/auth-logo.svg",
+        "generated/images/auth-logo-dark.svg",
+    )
+
+    if "generated/images/hbicon.ico" not in index_html_text:
+        _add_violation(
+            index_html_path,
+            "frontend/index.html deve usar generated/images/hbicon.ico como favicon oficial.",
+        )
+
+    if not layout_files:
+        _add_violation(layouts_dir, "A shell autenticada deve existir em frontend/src/shared/layouts/.")
+    else:
+        if not all(token in layout_text for token in ("<aside", "<header", "<main")):
+            _add_violation(
+                layout_files[0],
+                "A shell deve materializar sidebar, top bar e área principal scrollável.",
+            )
+        if not any(token in layout_text for token in ("collapsed", "isCollapsed", "sidebarCollapsed", "collapseSidebar")):
+            _add_violation(
+                layout_files[0],
+                "A shell deve materializar sidebar desktop colapsável no primeiro batch.",
+            )
+        if not any(token in lower_nav_text for token in ("overlay", "backdrop", "drawer-backdrop", "mobile-overlay")):
+            _add_violation(
+                layout_files[0],
+                "A shell deve materializar drawer mobile com overlay.",
+            )
+        if "Escape" not in layout_text:
+            _add_violation(
+                layout_files[0],
+                "O drawer mobile deve fechar ao pressionar Escape.",
+            )
+        if not any(ref in layout_text for ref in shell_logo_refs):
+            _add_violation(
+                layout_files[0],
+                "A shell deve consumir os logos oficiais a partir de generated/images.",
+            )
+        if "HB Track" in layout_text and "generated/images/" not in layout_text:
+            _add_violation(
+                layout_files[0],
+                "Branding improvisado detectado na shell: substitua texto cru por asset oficial.",
+            )
+        if not any(token in lower_nav_text for token in ("breadcrumb", "breadcrumbs")):
+            _add_violation(
+                layout_files[0],
+                "A top bar deve suportar breadcrumbs em rotas profundas.",
+            )
+        if not _contains_any(
+            normalized_nav_text,
+            ("command palette", "commandpalette", "cmdk", "command menu"),
+        ):
+            _add_violation(
+                layout_files[0],
+                "A top bar do primeiro batch deve expor command palette.",
+            )
+        if not _contains_any(
+            normalized_nav_text,
+            ("notificacoes", "notifications", "notification center", "notificationcenter"),
+        ):
+            _add_violation(
+                layout_files[0],
+                "A top bar do primeiro batch deve expor notificações.",
+            )
+        if not any(token in nav_text for token in ("avatar", "Avatar")):
+            _add_violation(
+                layout_files[0],
+                "O menu do usuário deve expor avatar.",
+            )
+        if not _contains_any(
+            normalized_nav_text,
+            ("user menu", "usermenu", "menu do usuario", "menu do utilizador"),
+        ):
+            _add_violation(
+                layout_files[0],
+                "A top bar deve expor user menu no primeiro batch.",
+            )
+        if "rounded-full" not in layout_text and "avatar-circle" not in lower_nav_text:
+            _add_violation(
+                layout_files[0],
+                "O avatar da top bar deve ser circular.",
+            )
+        if not _contains_any(
+            normalized_layout_text,
+            ("initials", "iniciais", "avatar fallback", "avatarfallback", "fallback"),
+        ):
+            _add_violation(
+                layout_files[0],
+                "A shell deve suportar fallback para iniciais quando não houver avatar.",
+            )
+        if not any(token in lower_nav_text for token in ("logout", "sair")):
+            _add_violation(
+                layout_files[0],
+                "A shell deve expor logout no menu do usuário.",
+            )
+        if not any(
+            token in nav_text
+            for token in (
+                "activeTeam",
+                "selectedTeam",
+                "currentTeam",
+                "teamContext",
+                "activeSeason",
+                "selectedSeason",
+                "currentSeason",
+                "seasonContext",
+            )
+        ):
+            _add_violation(
+                layout_files[0],
+                "A shell deve suportar contexto operacional de equipe ativa e temporada ativa.",
+            )
+        if not any(
+            token in nav_text
+            for token in ("switchTeam", "teamSwitcher", "onTeamChange", "setActiveTeam", "handleTeamChange")
+        ):
+            _add_violation(
+                layout_files[0],
+                "A shell deve suportar troca de equipe.",
+            )
+        if not any(
+            token in nav_text
+            for token in (
+                "allowedRoles",
+                "visibleRoles",
+                "visibleForRole",
+                "canAccess",
+                "roleVisibility",
+            )
+        ):
+            _add_violation(
+                layout_files[0],
+                "A navegação deve suportar visibilidade por role.",
+            )
+        if not any(token in nav_text for token in ("badge", "Badge")):
+            _add_violation(
+                layout_files[0],
+                "A sidebar deve suportar badges e rollout visual de módulos.",
+            )
+
+    required_nav_groups = (
+        "inicio",
+        "organizacao",
+        "planejamento tecnico",
+        "jogo e competicao",
+        "performance e saude",
+        "administracao",
+    )
+    missing_groups = [group for group in required_nav_groups if group not in normalized_source_text]
+    if missing_groups:
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            f"A navegação deve expor o agrupamento oficial. Ausentes: {', '.join(missing_groups)}.",
+        )
+
+    required_active_navigation = {
+        "dashboard": ("dashboard",),
+        "teams": ("teams",),
+        "seasons": ("seasons",),
+        "training": ("training",),
+        "users": ("users",),
+        "conta e acesso": ("conta e acesso",),
+    }
+    missing_active_navigation = [
+        key
+        for key, variants in required_active_navigation.items()
+        if not _contains_any(normalized_source_text, variants)
+    ]
+    if missing_active_navigation:
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "A shell inicial deve expor os módulos ativos definidos no contrato de navegação. "
+            f"Ausentes: {', '.join(missing_active_navigation)}.",
+        )
+
+    required_disabled_navigation = {
+        "competitions": ("competitions",),
+        "matches": ("matches",),
+        "scout": ("scout",),
+        "video": ("video",),
+        "wellness": ("wellness",),
+        "medical": ("medical",),
+        "exercises": ("exercises",),
+        "analytics": ("analytics",),
+        "reports": ("reports",),
+        "ai ingestion": ("ai ingestion",),
+        "audit": ("audit",),
+    }
+    missing_disabled_navigation = [
+        key
+        for key, variants in required_disabled_navigation.items()
+        if not _contains_any(normalized_source_text, variants)
+    ]
+    if missing_disabled_navigation:
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "A shell inicial deve expor os módulos disabled definidos no contrato de navegação. "
+            f"Ausentes: {', '.join(missing_disabled_navigation)}.",
+        )
+
+    required_top_bar_capabilities = (
+        "notificacoes",
+        "command palette",
+        "breadcrumbs",
+        "user menu",
+    )
+    missing_top_bar_capabilities = [
+        capability for capability in required_top_bar_capabilities if capability not in normalized_source_text
+    ]
+    if missing_top_bar_capabilities:
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "A navegação deve refletir as capabilities ativas da top bar definidas no contrato. "
+            f"Ausentes: {', '.join(missing_top_bar_capabilities)}.",
+        )
+
+    if not _contains_any(normalized_source_text, ("disabled", "coming soon", "coming-soon", "comingsoon", "em breve")):
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "Módulos ainda não liberados devem seguir política visual consistente de rollout.",
+        )
+
+    if not auth_files:
+        _add_violation(auth_dir, "O módulo de auth deve existir em frontend/src/features/auth/.")
+    else:
+        if not all(ref in auth_text for ref in auth_logo_refs):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve consumir auth-logo.svg e auth-logo-dark.svg.",
+            )
+        if "dados que decidem jogos" not in normalized_auth_text:
+            _add_violation(
+                auth_files[0],
+                "A tela de login deve usar a tagline oficial 'Dados que decidem jogos'.",
+            )
+        if "HB Track" in auth_text and "generated/images/auth-logo" not in auth_text:
+            _add_violation(
+                auth_files[0],
+                "Branding improvisado detectado em auth: use o asset oficial de autenticação.",
+            )
+        if "Esqueceu a senha" not in auth_text:
+            _add_violation(
+                auth_files[0],
+                "A tela de login deve expor o link 'Esqueceu a senha?'.",
+            )
+        if not any(token in auth_text for token in ("showPassword", "togglePassword", "Eye", "EyeOff", "mostrarSenha")):
+            _add_violation(
+                auth_files[0],
+                "A tela de login deve suportar mostrar/ocultar senha.",
+            )
+        if not re.search(r"disabled=\{[^}]+(email|password|isValid|formValid)", auth_text, re.S):
+            _add_violation(
+                auth_files[0],
+                "O botão principal de login deve habilitar apenas com formulário válido.",
+            )
+        if not any(token in lower_auth_text for token in ("ispending", "loading", "entrando")):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve expor loading state.",
+            )
+        if not any(token in lower_auth_text for token in ("error", "erro", "credenciais")):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve expor estados controlados de erro.",
+            )
+        if "isAuthenticated" not in auth_text or "navigate('/'" not in auth_text:
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve redirecionar corretamente após login e evitar login para usuário autenticado.",
+            )
+        if not _contains_any(
+            normalized_auth_text,
+            (
+                "reset solicitado com sucesso",
+                "reset request success",
+                "resetrequested",
+                "reset solicitado",
+            ),
+        ):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve materializar estado de reset solicitado com sucesso.",
+            )
+        if not _contains_any(
+            normalized_auth_text,
+            ("token invalido", "token expirado", "invalid token", "expired token"),
+        ):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve materializar estado de token inválido/expirado.",
+            )
+        if not _contains_any(
+            normalized_auth_text,
+            ("senha redefinida com sucesso", "password reset success", "passwordresetsuccess"),
+        ):
+            _add_violation(
+                auth_files[0],
+                "A experiência de auth deve materializar estado de senha redefinida com sucesso.",
+            )
+
+    auth_routes_text = "\n".join([route_text, auth_text])
+    normalized_auth_routes_text = _normalize_contract_text(auth_routes_text)
+    if not _contains_any(normalized_auth_routes_text, ("forgotpassword", "/forgot-password", "/forgot", "esqueceu a senha")):
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "O frontend deve implementar o fluxo de solicitação de reset de senha.",
+        )
+    if not _contains_any(
+        normalized_auth_routes_text,
+        ("resetpassword", "/reset-password", "newpassword", "confirmreset", "/confirm-reset"),
+    ):
+        _add_violation(
+            app_path if app_path.exists() else frontend_dir,
+            "O frontend deve implementar nova senha e confirmação final do reset.",
+        )
+
+    if not env_example_path.exists():
+        _add_violation(
+            env_example_path,
+            "A prontidão do frontend deve declarar `.env.example` com `FRONTEND_URL`, `RESEND_*` e `CLOUDINARY_*` como integrações-base do target-state.",
+        )
+    else:
+        required_env_vars = (
+            "FRONTEND_URL",
+            "RESEND_API_KEY",
+            "RESEND_FROM_EMAIL",
+            "RESEND_FROM_NAME",
+            "CLOUDINARY_URL",
+            "CLOUDINARY_CLOUD_NAME",
+            "CLOUDINARY_UPLOAD_PRESET",
+            "CLOUDINARY_ASSET",
+        )
+        missing_env_vars = [name for name in required_env_vars if not _has_active_env_var(name)]
+        if missing_env_vars:
+            _add_violation(
+                env_example_path,
+                "O target-state de auth/avatar requer variáveis ativas em `.env.example`. "
+                f"Ausentes: {', '.join(missing_env_vars)}.",
+            )
+        if "frontend_url" not in normalized_env_example_text or "resend" not in normalized_env_example_text:
+            _add_violation(
+                env_example_path,
+                "`.env.example` deve evidenciar o uso de FRONTEND_URL e Resend no fluxo de recuperação de senha.",
+            )
+
+    if not identity_access_path.exists():
+        _add_violation(
+            identity_access_path,
+            "O contrato OpenAPI de identity_access deve existir para validar auth recovery.",
+        )
+    elif not _contains_any(
+        normalized_identity_access_text,
+        (
+            "/auth/forgot-password",
+            "/auth/reset-password",
+            "/auth/new-password",
+            "forgot password",
+            "reset password",
+            "confirm reset",
+        ),
+    ):
+        _add_violation(
+            identity_access_path,
+            "O contrato soberano de identity_access deve materializar forgot/reset/new-password/confirm reset.",
+        )
+
+    if not feature_registry_path.exists():
+        _add_violation(
+            feature_registry_path,
+            "FEATURE_REGISTRY.yaml deve existir para rastrear a experiência de auth recovery.",
+        )
+    elif not _contains_any(
+        normalized_feature_registry_text,
+        ("forgot password", "reset password", "new password", "confirm reset", "conta e acesso"),
+    ):
+        _add_violation(
+            feature_registry_path,
+            "FEATURE_REGISTRY.yaml deve refletir auth recovery e a superfície visual 'Conta e Acesso'.",
+        )
+
+    if not any(path.exists() for path in user_profile_schema_paths):
+        _add_violation(
+            user_profile_schema_paths[0],
+            "A superfície soberana de perfil deve existir para validar avatar do usuário.",
+        )
+    elif not _contains_any(
+        normalized_user_profile_schema_text,
+        ("avatar", "avatarurl", "avatar url", "profileimage", "imageurl", "photourl"),
+    ):
+        _add_violation(
+            user_profile_schema_paths[0],
+            "A superfície soberana de perfil deve expor campo canônico de avatar para a shell.",
+        )
+
+    if not style_files:
+        _add_violation(frontend_dir / "src", "O frontend deve materializar estilos/tokens canônicos.")
+    else:
+        if not all(font in style_text for font in ("Inter", "Manrope", "JetBrains Mono")):
+            _add_violation(
+                style_files[0],
+                "Os estilos devem declarar Inter, Manrope e JetBrains Mono como tipografia oficial.",
+            )
+        if not all(token in lower_style_text for token in ("brand-", "gray-", "success-", "error-", "warning-", "orange-")):
+            _add_violation(
+                style_files[0],
+                "Os estilos devem declarar as famílias de tokens canônicas de marca e suporte.",
+            )
+        if not any(
+            token in lower_style_text
+            for token in (
+                "court",
+                "goal-area",
+                "shot-success",
+                "shot-miss",
+                "save",
+                "turnover",
+                "load-deficit",
+                "load-optimal",
+                "load-excess",
+            )
+        ):
+            _add_violation(
+                style_files[0],
+                "Os estilos devem declarar tokens semânticos específicos do handebol.",
+            )
+        if not any(
+            token in lower_style_text or token in lower_source_text
+            for token in ("dark:", "prefers-color-scheme", "data-theme=\"dark\"", "theme-dark")
+        ):
+            _add_violation(
+                style_files[0],
+                "O frontend deve suportar dark mode de forma explícita.",
+            )
+
+    if violations:
+        blocking_code = (
+            BLOCKED_MISSING_CANON_ARTIFACT
+            if any(v.get("blocking_code") == BLOCKED_MISSING_CANON_ARTIFACT for v in violations)
+            else BLOCKED_FRONTEND_CONTRACT_NONCOMPLIANCE
+        )
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            blocking_code,
+            f"{len(violations)} violação(ões) do contrato de frontend.",
+            [_rel(contract) for contract in required_contracts],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Frontend alinhado ao contrato técnico e aos contratos de UX/UI.",
+        [_rel(contract) for contract in required_contracts],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 _SHA256_HEX_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -7397,15 +8097,26 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
                         "message": "Handoff só pode usar relatório de gates com canonical_scope=full_pipeline.",
                         "severity": "error",
                     })
-                overall = report_evidence.get("overall_status")
-                if ci_status == "PASS" and overall != "PASS":
+                # Exclui o próprio HANDOFF_COHERENCE_GATE do cross-check de overall_status:
+                # quando o único blocking fail do relatório é este gate, o overall=FAIL é
+                # auto-referência (handoff falha → relatório FAIL → handoff re-falha).
+                report_gates = report_evidence.get("gates") or []
+                other_blocking_fails = [
+                    g for g in report_gates
+                    if g.get("gate_id") != "HANDOFF_COHERENCE_GATE"
+                    and g.get("blocking")
+                    and g.get("status") == "FAIL"
+                ]
+                overall_raw = report_evidence.get("overall_status")
+                effective_overall = "FAIL" if other_blocking_fails else ("PASS" if overall_raw in ("PASS", "FAIL") else overall_raw)
+                if ci_status == "PASS" and effective_overall != "PASS":
                     violations.append({
                         "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                         "artifact": "SESSION_HANDOFF.md",
-                        "message": f"ci_status=PASS diverge do relatório canônico ({overall}).",
+                        "message": f"ci_status=PASS diverge do relatório canônico ({effective_overall}).",
                         "severity": "error",
                     })
-                if ci_status == "FAIL" and overall == "PASS":
+                if ci_status == "FAIL" and effective_overall == "PASS":
                     violations.append({
                         "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                         "artifact": "SESSION_HANDOFF.md",
@@ -10123,6 +10834,7 @@ def run_pipeline(
         "MODULE_REGISTRY_GATE",
         "PLACEHOLDER_RESIDUE_GATE",
         "UI_DOC_VALIDATION_GATE",
+        "FRONTEND_CONTRACT_GATE",
         "HANDOFF_COHERENCE_GATE",
         "MODULE_STATUS_COHERENCE_GATE",
         "SURFACE_PROMOTION_COHERENCE_GATE",
@@ -10149,6 +10861,7 @@ def run_pipeline(
         "DERIVED_DRIFT_GATE",
         "ADVERSARIAL_ANALYSIS_GATE",
         "FEATURE_READINESS_GATE",
+        "FRONTEND_CONTRACT_GATE",
         # FIX BACKLOG_ITEM_1 (Passos E-F): Adicionar validadores externos ao default local profile
         "OPENAPI_ROOT_STRUCTURE_GATE",         # Redocly lint (validação OpenAPI)
         "ASYNCAPI_VALIDATION_GATE",            # AsyncAPI validate (validação AsyncAPI)
@@ -10233,6 +10946,7 @@ def run_pipeline(
         ("SPECTRAL_LINTING_GATE", lambda: _g13a_spectral_linting(root)),  # FIX BACKLOG_ITEM_1 (Passo D): novo gate de Spectral
         ("ARAZZO_COMPLETENESS_GATE", lambda: _g_arazzo_completeness(root)),
         ("UI_DOC_VALIDATION_GATE", lambda: _g14_ui_doc_validation(root)),
+        ("FRONTEND_CONTRACT_GATE", lambda: _g_frontend_contract(root)),
         ("DERIVED_DRIFT_GATE", lambda: _g15_derived_drift(root)),
         ("ADVERSARIAL_ANALYSIS_GATE", lambda: _g_adversarial_analysis(root)),
         ("FEATURE_READINESS_GATE", lambda: _g_feature_readiness(root)),

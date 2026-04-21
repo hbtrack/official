@@ -1,6 +1,6 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-04-11T17:16:59Z`
+- Generated at: `2026-04-21T04:50:03Z`
 - Pipeline status: `PASS`
 
 | Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |
@@ -18,7 +18,7 @@
 | `analytics` | `implemented` | `performance-tech` | 100 | 4/4 | 4 | — |
 | `reports` | `implemented` | `performance-tech` | 100 | 3/3 | 1 | — |
 | `ai_ingestion` | `implemented` | `platform-core` | 100 | 3/3 | 1 | — |
-| `identity_access` | `implemented` | `platform-core` | 100 | 8/8 | 1 | — |
+| `identity_access` | `implemented` | `platform-core` | 100 | 12/12 | 1 | — |
 | `audit` | `implemented` | `platform-core` | 100 | 3/3 | 1 | — |
 | `notifications` | `implemented` | `platform-core` | 100 | 4/4 | 1 | — |
 | `video` | `implemented` | `platform-core` | 100 | 5/5 | 4 | — |

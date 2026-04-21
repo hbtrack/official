@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-11T16:55:23Z",
+  "timestamp_utc": "2026-04-21T05:08:20Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "7c2d2ebd",
+    "git_commit": "91056a0f",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260411T165523_6d4571"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T050820_f2bc0f"
   },
   "status_detail": {
     "active_gates_passed": 8,
-    "skip_count": 53,
+    "skip_count": 54,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -166,6 +166,10 @@
         "status": "PASS"
       },
       {
+        "gate_id": "FRONTEND_CONTRACT_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "DERIVED_DRIFT_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
@@ -257,7 +261,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 103
+        "duration_ms": 43
       }
     },
     {
@@ -282,7 +286,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6898
+        "duration_ms": 545
       }
     },
     {
@@ -924,7 +928,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 72
+        "duration_ms": 30
       }
     },
     {
@@ -982,7 +986,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2126
+        "duration_ms": 1222
       }
     },
     {
@@ -1086,7 +1090,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -1250,7 +1254,25 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 2
+      }
+    },
+    {
+      "gate_id": "FRONTEND_CONTRACT_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'artifact'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
       }
     },
     {
@@ -1488,7 +1510,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 23
       }
     },
     {
@@ -1749,7 +1771,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 7 PASS, 53 SKIP.",
+      "summary": "Pipeline PASS: 7 PASS, 54 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
