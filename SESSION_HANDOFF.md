@@ -1,23 +1,24 @@
 ---
 data_ultima_sessao: "2026-04-21"
 branch_ativo: chore/fix-image-path
-modo_operacao: CDD
-ci_status: PASS
-modulo_foco: identity_access
-fase_roadmap: 6
-task_type: contract_revision
-boot_profile_id: contract_execution
-task_id: UX-CONTRACTS-BATCH-001
-resultado: DONE
-proxima_acao_permitida: "Validar frontend em staging (npm run dev) e confirmar UI visual"
+modo_operacao: ROADMAP
+ci_status: UNKNOWN
+modulo_foco: training
+fase_roadmap: 4
+roadmap_phase: 4
+task_type: execute_roadmap_phase
+boot_profile_id: roadmap_execution
+task_id: ROADMAP-PHASE4-CI-FIXES
+resultado: PENDENTE
+proxima_acao_permitida: "Aguardar CI passar após push de compiled_context/users/"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "frontend/src/shared/layouts/AppLayout.tsx"
-  - "frontend/src/features/auth/pages/LoginPage.tsx"
-  - "frontend/src/features/auth/pages/ForgotPasswordPage.tsx"
-  - "frontend/src/features/auth/pages/ResetPasswordPage.tsx"
-  - "frontend/src/App.tsx"
+  - "generated/source_graph/users/users.bundle.yaml"
+  - "compiled_context/users/FT-014.json"
+  - "compiled_context/users/FT-015.json"
+  - "compiled_context/users/FT-016.json"
+  - "compiled_context/users/FT-017.json"
 ---
 # SESSION HANDOFF — HB TRACK
 
