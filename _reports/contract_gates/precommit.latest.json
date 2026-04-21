@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-21T19:08:12Z",
+  "timestamp_utc": "2026-04-21T21:52:46Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "b5b38a74",
+    "git_commit": "29132414",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T190812_2e7124"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260421T215246_720c83"
   },
   "status_detail": {
     "active_gates_passed": 24,
@@ -261,7 +261,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 47
       }
     },
     {
@@ -286,7 +286,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1320
+        "duration_ms": 7326
       }
     },
     {
@@ -397,7 +397,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 52
       }
     },
     {
@@ -646,7 +646,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 15
       }
     },
     {
@@ -1018,7 +1018,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 272
       }
     },
     {
@@ -1104,7 +1104,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 735
+        "duration_ms": 3391
       }
     },
     {
@@ -1127,7 +1127,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1329
+        "duration_ms": 4882
       }
     },
     {
@@ -1149,7 +1149,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1230
+        "duration_ms": 12616
       }
     },
     {
@@ -1188,7 +1188,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 566
+        "duration_ms": 1146
       }
     },
     {
@@ -4140,7 +4140,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 1759
+        "duration_ms": 4376
       }
     },
     {
@@ -4208,7 +4208,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 18
       }
     },
     {
@@ -4823,7 +4823,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1682
+        "duration_ms": 2222
       }
     },
     {
@@ -4899,7 +4899,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1475
+        "duration_ms": 4440
       }
     },
     {
@@ -4942,7 +4942,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 69
       }
     },
     {
@@ -4964,7 +4964,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1206
+        "duration_ms": 2933
       }
     },
     {
@@ -5020,7 +5020,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 62
       }
     },
     {
@@ -5040,7 +5040,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 8
       }
     },
     {
@@ -5121,7 +5121,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 233
+        "duration_ms": 686
       }
     },
     {
@@ -5297,21 +5297,19 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/generated/source_graph/users/users.bundle.yaml",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-014.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-015.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-016.json",
-        "/home/davis/HB-TRACK/compiled_context/users/FT-017.json"
+        "/home/davis/HB-TRACK/generated/source_graph/training/training.bundle.yaml",
+        "/home/davis/HB-TRACK/compiled_context/training/FT-001.json",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/module_manifest.yaml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5319,7 +5317,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 22
       }
     },
     {
@@ -5341,7 +5339,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 161
+        "duration_ms": 177
       }
     },
     {
@@ -5423,7 +5421,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -5445,7 +5443,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 24
       }
     },
     {

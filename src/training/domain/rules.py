@@ -106,6 +106,22 @@ class ElasticSumRuleViolation(Exception):
 
 
 # ---------------------------------------------------------------------------
+# Exceções de conflito de estado (ValueError semântico → 409)
+# ---------------------------------------------------------------------------
+
+class FeedbackThreadAlreadyClosed(ValueError):
+    """Thread de feedback já está fechada — não pode ser fechada novamente."""
+
+
+class IneligibilityStateConflict(ValueError):
+    """Declaração de indisponibilidade não permitida para o estado atual da sessão."""
+
+
+class SuggestionStateConflict(ValueError):
+    """Sugestão não pode ser submetida para sessão neste estado."""
+
+
+# ---------------------------------------------------------------------------
 # FSM da TrainingSession — INV-TRAIN-006
 # ---------------------------------------------------------------------------
 
