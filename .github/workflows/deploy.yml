@@ -374,6 +374,26 @@ jobs:
 
             echo "✅ Staging interno serve o build ${EXPECTED_SHA}"
 
+      - name: Reachability check — staging (público)
+        run: |
+          set -euo pipefail
+          BASE_URL="${STAGING_URL%/}"
+          echo "Validando reachability pública do staging em ${BASE_URL}..."
+          for i in $(seq 1 24); do
+            STATUS=$(curl -sS -L --max-time 10 -o /dev/null -w "%{http_code}" "${BASE_URL}/" || true)
+            if [ -z "$STATUS" ]; then
+              STATUS="000"
+            fi
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ Staging público acessível (tentativa $i)"
+              exit 0
+            fi
+            echo "⏳ Tentativa $i/24 — HTTP $STATUS"
+            sleep 5
+          done
+          echo "❌ Staging público inacessível após 120s"
+          exit 1
+
       - name: Seed demo data — staging (opcional)
         if: success()
         uses: appleboy/ssh-action@v1
