@@ -288,7 +288,8 @@ jobs:
               echo "✅ .env válido — credenciais existentes mantidas"
             fi
 
-            if ! echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>&1; then
+            # Login no GHCR com credencial persistente para pull no VPS
+            if ! echo "${{ secrets.GHCR_PULL_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_PULL_USERNAME || github.actor }}" --password-stdin 2>&1; then
               echo "❌ Falha ao autenticar no GHCR"
               exit 1
             fi
@@ -599,8 +600,8 @@ jobs:
               echo "✅ .env válido"
             fi
 
-            # Autenticar no GHCR
-            if ! echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>&1; then
+            # Login no GHCR com credencial persistente para pull no VPS
+            if ! echo "${{ secrets.GHCR_PULL_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_PULL_USERNAME || github.actor }}" --password-stdin 2>&1; then
               echo "❌ Falha ao autenticar no GHCR"
               exit 1
             fi
