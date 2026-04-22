@@ -1,0 +1,184 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# HB Track — Docker Compose de STAGING
+#
+# Diferenças em relação à produção:
+#   - SEM nginx próprio (a borda é gerenciada pelo docker-compose.edge.yml)
+#   - SEM portas 80/443 publicadas — containers só acessíveis internamente
+#   - Rede: hbtrack-staging-net (isolada de produção)
+#   - Aliases de rede: staging-api, staging-frontend (usados pelo edge nginx)
+#   - Banco e volumes segregados (staging_postgres_data, staging_redis_data)
+#   - Recursos limitados para não afetar produção
+#
+# Uso:
+#   docker compose -f infra/docker-compose.staging.yml up -d
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: ${COMPOSE_PROJECT_NAME:-hbtrack-staging}
+
+services:
+
+  # ── Frontend: React/Vite ───────────────────────────────────────────────────
+  frontend:
+    image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      hbtrack-staging-net:
+        aliases:
+          - staging-frontend
+    expose:
+      - "80"
+    # Limitar recursos para não afetar produção
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── API: Django Ninja + Gunicorn ───────────────────────────────────────────
+  api:
+    image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - DEBUG=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      hbtrack-staging-net:
+        aliases:
+          - staging-api
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput &&
+        exec gunicorn config.asgi:application
+        --bind 0.0.0.0:8000
+        --worker-class uvicorn.workers.UvicornWorker
+        --workers 2
+        --timeout 120
+        --graceful-timeout 30
+        --access-logfile -
+        --error-logfile -
+
+  # ── Celery Worker ──────────────────────────────────────────────────────────
+  celery_worker:
+    image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - DEBUG=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - hbtrack-staging-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    entrypoint: ["celery", "-A", "config", "worker", "--loglevel=info", "--concurrency=1"]
+
+  # ── Celery Beat ────────────────────────────────────────────────────────────
+  celery_beat:
+    image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - DEBUG=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - hbtrack-staging-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
+    entrypoint: ["celery", "-A", "config", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
+
+  # ── PostgreSQL 16 (banco isolado de produção) ──────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-hb_track_staging}
+      - POSTGRES_USER=${POSTGRES_USER:-hbtrack}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - staging_postgres_data:/var/lib/postgresql/data
+    networks:
+      - hbtrack-staging-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hbtrack} -d ${POSTGRES_DB:-hb_track_staging}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Redis 7 ───────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - staging_redis_data:/data
+    networks:
+      - hbtrack-staging-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 192M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  # Volumes completamente separados de produção
+  staging_postgres_data:
+  staging_redis_data:
+
+networks:
+  hbtrack-staging-net:
+    name: hbtrack-staging-net
+    driver: bridge
