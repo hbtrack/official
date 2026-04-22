@@ -1,11 +1,11 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-22T00:55:31.675157+00:00",
+  "session_timestamp": "2026-04-22T06:52:25.865093+00:00",
   "branch": "refactor/training-decomposition",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -404,11 +404,17 @@
       "sha256": "150ebf276c6a7f07ebad93a64f748583edfb9499b83620cf26f383b678ad8e6f",
       "created_at": "2026-04-22T04:08:53.122652+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/runbooks/TRAINING_V1_DATA_RECOVERY.md",
+      "sha256": "df30182bc690aab2a251afea962a3f7b5e9c05e3a4e2f13cfb818026465d5919",
+      "created_at": "2026-04-22T04:15:11.299877+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-22T04:08:28.379774+00:00",
+  "hook_validated_at": "2026-04-22T05:35:33.581281+00:00",
   "module": "training",
   "module_focus": "training",
   "roadmap_phase": 6
