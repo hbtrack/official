@@ -1,234 +1,241 @@
 {
-    "$schema": "./contracts/schemas/shared/merge-readiness.schema.json",
-    "version": "2.0.0",
-    "updated": "2026-04-08",
-    "target_branch": "main",
-    "ruleset_name": "contract-gates",
-    "ruleset_id": 13901517,
-    "checks": [
-        {
-            "context": "Validate Contract Gates",
-            "workflow": "contract-gates.yml",
-            "job": "validate-contracts",
-            "category": "required",
-            "local_equivalent": "python3 scripts/hb validate --profile ci",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "Governance Tests",
-            "workflow": "contract-gates.yml",
-            "job": "governance-tests",
-            "category": "required",
-            "local_equivalent": "pytest tests/test_pipeline_governance.py",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "Architecture Drift Check",
-            "workflow": "contract-gates.yml",
-            "job": "architecture-drift-check",
-            "category": "required",
-            "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "ci / Validate Contracts",
-            "workflow": "_reusable-ci.yml",
-            "job": "validate",
-            "category": "required",
-            "local_equivalent": "python3 scripts/hb validate --profile precommit",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "ci / Tests",
-            "workflow": "_reusable-ci.yml",
-            "job": "test",
-            "category": "required",
-            "local_equivalent": "python3 scripts/hb ci --profile pr",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "ci / Frontend Build + Tests",
-            "workflow": "_reusable-ci.yml",
-            "job": "build-frontend",
-            "category": "required",
-            "local_equivalent": "cd frontend && npm ci --legacy-peer-deps && npx vitest run --reporter=verbose && npm run build",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "ci / Docker Build Check",
-            "workflow": "_reusable-ci.yml",
-            "job": "build",
-            "category": "informational",
-            "reason": "Valida Dockerfile mas não bloqueia merge — falha de build de imagem não impede integração de código"
-        },
-        {
-            "context": "Governance Enforcement (survival-suite)",
-            "workflow": "contract-gates.yml",
-            "job": "governance-enforcement",
-            "category": "conditional",
-            "condition": "governance_changed == true",
-            "reason": "Condicional — só roda quando arquivos de governança (.contract_driven/, contracts/, docs/_canon/) são modificados",
-            "local_equivalent": "CI=true python3 scripts/hb survival-suite",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "Paridade Registry × Executor",
-            "workflow": "contract-gates.yml",
-            "job": "registry-executor-parity",
-            "category": "conditional",
-            "condition": "governance_changed == true",
-            "reason": "Condicional — verifica paridade entre MODULE_REGISTRY.yaml e executores; ativado apenas em mudanças de governança",
-            "local_equivalent": "python -m pytest tests/pipeline_gates/test_gate_registry_parity.py -v",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "Paridade Schema × Template × Skills",
-            "workflow": "contract-gates.yml",
-            "job": "schema-template-skills-parity",
-            "category": "conditional",
-            "condition": "governance_changed == true",
-            "reason": "Condicional — verifica paridade entre schemas, templates e skills; ativado apenas em mudanças de governança",
-            "local_equivalent": "python -m pytest tests/pipeline_gates/test_schema_template_parity_phase4.py -v",
-            "local_equivalent_kind": "exact_job"
-        },
-        {
-            "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
-            "workflow": "contract-gates.yml",
-            "job": "session-handoff-crossval",
-            "category": "conditional",
-            "condition": "governance_changed == true",
-            "reason": "Condicional — cross-valida SESSION_HANDOFF.md contra session_start workflow; ativado apenas em mudanças de governança",
-            "local_equivalent": "python -m pytest tests/pipeline_gates/test_session_state_phase3.py -v",
-            "local_equivalent_kind": "exact_job"
-        }
-    ],
-    "enforcement": {
-        "require_pr": true,
-        "require_conversation_resolution": true,
-        "require_up_to_date": true,
-        "block_force_push": true,
-        "block_deletion": true,
-        "bypass_actors": []
+  "$schema": "./contracts/schemas/shared/merge-readiness.schema.json",
+  "version": "2.0.0",
+  "updated": "2026-04-08",
+  "target_branch": "main",
+  "ruleset_name": "contract-gates",
+  "ruleset_id": 13901517,
+  "checks": [
+    {
+      "context": "Validate Contract Gates",
+      "workflow": "contract-gates.yml",
+      "job": "validate-contracts",
+      "category": "required",
+      "local_equivalent": "python3 scripts/hb validate --profile ci",
+      "local_equivalent_kind": "exact_job"
     },
-    "local_executor": {
-        "command": "python3 scripts/hb preflight",
-        "evidence_path": "_reports/preflight/latest.json",
-        "pre_push_hook": "scripts/git-hooks/pre-push"
+    {
+      "context": "Governance Tests",
+      "workflow": "contract-gates.yml",
+      "job": "governance-tests",
+      "category": "required",
+      "local_equivalent": "pytest tests/test_pipeline_governance.py",
+      "local_equivalent_kind": "exact_job"
     },
-    "execution_plan": {
-        "baseline_steps": [
-            "survival_suite",
-            "diff_scan",
-            "schema_guard",
-            "handoff_guard"
-        ],
-        "required_check_strategy": "run_all_required",
-        "conditional_check_strategy": "activate_by_paths_and_rules",
-        "decision_policy": "block_on_required_fail_or_missing_evidence",
-        "output_report": "_reports/preflight/latest.json"
+    {
+      "context": "Architecture Drift Check",
+      "workflow": "contract-gates.yml",
+      "job": "architecture-drift-check",
+      "category": "required",
+      "local_equivalent": "python3 scripts/audit/check_architecture_docs.py --json && pytest tests/pipeline_gates/test_architecture_drift.py",
+      "local_equivalent_kind": "exact_job"
     },
-    "diff_classification": {
-        "classes": [
-            {
-                "class_id": "governance_changed",
-                "paths": [
-                    ".contract_driven/**",
-                    "contracts/**",
-                    "docs/_canon/**"
-                ]
-            },
-            {
-                "class_id": "bridge_docs_changed",
-                "paths": [
-                    ".github/copilot-instructions.md",
-                    ".github/skills/**"
-                ]
-            },
-            {
-                "class_id": "session_contract_changed",
-                "paths": [
-                    "contracts/schemas/shared/session_start.schema.json",
-                    "SESSION_HANDOFF.md",
-                    "tests/pipeline_gates/test_session_state_phase3.py"
-                ]
-            },
-            {
-                "class_id": "frontend_changed",
-                "paths": [
-                    "frontend/**"
-                ]
-            },
-            {
-                "class_id": "schema_changed",
-                "paths": [
-                    "contracts/schemas/**"
-                ]
-            }
-        ]
+    {
+      "context": "ci / Validate Contracts",
+      "workflow": "_reusable-ci.yml",
+      "job": "validate",
+      "category": "required",
+      "local_equivalent": "python3 scripts/hb validate --profile precommit",
+      "local_equivalent_kind": "exact_job"
     },
-    "semantic_requirements": {
-        "rules": [
-            {
-                "when": "schema_field_removed",
-                "require": [
-                    "breaking_change_note"
-                ],
-                "block_if_missing": true
-            },
-            {
-                "when": "new_cross_module_boundary",
-                "require": [
-                    "scope_boundary_policy_update"
-                ],
-                "block_if_missing": true
-            },
-            {
-                "when": "canonical_status_transition",
-                "require": [
-                    "formal_activation_evidence"
-                ],
-                "block_if_missing": true
-            },
-            {
-                "when": "diff_outside_handoff_scope",
-                "require": [
-                    "handoff_scope_expansion"
-                ],
-                "block_if_missing": true
-            },
-            {
-                "when": "bridge_doc_uses_authority_language",
-                "require": [
-                    "bridge_doc_language_fix"
-                ],
-                "block_if_missing": true
-            }
-        ]
+    {
+      "context": "ci / Tests",
+      "workflow": "_reusable-ci.yml",
+      "job": "test",
+      "category": "required",
+      "local_equivalent": "python3 scripts/hb ci --profile pr",
+      "local_equivalent_kind": "exact_job"
     },
-    "reviewability": {
-        "max_changed_files": 150,
-        "max_commits": 20,
-        "max_cross_domain_areas": 3,
-        "split_required_when_exceeded": true
+    {
+      "context": "ci / Frontend Build + Tests",
+      "workflow": "_reusable-ci.yml",
+      "job": "build-frontend",
+      "category": "required",
+      "local_equivalent": "cd frontend && npm ci --legacy-peer-deps && npx vitest run --reporter=verbose && npm run build",
+      "local_equivalent_kind": "exact_job"
     },
-    "pr_fix_resolution": {
-        "finding_classes": [
-            {
-                "finding_id": "defect_real",
-                "action": "fix_repository"
-            },
-            {
-                "finding_id": "governance_gap",
-                "action": "fix_governance_artifact"
-            },
-            {
-                "finding_id": "evidence_missing",
-                "action": "reply_with_evidence"
-            },
-            {
-                "finding_id": "advisory_non_actionable",
-                "action": "reply_without_scope_expansion"
-            }
-        ]
+    {
+      "context": "ci / Docker Build Check",
+      "workflow": "_reusable-ci.yml",
+      "job": "build",
+      "category": "informational",
+      "reason": "Valida Dockerfile mas não bloqueia merge — falha de build de imagem não impede integração de código"
+    },
+    {
+      "context": "Governance Enforcement (survival-suite)",
+      "workflow": "contract-gates.yml",
+      "job": "governance-enforcement",
+      "category": "conditional",
+      "condition": "governance_changed == true",
+      "reason": "Condicional — só roda quando arquivos de governança (.contract_driven/, contracts/, docs/_canon/) são modificados",
+      "local_equivalent": "CI=true python3 scripts/hb survival-suite",
+      "local_equivalent_kind": "exact_job"
+    },
+    {
+      "context": "Paridade Registry × Executor",
+      "workflow": "contract-gates.yml",
+      "job": "registry-executor-parity",
+      "category": "conditional",
+      "condition": "governance_changed == true",
+      "reason": "Condicional — verifica paridade entre MODULE_REGISTRY.yaml e executores; ativado apenas em mudanças de governança",
+      "local_equivalent": "python -m pytest tests/pipeline_gates/test_gate_registry_parity.py -v",
+      "local_equivalent_kind": "exact_job"
+    },
+    {
+      "context": "Paridade Schema × Template × Skills",
+      "workflow": "contract-gates.yml",
+      "job": "schema-template-skills-parity",
+      "category": "conditional",
+      "condition": "governance_changed == true",
+      "reason": "Condicional — verifica paridade entre schemas, templates e skills; ativado apenas em mudanças de governança",
+      "local_equivalent": "python -m pytest tests/pipeline_gates/test_schema_template_parity_phase4.py -v",
+      "local_equivalent_kind": "exact_job"
+    },
+    {
+      "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
+      "workflow": "contract-gates.yml",
+      "job": "session-handoff-crossval",
+      "category": "conditional",
+      "condition": "governance_changed == true",
+      "reason": "Condicional — cross-valida SESSION_HANDOFF.md contra session_start workflow; ativado apenas em mudanças de governança",
+      "local_equivalent": "python -m pytest tests/pipeline_gates/test_session_state_phase3.py -v",
+      "local_equivalent_kind": "exact_job"
+    },
+    {
+      "context": "Pact Provider Gate — training",
+      "category": "informational",
+      "reason": "test_pact_provider_gate.py ausente — gate deletado durante refactor training (Fases 0-6). Waiver formal: contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json (expira 2026-07-22). Recriar em N+1 após consumer contract ser emitido. Ver .dev/decisões/rafatora_training.md §7.3 P6.",
+      "workflow": "contract-gates.yml",
+      "job": "pact-provider-gate"
     }
+  ],
+  "enforcement": {
+    "require_pr": true,
+    "require_conversation_resolution": true,
+    "require_up_to_date": true,
+    "block_force_push": true,
+    "block_deletion": true,
+    "bypass_actors": []
+  },
+  "local_executor": {
+    "command": "python3 scripts/hb preflight",
+    "evidence_path": "_reports/preflight/latest.json",
+    "pre_push_hook": "scripts/git-hooks/pre-push"
+  },
+  "execution_plan": {
+    "baseline_steps": [
+      "survival_suite",
+      "diff_scan",
+      "schema_guard",
+      "handoff_guard"
+    ],
+    "required_check_strategy": "run_all_required",
+    "conditional_check_strategy": "activate_by_paths_and_rules",
+    "decision_policy": "block_on_required_fail_or_missing_evidence",
+    "output_report": "_reports/preflight/latest.json"
+  },
+  "diff_classification": {
+    "classes": [
+      {
+        "class_id": "governance_changed",
+        "paths": [
+          ".contract_driven/**",
+          "contracts/**",
+          "docs/_canon/**"
+        ]
+      },
+      {
+        "class_id": "bridge_docs_changed",
+        "paths": [
+          ".github/copilot-instructions.md",
+          ".github/skills/**"
+        ]
+      },
+      {
+        "class_id": "session_contract_changed",
+        "paths": [
+          "contracts/schemas/shared/session_start.schema.json",
+          "SESSION_HANDOFF.md",
+          "tests/pipeline_gates/test_session_state_phase3.py"
+        ]
+      },
+      {
+        "class_id": "frontend_changed",
+        "paths": [
+          "frontend/**"
+        ]
+      },
+      {
+        "class_id": "schema_changed",
+        "paths": [
+          "contracts/schemas/**"
+        ]
+      }
+    ]
+  },
+  "semantic_requirements": {
+    "rules": [
+      {
+        "when": "schema_field_removed",
+        "require": [
+          "breaking_change_note"
+        ],
+        "block_if_missing": true
+      },
+      {
+        "when": "new_cross_module_boundary",
+        "require": [
+          "scope_boundary_policy_update"
+        ],
+        "block_if_missing": true
+      },
+      {
+        "when": "canonical_status_transition",
+        "require": [
+          "formal_activation_evidence"
+        ],
+        "block_if_missing": true
+      },
+      {
+        "when": "diff_outside_handoff_scope",
+        "require": [
+          "handoff_scope_expansion"
+        ],
+        "block_if_missing": true
+      },
+      {
+        "when": "bridge_doc_uses_authority_language",
+        "require": [
+          "bridge_doc_language_fix"
+        ],
+        "block_if_missing": true
+      }
+    ]
+  },
+  "reviewability": {
+    "max_changed_files": 150,
+    "max_commits": 20,
+    "max_cross_domain_areas": 3,
+    "split_required_when_exceeded": true
+  },
+  "pr_fix_resolution": {
+    "finding_classes": [
+      {
+        "finding_id": "defect_real",
+        "action": "fix_repository"
+      },
+      {
+        "finding_id": "governance_gap",
+        "action": "fix_governance_artifact"
+      },
+      {
+        "finding_id": "evidence_missing",
+        "action": "reply_with_evidence"
+      },
+      {
+        "finding_id": "advisory_non_actionable",
+        "action": "reply_without_scope_expansion"
+      }
+    ]
+  }
 }

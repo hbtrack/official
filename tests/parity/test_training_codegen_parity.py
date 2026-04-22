@@ -46,7 +46,13 @@ def test_training_schema_from_domain_round_trip():
 
 def test_training_api_route_coverage():
     gen = route_surface(REPO_ROOT / "src" / "training" / "generated" / "api.py")
-    manual = route_surface(REPO_ROOT / "src" / "training" / "api.py")
+    # api.py foi convertido em pacote api/ na Fase 1 — agregar rotas de todos os sub-arquivos
+    _INFRA_FILES = {"__init__.py", "deps.py", "errors.py", "mappers.py"}
+    api_dir = REPO_ROOT / "src" / "training" / "api"
+    manual = []
+    for sub in sorted(api_dir.glob("*.py")):
+        if sub.name not in _INFRA_FILES:
+            manual.extend(route_surface(sub))
     gen_rs = route_set(gen)
     manual_rs = route_set(manual)
     # Strict check: normalized paths match

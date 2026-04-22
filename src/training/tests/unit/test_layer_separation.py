@@ -60,3 +60,29 @@ class TestDomainLayerPurity:
                     assert ".api" not in node.module, (
                         f"{mod_name} importa de {node.module}"
                     )
+
+
+class TestApplicationLayerPurity:
+    """Addendum 2.2: application/common/ não importa framework."""
+
+    def test_paging_no_django_imports(self):
+        """paging.py é framework-agnostic: nunca importa django.conf."""
+        from pathlib import Path
+
+        paging_path = (
+            Path(__file__).parent.parent.parent / "application" / "common" / "paging.py"
+        )
+        tree = ast.parse(paging_path.read_text())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    assert not alias.name.startswith("django"), (
+                        f"application/common/paging.py importa '{alias.name}' "
+                        "— viola Clean Architecture (deve ser framework-agnostic)"
+                    )
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    assert not node.module.startswith("django"), (
+                        f"application/common/paging.py importa de '{node.module}' "
+                        "— viola Clean Architecture (deve ser framework-agnostic)"
+                    )

@@ -17,8 +17,8 @@
     "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
   ],
   "impacted_runtime": [
-    "src/training/api.py",
-    "src/training/domain/entities.py",
+    "src/training/api/__init__.py",
+    "src/training/domain/entities/__init__.py",
     "src/training/domain/rules.py",
     "src/training/application/use_cases.py"
   ],
@@ -141,11 +141,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
-      "sha256": "866fc431a6a7f057710dcb3e654a07cb5c3f8275fa554bdc59a4a015387169ea"
+      "sha256": "e3b71f7bef5815f47c35cb1fa6839c9b3c3b19d61b74654d63bea9241d4ae0fa"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
-      "sha256": "5dee71049833c2a49ee48243dcb4a81af20a71730a0a6d20b981ad9d019cacf1"
+      "sha256": "611ce2c2c77f5632f6328d80e5b23e70d378a9399c79d51d065e0aac39b25af4"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/errors.yaml",
@@ -153,27 +153,27 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-      "sha256": "0ba0183c615b9bebd43c95063fcba3bb8947515377baa2748c4bd40c36208cf8"
+      "sha256": "11ffe1f59f224042d0d832c387abd628b5777396c46f5898f6c6e823cb502800"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/test_obligations.yaml",
       "sha256": "5fadae9a1f794d00c6b6de66b08cc93aa121d8ff237f662dcc6cd489653ca5cc"
     },
     {
-      "relpath": "src/training/api.py",
-      "sha256": "b614e3c2d3fb8b7472d12ea235b814f791601bf273137ec5822257fb5dd15399"
+      "relpath": "src/training/api/__init__.py",
+      "sha256": "6ef59d1b1db37bbd0c58b90a3fa56305500910c0de2abd10600db78d9183827b"
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "c23232360b7abe94d51644753c54af1a07fa5a3b79c9e614b5c801dcab3786df"
+      "sha256": "b913b8343bed90e8f0a61465f9b256d80a56a98c45f7c9b9686d48ae17641adb"
     },
     {
-      "relpath": "src/training/domain/entities.py",
-      "sha256": "cb49a6d2f662651be108ce2b209bd5ebaf467ff8882c8a7b58e8701d6183e775"
+      "relpath": "src/training/domain/entities/__init__.py",
+      "sha256": "ecc9f0c0777358635c830a1781fbea3845ab5418326d17c4cb839ec73f6388de"
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "7fb1784f3a02d4e1b5d087d51d5c1d79da2db2196626ce285b39bf77ccf61c7b"
+      "sha256": "f45e98b28ad1a7ca5cfb96822d9bf19b456e466140343f202eef15bd5cf21e83"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "3a06e3199cd1ee8e216fd57adbd99903a304fab9d01667079ac95f294cade548"
+  "source_fingerprint": "8972fa763c21a1523af4b9b77f84333333a7b48005d6c91dadd03d2ab17b0223"
 }

@@ -5,7 +5,7 @@ module: training
 entities:
   TrainingSession:
     schema_ref: "../../../../../contracts/schemas/training/training_session.schema.json"
-    runtime_entity_ref: "../../../../../src/training/domain/entities.py#TrainingSession"
+    runtime_entity_ref: "../../../../../src/training/domain/entities/sessions.py#TrainingSession"
     docs_refs:
       - "../DOMAIN_RULES_TRAINING.md"
       - "../INVARIANTS_TRAINING.md"

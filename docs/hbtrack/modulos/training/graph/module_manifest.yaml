@@ -23,11 +23,12 @@ contract_surfaces:
   openapi_paths: "../../../../../contracts/openapi/paths/training.yaml"
   sovereign_schema_dir: "../../../../../contracts/schemas/training/"
   primary_schema: "../../../../../contracts/schemas/training/training_session.schema.json"
-  openapi_projection: "../../../../../contracts/openapi/components/schemas/training/training_session.yaml"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/traini\
+    ng/training_session.yaml"
 
 runtime_surfaces:
-  api_router: "../../../../../src/training/api.py"
-  domain_entity: "../../../../../src/training/domain/entities.py"
+  api_router: "../../../../../src/training/api/__init__.py"
+  domain_entity: "../../../../../src/training/domain/entities/__init__.py"
   domain_rules: "../../../../../src/training/domain/rules.py"
   use_cases: "../../../../../src/training/application/use_cases.py"
 
@@ -38,11 +39,28 @@ structured_ir:
   test_obligations: "./test_obligations.yaml"
 
 known_gaps:
-  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos nesta fase do source graph."
-  - "Entity graph cobre apenas TrainingSession (entidade soberana primária). Entidades secundárias (SessionBlock, WellnessPre, WellnessPost, ExecutionRecord, SessionObjective, FeedbackThread, AttentionQueueItem, Mesocycle, Microcycle) declaradas em known_gaps — schemas individuais em contracts/schemas/training/."
-  - "27 handlers em api.py são stubs de contrato (NotImplementedError) — implementação pendente. Stubs adicionados para source graph integrity em B10-001."
-  - "33 use cases em use_cases.py são stubs de contrato — implementação pendente."
-  - "OpenAPI YAML tem bug estrutural: PATCH /training-sessions/{id} (updateTrainingSession) e DELETE /training-sessions/{id} (deleteTrainingSession) estão no bloco /training-sessions/{id}/blocks/reorder. Source graph usa paths lógicos alinhados com FEATURE_REGISTRY."
-  - "teamId, seasonId referenciam módulo teams/seasons — boundaries explicitados em DOMAIN_RULES_TRAINING."
-  - "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection)."
-  - "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
+  - "AsyncAPI/Arazzo do módulo seguem governança separada e não estão incluídos
+    nesta fase do source graph."
+  - "Entity graph cobre apenas TrainingSession (entidade soberana primária).
+    Entidades secundárias (SessionBlock, WellnessPre, WellnessPost,
+    ExecutionRecord, SessionObjective, FeedbackThread, AttentionQueueItem,
+    Mesocycle, Microcycle) declaradas em known_gaps — schemas individuais em
+    contracts/schemas/training/."
+  - "27 handlers em api.py são stubs de contrato (NotImplementedError) —
+    implementação pendente. Stubs adicionados para source graph integrity em
+    B10-001."
+  - "33 use cases em use_cases.py são stubs de contrato — implementação
+    pendente."
+  - "OpenAPI YAML tem bug estrutural: PATCH /training-sessions/{id}
+    (updateTrainingSession) e DELETE /training-sessions/{id}
+    (deleteTrainingSession) estão no bloco
+    /training-sessions/{id}/blocks/reorder. Source graph usa paths lógicos
+    alinhados com FEATURE_REGISTRY."
+  - "teamId, seasonId referenciam módulo teams/seasons — boundaries explicitados
+    em DOMAIN_RULES_TRAINING."
+  - "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem
+    schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI
+    projection)."
+  - "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade,
+    load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta
+    edição do source graph."

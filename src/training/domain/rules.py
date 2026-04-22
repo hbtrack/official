@@ -1,108 +1,132 @@
 """
-Regras de domínio — módulo training.
+Regras de domínio — módulo training.  [SHIM PARCIAL — exceções serão migradas em N+2]
+
 Derivadas de:
   - docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
   - docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
   - docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
 ADR-008: RBAC flat de 5 roles.
+
+ATENÇÃO:
+  As classes de exceção neste módulo (InsufficientPrivilege, TrainingSessionNotFound, etc.)
+  são shims que herdam de training.domain.common.exceptions — serão movidas para
+  módulos por agregado (domain/<agregado>/exceptions.py) em release N+2.
+  As funções assert_* são CANÔNICAS neste módulo até redistribuição por agregado.
 """
 from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone, timedelta
-from enum import StrEnum
 from typing import Optional
 
+from .common.enums import RoleLabel  # SSOT; re-exportado para compat
+from .common.exceptions import (
+    AuthorizationError,
+    ConflictError,
+    NotFoundError,
+    PreconditionError,
+    StateError,
+    TrainingDomainError,  # noqa: F401 — re-exportado para consumidores externos
+    ValidationError,
+)
 from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
 
 
-class RoleLabel(StrEnum):
-    """5 roles canônicos — ADR-008."""
-    ADMIN = "admin"
-    COORDINATOR = "coordinator"
-    COACH = "coach"
-    ATHLETE = "athlete"
-    MEMBER = "member"
-
-
 # ---------------------------------------------------------------------------
-# Exceções de domínio
+# Exceções de domínio — taxonomia em domain/common/exceptions.py
 # ---------------------------------------------------------------------------
 
-class InsufficientPrivilege(Exception):
+class InsufficientPrivilege(AuthorizationError):
     """BFLA: ator não tem permissão para a operação."""
 
 
-class TrainingSessionNotFound(Exception):
+class TrainingSessionNotFound(NotFoundError):
     pass
 
 
-class SessionBlockNotFound(Exception):
+class SessionBlockNotFound(NotFoundError):
     pass
 
 
-class InvalidStatusTransition(Exception):
+class InvalidStatusTransition(StateError):
     """FSM: transição de estado inválida (INV-TRAIN-006)."""
 
 
-class SessionNotMutable(Exception):
+class SessionNotMutable(StateError):
     """Sessão em estado que não permite edição destrutiva."""
 
 
-class WellnessWindowClosed(Exception):
+class WellnessWindowClosed(PreconditionError):
     """Janela temporal de wellness fechada (INV-TRAIN-002/003)."""
 
 
-class DuplicateWellnessEntry(Exception):
+class DuplicateWellnessEntry(ConflictError):
     """INV-TRAIN-009/010: já existe wellness ativo."""
 
 
-class WellnessEntryNotFound(Exception):
+class WellnessEntryNotFound(NotFoundError):
     """Registro de wellness não encontrado para sessão/atleta."""
 
 
-class AttendanceRecordNotFound(Exception):
+class AttendanceRecordNotFound(NotFoundError):
     """Registro de presença não encontrado."""
 
 
-class MesocycleNotFound(Exception):
+class MesocycleNotFound(NotFoundError):
     """Mesociclo não encontrado."""
 
 
-class MicrocycleNotFound(Exception):
+class MicrocycleNotFound(NotFoundError):
     """Microciclo não encontrado."""
 
 
-class ExecutionRecordNotFound(Exception):
+class ExecutionRecordNotFound(NotFoundError):
     """Registro de execução não encontrado."""
 
 
-class FeedbackThreadNotFound(Exception):
+class FeedbackThreadNotFound(NotFoundError):
     """Thread de feedback não encontrada."""
 
 
-class AttentionQueueItemNotFound(Exception):
+class AttentionQueueItemNotFound(NotFoundError):
     """Item da attention queue não encontrado."""
 
 
-class AttentionQueueConflict(Exception):
+class AttentionQueueConflict(ConflictError):
     """Item da attention queue já foi actionado ou está em estado inválido."""
 
 
-class RecommendationNotFound(Exception):
+class RecommendationNotFound(NotFoundError):
     """Recommendation não encontrada."""
 
 
-class RecommendationConflict(Exception):
+class RecommendationConflict(ConflictError):
     """Recommendation não está em estado compatível com a ação solicitada."""
 
 
-class IneligibilityDeclarationNotFound(Exception):
+class IneligibilityDeclarationNotFound(NotFoundError):
     """Declaração de indisponibilidade não encontrada."""
 
 
-class ElasticSumRuleViolation(Exception):
+class ElasticSumRuleViolation(ValidationError):
     """INV-TRAIN-083: soma de duração dos blocos excede limite elástico."""
+
+
+# ---------------------------------------------------------------------------
+# Exceções de conflito de estado — preservam ValueError para compat com
+# consumidores legados que fazem `except ValueError`.
+# ---------------------------------------------------------------------------
+
+class FeedbackThreadAlreadyClosed(ConflictError, ValueError):
+    """Thread de feedback já está fechada — não pode ser fechada novamente."""
+
+
+class IneligibilityStateConflict(ConflictError, ValueError):
+    """Declaração de indisponibilidade não permitida para o estado atual da sessão."""
+
+
+class SuggestionStateConflict(ConflictError, ValueError):
+    """Sugestão não pode ser submetida para sessão neste estado."""
 
 
 # ---------------------------------------------------------------------------

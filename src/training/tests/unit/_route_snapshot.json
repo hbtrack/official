@@ -1,0 +1,652 @@
+[
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/mesocycles",
+    "response_codes": [
+      "200",
+      "403"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/mesocycles",
+    "response_codes": [
+      "201",
+      "401",
+      "403",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/mesocycles/{id}",
+    "response_codes": [
+      "200",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/mesocycles/{id}",
+    "response_codes": [
+      "200",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/microcycles",
+    "response_codes": [
+      "200",
+      "403"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/microcycles",
+    "response_codes": [
+      "201",
+      "401",
+      "403",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/microcycles/{id}",
+    "response_codes": [
+      "200",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/microcycles/{id}",
+    "response_codes": [
+      "200",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions",
+    "response_codes": [
+      "200",
+      "400",
+      "401",
+      "403"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions",
+    "response_codes": [
+      "201",
+      "400",
+      "401",
+      "403",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "path": "/training-sessions/{id}",
+    "response_codes": [
+      "204",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/training-sessions/{id}",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/archive",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/attendance",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/attendance",
+    "response_codes": [
+      "201",
+      "400",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/attention-queue",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/attention-queue/{item_id}/dismiss",
+    "response_codes": [
+      "200",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/attention-queue/{item_id}/escalate",
+    "response_codes": [
+      "200",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/attention-queue/{item_id}/resolve",
+    "response_codes": [
+      "200",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/blocks",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/blocks",
+    "response_codes": [
+      "201",
+      "401",
+      "403",
+      "404",
+      "409",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/blocks/reorder",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "DELETE"
+    ],
+    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "response_codes": [
+      "204",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/cancel",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/complete",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/execution-records",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/execution-records",
+    "response_codes": [
+      "201",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/execution-records/{record_id}",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/feedback-threads",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/feedback-threads",
+    "response_codes": [
+      "201",
+      "400",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/feedback-threads/{thread_id}/close",
+    "response_codes": [
+      "200",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/ineligibility",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/ineligibility",
+    "response_codes": [
+      "201",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/load-chart",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/messages",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/objectives",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/objectives",
+    "response_codes": [
+      "201",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/publish",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/recommendations",
+    "response_codes": [
+      "200",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/recommendations/{rec_id}/accept",
+    "response_codes": [
+      "200",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/recommendations/{rec_id}/dismiss",
+    "response_codes": [
+      "200",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/start",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/suggestions",
+    "response_codes": [
+      "201",
+      "400",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/unpublish",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "422"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/wellness-post",
+    "response_codes": [
+      "201",
+      "400",
+      "401",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/wellness-post/{athleteId}",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/training-sessions/{id}/wellness-post/{athleteId}",
+    "response_codes": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "POST"
+    ],
+    "path": "/training-sessions/{id}/wellness-pre",
+    "response_codes": [
+      "201",
+      "400",
+      "401",
+      "403",
+      "404",
+      "409"
+    ]
+  },
+  {
+    "methods": [
+      "GET"
+    ],
+    "path": "/training-sessions/{id}/wellness-pre/{athleteId}",
+    "response_codes": [
+      "200",
+      "401",
+      "403",
+      "404"
+    ]
+  },
+  {
+    "methods": [
+      "PATCH"
+    ],
+    "path": "/training-sessions/{id}/wellness-pre/{athleteId}",
+    "response_codes": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "404"
+    ]
+  }
+]
