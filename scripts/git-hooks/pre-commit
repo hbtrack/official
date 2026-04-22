@@ -362,6 +362,27 @@ class HBHookValidator:
         
         return True
     
+    def check_reviewability_limits(self) -> bool:
+        """Bloquear commit se preflight reportou PR_SIZE excedido com split obrigatório."""
+        preflight_report = self.repo_root / "_reports" / "preflight" / "latest.json"
+        if not preflight_report.exists():
+            return True  # sem relatório de preflight — sem bloqueio
+
+        try:
+            data = json.loads(preflight_report.read_text(encoding="utf-8"))
+        except Exception:
+            return True  # leitura falhou — sem bloqueio
+
+        rc = data.get("reviewability_check", {})
+        if rc.get("exceeded") is True and rc.get("split_required") is True:
+            self.errors.append(
+                "❌ [BLOCKED] PR_SIZE_EXCEEDS_REVIEWABILITY_LIMIT: O PR é muito grande para "
+                "revisão segura. Execute o comando 'hb split' ou divida as alterações "
+                "manualmente antes de commitar."
+            )
+            return False
+        return True
+
     def check_governance_integrity(self) -> bool:
         """
         Verificações de integridade e coerência para mudanças em GOVERNANCE_PATHS.
@@ -516,6 +537,12 @@ class HBHookValidator:
                 self._print_errors_and_exit(1)
             # stage2 warning (ausente) é OK
         print("✅ Exit codes válidos\n")
+
+        # Fase 3.9: Verificar limites de reviewability
+        print("▶ Fase 3.9: Verificando limites de reviewability...")
+        if not self.check_reviewability_limits():
+            self._print_errors_and_exit(1)
+        print("✅ Reviewability dentro dos limites\n")
 
         # Fase 4: Verificar integridade de artefatos (path + hash)
         print("▶ Fase 4: Verificando integridade de artefatos staged...")
