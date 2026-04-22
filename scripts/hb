@@ -928,6 +928,92 @@ class HBCLIv2:
     # Helpers de preflight
     # ──────────────────────────────────────────────────────
 
+    def _format_actionable_output(
+        self,
+        checks_failed: list,
+        semantic_findings: list,
+        reviewability_check: dict,
+    ) -> None:
+        """Imprimir saída acionável do preflight, agrupada por causa raiz.
+
+        Grupos de prioridade:
+          [CORRIGIR PRIMEIRO] — erros de sessão/handoff (BLOCKED_*, survival_suite,
+                                HANDOFF_COHERENCE, session_*)
+          [NÃO TOCAR]         — arquivos protegidos fora de escopo (schema_changed,
+                                governance_changed quando não há task relacionada)
+          [PRÓXIMA AÇÃO]      — validações de contrato OpenAPI/AsyncAPI/Arazzo
+
+        Regra de ouro: não altera a lógica de decisão — apenas formata a saída.
+        """
+        # Mapeamento: prefixo/palavra-chave → grupo
+        _SESSION_KEYS = ("BLOCKED_", "survival_suite", "HANDOFF_COHERENCE", "session_")
+        _CONTRACT_KEYS = ("openapi", "asyncapi", "arazzo", "spectral", "redocly",
+                          "contract", "schema", "json_schema", "HB Contract Gates")
+        _PROTECTED_KEYS = ("governance_changed", "session_contract_changed", "frontend_changed")
+
+        group_first: list[str] = []
+        group_contract: list[str] = []
+        group_protected: list[str] = []
+        group_other: list[str] = []
+
+        for item in checks_failed:
+            item_lower = item.lower()
+            if any(k.lower() in item_lower for k in _SESSION_KEYS):
+                group_first.append(item)
+            elif any(k.lower() in item_lower for k in _PROTECTED_KEYS):
+                group_protected.append(item)
+            elif any(k.lower() in item_lower for k in _CONTRACT_KEYS):
+                group_contract.append(item)
+            else:
+                group_contract.append(item)  # default: próxima ação de contrato
+
+        # Semantic findings bloqueantes → CORRIGIR PRIMEIRO
+        for finding in semantic_findings:
+            if finding.get("triggered") and finding.get("block_if_missing"):
+                label = f"[semântico] {finding['when']}: requer {finding.get('require', [])}"
+                group_first.append(label)
+
+        # Reviewability excedido → aviso de split
+        if reviewability_check.get("exceeded"):
+            c = reviewability_check
+            rv_msg = (
+                f"reviewability excedida — arquivos={c['changed_files']}/{c['max_changed_files']}, "
+                f"commits={c['commits']}/{c['max_commits']}, "
+                f"domínios={c['cross_domain_areas']}/{c['max_cross_domain_areas']}"
+            )
+            group_protected.append(rv_msg)
+
+        sep = "─" * 60
+        print(f"\n{sep}")
+        print("  RELATÓRIO ACIONÁVEL DE PREFLIGHT")
+        print(sep)
+
+        if group_first:
+            print(f"\n  ╔══ [CORRIGIR PRIMEIRO] ══╗  ({len(group_first)} item(s))")
+            for item in group_first:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Execute: python3 scripts/hb verify")
+            print(f"  ╚══════════════════════════╝")
+
+        if group_protected:
+            print(f"\n  ╔══ [NÃO TOCAR] ══╗  ({len(group_protected)} item(s))")
+            for item in group_protected:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Reduzir escopo do PR antes de fazer push.")
+            print(f"  ╚══════════════════╝")
+
+        if group_contract:
+            print(f"\n  ╔══ [PRÓXIMA AÇÃO] ══╗  ({len(group_contract)} item(s))")
+            for item in group_contract:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Execute: python3 scripts/contracts/validate/validate_contracts.py --profile precommit")
+            print(f"  ╚══════════════════════╝")
+
+        if not group_first and not group_protected and not group_contract:
+            print("\n  Nenhum erro acionável encontrado.")
+
+        print(sep)
+
     @staticmethod
     def _match_diff_class(changed_files: list, patterns: list) -> bool:
         """Retorna True se algum arquivo alterado bate com algum padrão glob da classe."""
@@ -1427,9 +1513,9 @@ class HBCLIv2:
         # Resumo final
         decision_icon = {"PASS": "✅", "WARN": "⚠️ ", "BLOCK": "❌"}.get(final_decision, "?")
         print(f"\n══ PREFLIGHT: {decision_icon} {final_decision} ══")
-        if checks_failed:
-            print(f"  Checks com falha: {checks_failed}")
-        if missing_evidence:
+        if checks_failed or semantic_findings or reviewability_check.get("exceeded"):
+            self._format_actionable_output(checks_failed, semantic_findings, reviewability_check)
+        elif missing_evidence:
             print(f"  Evidência ausente: {missing_evidence}")
         print(f"  Relatório: {output_report}")
 
