@@ -10900,12 +10900,33 @@ def run_pipeline(
         if stage else None
     )
 
+    # task_focal: carrega focal_gate_set a partir de session_start.json + TASK_CATALOG.yaml
+    _focal_ids: "set[str] | None" = None
+    if profile == "task_focal":
+        try:
+            session_path = root / "_reports" / "session_start.json"
+            session_data = json.loads(session_path.read_text(encoding="utf-8"))
+            current_task_type = session_data.get("task_type")
+            catalog_path = root / ".contract_driven" / "TASK_CATALOG.yaml"
+            catalog = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+            task_entry = (catalog.get("task_catalog") or {}).get(current_task_type, {})
+            focal_list = task_entry.get("focal_gate_set") or []
+            _focal_ids = set(focal_list)
+            print(f"[task_focal] task_type={current_task_type!r}  focal_gates={sorted(_focal_ids)}")
+        except Exception as _e:
+            print(f"[task_focal] ERRO ao carregar focal_gate_set: {_e} — rodando todos os gates.", file=sys.stderr)
+            _focal_ids = None
+
     def _maybe(gate_fn, gate_id_hint: str) -> dict:
         if _stage_map is not None:
             allowed_for_stage = _stage_map.get(stage, set())  # type: ignore[arg-type]
             if gate_id_hint not in allowed_for_stage:
                 return _skip(gate_id_hint, f"Pulado no estágio '{stage}'.", 0)
             return gate_fn()
+        if profile == "task_focal":
+            if _focal_ids is not None and gate_id_hint in _focal_ids:
+                return gate_fn()
+            return _skip(gate_id_hint, f"Pulado no perfil 'task_focal'.", 0)
         if profile == "ci":
             return gate_fn()
         allowed = _local_ids if profile == "local" else _precommit_ids
@@ -11025,7 +11046,7 @@ def main() -> int:
     import argparse as _argparse
 
     parser = _argparse.ArgumentParser(description="HB Track Contract Gates")
-    parser.add_argument("--profile", choices=["local", "precommit", "ci"], default=None)
+    parser.add_argument("--profile", choices=["local", "precommit", "ci", "task_focal"], default=None)
     parser.add_argument(
         "--stage",
         choices=["session-start", "pre-authoring", "artifact"],
