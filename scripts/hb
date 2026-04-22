@@ -940,6 +940,85 @@ class HBCLIv2:
                 print(f"  {status} {art['path']} (hash: {art['sha256'][:8]}...)")
         
         return 0
+
+    def cmd_stats(self) -> int:
+        """Agregar evidências de execução por task_type."""
+        evidence_dir = self.root / "_reports" / "execution_evidence"
+        if not evidence_dir.exists() or not evidence_dir.is_dir():
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        evidence_files = sorted(evidence_dir.glob("*.json"))
+        if not evidence_files:
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        grouped: dict[str, dict[str, Any]] = {}
+        valid_files = 0
+
+        for evidence_file in evidence_files:
+            try:
+                payload = json.loads(evidence_file.read_text(encoding="utf-8"))
+            except Exception as exc:
+                print(f"⚠️  Ignorando evidência inválida: {evidence_file.name} ({exc})", file=sys.stderr)
+                continue
+
+            task_type = payload.get("task_type") or "<unknown>"
+            entry = grouped.setdefault(
+                task_type,
+                {
+                    "attempts": 0,
+                    "overflow_count": 0,
+                    "cause_counts": {},
+                },
+            )
+            entry["attempts"] += 1
+            valid_files += 1
+
+            if payload.get("scope_overflow_detected") is True:
+                entry["overflow_count"] += 1
+
+            for cause_id in payload.get("cause_ids", []):
+                if not cause_id:
+                    continue
+                entry["cause_counts"][cause_id] = entry["cause_counts"].get(cause_id, 0) + 1
+
+        if valid_files == 0:
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        rows: list[tuple[str, int, int, str]] = []
+        for task_type, metrics in sorted(grouped.items()):
+            cause_counts = metrics["cause_counts"]
+            top_cause = "-"
+            if cause_counts:
+                top_cause = sorted(cause_counts.items(), key=lambda item: (-item[1], item[0]))[0][0]
+            rows.append((task_type, metrics["attempts"], metrics["overflow_count"], top_cause))
+
+        task_width = max(len("task_type"), *(len(row[0]) for row in rows))
+        attempts_width = max(len("attempts"), *(len(str(row[1])) for row in rows))
+        overflow_width = max(len("overflow_count"), *(len(str(row[2])) for row in rows))
+        top_cause_width = max(len("top_cause"), *(len(row[3]) for row in rows))
+
+        header = (
+            f"{'task_type':<{task_width}}  "
+            f"{'attempts':>{attempts_width}}  "
+            f"{'overflow_count':>{overflow_width}}  "
+            f"{'top_cause':<{top_cause_width}}"
+        )
+        print(header)
+        print(
+            f"{'-' * task_width}  {'-' * attempts_width}  {'-' * overflow_width}  {'-' * top_cause_width}"
+        )
+        for task_type, attempts, overflow_count, top_cause in rows:
+            print(
+                f"{task_type:<{task_width}}  "
+                f"{attempts:>{attempts_width}}  "
+                f"{overflow_count:>{overflow_width}}  "
+                f"{top_cause:<{top_cause_width}}"
+            )
+
+        return 0
     
     # ──────────────────────────────────────────────────────
     # Helpers de preflight
@@ -2190,6 +2269,11 @@ class HBCLIv2:
             help="Auditar agent_prompts vs TASK_CATALOG.yaml (exit 1 se órfãos encontrados)",
         )
 
+        subparsers.add_parser(
+            "stats",
+            help="Agregar métricas de _reports/execution_evidence/ por task_type",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -2237,6 +2321,8 @@ class HBCLIv2:
                 )
             elif parsed_args.command == "audit-prompts":
                 return self.cmd_audit_prompts()
+            elif parsed_args.command == "stats":
+                return self.cmd_stats()
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2
