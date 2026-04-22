@@ -53,6 +53,7 @@ Para `execute_roadmap_phase`: usar worker diretamente — **NÃO passa por `pre_
 - **CLI:** `scripts/hb` (hb verify | hb check | hb artifact) — Modo CDD apenas
 - **ROADMAP:** `ROADMAP.md` (fases 0-13, critérios de done, stack canônica) — Modo ROADMAP
 - **Hook:** `scripts/git-hooks/pre-commit` (via git config core.hooksPath)
+- **Compilador de IR:** `scripts/compile/compile_source_graph.py` — compilador canônico único; produz `generated/source_graph/<module>/` (bundle + views + SHA-256). Única fonte autorizada para IR consumida por geradores downstream. Detalhes em `docs/_canon/CONTRACT_PIPELINE.md` §7.
 
 Paths: [CONTRACT_PIPELINE.md](docs/_canon/CONTRACT_PIPELINE.md) | [Rules](.contract_driven/CONTRACT_SYSTEM_RULES.md) | [Workers](.contract_driven/agent_prompts)
 
