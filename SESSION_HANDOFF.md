@@ -10,7 +10,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: ROADMAP-TIER3-TRAINING-DECOMPOSITION
 resultado: DONE
-proxima_acao_permitida: "push branch + abrir PR refactor/training-decomposition → main"
+proxima_acao_permitida: "push branch refactor/training-decomposition + abrir PR → main"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/precommit.latest.json"

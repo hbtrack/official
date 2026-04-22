@@ -7,7 +7,10 @@ OWASP API1/2/3/5 enforcement via domain rules.
 """
 from __future__ import annotations
 
-# CODEGEN CUTOVER — generated use cases linked
+# CODEGEN CUTOVER — side-effect imports que garantem importabilidade do módulo generated/
+# Padrão arquitetural aplicado em todos os 14 módulos do projeto (ver ADR-032).
+# NÃO remover: test_training_codegen_parity.py verifica que generated/ é importável
+# junto com api/; remoção quebra o gate de paridade de codegen.
 from ..generated.application import use_cases as _gen_use_cases  # noqa: F401
 from ..generated.infrastructure import repository as _gen_repository  # noqa: F401
 

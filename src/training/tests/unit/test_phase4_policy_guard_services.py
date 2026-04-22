@@ -6,6 +6,7 @@ Cobre:
   require_valid_transition, require_write_access, require_deletable
 - SessionGuard: todos os métodos load_for_*
 - TrainingServices: façade expõe somente métodos (nenhum atributo de repositório)
+- TrainingServices: mock injection via configure_for_testing / reset_testing_overrides (N3.1)
 """
 from __future__ import annotations
 
@@ -332,3 +333,100 @@ class TestTrainingServicesFacade:
         svc = TrainingServices()
         guard = svc.session_guard()
         assert isinstance(guard, SessionGuard)
+
+
+# ---------------------------------------------------------------------------
+# TrainingServices — mock injection via configure_for_testing (N3.1)
+# ---------------------------------------------------------------------------
+
+class TestTrainingServicesMockInjection:
+    """
+    Valida a API de injeção de mocks via configure_for_testing / reset_testing_overrides.
+
+    Garante que testes unitários de UseCases podem usar TrainingServices sem
+    precisar de unittest.mock.patch no nível de módulo (fechamento de P15).
+    """
+
+    def teardown_method(self):
+        """Limpeza obrigatória — remove overrides para não vazar entre testes."""
+        from training.application.common.services import TrainingServices
+        TrainingServices.reset_testing_overrides()
+
+    def test_configure_for_testing_injects_mock_use_case(self):
+        """override de factory retorna o mock, não o UseCase real."""
+        from unittest.mock import MagicMock
+        from training.application.common.services import TrainingServices
+        from training.application.sessions.commands import CreateTrainingSessionUseCase
+
+        mock_uc = MagicMock(spec=CreateTrainingSessionUseCase)
+        TrainingServices.configure_for_testing(
+            create_training_session_uc=lambda: mock_uc
+        )
+        svc = TrainingServices()
+        result = svc.create_training_session_uc()
+        assert result is mock_uc
+
+    def test_non_overridden_factories_still_work(self):
+        """Factory sem override continua retornando objeto real."""
+        from unittest.mock import MagicMock
+        from training.application.common.services import TrainingServices
+        from training.application.sessions.commands import CreateTrainingSessionUseCase
+
+        mock_uc = MagicMock(spec=CreateTrainingSessionUseCase)
+        TrainingServices.configure_for_testing(
+            create_training_session_uc=lambda: mock_uc
+        )
+        svc = TrainingServices()
+        guard = svc.session_guard()
+        assert isinstance(guard, SessionGuard)
+
+    def test_reset_restores_original_behavior(self):
+        """Após reset, factory retorna o UseCase real novamente."""
+        from unittest.mock import MagicMock
+        from training.application.common.services import TrainingServices
+        from training.application.sessions.commands import CreateTrainingSessionUseCase
+
+        mock_uc = MagicMock(spec=CreateTrainingSessionUseCase)
+        TrainingServices.configure_for_testing(
+            create_training_session_uc=lambda: mock_uc
+        )
+        TrainingServices.reset_testing_overrides()
+        svc = TrainingServices()
+        result = svc.create_training_session_uc()
+        assert isinstance(result, CreateTrainingSessionUseCase)
+        assert result is not mock_uc
+
+    def test_overrides_are_class_level_not_instance_level(self):
+        """_test_overrides não aparece em vars(svc) — não viola regra de no-repo-attributes."""
+        from training.application.common.services import TrainingServices
+
+        TrainingServices.configure_for_testing(
+            get_training_session_uc=lambda: object()
+        )
+        svc = TrainingServices()
+        # _test_overrides é class var — não deve aparecer em vars(svc)
+        assert "_test_overrides" not in vars(svc)
+
+    def test_multiple_overrides_simultaneously(self):
+        """Múltiplos overrides independentes coexistem sem conflito."""
+        from unittest.mock import MagicMock
+        from training.application.common.services import TrainingServices
+        from training.application.sessions.commands import CreateTrainingSessionUseCase
+        from training.application.sessions.queries import GetTrainingSessionUseCase
+
+        mock_create = MagicMock(spec=CreateTrainingSessionUseCase)
+        mock_get = MagicMock(spec=GetTrainingSessionUseCase)
+        TrainingServices.configure_for_testing(
+            create_training_session_uc=lambda: mock_create,
+            get_training_session_uc=lambda: mock_get,
+        )
+        svc = TrainingServices()
+        assert svc.create_training_session_uc() is mock_create
+        assert svc.get_training_session_uc() is mock_get
+
+    def test_configure_for_testing_and_reset_are_public_callable(self):
+        """configure_for_testing e reset_testing_overrides são callables públicos."""
+        from training.application.common.services import TrainingServices
+
+        assert callable(TrainingServices.configure_for_testing)
+        assert callable(TrainingServices.reset_testing_overrides)
