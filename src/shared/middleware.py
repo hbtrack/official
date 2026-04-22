@@ -7,10 +7,23 @@ Garante que todo request tenha um X-Flow-ID rastreável.
 """
 from __future__ import annotations
 
+import re
 import threading
 import uuid
 
 _flow_store = threading.local()
+
+_UUID4_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+    re.IGNORECASE,
+)
+
+
+def _sanitize_flow_id(value: str | None) -> str:
+    """Retorna value se for UUID v4 válido; caso contrário gera um novo UUID."""
+    if value and _UUID4_RE.match(value):
+        return value
+    return str(uuid.uuid4())
 
 
 def get_current_flow_id() -> str:
@@ -57,8 +70,10 @@ class FlowIDMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        flow_id = request.headers.get("X-Flow-ID") or str(uuid.uuid4())
+        raw = request.headers.get("X-Flow-ID")
+        flow_id = _sanitize_flow_id(raw)
         set_flow_id(flow_id)
+        request.flow_id = flow_id
         response = self.get_response(request)
         response["X-Flow-ID"] = flow_id
         return response

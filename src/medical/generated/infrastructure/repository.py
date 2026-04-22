@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: medical
-# source_fingerprint: 0ca441b290a1871df0f4daa3093237e5355853821432b3548b2f7133962b3448
+# source_fingerprint: 2d8f0dcf89c4cf46b9ca8b69aafbb1b0096fbd9b4d5a1394b00f2a1a760171f6
 
 from __future__ import annotations
 

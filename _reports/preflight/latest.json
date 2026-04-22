@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T07:28:06.493304+00:00",
+  "generated_at": "2026-04-22T10:27:23.148975+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
@@ -10,50 +10,50 @@
   "checks_run": [
     {
       "step": "survival_suite",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Validate Contract Gates",
       "category": "required",
       "result": "FAIL",
-      "exit_code": 120
+      "exit_code": 2
     },
     {
       "context": "Governance Tests",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Architecture Drift Check",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 120
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "ci / Validate Contracts",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 120
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "ci / Tests",
       "category": "required",
       "result": "FAIL",
-      "exit_code": 120
+      "exit_code": 2
     },
     {
       "context": "ci / Frontend Build + Tests",
       "category": "required",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Governance Enforcement (survival-suite)",
       "category": "conditional",
-      "result": "FAIL",
-      "exit_code": 120
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Paridade Registry × Executor",
@@ -64,28 +64,20 @@
     {
       "context": "Paridade Schema × Template × Skills",
       "category": "conditional",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     },
     {
       "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
       "category": "conditional",
-      "result": "FAIL",
-      "exit_code": 1
+      "result": "PASS",
+      "exit_code": 0
     }
   ],
   "checks_failed": [
-    "survival_suite",
     "Validate Contract Gates",
-    "Governance Tests",
-    "Architecture Drift Check",
-    "ci / Validate Contracts",
     "ci / Tests",
-    "ci / Frontend Build + Tests",
-    "Governance Enforcement (survival-suite)",
-    "Paridade Registry × Executor",
-    "Paridade Schema × Template × Skills",
-    "Validação Cruzada SESSION_HANDOFF ↔ session_start"
+    "Paridade Registry × Executor"
   ],
   "missing_evidence": [
     "handoff_scope_expansion"
@@ -133,11 +125,11 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 176,
+    "changed_files": 434,
     "max_changed_files": 150,
-    "commits": 9,
+    "commits": 13,
     "max_commits": 20,
-    "cross_domain_areas": 2,
+    "cross_domain_areas": 16,
     "max_cross_domain_areas": 3,
     "exceeded": true,
     "split_required": true

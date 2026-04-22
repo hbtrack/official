@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: notifications
-# source_fingerprint: ff1df0bf0fefa6a65aa4392c2f712f7c85074a3598ec3870f141324eb64e6a0a
+# source_fingerprint: fededf51a4587123ff19d4ac629307453f0562892ad35b9fa6f7fee05413f6d0
 
 from __future__ import annotations
 

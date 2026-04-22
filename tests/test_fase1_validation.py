@@ -2,6 +2,8 @@
 Testes de validação — FASE 1
 Cobertura: JWT 401, X-Flow-ID, /health, CORS preflight, constraint violation 422.
 """
+import uuid
+
 import pytest
 from django.test import Client
 
@@ -41,7 +43,7 @@ class TestFlowIDMiddleware:
 
     def test_flow_id_propagated_when_sent_in_request(self):
         client = Client()
-        custom_id = "test-flow-id-abc123"
+        custom_id = str(uuid.uuid4())
         response = client.get("/health", HTTP_X_FLOW_ID=custom_id)
         assert response["X-Flow-ID"] == custom_id, (
             f"flow_id não propagado: esperado '{custom_id}', "

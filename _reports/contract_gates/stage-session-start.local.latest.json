@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-22T04:11:03Z",
+  "timestamp_utc": "2026-04-22T12:51:25Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "e560168f",
+    "git_commit": "1e73dbe4",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260422T041103_a2cedf"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260422T125125_f35657"
   },
   "status_detail": {
     "active_gates_passed": 2,
@@ -261,7 +261,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 46
       }
     },
     {
@@ -1026,42 +1026,52 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 3 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
-        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-035-session-access-policy.md",
-        "/home/davis/HB-TRACK/src/training/migrations/0007_training_session_execution_fields.py"
+        "/home/davis/HB-TRACK/infra/docker-compose.edge.yml",
+        "/home/davis/HB-TRACK/infra/docker-compose.staging.yml",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.edge.conf",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.edge.bootstrap.conf",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
-        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-035-session-access-policy.md",
-        "/home/davis/HB-TRACK/src/training/migrations/0007_training_session_execution_fields.py"
+        "/home/davis/HB-TRACK/infra/docker-compose.edge.yml",
+        "/home/davis/HB-TRACK/infra/docker-compose.staging.yml",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.edge.conf",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.edge.bootstrap.conf",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml"
       ],
       "evidence_files": [],
       "violations": [
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=6.",
+          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='infra'.",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=6 != session_start.roadmap_phase=3.",
+          "message": "Divergência de fase: session_start.roadmap_phase=1 != SESSION_HANDOFF.fase_roadmap=6.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=6 != session_start.roadmap_phase=1.",
           "severity": "error"
         }
       ],
       "metrics": {
-        "errors": 2,
+        "errors": 3,
         "warnings": 0,
-        "violations": 2,
+        "violations": 3,
         "duration_ms": 4
       }
     },
@@ -1084,7 +1094,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 182
+        "duration_ms": 285
       }
     },
     {

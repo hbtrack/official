@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: teams
-# source_fingerprint: 04fc4ef0c30062cbf73c2a7bb9ab73197c6c1082d0f8a75caeddf58f87a99f9f
+# source_fingerprint: 82db61b6f421724404ef9fa8af58bf7d2916191be40b77765812cf27196a9e1d
 
 from __future__ import annotations
 

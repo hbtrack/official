@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: competitions
-# source_fingerprint: 2c4a0de6630def3e14a5a209e2117b5b2f710c564e1f319889906a1348224984
+# source_fingerprint: 319936c3b5198e07fc0513c4a479abe9df7f729c035b8a118ddd7d7ab3c4cb99
 
 from __future__ import annotations
 

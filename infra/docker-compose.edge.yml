@@ -1,0 +1,69 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# HB Track — Edge Proxy (único ponto de entrada público na VPS)
+#
+# Responsabilidade:
+#   - Escutar 80/443 publicamente (única stack a fazer isso)
+#   - Terminar TLS para todos os hostnames
+#   - Rotear por hostname → produção OU staging
+#   - Renovar certificados via Certbot
+#
+# Upstreams esperados (nomes de rede Docker):
+#   - prod-api:8000       → alias do serviço api em hbtrack-prod-net
+#   - prod-frontend:80    → alias do serviço frontend em hbtrack-prod-net
+#   - staging-api:8000    → alias do serviço api em hbtrack-staging-net
+#   - staging-frontend:80 → alias do serviço frontend em hbtrack-staging-net
+#
+# Uso:
+#   docker compose -f infra/docker-compose.edge.yml up -d
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: hbtrack-edge
+
+services:
+
+  # ── Edge Nginx: roteamento por hostname + TLS ─────────────────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/${NGINX_EDGE_CONF:-nginx.edge.conf}:/etc/nginx/nginx.conf:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
+    networks:
+      - hbtrack-prod-net
+      - hbtrack-staging-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── Certbot: renovação automática de certificados ─────────────────────────
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - hbtrack-prod-net
+
+volumes:
+  # Volumes gerenciados pela stack edge.
+  # No primeiro deploy, o script de deploy copia os certs existentes
+  # do volume da produção (hbtrack-production_certbot_conf) se disponíveis,
+  # ou emite novos certs via certbot --standalone.
+  certbot_www: {}
+  certbot_conf: {}
+
+networks:
+  # Redes criadas pelas respectivas stacks de aplicação.
+  # A edge precisa de acesso a ambas para alcançar os upstreams.
+  hbtrack-prod-net:
+    external: true
+  hbtrack-staging-net:
+    external: true

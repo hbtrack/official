@@ -3,63 +3,71 @@ data_ultima_sessao: "2026-04-22"
 branch_ativo: docs/codegen-canonization
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: infra
 fase_roadmap: 6
 roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-FASE6-DEPLOY
+task_id: ROADMAP-FASE6-EDGE-PROXY
 resultado: PENDENTE
-proxima_acao_permitida: "aguardar Deploy Pipeline completar em main (cdfe57bc); confirmar staging deploy; criar ticket test_list_training_sessions_response_time"
+proxima_acao_permitida: "aguardar CI verde no PR #83; aprovar merge; verificar deploy-edge no VPS"
 bloqueios_ativos: []
 evidence_paths:
-  - "_reports/contract_gates/precommit.latest.json"
-  - "contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json"
-  - "docs/_canon/decisions/ADR-035-session-access-policy.md"
+  - "infra/docker-compose.edge.yml"
+  - "infra/docker-compose.prod.yml"
+  - ".github/workflows/deploy.yml"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-**Sessão 2026-04-22 — Fix CI/Deploy Pipeline pós-merge PR #80**
+Fase 6 — Edge Proxy (resolve BLOCKED_SHARED_EDGE_HOST):
+- `infra/docker-compose.edge.yml` — nginx:1.27-alpine + certbot, portas 80/443
+- `infra/nginx/nginx.edge.conf` — 3 vhosts SSL; `nginx.edge.bootstrap.conf` — bootstrap HTTP
+- `infra/docker-compose.staging.yml` — staging sem nginx, rede `hbtrack-staging-net`
+- `infra/docker-compose.prod.yml` — nginx/certbot removidos, rede → `hbtrack-prod-net`
+- `deploy.yml` — health check interno (docker exec), certbot --webroot, job deploy-edge
 
-Após merge do PR #80 (refactor training), o Deploy Pipeline falhou em `main` com dois problemas distintos. Ambos corrigidos e merged via PR #81 (`cdfe57bc`):
-
-1. **`TRAINING_CURSOR_SECRET` ausente** no job `test` de `deploy.yml` → `RuntimeError` com `DEBUG=false`. Fix: variável adicionada, alinhando com `_reusable-ci.yml` linha 107.
-2. **Budget `CONTRACT_PIPELINE.md` excedido** (828w > 650w) — §7 "Compilador Canônico de IR" foi adicionada pelo pre-commit hook no commit `d5330134`. Fix: budget atualizado 650→850 em `test_context_budgets_and_parity.py`.
-
-**VCS:**
-- PR #80 merged → `d7102131` (squash, 22/04/2026)
-- PR #81 merged → `cdfe57bc` (squash, 22/04/2026)
-- Deploy Pipeline rodando em `main` pós-PR #81 (em andamento)
+CI fixes (branch `docs/codegen-canonization`, HEAD `c47b05e5`):
+- `scripts/hbtrack_lint/` (25 arquivos) restaurados — deletados por acidente em merge
+- `src/shared/middleware.py` — `_UUID4_RE` sanitiza X-Flow-ID, previne log injection (F10)
+- `tests/test_fase1_validation.py` — `test_flow_id_propagated` usa UUID v4 válido
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| PR #80 (refactor training) | ✅ MERGED `d7102131` |
-| PR #81 (fix CI deploy pipeline) | ✅ MERGED `cdfe57bc` |
-| Deploy Pipeline em main | 🔄 EM ANDAMENTO |
-| Deploy staging `/training/*` | ⏳ aguarda pipeline |
-| N3.3 / N3.5 | ⛔ bloqueados (2 releases em produção) |
+| Artefatos edge + deploy.yml | ✅ commitados |
+| CI failures resolvidas (3 → 2) | ✅ `c47b05e5` |
+| PR #83 mergeable | ✅ |
+| Merge PR #83 | ⏳ aprovação humana |
+| Deploy-edge VPS | ⏳ após merge |
 
 ## Próxima ação permitida
 
-Aguardar Deploy Pipeline completar → confirmar staging saudável → criar ticket para `test_list_training_sessions_response_time`.
-
-## Evidências
-
-- PR #81 merged: `cdfe57bc` (22/04/2026)
-- `_reports/contract_gates/precommit.latest.json` → PASS (após PR #81)
-- Deploy Pipeline: run iniciado em `main` pós-`cdfe57bc`
+1. CI verde → aprovar merge do PR #83
+2. Verificar deploy-staging → deploy-production → deploy-edge no VPS
+3. Migrar imports em `src/training/api/` para paths canônicos (33 DeprecationWarnings)
 
 ## Bloqueios ativos
 
 Nenhum.
 
-## Próxima Sessão
+## Evidências
 
-1. Confirmar resultado do Deploy Pipeline (run em `main` após `cdfe57bc`)
-2. Se staging OK: marcar Fase 6.2 como DONE no ROADMAP
-3. Criar issue GitHub: `test_list_training_sessions_response_time` — falha pré-existente
-4. Migrar imports em `src/training/api/` de shims legados para paths canônicos (109 DeprecationWarnings)
+- `infra/docker-compose.edge.yml`, `nginx.edge.conf`, `nginx.edge.bootstrap.conf`
+- `infra/docker-compose.staging.yml`, `infra/docker-compose.prod.yml`
+- `.github/workflows/deploy.yml` — health check interno + certbot --webroot + deploy-edge
+- `scripts/hbtrack_lint/` (25 arquivos restaurados)
+- `src/shared/middleware.py` — _UUID4_RE sanitização F10
+
+## Falhas pré-existentes (não bloquear merge)
+
+- `test_session_handoff_md_under_budget` — resolvido por este handoff
+- `test_all_budgets_combined` — resolvido por este handoff
+- `test_list_training_sessions_response_time` — `TRAINING_CURSOR_SECRET` ausente no CI
+
+## Próxima sessão
+
+1. CI verde → aprovar merge do PR #83
+2. Verificar deploy automático após merge (staging → production → edge)

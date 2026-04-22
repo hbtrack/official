@@ -22,14 +22,22 @@ _SRC_DIR = str(BASE_DIR / "src")
 if _SRC_DIR not in sys.path:
     sys.path.insert(0, _SRC_DIR)
 
+_INSECURE_SECRET_KEY = "django-insecure-hbtrack-dev-key-not-for-production-change-before-deploy"
+
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
-    "django-insecure-hbtrack-dev-key-not-for-production-change-before-deploy",
+    _INSECURE_SECRET_KEY,
 )
 
-DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
+# SEGURANÇA: default false — em dev, defina DEBUG=true no .env local
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+# SEGURANÇA: default vazio (não "*") — requer configuração explícita em produção
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get("ALLOWED_HOSTS", "" if not DEBUG else "localhost,127.0.0.1").split(",")
+    if h.strip()
+]
 
 INSTALLED_APPS = [
     # Django core
@@ -143,8 +151,8 @@ CHANNEL_LAYERS = {
 }
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
-# Temporarily allow all origins for CI tests
-CORS_ALLOW_ALL_ORIGINS = True
+# SEGURANÇA: allow-all apenas em dev local (DEBUG=True). Nunca em produção.
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOWED_ORIGINS = [
     o.strip()
     for o in os.environ.get(
@@ -219,3 +227,29 @@ LOGGING = {
         },
     },
 }
+
+# ── Produção: fail-fast em configuração insegura ──────────────────────────────
+# Esta verificação é executada no boot do Django. Se DEBUG=False e qualquer
+# variável crítica estiver ausente ou com valor inseguro, o processo falha
+# explicitamente com mensagem clara — nunca sobe silenciosamente inseguro.
+if not DEBUG:
+    from django.core.exceptions import ImproperlyConfigured as _IC
+
+    if SECRET_KEY == _INSECURE_SECRET_KEY:
+        raise _IC(
+            "[SEGURANÇA] SECRET_KEY insegura detectada com DEBUG=False. "
+            "Gere um valor com: python -c \"import secrets; print(secrets.token_urlsafe(50))\" "
+            "e defina SECRET_KEY no ambiente de produção."
+        )
+
+    if not ALLOWED_HOSTS or ALLOWED_HOSTS == ["*"]:
+        raise _IC(
+            "[SEGURANÇA] ALLOWED_HOSTS vazio ou '*' com DEBUG=False. "
+            "Defina ALLOWED_HOSTS=handballtrack.app,www.handballtrack.app no ambiente de produção."
+        )
+
+    if CORS_ALLOW_ALL_ORIGINS:
+        raise _IC(
+            "[SEGURANÇA] CORS_ALLOW_ALL_ORIGINS=True não é permitido com DEBUG=False. "
+            "Defina CORS_ALLOWED_ORIGINS com as origens explicitamente autorizadas."
+        )

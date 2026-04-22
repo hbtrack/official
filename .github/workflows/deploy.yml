@@ -191,8 +191,6 @@ jobs:
       url: ${{ vars.STAGING_URL || 'https://staging.handballtrack.app' }}
     env:
       STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.handballtrack.app' }}
-      STAGING_HTTP_PORT: ${{ vars.STAGING_HTTP_PORT || '80' }}
-      STAGING_HTTPS_PORT: ${{ vars.STAGING_HTTPS_PORT || '443' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -215,8 +213,6 @@ jobs:
             set -e
             mkdir -p /opt/hbtrack/staging
             cd /opt/hbtrack/staging
-            STAGING_HTTP_PORT="${{ vars.STAGING_HTTP_PORT || '80' }}"
-            STAGING_HTTPS_PORT="${{ vars.STAGING_HTTPS_PORT || '443' }}"
 
             upsert_env() {
               KEY="$1"
@@ -236,12 +232,9 @@ jobs:
                 echo "REGISTRY=ghcr.io/hbtrack"
                 echo "IMAGE_TAG=latest"
                 echo "COMPOSE_PROJECT_NAME=hbtrack-staging"
-                echo "NGINX_CONF=nginx.staging.conf"
-                echo "HTTP_PORT=${STAGING_HTTP_PORT}"
-                echo "HTTPS_PORT=${STAGING_HTTPS_PORT}"
                 echo "SECRET_KEY=${SK}"
                 echo "DEBUG=false"
-                echo "ALLOWED_HOSTS=staging.handballtrack.app,191.252.185.34"
+                echo "ALLOWED_HOSTS=staging.handballtrack.app,localhost,127.0.0.1"
                 echo "DB_NAME=hb_track_staging"
                 echo "DB_USER=hbtrack"
                 echo "DB_PASSWORD=${DB}"
@@ -272,117 +265,50 @@ jobs:
 
             SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
 
-            # Migrar .env existente e forçar staging para o endpoint público validado.
             upsert_env "REGISTRY" "ghcr.io/hbtrack"
             upsert_env "IMAGE_TAG" "${SHORT_SHA}"
             upsert_env "HB_BUILD_SHA" "${{ github.sha }}"
             upsert_env "COMPOSE_PROJECT_NAME" "hbtrack-staging"
-            upsert_env "NGINX_CONF" "nginx.staging.conf"
-            upsert_env "HTTP_PORT" "${STAGING_HTTP_PORT}"
-            upsert_env "HTTPS_PORT" "${STAGING_HTTPS_PORT}"
 
-            # Validar .env: se tiver linhas sem VAR= (ex: PEM key multi-linha), avisar
+            # Garantir localhost no ALLOWED_HOSTS (health check interno)
+            if ! grep "^ALLOWED_HOSTS=" .env | grep -q "localhost"; then
+              sed -i "s|^ALLOWED_HOSTS=\(.*\)$|ALLOWED_HOSTS=\1,localhost,127.0.0.1|" .env
+            fi
+
             if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
               echo "⚠️ .env contém linhas com formato inválido — verifique manualmente"
-              echo "   Para regenerar, execute o workflow com destructive_reset=true"
               grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true
             else
               echo "✅ .env válido — credenciais existentes mantidas"
             fi
 
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>/dev/null || true
+            if ! echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>&1; then
+              echo "❌ Falha ao autenticar no GHCR"
+              exit 1
+            fi
 
-            docker compose -f infra/docker-compose.prod.yml pull
+            docker compose -f infra/docker-compose.staging.yml pull
 
             if [ "${{ inputs.destructive_reset }}" = "true" ]; then
-              echo "🔄 DESTRUCTIVE RESET solicitado — parando containers e removendo volumes de dados..."
-              docker compose -f infra/docker-compose.prod.yml down -v 2>/dev/null || true
-              docker volume rm hbtrack-prod_postgres_data hbtrack-prod_redis_data 2>/dev/null || true
-              echo "⚠️ Volumes de DB e Redis removidos — dados serão recriados do zero"
+              echo "🔄 DESTRUCTIVE RESET — removendo volumes de staging..."
+              docker compose -f infra/docker-compose.staging.yml down -v 2>/dev/null || true
+              echo "⚠️ Volumes de staging removidos — dados recriados do zero"
             else
-              echo "🔄 Deploy normal — parando containers, preservando dados..."
-              docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
+              docker compose -f infra/docker-compose.staging.yml down 2>/dev/null || true
             fi
 
-            # ────────────────────────────────────────────────────────────
-            # PORT GUARD — libera 80/443 antes de certbot e up -d.
-            # Causa raiz histórica: stacks legados (com COMPOSE_PROJECT_NAME
-            # diferente do esperado) seguram as portas e o "stop nginx"
-            # com nome hardcoded falha silenciosamente. Aqui paramos
-            # qualquer container Docker que esteja publicando 80/443,
-            # independentemente de project name.
-            # ────────────────────────────────────────────────────────────
-            free_port() {
-              local PORT="$1"
-              echo "🔍 Verificando ocupantes da porta ${PORT}..."
-              local OCCUPANTS
-              OCCUPANTS=$(docker ps --format '{{.ID}} {{.Names}} {{.Ports}}' | awk -v p=":${PORT}->" '$0 ~ p {print $1"|"$2}')
-              if [ -z "${OCCUPANTS}" ]; then
-                echo "  ✅ Porta ${PORT} livre"
-                return 0
-              fi
-              echo "  ⚠️ Porta ${PORT} ocupada por:"
-              echo "${OCCUPANTS}" | sed 's/^/    /'
-              echo "${OCCUPANTS}" | while IFS='|' read -r CID CNAME; do
-                # NUNCA mexer em containers do staging atual (vão subir já já)
-                case "${CNAME}" in
-                  hbtrack-staging-*) echo "    ↩️ skip ${CNAME} (staging atual)"; continue ;;
-                esac
-                echo "    🛑 stop ${CNAME} (${CID})"
-                docker stop "${CID}" >/dev/null 2>&1 || true
-              done
-            }
-            if [ "${STAGING_HTTP_PORT}" = "80" ]; then
-              free_port 80
-            else
-              echo "ℹ️ STAGING_HTTP_PORT=${STAGING_HTTP_PORT} (não-pública) — port guard 80 skip"
-            fi
-            if [ "${STAGING_HTTPS_PORT}" = "443" ]; then
-              free_port 443
-            else
-              echo "ℹ️ STAGING_HTTPS_PORT=${STAGING_HTTPS_PORT} (não-pública) — port guard 443 skip"
-            fi
-
-            # Gerar certificado SSL se ausente
-            if ! docker run --rm -v hbtrack-staging_certbot_conf:/etc/letsencrypt alpine \
-                test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null; then
-              echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
-              # port guard acima já liberou a 80; double-check
-              free_port 80
-              docker run --rm \
-                -v hbtrack-staging_certbot_conf:/etc/letsencrypt \
-                -v hbtrack-staging_certbot_www:/var/www/certbot \
-                -p 80:80 \
-                certbot/certbot certonly \
-                --standalone \
-                --non-interactive \
-                --agree-tos \
-                --email suporte@handballtrack.app \
-                -d staging.handballtrack.app \
-              && echo "✅ Certificado SSL gerado com sucesso" \
-              || echo "⚠️ Certbot falhou — continuando deploy sem SSL (renovação manual necessária)"
-            else
-              echo "✅ Certificado SSL existente — mantendo"
-            fi
-
-            # Re-confirma portas livres logo antes do up (independente por porta)
-            if [ "${STAGING_HTTP_PORT}" = "80" ]; then
-              free_port 80
-            fi
-            if [ "${STAGING_HTTPS_PORT}" = "443" ]; then
-              free_port 443
-            fi
-
-            docker compose -f infra/docker-compose.prod.yml up -d
+            # Staging não expõe portas 80/443 — o edge proxy gerencia a borda.
+            # Sem port guard, sem certbot, sem nginx nesta stack.
+            docker compose -f infra/docker-compose.staging.yml up -d
 
             echo "⏳ Aguardando API inicializar (30s)..."
             sleep 30
 
             echo "--- STATUS DOS CONTAINERS ---"
-            docker compose -f infra/docker-compose.prod.yml ps
+            docker compose -f infra/docker-compose.staging.yml ps
 
             echo "--- LOGS DO CONTAINER API (últimas 80 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs api --tail=80 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml logs api --tail=80 2>&1 || true
 
             echo "✅ Deploy staging concluído — IMAGE_TAG=${SHORT_SHA}"
 
@@ -438,8 +364,7 @@ jobs:
           script: |
             cd /opt/hbtrack/staging
             echo "🌱 Aplicando seed de dados de demonstração em staging..."
-            # Executar seed_demo dentro do container de forma idempotente
-            docker compose -f infra/docker-compose.prod.yml exec -T api \
+            docker compose -f infra/docker-compose.staging.yml exec -T api \
               python manage.py seed_demo 2>&1 || true
             echo "✅ Seed demo concluído (ou já existia)"
 
@@ -453,11 +378,11 @@ jobs:
           script: |
             cd /opt/hbtrack/staging
             echo "--- CONTAINER STATUS ---"
-            docker compose -f infra/docker-compose.prod.yml ps 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml ps 2>&1 || true
             echo "--- LOGS API (100 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs api --tail=100 2>&1 || true
-            echo "--- LOGS NGINX (30 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs nginx --tail=30 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml logs api --tail=100 2>&1 || true
+            echo "--- LOGS EDGE (verificar se proxy está rodando) ---"
+            docker ps --filter name=hbtrack-edge 2>&1 || true
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 5: Validação de contratos contra staging live
@@ -602,12 +527,9 @@ jobs:
                 echo "REGISTRY=ghcr.io/hbtrack"
                 echo "IMAGE_TAG=latest"
                 echo "COMPOSE_PROJECT_NAME=hbtrack-production"
-                echo "NGINX_CONF=nginx.production.conf"
-                echo "HTTP_PORT=80"
-                echo "HTTPS_PORT=443"
                 echo "SECRET_KEY=${SK}"
                 echo "DEBUG=false"
-                echo "ALLOWED_HOSTS=handballtrack.app,www.handballtrack.app,${{ secrets.VPS_HOST_PRODUCTION }}"
+                echo "ALLOWED_HOSTS=handballtrack.app,www.handballtrack.app,${{ secrets.VPS_HOST_PRODUCTION }},localhost,127.0.0.1"
                 echo "DB_NAME=hb_track_production"
                 echo "DB_USER=hbtrack"
                 echo "DB_PASSWORD=${DB}"
@@ -640,7 +562,16 @@ jobs:
 
             # Salvar SHA anterior para rollback
             PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
-            echo "$PREV_SHA" > .last_sha
+            if [ -n "${PREV_SHA}" ] && [ "${PREV_SHA}" != "latest" ]; then
+              echo "${PREV_SHA}" > .last_sha
+            fi
+
+            # Garantir localhost no ALLOWED_HOSTS
+            if ! grep -q "^ALLOWED_HOSTS=" .env 2>/dev/null; then
+              echo "ALLOWED_HOSTS=handballtrack.app,www.handballtrack.app,${{ secrets.VPS_HOST_PRODUCTION }},localhost,127.0.0.1" >> .env
+            elif ! grep "^ALLOWED_HOSTS=" .env | grep -q "localhost"; then
+              sed -i "s|^ALLOWED_HOSTS=\(.*\)$|ALLOWED_HOSTS=\1,localhost,127.0.0.1|" .env
+            fi
 
             sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${SHORT_SHA}|" .env
             if grep -q "^HB_BUILD_SHA=" .env 2>/dev/null; then
@@ -649,46 +580,26 @@ jobs:
               echo "HB_BUILD_SHA=${{ github.sha }}" >> .env
             fi
 
-            # Validar .env
             if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
-              echo "⚠️ .env contém linhas com formato inválido — verifique manualmente"
+              echo "⚠️ .env contém linhas com formato inválido"
               grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true
             else
               echo "✅ .env válido"
             fi
 
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>/dev/null || true
+            # Autenticar no GHCR
+            if ! echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>&1; then
+              echo "❌ Falha ao autenticar no GHCR"
+              exit 1
+            fi
 
             docker compose -f infra/docker-compose.prod.yml pull
 
             echo "🔄 Deploy produção — parando containers, preservando dados..."
             docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
 
-            # Gerar certificado SSL se ausente
-            if ! docker run --rm -v hbtrack-production_certbot_conf:/etc/letsencrypt alpine \
-                test -f /etc/letsencrypt/live/handballtrack.app/fullchain.pem 2>/dev/null; then
-              echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
-              # Liberar porta 80 caso staging esteja rodando no mesmo VPS
-              COMPOSE_PROJECT_NAME=hbtrack-staging docker compose -f infra/docker-compose.prod.yml stop nginx 2>/dev/null || true
-              docker run --rm \
-                -v hbtrack-production_certbot_conf:/etc/letsencrypt \
-                -v hbtrack-production_certbot_www:/var/www/certbot \
-                -p 80:80 \
-                certbot/certbot certonly \
-                --standalone \
-                --non-interactive \
-                --agree-tos \
-                --email suporte@handballtrack.app \
-                -d handballtrack.app \
-                -d www.handballtrack.app \
-              && echo "✅ Certificado SSL gerado com sucesso" \
-              || echo "⚠️ Certbot falhou — continuando deploy sem SSL (renovação manual necessária)"
-              # Sempre reiniciar nginx de staging, mesmo se certbot falhou
-              COMPOSE_PROJECT_NAME=hbtrack-staging docker compose -f infra/docker-compose.prod.yml start nginx 2>/dev/null || true
-            else
-              echo "✅ Certificado SSL existente — mantendo"
-            fi
-
+            # Produção não expõe 80/443 — o edge proxy gerencia a borda.
+            # Sem port guard, sem certbot nesta stack.
             docker compose -f infra/docker-compose.prod.yml up -d
 
             echo "⏳ Aguardando API inicializar (30s)..."
@@ -705,19 +616,27 @@ jobs:
       - name: Health check — production
         if: steps.check-prod.outputs.skip != 'true'
         id: healthcheck
-        run: |
-          echo "Aguardando produção inicializar..."
-          for i in $(seq 1 24); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ vars.PRODUCTION_URL }}/health" || echo "000")
-            if [ "$STATUS" = "200" ]; then
-              echo "✅ Produção OK (tentativa $i)"
-              exit 0
-            fi
-            echo "⏳ Tentativa $i/24 — HTTP $STATUS"
-            sleep 5
-          done
-          echo "❌ Health check falhou — iniciando rollback"
-          exit 1
+        # Verifica internamente via docker exec — não depende do edge proxy estar rodando.
+        # O healthcheck via URL pública só funcionaria após deploy-edge, criando deadlock
+        # em primeiro rollout. Usando check interno o rollback continua funcional.
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "Aguardando API inicializar..."
+            for i in $(seq 1 24); do
+              if docker exec hbtrack-production-api-1 \
+                   curl -sf --max-time 5 http://localhost:8000/health > /dev/null 2>&1; then
+                echo "✅ Produção OK (tentativa $i)"
+                exit 0
+              fi
+              echo "⏳ Tentativa $i/24 — container não pronto"
+              sleep 5
+            done
+            echo "❌ Health check interno falhou — iniciando rollback"
+            exit 1
 
       - name: Rollback automático em caso de falha
         if: failure() && steps.healthcheck.outcome == 'failure' &&
@@ -728,15 +647,19 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
             cd /opt/hbtrack/production
-            PREV_SHA=$(cat .last_sha 2>/dev/null || echo "")
-            if [ -n "$PREV_SHA" ]; then
-              echo "⏪ Rollback para SHA $PREV_SHA"
-              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$PREV_SHA|" .env
+            PREV_SHA=$(cat .last_sha 2>/dev/null | tr -d '[:space:]' || echo "")
+            if [ -n "${PREV_SHA}" ] && [ "${PREV_SHA}" != "latest" ] && [ "${PREV_SHA}" != "none" ]; then
+              echo "⏪ Rollback para SHA ${PREV_SHA}..."
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${PREV_SHA}|" .env
               docker compose -f infra/docker-compose.prod.yml pull
               docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
+              echo "✅ Rollback concluído — IMAGE_TAG=${PREV_SHA}"
             else
-              echo "⚠️ Sem SHA anterior para rollback"
+              echo "⚠️ Sem SHA válido para rollback (PREV_SHA='${PREV_SHA}')"
+              echo "   Stack atual mantida — investigar manualmente"
+              docker compose -f infra/docker-compose.prod.yml ps || true
             fi
 
       - name: Diagnóstico — logs container api (em caso de falha)
@@ -752,5 +675,161 @@ jobs:
             docker compose -f infra/docker-compose.prod.yml ps 2>&1 || true
             echo "--- LOGS API (100 linhas) ---"
             docker compose -f infra/docker-compose.prod.yml logs api --tail=100 2>&1 || true
-            echo "--- LOGS NGINX (30 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs nginx --tail=30 2>&1 || true
+            echo "--- LOGS EDGE (verificar se proxy está rodando) ---"
+            docker ps --filter name=hbtrack-edge 2>&1 || true
+
+  # ─────────────────────────────────────────────────────────────
+  # ETAPA 8: Deploy Edge Proxy (proxy único de borda)
+  #          Roda após deploy-production. Idempotente.
+  #
+  #          Resolve o conflito staging/produção:
+  #          staging e produção ficam em redes internas distintas.
+  #          O edge roteia por hostname sem disputar 80/443.
+  # ─────────────────────────────────────────────────────────────
+  deploy-edge:
+    name: "8. Deploy → Edge Proxy"
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar se VPS está configurada
+        id: check-vps
+        run: |
+          if [ -z "${{ secrets.VPS_HOST_PRODUCTION }}" ]; then
+            echo "⚠️ VPS_HOST_PRODUCTION não configurado — skip edge deploy"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sincronizar infra para o servidor (edge)
+        if: steps.check-vps.outputs.skip != 'true'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "infra/"
+          target: /opt/hbtrack/edge
+
+      - name: Provisionar Edge Proxy via SSH
+        if: steps.check-vps.outputs.skip != 'true'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            mkdir -p /opt/hbtrack/edge
+            cd /opt/hbtrack/edge
+
+            docker network create hbtrack-prod-net 2>/dev/null || true
+            docker network create hbtrack-staging-net 2>/dev/null || true
+
+            EDGE_CONF_VOL="hbtrack-edge_certbot_conf"
+            EDGE_WWW_VOL="hbtrack-edge_certbot_www"
+            OLD_PROD_VOL="hbtrack-production_certbot_conf"
+            OLD_PROD_WWW="hbtrack-production_certbot_www"
+
+            # Migração única: copiar certs do volume antigo de produção para edge
+            if docker volume ls --format "{{.Name}}" | grep -q "^${OLD_PROD_VOL}$" && \
+               ! docker volume ls --format "{{.Name}}" | grep -q "^${EDGE_CONF_VOL}$"; then
+              echo "📦 Migrando certs de produção para volume edge..."
+              docker run --rm \
+                -v ${OLD_PROD_VOL}:/src:ro \
+                -v ${EDGE_CONF_VOL}:/dst \
+                alpine sh -c "cp -a /src/. /dst/"
+              echo "✅ Migração certbot_conf concluída"
+            fi
+            if docker volume ls --format "{{.Name}}" | grep -q "^${OLD_PROD_WWW}$" && \
+               ! docker volume ls --format "{{.Name}}" | grep -q "^${EDGE_WWW_VOL}$"; then
+              docker run --rm \
+                -v ${OLD_PROD_WWW}:/src:ro \
+                -v ${EDGE_WWW_VOL}:/dst \
+                alpine sh -c "cp -a /src/. /dst/"
+            fi
+
+            # Parar qualquer nginx legado que ocupe 80/443
+            docker ps --format '{{.ID}} {{.Ports}} {{.Names}}' \
+              | awk '/:80->|:443->/ && !/hbtrack-edge/ {print $1}' \
+              | xargs -r docker stop >/dev/null 2>&1 || true
+
+            if [ ! -f .env ]; then
+              { echo "NGINX_EDGE_CONF=nginx.edge.bootstrap.conf"; echo "COMPOSE_PROJECT_NAME=hbtrack-edge"; } > .env
+            fi
+
+            PROD_CERT_OK=false
+            STAGING_CERT_OK=false
+            docker run --rm -v ${EDGE_CONF_VOL}:/etc/letsencrypt alpine \
+              test -f /etc/letsencrypt/live/handballtrack.app/fullchain.pem 2>/dev/null \
+              && PROD_CERT_OK=true && echo "✅ Cert produção: presente" || echo "📜 Cert produção: ausente"
+            docker run --rm -v ${EDGE_CONF_VOL}:/etc/letsencrypt alpine \
+              test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null \
+              && STAGING_CERT_OK=true && echo "✅ Cert staging: presente" || echo "📜 Cert staging: ausente"
+
+            if [ "${PROD_CERT_OK}" = "false" ] || [ "${STAGING_CERT_OK}" = "false" ]; then
+              sed -i "s|^NGINX_EDGE_CONF=.*|NGINX_EDGE_CONF=nginx.edge.bootstrap.conf|" .env
+              docker compose -f infra/docker-compose.edge.yml up -d nginx
+              sleep 5
+              VPS_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
+
+              if [ "${PROD_CERT_OK}" = "false" ]; then
+                DNS_PROD=$(curl -s "https://dns.google/resolve?name=handballtrack.app&type=A" \
+                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)
+                if [ "${DNS_PROD}" = "${VPS_IP}" ]; then
+                  docker run --rm \
+                    -v ${EDGE_CONF_VOL}:/etc/letsencrypt \
+                    -v ${EDGE_WWW_VOL}:/var/www/certbot \
+                    certbot/certbot certonly \
+                    --webroot --webroot-path /var/www/certbot \
+                    --non-interactive --agree-tos \
+                    --email suporte@handballtrack.app \
+                    -d handballtrack.app -d www.handballtrack.app
+                  PROD_CERT_OK=true
+                  echo "✅ Cert produção emitido"
+                fi
+              fi
+
+              if [ "${STAGING_CERT_OK}" = "false" ]; then
+                DNS_STAG=$(curl -s "https://dns.google/resolve?name=staging.handballtrack.app&type=A" \
+                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)
+                if [ "${DNS_STAG}" = "${VPS_IP}" ]; then
+                  docker run --rm \
+                    -v ${EDGE_CONF_VOL}:/etc/letsencrypt \
+                    -v ${EDGE_WWW_VOL}:/var/www/certbot \
+                    certbot/certbot certonly \
+                    --webroot --webroot-path /var/www/certbot \
+                    --non-interactive --agree-tos \
+                    --email suporte@handballtrack.app \
+                    -d staging.handballtrack.app
+                  STAGING_CERT_OK=true
+                  echo "✅ Cert staging emitido"
+                fi
+              fi
+            fi
+
+            if [ "${PROD_CERT_OK}" = "true" ] && [ "${STAGING_CERT_OK}" = "true" ]; then
+              sed -i "s|^NGINX_EDGE_CONF=.*|NGINX_EDGE_CONF=nginx.edge.conf|" .env
+              docker compose -f infra/docker-compose.edge.yml up -d
+              echo "✅ Edge proxy rodando com SSL completo"
+            else
+              echo "⚠️ Edge em modo bootstrap — certs incompletos. Re-execute após corrigir DNS."
+              docker compose -f infra/docker-compose.edge.yml up -d nginx
+            fi
+            docker compose -f infra/docker-compose.edge.yml ps
+
+      - name: Health check — edge
+        if: steps.check-vps.outputs.skip != 'true'
+        run: |
+          for HOST in handballtrack.app www.handballtrack.app; do
+            STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://${HOST}/health" || echo "000")
+            echo "${HOST}: HTTP ${STATUS}"
+          done
+          PROD_STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://handballtrack.app/health" || echo "000")
+          if [ "${PROD_STATUS}" != "200" ]; then
+            echo "❌ handballtrack.app não respondeu 200 (status=${PROD_STATUS})"
+            exit 1
+          fi
+          echo "✅ Edge proxy OK"
