@@ -5,7 +5,7 @@
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -417,11 +417,17 @@
       "sha256": "93e68514788408cc3264ebc0bfb09f2fe1584875f46338bb99d1281e4488f2e6",
       "created_at": "2026-04-22T07:08:08.255149+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/session_start.schema.json",
+      "sha256": "387211a1249195f6c0a7ec179cefb5045df00dd4bb44868bfb7ce6836e57f898",
+      "created_at": "2026-04-22T17:53:59.675292+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-22T14:17:02.986197+00:00",
+  "hook_validated_at": "2026-04-22T17:49:28.339050+00:00",
   "module": "training",
   "module_focus": "infra",
   "roadmap_phase": 6

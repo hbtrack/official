@@ -1717,6 +1717,20 @@ class HBCLIv2:
 
         return overall_exit
     
+    def _read_worker_frontmatter(self, path: pathlib.Path) -> dict:
+        """Extrai frontmatter YAML delimitado por --- do arquivo de worker prompt.
+
+        Retorna dict com os campos do frontmatter, ou {} se ausente ou parse falhar.
+        """
+        try:
+            text = path.read_text(encoding="utf-8")
+            if not text.startswith("---"):
+                return {}
+            end_idx = text.index("---", 3)
+            return yaml.safe_load(text[3:end_idx]) or {}
+        except Exception:
+            return {}
+
     @staticmethod
     def _calculate_file_hash(path: pathlib.Path) -> str:
         """Calcular SHA-256 do arquivo."""
