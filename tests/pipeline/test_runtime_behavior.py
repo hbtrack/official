@@ -96,12 +96,24 @@ def _default_merge_readiness() -> dict:
     }
 
 
+def _default_bridge_docs() -> dict[str, str]:
+    banner = "> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**\n\n"
+    return {
+        "CLAUDE.md": banner + "# Claude bridge\n",
+        "AGENTS.md": banner + "# Agents bridge\n",
+        ".github/copilot-instructions.md": banner + "# Copilot bridge\n",
+        ".github/skills/hb-pipeline-orchestrator/SKILL.md": banner + "# Skill pipeline\n",
+        ".github/skills/hb-roadmap-executor/SKILL.md": banner + "# Skill roadmap\n",
+    }
+
+
 def _build_workspace(
     tmp_path: Path,
     *,
     task_catalog: dict | None = None,
     boot_profiles: dict | None = None,
     merge_readiness: dict | None = None,
+    bridge_docs: dict[str, str] | None = None,
     validator_rc: int = 0,
 ) -> Path:
     workspace = tmp_path / "workspace"
@@ -117,6 +129,9 @@ def _build_workspace(
     _write_yaml(workspace / ".contract_driven" / "TASK_CATALOG.yaml", catalog)
     _write_yaml(workspace / "docs" / "_canon" / "MODULE_REGISTRY.yaml", {"modules": {"users": {"status": "validated_contract"}}})
     _write_json(workspace / "merge-readiness.json", merge_readiness or _default_merge_readiness())
+
+    for relative_path, content in (bridge_docs or _default_bridge_docs()).items():
+        _write_text(workspace / relative_path, content)
 
     for task_type, config in catalog["task_catalog"].items():
         prompt_path = workspace / config["worker_path"]
@@ -262,3 +277,24 @@ class TestPromotionGuards:
         assert result.returncode == 1
         assert "MISSING_PROMOTION_EVIDENCE" in result.stderr
         assert "module_readiness_scorecard.json" in result.stderr
+
+
+class TestAuditPromptsBridgeDocs:
+    def test_audit_prompts_passes_when_all_bridge_docs_have_disclaimer(self, tmp_path):
+        workspace = _build_workspace(tmp_path)
+
+        result = _run_hb(workspace, "audit-prompts", "--check-bridge-docs")
+
+        assert result.returncode == 0, result.stderr
+        assert "bridge docs com disclaimer" in result.stdout
+
+    def test_audit_prompts_fails_when_bridge_doc_lacks_disclaimer(self, tmp_path):
+        workspace = _build_workspace(tmp_path)
+        _write_text(workspace / "AGENTS.md", "# AGENTS\nsem banner\n")
+
+        result = _run_hb(workspace, "audit-prompts", "--check-bridge-docs")
+
+        combined = result.stdout + result.stderr
+        assert result.returncode == 1
+        assert "AGENTS.md" in combined
+        assert "bridge docs sem disclaimer obrigatório" in combined
