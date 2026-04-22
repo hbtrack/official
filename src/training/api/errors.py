@@ -8,6 +8,7 @@ Fase 1.3 — split estrutural do api/__init__.py monolítico.
 from __future__ import annotations
 
 import functools
+import logging
 from typing import Callable, TypeVar
 
 from django.db import DataError, IntegrityError
@@ -23,6 +24,7 @@ from training.domain.common.exceptions import (
 )
 
 _F = TypeVar("_F", bound=Callable)
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Tabela de mapeamento: nome-da-classe-de-exceção → código HTTP
@@ -96,10 +98,15 @@ def map_exceptions(func: _F) -> _F:
             for base_cls, http_code in _DOMAIN_BASE_MAP:
                 if isinstance(exc, base_cls):
                     raise HttpError(http_code, str(exc)) from exc
-            # 3. Erros de ORM do Django
+            # 3. Erros de ORM do Django — mascarar detalhes de schema (OWASP API3)
             if isinstance(exc, (IntegrityError, DataError)):
+                logger.warning(
+                    "db_constraint_error",
+                    extra={"detail": str(exc)},
+                    exc_info=True,
+                )
                 raise HttpError(
-                    422, f"Dados inválidos: violação de restrição do banco — {exc}"
+                    422, "Dados inválidos: violação de constraint de integridade"
                 ) from exc
             # 3. ValueError genérico (validação de negócio)
             if isinstance(exc, ValueError):

@@ -60,6 +60,19 @@ class TrainingSessionRepository:
             "created_by_user_id": session.created_by_user_id,
             "deleted_at": session.deleted_at,
             "deleted_reason": session.deleted_reason or "",
+            # ── Campos de execução (migration 0007) ───────────────────────────
+            "started_at": session.started_at,
+            "ended_at": session.ended_at,
+            "closed_at": session.closed_at,
+            "closed_by_user_id": session.closed_by_user_id,
+            "deviation_justification": session.deviation_justification,
+            "planning_deviation_flag": session.planning_deviation_flag,
+            "duration_actual_minutes": session.duration_actual_minutes,
+            "execution_outcome": session.execution_outcome,
+            "delay_minutes": session.delay_minutes,
+            "cancellation_reason": session.cancellation_reason,
+            "actual_load_recorded": session.actual_load_recorded,
+            "post_review_completed_at": session.post_review_completed_at,
         }
         m, _ = TrainingSessionModel.objects.update_or_create(pk=session.id, defaults=defaults)
         return self._to_domain(m)
@@ -72,8 +85,9 @@ class TrainingSessionRepository:
         status: Optional[str] = None,
         page_size: int = 20,
         page_token: Optional[str] = None,
+        page_id: Optional[uuid.UUID] = None,
     ) -> list[TrainingSession]:
-        qs = TrainingSessionModel.objects.filter(deleted_at__isnull=True).order_by("-session_at")
+        qs = TrainingSessionModel.objects.filter(deleted_at__isnull=True).order_by("-session_at", "-id")
         if organization_id:
             qs = qs.filter(organization_id=organization_id)
         if team_id:
@@ -84,7 +98,16 @@ class TrainingSessionRepository:
             qs = qs.filter(status=status)
         if page_token:
             try:
-                qs = qs.filter(session_at__lt=page_token)
+                if page_id is not None:
+                    # Cursor composto: (session_at, id) — tie-break determinístico (V12 fix)
+                    from django.db.models import Q  # noqa: PLC0415
+                    qs = qs.filter(
+                        Q(session_at__lt=page_token)
+                        | Q(session_at=page_token, id__lt=page_id)
+                    )
+                else:
+                    # Fallback legado: apenas session_at (tokens pré-Fase 2)
+                    qs = qs.filter(session_at__lt=page_token)
             except Exception:
                 pass
         return [self._to_domain(m) for m in qs[:page_size]]
@@ -126,6 +149,19 @@ class TrainingSessionRepository:
             updated_at=m.updated_at,
             deleted_at=m.deleted_at,
             deleted_reason=m.deleted_reason or None,
+            # ── Campos de execução (migration 0007) ───────────────────────────
+            started_at=m.started_at,
+            ended_at=m.ended_at,
+            closed_at=m.closed_at,
+            closed_by_user_id=m.closed_by_user_id,
+            deviation_justification=m.deviation_justification,
+            planning_deviation_flag=m.planning_deviation_flag,
+            duration_actual_minutes=m.duration_actual_minutes,
+            execution_outcome=m.execution_outcome,
+            delay_minutes=m.delay_minutes,
+            cancellation_reason=m.cancellation_reason,
+            actual_load_recorded=m.actual_load_recorded,
+            post_review_completed_at=m.post_review_completed_at,
         )
 
 

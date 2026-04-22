@@ -98,3 +98,56 @@ def test_legacy_valueerror_exceptions_still_valueerror(
         f"{concrete.__name__} historicamente herda de ValueError — "
         f"remover essa herança quebra consumidores que fazem `except ValueError`."
     )
+
+
+# ---------------------------------------------------------------------------
+# A6 — Varredura automática: toda subclasse de TrainingDomainError tem mapeamento
+# ---------------------------------------------------------------------------
+
+def _all_subclasses(cls: type) -> list[type]:
+    """Retorna todas as subclasses concretas (folha) recursivamente."""
+    result = []
+    for sub in cls.__subclasses__():
+        deeper = _all_subclasses(sub)
+        if deeper:
+            result.extend(deeper)
+        else:
+            result.append(sub)
+    return result
+
+
+# Bases semânticas cobertas pelo fallback isinstance em errors.py
+_FALLBACK_BASES = (
+    NotFoundError,
+    AuthorizationError,
+    ConflictError,
+    PreconditionError,
+    StateError,
+    ValidationError,
+)
+
+
+def test_all_training_domain_errors_have_mapping() -> None:
+    """Garante que toda exceção concreta de TrainingDomainError:
+    - está em _EXCEPTION_STATUS_MAP por nome (lookup string), OU
+    - é coberta pelo fallback isinstance das 6 bases semânticas.
+
+    Se este teste falhar, adicione a nova exceção à EXCEPTION_TAXONOMY acima
+    e ao _EXCEPTION_STATUS_MAP em api/errors.py.
+    """
+    from training.api.errors import _EXCEPTION_STATUS_MAP  # noqa: PLC0415
+
+    concrete_classes = _all_subclasses(TrainingDomainError)
+    unmapped: list[str] = []
+    for cls in concrete_classes:
+        in_map = cls.__name__ in _EXCEPTION_STATUS_MAP
+        in_fallback = issubclass(cls, _FALLBACK_BASES)
+        if not in_map and not in_fallback:
+            unmapped.append(cls.__name__)
+
+    assert not unmapped, (
+        f"As seguintes subclasses de TrainingDomainError não têm mapeamento HTTP "
+        f"(nem em _EXCEPTION_STATUS_MAP nem coberta por fallback isinstance): "
+        f"{unmapped}. "
+        f"Adicione-as em api/errors.py e na EXCEPTION_TAXONOMY deste teste."
+    )

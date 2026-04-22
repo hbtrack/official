@@ -62,23 +62,41 @@ def resolve_access(request) -> AccessContext:
 def get_cursor_codec() -> CursorCodec:
     """Fábrica de CursorCodec resolvida a partir de variável de ambiente.
 
-    Lê TRAINING_CURSOR_SECRET primeiro. Em ambiente de desenvolvimento
-    (DEBUG=True), aceita fallback para SECRET_KEY do Django. Em produção,
-    a ausência de TRAINING_CURSOR_SECRET levanta RuntimeError em deploy.
-    """
-    secret_str = os.environ.get("TRAINING_CURSOR_SECRET")
-    if not secret_str:
-        # Fallback para SECRET_KEY apenas em DEBUG
-        try:
-            from django.conf import settings  # noqa: PLC0415
+    Resolução em ordem:
+      1. TRAINING_CURSOR_SECRETS (CSV de secrets, novo,antigo) — suporte a rotação dual-key.
+      2. TRAINING_CURSOR_SECRET (singular, backward compat).
+      3. Fallback para SECRET_KEY do Django APENAS em ambiente não-produção
+         (DEBUG=True E ENV não é "production"/"prod").
 
-            if not getattr(settings, "DEBUG", False):
-                raise RuntimeError(
-                    "TRAINING_CURSOR_SECRET não definida. "
-                    "Em produção, defina esta variável de ambiente explicitamente."
-                )
-            secret_str = settings.SECRET_KEY
-        except ImportError:
-            raise RuntimeError("TRAINING_CURSOR_SECRET não definida.")
-    return CursorCodec(secret_str.encode())
+    Em produção, a ausência de TRAINING_CURSOR_SECRET(S) levanta RuntimeError.
+    """
+    # 1. Lista de secrets para rotação dual-key
+    secrets_csv = os.environ.get("TRAINING_CURSOR_SECRETS", "").strip()
+    if secrets_csv:
+        secrets = [s.encode() for s in secrets_csv.split(",") if s.strip()]
+        if secrets:
+            return CursorCodec(secrets=secrets)
+
+    # 2. Secret único (backward compat)
+    secret_str = os.environ.get("TRAINING_CURSOR_SECRET")
+    if secret_str:
+        return CursorCodec(secret=secret_str.encode())
+
+    # 3. Fallback para SECRET_KEY — apenas em dev (DEBUG=True E ENV != production)
+    try:
+        from django.conf import settings  # noqa: PLC0415
+
+        is_debug = getattr(settings, "DEBUG", False)
+        env_name = os.environ.get("ENV", "").lower()
+        is_production = env_name in ("production", "prod")
+
+        if is_production or not is_debug:
+            raise RuntimeError(
+                "TRAINING_CURSOR_SECRET não definida. "
+                "Em produção, defina TRAINING_CURSOR_SECRET ou TRAINING_CURSOR_SECRETS "
+                "explicitamente."
+            )
+        return CursorCodec(secret=settings.SECRET_KEY.encode())
+    except ImportError:
+        raise RuntimeError("TRAINING_CURSOR_SECRET não definida.")
 

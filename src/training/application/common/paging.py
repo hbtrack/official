@@ -68,16 +68,40 @@ class CursorCodec:
     O campo <session_at_iso> segue RFC 3339 (com timezone UTC).
 
     Instanciar via CursorCodec(secret=...) — nunca ler django.conf aqui.
+
+    Rotação de secret (V2 fix):
+        Para rotacionar sem cliff failure, passe uma lista de secrets:
+            CursorCodec(secrets=[novo_secret, secret_antigo])
+        - encode() usa sempre secrets[0] (o mais novo).
+        - decode() tenta cada secret em ordem até um verificar com sucesso.
+        O parâmetro `secret` (singular) é mantido por backward compatibility.
     """
 
     _VERSION = b"v1"
     _SEP = b"|"
     _SIG_LEN = 32  # SHA-256 digest = 32 bytes
 
-    def __init__(self, secret: bytes) -> None:
-        if not secret:
+    def __init__(
+        self,
+        secret: Optional[bytes] = None,
+        *,
+        secrets: Optional[list[bytes]] = None,
+    ) -> None:
+        """Inicializa o codec com um ou mais secrets.
+
+        Args:
+            secret:  secret único — backward compatible com código existente.
+            secrets: lista de secrets para rotação dual-key.
+                     secrets[0] é usado para encode; os demais são tentados no decode.
+        """
+        if secrets:
+            if any(not s for s in secrets):
+                raise ValueError("CursorCodec: nenhum secret pode ser vazio")
+            self._secrets = secrets
+        elif secret:
+            self._secrets = [secret]
+        else:
             raise ValueError("CursorCodec: secret não pode ser vazio")
-        self._secret = secret
 
     # ------------------------------------------------------------------
     # Public API
@@ -91,27 +115,35 @@ class CursorCodec:
             at_iso.encode(),
             str(id).encode(),
         ])
-        sig = self._sign(payload)
+        sig = self._sign(payload, self._secrets[0])
         raw = payload + self._SEP + sig
         return base64.urlsafe_b64encode(raw).decode()
 
     def decode(self, token: str) -> tuple[datetime, uuid.UUID]:
         """Deserializa cursor → (session_at, id).
 
+        Tenta cada secret em self._secrets na ordem (suporte a rotação dual-key).
         Lança ValueError com mensagem genérica se o cursor for inválido,
         expirado ou adulterado — nunca exponha detalhes de assinatura ao
         chamador HTTP.
         """
-        # Tenta decode principal; se falhar e ACCEPT_LEGACY_CURSOR=true, usa fallback
-        try:
-            return self._decode_v1(token)
-        except ValueError:
-            if os.environ.get("ACCEPT_LEGACY_CURSOR", "").lower() == "true":
-                return self._decode_legacy(token)
-            raise
+        # Tenta decode v1 com cada secret (rotação dual-key)
+        last_err: Optional[ValueError] = None
+        for s in self._secrets:
+            try:
+                return self._decode_v1(token, secret=s)
+            except ValueError as e:
+                last_err = e
+        # Se todos os secrets falharam, tenta fallback legacy
+        if os.environ.get("ACCEPT_LEGACY_CURSOR", "").lower() == "true":
+            return self._decode_legacy(token)
+        raise last_err or ValueError("Cursor inválido")
 
-    def _decode_v1(self, token: str) -> tuple[datetime, uuid.UUID]:
-        """Decode v1 com HMAC-SHA256."""
+    def _decode_v1(
+        self, token: str, *, secret: Optional[bytes] = None
+    ) -> tuple[datetime, uuid.UUID]:
+        """Decode v1 com HMAC-SHA256 usando o secret fornecido."""
+        _secret = secret if secret is not None else self._secrets[0]
         try:
             raw = base64.urlsafe_b64decode(token.encode() + b"==")
         except Exception:
@@ -127,7 +159,7 @@ class CursorCodec:
         payload = raw[:sep_before_sig]
         sig = raw[sig_start:]
 
-        expected = self._sign(payload)
+        expected = self._sign(payload, _secret)
         if not hmac.compare_digest(sig, expected):
             raise ValueError("Cursor inválido")
 
@@ -164,5 +196,6 @@ class CursorCodec:
     # Internal
     # ------------------------------------------------------------------
 
-    def _sign(self, payload: bytes) -> bytes:
-        return hmac.new(self._secret, payload, hashlib.sha256).digest()
+    def _sign(self, payload: bytes, secret: Optional[bytes] = None) -> bytes:
+        _secret = secret if secret is not None else self._secrets[0]
+        return hmac.new(_secret, payload, hashlib.sha256).digest()

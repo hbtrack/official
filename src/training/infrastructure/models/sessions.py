@@ -77,6 +77,20 @@ class TrainingSessionModel(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     deleted_reason = models.TextField(blank=True, default="")
 
+    # ── Campos de execução / resultado (migration 0007) ───────────────────────
+    started_at = models.DateTimeField(null=True, blank=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
+    closed_by_user_id = models.UUIDField(null=True, blank=True)
+    deviation_justification = models.TextField(null=True, blank=True)
+    planning_deviation_flag = models.BooleanField(null=True, blank=True)
+    duration_actual_minutes = models.IntegerField(null=True, blank=True)
+    execution_outcome = models.CharField(max_length=40, null=True, blank=True)
+    delay_minutes = models.IntegerField(null=True, blank=True)
+    cancellation_reason = models.TextField(null=True, blank=True)
+    actual_load_recorded = models.SmallIntegerField(null=True, blank=True)
+    post_review_completed_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         db_table = "training_sessions"
         app_label = "training"

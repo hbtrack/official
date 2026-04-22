@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import uuid
 from typing import Optional
 
 from ...application.common.paging import CursorCodec
@@ -31,15 +32,18 @@ class ListTrainingSessionsUseCase:
         if inp.actor_role == RoleLabel.MEMBER:
             raise InsufficientPrivilege("member não tem acesso a sessões de treino")
 
-        # Decodificar cursor opaco → session_at para filtro no repositório
+        # Decodificar cursor opaco → session_at + id para filtro no repositório
         repo_page_token: Optional[str] = inp.page_token
+        repo_page_id: Optional[uuid.UUID] = None
         if inp.page_token and self._cursor_codec:
             try:
-                session_at, _id = self._cursor_codec.decode(inp.page_token)
+                session_at, cursor_id = self._cursor_codec.decode(inp.page_token)
                 repo_page_token = session_at.isoformat()
+                repo_page_id = cursor_id  # usado no tie-break (session_at, id)
             except ValueError:
                 # Cursor inválido → ignorar (retorna primeira página)
                 repo_page_token = None
+                repo_page_id = None
 
         items = self._repo.list(
             organization_id=inp.organization_id,
@@ -48,6 +52,7 @@ class ListTrainingSessionsUseCase:
             status=inp.status,
             page_size=inp.page_size,
             page_token=repo_page_token,
+            page_id=repo_page_id,
         )
 
         next_token: Optional[str] = None
