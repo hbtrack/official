@@ -365,7 +365,12 @@ Paths canônicos obrigatórios:
         ), f"Paths que faltam em LAYOUT: {missing_paths}"
 
     def test_validate_contracts_profile_local_passes(self):
-        """Teste 11: `validate_contracts.py --profile local` retorna PASS ou DEGRADED."""
+        """Teste 11: `validate_contracts.py --profile local` retorna PASS ou DEGRADED.
+
+        Nota: profile `local` executa todos os gates (não só os de precommit) e
+        pode levar 60-120s dependendo da máquina. Timeout de 180s cobre runners
+        CI mais lentos e máquinas locais com IO mais devagar.
+        """
         # Usar repo real, não tmp_path
         repo_root = Path(__file__).parent.parent
 
@@ -379,7 +384,7 @@ Paths canônicos obrigatórios:
             cwd=repo_root,
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=180,
         )
 
         # Output deve conter PASS ou DEGRADED ou exitcode 0, não FAIL crítico
