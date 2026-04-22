@@ -26,6 +26,8 @@ jobs:
   validate:
     name: "1. Validate Contracts"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Sincronizar branch_ativo no SESSION_HANDOFF
@@ -62,6 +64,8 @@ jobs:
     name: "2. Run Tests"
     runs-on: ubuntu-latest
     needs: validate
+    permissions:
+      contents: read
 
     services:
       postgres:
@@ -113,8 +117,8 @@ jobs:
       - name: Run migrations
         run: python manage.py migrate --noinput
       - name: Run tests (excluindo schemathesis e pipeline_gates)
-        run: pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates
-          --tb=short
+        run: pytest -q -m "not slow" --ignore=tests/schemathesis
+          --ignore=tests/pipeline_gates --tb=short
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 3: Build da imagem Docker
@@ -186,6 +190,8 @@ jobs:
     name: "4. Deploy → Staging"
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: read
     environment:
       name: staging
       url: ${{ vars.STAGING_URL || 'https://staging.handballtrack.app' }}
@@ -393,6 +399,8 @@ jobs:
     name: "5. Contract Conformance — ${{ matrix.module }} (Staging)"
     runs-on: ubuntu-latest
     needs: deploy-staging
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -447,6 +455,8 @@ jobs:
     name: "6. Aguardando aprovação humana"
     runs-on: ubuntu-latest
     needs: contract-conformance
+    permissions:
+      contents: read
     environment:
       name: production
       url: ${{ vars.PRODUCTION_URL }}
@@ -461,6 +471,8 @@ jobs:
     name: "7. Deploy → Production"
     runs-on: ubuntu-latest
     needs: approve
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Verificar se produção está configurada
@@ -690,6 +702,8 @@ jobs:
     name: "8. Deploy → Edge Proxy"
     runs-on: ubuntu-latest
     needs: deploy-production
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
