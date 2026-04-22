@@ -1524,6 +1524,79 @@ class HBCLIv2:
         exit_map = {"PASS": 0, "WARN": 1, "BLOCK": 2}
         return exit_map.get(final_decision, 2)
 
+    def cmd_audit_prompts(self) -> int:
+        """Auditar agent_prompts vs TASK_CATALOG.yaml.
+
+        Classifica cada .prompt.md como: active, frozen, orphan, legacy.
+        Retorna exit 1 se pelo menos um prompt for orphan.
+        """
+        prompts_dir = self.root / ".contract_driven" / "agent_prompts"
+        catalog_path = self.root / ".contract_driven" / "TASK_CATALOG.yaml"
+
+        if not prompts_dir.exists():
+            print(f"❌ Diretório de prompts não encontrado: {prompts_dir}", file=sys.stderr)
+            return 2
+        if not catalog_path.exists():
+            print(f"❌ TASK_CATALOG.yaml não encontrado: {catalog_path}", file=sys.stderr)
+            return 2
+
+        catalog_data = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+        task_catalog = catalog_data.get("task_catalog", {})
+
+        # Mapear worker_path → status do catálogo
+        # Normalizar para path relativo ao repo
+        cataloged: dict[str, str] = {}  # basename_stem -> ("active" | "frozen")
+        for _task_key, task in task_catalog.items():
+            wp = task.get("worker_path", "")
+            if not wp:
+                continue
+            stem = pathlib.Path(wp).name  # ex: "create_module_docs.prompt.md"
+            status = task.get("status", "active")
+            if status == "frozen":
+                cataloged[stem] = "frozen"
+            else:
+                cataloged[stem] = "active"
+
+        prompt_files = sorted(prompts_dir.glob("*.prompt.md"))
+
+        results: list[tuple[str, str]] = []
+        has_orphan = False
+
+        for pf in prompt_files:
+            fname = pf.name
+            if fname.endswith("_legacy.prompt.md"):
+                cat = "legacy"
+            elif fname in cataloged:
+                cat = cataloged[fname]  # "active" ou "frozen"
+            else:
+                cat = "orphan"
+                has_orphan = True
+            results.append((fname, cat))
+
+        # Imprimir tabela
+        print("\n══ AUDIT: agent_prompts vs TASK_CATALOG ══\n")
+        _ICONS = {"active": "✅", "frozen": "🧊", "orphan": "❌", "legacy": "📦"}
+        col_w = max(len(r[0]) for r in results) + 2 if results else 40
+        print(f"  {'ARQUIVO':<{col_w}} CATEGORIA")
+        print(f"  {'-' * col_w} ---------")
+        for fname, cat in results:
+            icon = _ICONS.get(cat, "?")
+            print(f"  {fname:<{col_w}} {icon} {cat}")
+
+        total = len(results)
+        orphans = sum(1 for _, c in results if c == "orphan")
+        frozen_n = sum(1 for _, c in results if c == "frozen")
+        active_n = sum(1 for _, c in results if c == "active")
+        legacy_n = sum(1 for _, c in results if c == "legacy")
+
+        print(f"\n  Total: {total}  |  active: {active_n}  frozen: {frozen_n}  legacy: {legacy_n}  orphan: {orphans}")
+
+        if has_orphan:
+            print(f"\n❌ AUDIT FAIL — {orphans} prompt(s) órfão(s) encontrado(s).\n", file=sys.stderr)
+            return 1
+        print("\n✅ AUDIT PASS — todos os prompts estão catalogados.\n")
+        return 0
+
     def cmd_survival_suite(self) -> int:
         """Rodar suíte de sobrevivência obrigatória.
 
@@ -1953,6 +2026,12 @@ class HBCLIv2:
             help="Módulo específico (opcional). Se omitido com --backend/--frontend/--db/--tests, roda para todos."
         )
 
+        # audit-prompts — verificar consistência de agent_prompts vs TASK_CATALOG
+        subparsers.add_parser(
+            "audit-prompts",
+            help="Auditar agent_prompts vs TASK_CATALOG.yaml (exit 1 se órfãos encontrados)",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -1998,6 +2077,8 @@ class HBCLIv2:
                     all_generators=parsed_args.all,
                     module=parsed_args.module,
                 )
+            elif parsed_args.command == "audit-prompts":
+                return self.cmd_audit_prompts()
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2
