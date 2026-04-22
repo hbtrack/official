@@ -687,6 +687,7 @@ class HBCLIv2:
                 "boot_profile_exists": True,
                 "boot_paths_valid": boot_paths_valid,
                 "required_sections_resolvable": required_sections_valid,
+                "authority_source_used": "TASK_CATALOG",
             },
         }
 
