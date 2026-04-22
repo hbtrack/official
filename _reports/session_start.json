@@ -421,7 +421,7 @@
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-22T13:10:47.421272+00:00",
+  "hook_validated_at": "2026-04-22T13:44:37.254847+00:00",
   "module": "training",
   "module_focus": "infra",
   "roadmap_phase": 6
