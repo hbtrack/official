@@ -161,19 +161,19 @@
     },
     {
       "relpath": "src/training/api/__init__.py",
-      "sha256": "3c2e8d1b85ddb42a873506463cf796c932f3f2f63807904ca62442bdb010b0be"
+      "sha256": "6ef59d1b1db37bbd0c58b90a3fa56305500910c0de2abd10600db78d9183827b"
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "516f3180c10f78d15ced9f8da2a00f941a87162114e2018732d5567a323d7237"
+      "sha256": "b913b8343bed90e8f0a61465f9b256d80a56a98c45f7c9b9686d48ae17641adb"
     },
     {
       "relpath": "src/training/domain/entities/__init__.py",
-      "sha256": "49a7a59e4a2103ef9e6a42ce38e569db18c3be2b6d810a39027d2b0067ce67d6"
+      "sha256": "ecc9f0c0777358635c830a1781fbea3845ab5418326d17c4cb839ec73f6388de"
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "a1b2d97a90da48157911bf5d4d7fedf4afe18b7319a8352cdfc9cab971d4e3a1"
+      "sha256": "f45e98b28ad1a7ca5cfb96822d9bf19b456e466140343f202eef15bd5cf21e83"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "1db7ab3daa815e8eb4c01f5ec5fa8ec6e53a5a7d2207d38b0017d2ef930f2eb5"
+  "source_fingerprint": "8972fa763c21a1523af4b9b77f84333333a7b48005d6c91dadd03d2ab17b0223"
 }

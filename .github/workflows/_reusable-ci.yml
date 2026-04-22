@@ -104,6 +104,7 @@ jobs:
     env:
       SECRET_KEY: ci-secret-key-for-testing-only-not-real
       DEBUG: "false"
+      TRAINING_CURSOR_SECRET: ci-training-cursor-secret-for-testing-only
       ALLOWED_HOSTS: localhost,127.0.0.1
       HB_RUN_SCHEMATHESIS: "1"
       HB_SCHEMATHESIS_MAX_EXAMPLES: "10"
