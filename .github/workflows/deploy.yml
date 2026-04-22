@@ -558,7 +558,18 @@ jobs:
           script: |
             mkdir -p /opt/hbtrack/production
             # chmod apenas se o usuário atual for dono do diretório (evita falha se criado por root)
-            [ "$(stat -c '%U' /opt/hbtrack/production)" = "$(whoami)" ] && chmod 755 /opt/hbtrack/production || true
+            if [ "$(stat -c '%U' /opt/hbtrack/production)" = "$(whoami)" ]; then
+              chmod 755 /opt/hbtrack/production
+            fi
+            # Validação explícita: falhar com mensagem clara se o diretório não for gravável
+            OWNER=$(stat -c '%U:%G' /opt/hbtrack/production)
+            PERMS=$(stat -c '%a' /opt/hbtrack/production)
+            echo "INFO: /opt/hbtrack/production owner=$OWNER perms=$PERMS"
+            if ! test -w /opt/hbtrack/production; then
+              echo "ERRO: diretório /opt/hbtrack/production não é gravável para $(whoami) (owner=$OWNER perms=$PERMS)"
+              echo "AÇÃO NECESSÁRIA: executar no VPS como root: chown $(whoami) /opt/hbtrack/production"
+              exit 1
+            fi
 
       - name: Sincronizar infra para o servidor produção
         if: steps.check-prod.outputs.skip != 'true'
