@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-22"
-branch_ativo: refactor/training-decomposition
+branch_ativo: docs/codegen-canonization
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
@@ -8,60 +8,46 @@ fase_roadmap: 6
 roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-TIER3-TRAINING-DECOMPOSITION
+task_id: A1-CODEGEN-CANONIZATION
 resultado: DONE
-proxima_acao_permitida: "push branch refactor/training-decomposition + abrir PR → main"
+proxima_acao_permitida: "revisar/mergear docs/codegen-canonization; retornar a refactor/training-decomposition via git stash pop"
 bloqueios_ativos: []
 evidence_paths:
-  - "_reports/contract_gates/precommit.latest.json"
-  - "contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json"
-  - "docs/_canon/decisions/ADR-035-session-access-policy.md"
-  - "src/training/migrations/0007_training_session_execution_fields.py"
+  - "docs/_canon/CONTRACT_PIPELINE.md"
+  - "docs/_canon/AGENT_INSTRUCTIONS.md"
+  - "_reports/contract_gates/stage-artifact.local.latest.json"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-**Sessão 2026-04-22 — Tier 1/2/3 (pós Fase 6)**
+**Sessão 2026-04-22 — A1 Codegen Canonization (plano de evolução arquitetural, fase A1)**
 
-Fases 0–6 + Tier 1 Adversarial + Tier 2 + Tier 3 concluídos (ver `.dev/decisões/rafatora_training.md` §6/§7/§8).
+Fase A1 do plano `/home/davis/.claude/plans/verifique-e-valide-as-glowing-fiddle.md` executada. Objetivo: oficializar `scripts/compile/compile_source_graph.py` como compilador canônico único de IR, evitando que agentes futuros criem compiladores redundantes.
 
-**Tier 1 — Adversarial bug fixes (e560168f):**
-- Migration `0007` + 12 campos ORM/repo (V1 — perda silenciosa de dados)
-- `CursorCodec` dual-key `TRAINING_CURSOR_SECRETS` CSV (V2 — cliff failure em rotação)
-- Q filter tie-break `(session_at, id)` + índice (V12 — duplicação com timestamps iguais)
-- Guard duplo ENV=production em `get_cursor_codec()` (V9)
-- IntegrityError/DataError retornam mensagem genérica (V10 — leak de schema)
-- `test_all_training_domain_errors_have_mapping` recursivo (V5)
+**Alterações:**
+- `docs/_canon/CONTRACT_PIPELINE.md` — nova §7 "Compilador Canônico de IR" documentando: inputs declarados, outputs canônicos em `generated/source_graph/<module>/`, determinismo via SHA-256, consumo downstream exclusivo pela IR, ordem canônica de geração, comando de regeneração autorizado.
+- `docs/_canon/AGENT_INSTRUCTIONS.md` — §7 (SSOT CRÍTICOS) ganhou entrada "Compilador de IR" apontando para o script canônico e a nova §7 do CONTRACT_PIPELINE.
 
-**Tier 2 — N+1 housekeeping:**
-- N2.1: `DeprecationWarning` via `__getattr__` em 5 shims + `warnings.warn` em `use_cases.py`
-- N2.2: `TrainingServices` singleton via `__new__`
-- N2.3: waiver `PACT_PROVIDER_GATE_TRAINING_20260422.json` + `merge-readiness.json`
-- N2.4: `ADR-035-session-access-policy.md` (OWASP API1+API5)
+**Validação:**
+- `hb artifact docs/_canon/CONTRACT_PIPELINE.md` → PASS (exitcode 0)
+- `hb artifact docs/_canon/AGENT_INSTRUCTIONS.md` → PASS (exitcode 0)
 
-**Tier 3 — N+2 housekeeping:**
-- N3.1: `configure_for_testing`/`reset_testing_overrides`/`_resolve` em `TrainingServices` + 6 testes
-- N3.2: comentário 4-linhas nos imports `_gen_*` em `api/__init__.py`
-- N3.4: `VPS/runbooks/TRAINING_V1_DATA_RECOVERY.md`
-- N3.3/N3.5: BLOQUEADOS (aguardam PR merge + 2 releases em produção)
-
-**Testes**: 394 passed, 19 skipped
+**Contexto do plano maior:** A1 é a primeira de 11 ações (A1-A4, B1-B3, C1-C4) que evoluem a arquitetura de codegen do HB Track. Demais ações aguardam Fase 6 ROADMAP (Deploy Produção Ciclo 1) encerrar antes de prosseguir.
 
 ## Estado Geral
 
-| Fase | Status |
+| Item | Status |
 |---|---|
-| 0–5 (decomposição completa) | ✅ CONCLUÍDAS |
-| 6.1 source graph sync | ✅ CONCLUÍDA |
-| 6.2 commit + PR | ⏳ |
+| A1 (docs canon) | ✅ DONE nesta branch |
+| A2..A4, B1..B3, C1..C4 | ⏸ aguardando Fase 6 ROADMAP |
+| Fase 6 ROADMAP (Deploy Produção Ciclo 1) | 🔧 EM PROGRESSO em `refactor/training-decomposition` |
 
 ## Evidências
 
-- `hb verify --roadmap-phase 5` → PASS
-- Source graph: 11/11 testes PASS
-- Context bundle: 5/5 testes PASS
-- Último commit Fase 5: `fe2e3aa0`
+- Diff: `git diff origin/main docs/_canon/` → +36 linhas, 0 deletions
+- `_reports/contract_gates/stage-artifact.local.latest.json` → STATUS PASS
+- `_reports/session_start.json` → stage2_artifacts atualizados com SHA-256 de ambos os arquivos
 
 ## Bloqueios ativos
 
@@ -69,9 +55,8 @@ Nenhum.
 
 ## Próxima ação permitida
 
-Commit Fase 6 + abrir PR com: decomposição de arquivos, surface pública preservada,
-shims ativos, TODO remoção shims N+1.
+Revisar o PR desta branch (`docs/codegen-canonization`) e mergear em `main`. Trabalho da branch `refactor/training-decomposition` preservado em stash@{0}; retomar via `git checkout refactor/training-decomposition && git stash pop`.
 
 ## Próxima Sessão
 
-Aderir aos critérios de done da Fase 6.
+Quando Fase 6 ROADMAP fechar, retomar o plano a partir de A2 (backend thin shims importando de `src/<module>/generated/`).

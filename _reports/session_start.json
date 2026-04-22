@@ -1,7 +1,7 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-22T00:55:31.675157+00:00",
-  "branch": "refactor/training-decomposition",
+  "session_timestamp": "2026-04-22T07:13:14.252106+00:00",
+  "branch": "docs/codegen-canonization",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -375,9 +375,10 @@
     },
     {
       "path": "SESSION_HANDOFF.md",
-      "sha256": "1ac50e69fa37f76e5c7553a5955a9f4acdf8c6dbbb09f73458cc341a0f8fcf1f",
+      "sha256": "fb37a6d75f08ba257efe4b44f6e03dd72119619fb08b2b5d3ba3983c92558629",
       "created_at": "2026-04-21T19:02:04.372497+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-22T07:13:22.157697+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
@@ -403,6 +404,18 @@
       "path": "contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
       "sha256": "150ebf276c6a7f07ebad93a64f748583edfb9499b83620cf26f383b678ad8e6f",
       "created_at": "2026-04-22T04:08:53.122652+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/CONTRACT_PIPELINE.md",
+      "sha256": "61e0a81e58e395052c2125e7688eb519c8821bb08ed3890d5f0cfdc3dff4c07f",
+      "created_at": "2026-04-22T07:07:51.715937+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/_canon/AGENT_INSTRUCTIONS.md",
+      "sha256": "93e68514788408cc3264ebc0bfb09f2fe1584875f46338bb99d1281e4488f2e6",
+      "created_at": "2026-04-22T07:08:08.255149+00:00",
       "gate_exit_code": 0
     }
   ],

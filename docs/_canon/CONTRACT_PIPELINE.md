@@ -53,6 +53,41 @@ Regra: todo gate inline em `validate_contracts.py` deve constar em `GATES_REGIST
 Gates com `integrated_in_validate_contracts: false` são passos externos por design.
 Teste obrigatório em CI: `tests/pipeline_gates/test_gate_registry_parity.py`.
 
+## 7. Compilador Canônico de IR
+
+**Compilador único**: `scripts/compile/compile_source_graph.py` é o único ponto de entrada autorizado para produzir a IR (Intermediate Representation) consumida pelos geradores downstream. Nenhum outro script deve ler `contracts/` para emitir IR.
+
+**Inputs declarados** (por módulo):
+- `contracts/openapi/paths/<module>.yaml` (derivado soberano do source master em `docs/hbtrack/modulos/<module>/graph/openapi_paths.yaml`)
+- `contracts/schemas/<module>/*.schema.json`
+- `docs/_canon/MODULE_REGISTRY.yaml` (fonte de taxonomia)
+- `docs/hbtrack/modulos/<module>/graph/module_manifest.yaml`
+
+**Outputs canônicos** em `generated/source_graph/<module>/`:
+- `<module>.bundle.yaml` — manifest com inputs + compiler version + SHA-256 por input
+- `<module>.openapi_contract_view.yaml` — operações com operation_id, method, path, runtime_handler_ref, use_case_ref, roles_allowed
+- `<module>.schema_contract_view.yaml` — visão normalizada dos schemas
+- `impact_report.json` — diff de cobertura e mudanças relativas à última compilação
+
+**Determinismo**: mesmo conjunto de inputs (verificado via SHA-256) deve produzir outputs byte-identicos. Re-execução sem alteração de inputs é vacuous-true.
+
+**Consumo downstream**: os geradores de código (`scripts/generate/backend_codegen.py`, e futuramente `frontend_contract_codegen.py`, `db_projection_codegen.py`, `test_codegen.py`) consomem **exclusivamente** a IR em `generated/source_graph/`. Ler contratos brutos (`contracts/openapi/`, `contracts/schemas/`) fora do compilador é violação arquitetural.
+
+**Ordem canônica de geração**:
+```
+contracts/ (SSOT)
+    ↓ compile_source_graph.py
+generated/source_graph/ (IR)
+    ↓ consumida por
+backend_codegen.py · frontend_contract_codegen.py · db_projection_codegen.py · test_codegen.py
+    ↓ produzem
+src/<module>/generated/ · frontend/src/generated/ · generated/db_candidates/ · tests/generated/
+    ↓ revisão humana para domínio/UX/banco
+    ↓ materialização final
+```
+
+**Regeneração manual autorizada**: `python3 scripts/compile/compile_source_graph.py --all` ou `--module <mod>`. Após rodar, validar via `hb artifact generated/source_graph/<module>/<module>.bundle.yaml`.
+
 Estado apurado 2026-03-23 (FASE 1):
 
 | Gate | Decisão |
