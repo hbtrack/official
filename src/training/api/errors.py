@@ -13,6 +13,15 @@ from typing import Callable, TypeVar
 from django.db import DataError, IntegrityError
 from ninja.errors import HttpError
 
+from training.domain.common.exceptions import (
+    AuthorizationError,
+    ConflictError,
+    NotFoundError,
+    PreconditionError,
+    StateError,
+    ValidationError as DomainValidationError,
+)
+
 _F = TypeVar("_F", bound=Callable)
 
 # ---------------------------------------------------------------------------
@@ -75,7 +84,19 @@ def map_exceptions(func: _F) -> _F:
             code = _EXCEPTION_STATUS_MAP.get(type(exc).__name__)
             if code is not None:
                 raise HttpError(code, str(exc)) from exc
-            # 2. Erros de ORM do Django
+            # 2. Fallback isinstance para bases semânticas do domínio (Fase 5.2)
+            _DOMAIN_BASE_MAP = (
+                (NotFoundError, 404),
+                (AuthorizationError, 403),
+                (ConflictError, 409),
+                (PreconditionError, 400),
+                (StateError, 422),
+                (DomainValidationError, 422),
+            )
+            for base_cls, http_code in _DOMAIN_BASE_MAP:
+                if isinstance(exc, base_cls):
+                    raise HttpError(http_code, str(exc)) from exc
+            # 3. Erros de ORM do Django
             if isinstance(exc, (IntegrityError, DataError)):
                 raise HttpError(
                     422, f"Dados inválidos: violação de restrição do banco — {exc}"

@@ -4,13 +4,13 @@ branch_ativo: refactor/training-decomposition
 modo_operacao: ROADMAP
 ci_status: PASS
 modulo_foco: training
-fase_roadmap: 4
-roadmap_phase: 4
+fase_roadmap: 5
+roadmap_phase: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-PHASE4-TRAINING-DECOMPOSITION
+task_id: ROADMAP-PHASE5-TRAINING-DECOMPOSITION
 resultado: DONE
-proxima_acao_permitida: "Iniciar Fase 5 — cobertura de testes de regressão + documentação interna"
+proxima_acao_permitida: "Fase 5 concluída — schemas/ split, test_layer_separation verde, bases domínio mapeadas em api/errors.py"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
