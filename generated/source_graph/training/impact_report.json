@@ -18,7 +18,7 @@
   ],
   "impacted_runtime": [
     "src/training/api/__init__.py",
-    "src/training/domain/entities.py",
+    "src/training/domain/entities/__init__.py",
     "src/training/domain/rules.py",
     "src/training/application/use_cases.py"
   ],
@@ -141,11 +141,11 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
-      "sha256": "62c65a7a5176278bbf7d0106e72855e953dc90693805f02a1073267caf362137"
+      "sha256": "e3b71f7bef5815f47c35cb1fa6839c9b3c3b19d61b74654d63bea9241d4ae0fa"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
-      "sha256": "5dee71049833c2a49ee48243dcb4a81af20a71730a0a6d20b981ad9d019cacf1"
+      "sha256": "611ce2c2c77f5632f6328d80e5b23e70d378a9399c79d51d065e0aac39b25af4"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/errors.yaml",
@@ -153,7 +153,7 @@
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-      "sha256": "e7d8dc9c3da0aead90dbadef6eb9dac2219d4613085bf676239c50bf5728f687"
+      "sha256": "11ffe1f59f224042d0d832c387abd628b5777396c46f5898f6c6e823cb502800"
     },
     {
       "relpath": "docs/hbtrack/modulos/training/graph/test_obligations.yaml",
@@ -165,15 +165,15 @@
     },
     {
       "relpath": "src/training/application/use_cases.py",
-      "sha256": "04c1114166f0c89183b3a9ef035f871286f3e63e815e69054a5ce61eab298bbf"
+      "sha256": "516f3180c10f78d15ced9f8da2a00f941a87162114e2018732d5567a323d7237"
     },
     {
-      "relpath": "src/training/domain/entities.py",
-      "sha256": "cb49a6d2f662651be108ce2b209bd5ebaf467ff8882c8a7b58e8701d6183e775"
+      "relpath": "src/training/domain/entities/__init__.py",
+      "sha256": "49a7a59e4a2103ef9e6a42ce38e569db18c3be2b6d810a39027d2b0067ce67d6"
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "0c47fae9f1dc4ac86a2a92bb701651f34627abba8536846a69452b5b2ee41f9c"
+      "sha256": "a1b2d97a90da48157911bf5d4d7fedf4afe18b7319a8352cdfc9cab971d4e3a1"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "1cb92fc3c976cb50984dcceb1b5db255d428ca6225cece14fd044594ecb2decf"
+  "source_fingerprint": "1db7ab3daa815e8eb4c01f5ec5fa8ec6e53a5a7d2207d38b0017d2ef930f2eb5"
 }

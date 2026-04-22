@@ -73,7 +73,7 @@ def test_training_entities_graph_matches_schema_and_runtime():
     entity_file, symbol = _resolve_symbol(entity["runtime_entity_ref"])
     entity_source = entity_file.read_text(encoding="utf-8")
 
-    assert entity_file.name == "entities.py"
+    assert entity_file.name in {"entities.py", "sessions.py"}
     assert f"class {symbol}" in entity_source
     assert entity["schema_ref"].endswith("training_session.schema.json")
 

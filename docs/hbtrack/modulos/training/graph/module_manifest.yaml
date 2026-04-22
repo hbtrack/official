@@ -28,7 +28,7 @@ contract_surfaces:
 
 runtime_surfaces:
   api_router: "../../../../../src/training/api/__init__.py"
-  domain_entity: "../../../../../src/training/domain/entities.py"
+  domain_entity: "../../../../../src/training/domain/entities/__init__.py"
   domain_rules: "../../../../../src/training/domain/rules.py"
   use_cases: "../../../../../src/training/application/use_cases.py"
 

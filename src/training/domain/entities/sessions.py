@@ -68,7 +68,11 @@ class TrainingSession:
     deleted_at: Optional[datetime] = None
     deleted_reason: Optional[str] = None
 
+    closed_at: Optional[datetime] = None
     closed_by_user_id: Optional[uuid.UUID] = None
+
+    started_at: Optional[datetime] = None
+    ended_at: Optional[datetime] = None
 
     deviation_justification: Optional[str] = None
     planning_deviation_flag: Optional[bool] = None

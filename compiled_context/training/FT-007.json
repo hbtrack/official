@@ -99,7 +99,7 @@
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "4cb924448859da7f82c13e740837e83012cd4ec16a41898e9626c3833eb7bb4f"
+      "sha256": "b29a9e9f8210ce8ab59ff4efd0a9d4b526c54480e6300a92644847b21bb4bf80"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -107,11 +107,11 @@
     },
     {
       "relpath": "generated/source_graph/training/training.openapi_contract_view.yaml",
-      "sha256": "fe0123ff191e402f691716e050dbdaa17e008c8aab142ce975e6b85862889299"
+      "sha256": "cc8b016bf9452996d1c13af9146959531857c4b3cf1878051e48b3717989fdbc"
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "62cd43753e989d1a61c87d9065a5ef62fc91ef17bd170f25cc392afe6d773be7"
+      "sha256": "ab04e77b221632a42b5b485b3ecff31631fc7325b7c445f00acfbeab2437a450"
     }
   ],
   "module": "training",
@@ -143,11 +143,11 @@
   },
   "runtime_surfaces": {
     "api_router": "src/training/api/__init__.py",
-    "domain_entity": "src/training/domain/entities.py",
+    "domain_entity": "src/training/domain/entities/__init__.py",
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "6b0c5a7967a0ab0854597e34a92c6525d97b22859f5c0e891e0f0e6e3bac7243",
+  "source_fingerprint": "1f646f3a2c680157909015e2ea224d4b4c0db9a6ae4bf15995d0b1f214f14348",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -217,7 +217,7 @@
             "rule": "deleted_at e deleted_reason devem ser ambos nulos ou ambos preenchidos."
           }
         ],
-        "runtime_entity_ref": "../../../../../src/training/domain/entities.py#TrainingSession",
+        "runtime_entity_ref": "../../../../../src/training/domain/entities/sessions.py#TrainingSession",
         "schema_ref": "../../../../../contracts/schemas/training/training_session.schema.json",
         "sovereign_fields": [
           {
@@ -764,7 +764,7 @@
       ],
       "impacted_runtime": [
         "src/training/api/__init__.py",
-        "src/training/domain/entities.py",
+        "src/training/domain/entities/__init__.py",
         "src/training/domain/rules.py",
         "src/training/application/use_cases.py"
       ],
@@ -778,7 +778,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "1cb92fc3c976cb50984dcceb1b5db255d428ca6225cece14fd044594ecb2decf"
+      "source_fingerprint": "1db7ab3daa815e8eb4c01f5ec5fa8ec6e53a5a7d2207d38b0017d2ef930f2eb5"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
@@ -949,7 +949,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#list_training_sessions",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListTrainingSessionsUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/queries.py#ListTrainingSessionsUseCase"
         },
         {
           "method": "POST",
@@ -974,7 +974,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#create_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#CreateTrainingSessionUseCase"
         },
         {
           "method": "GET",
@@ -1000,7 +1000,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#get_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/queries.py#GetTrainingSessionUseCase"
         },
         {
           "method": "PATCH",
@@ -1026,7 +1026,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#update_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#UpdateTrainingSessionUseCase"
         },
         {
           "method": "DELETE",
@@ -1050,7 +1050,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#delete_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#DeleteTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1075,7 +1075,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#publish_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1100,7 +1100,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#unpublish_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1125,7 +1125,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#start_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1150,7 +1150,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#complete_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1175,7 +1175,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#cancel_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "POST",
@@ -1200,7 +1200,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/sessions.py#archive_training_session",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#TransitionTrainingSessionUseCase"
+          "use_case_ref": "../../../../../src/training/application/sessions/commands.py#TransitionTrainingSessionUseCase"
         },
         {
           "method": "GET",
@@ -1226,7 +1226,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#list_session_blocks",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionBlocksUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/queries.py#ListSessionBlocksUseCase"
         },
         {
           "method": "POST",
@@ -1252,7 +1252,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#add_session_block",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#AddSessionBlockUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/commands.py#AddSessionBlockUseCase"
         },
         {
           "method": "GET",
@@ -1278,7 +1278,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#get_session_block",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetSessionBlockUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/queries.py#GetSessionBlockUseCase"
         },
         {
           "method": "PATCH",
@@ -1304,7 +1304,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#update_session_block",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateSessionBlockUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/commands.py#UpdateSessionBlockUseCase"
         },
         {
           "method": "DELETE",
@@ -1328,7 +1328,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#delete_session_block",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#DeleteSessionBlockUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/commands.py#DeleteSessionBlockUseCase"
         },
         {
           "method": "POST",
@@ -1353,7 +1353,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/blocks.py#reorder_session_blocks",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ReorderSessionBlocksUseCase"
+          "use_case_ref": "../../../../../src/training/application/blocks/commands.py#ReorderSessionBlocksUseCase"
         },
         {
           "method": "GET",
@@ -1379,7 +1379,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attendance.py#list_session_attendance",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionAttendanceUseCase"
+          "use_case_ref": "../../../../../src/training/application/attendance/queries.py#ListSessionAttendanceUseCase"
         },
         {
           "method": "POST",
@@ -1404,7 +1404,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attendance.py#record_session_attendance",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#RecordSessionAttendanceUseCase"
+          "use_case_ref": "../../../../../src/training/application/attendance/commands.py#RecordSessionAttendanceUseCase"
         },
         {
           "method": "POST",
@@ -1432,7 +1432,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#submit_wellness_pre",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPreUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/commands.py#SubmitWellnessPreUseCase"
         },
         {
           "method": "GET",
@@ -1458,7 +1458,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#get_wellness_pre",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPreUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/queries.py#GetWellnessPreUseCase"
         },
         {
           "method": "PATCH",
@@ -1485,7 +1485,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#update_wellness_pre",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPreUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/commands.py#UpdateWellnessPreUseCase"
         },
         {
           "method": "POST",
@@ -1513,7 +1513,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#submit_wellness_post",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitWellnessPostUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/commands.py#SubmitWellnessPostUseCase"
         },
         {
           "method": "GET",
@@ -1539,7 +1539,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#get_wellness_post",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetWellnessPostUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/queries.py#GetWellnessPostUseCase"
         },
         {
           "method": "PATCH",
@@ -1566,7 +1566,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/wellness.py#update_wellness_post",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateWellnessPostUseCase"
+          "use_case_ref": "../../../../../src/training/application/wellness/commands.py#UpdateWellnessPostUseCase"
         },
         {
           "method": "GET",
@@ -1589,7 +1589,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_mesocycles",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMesocyclesUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/queries.py#ListMesocyclesUseCase"
         },
         {
           "method": "POST",
@@ -1614,7 +1614,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_mesocycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMesocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/commands.py#CreateMesocycleUseCase"
         },
         {
           "method": "GET",
@@ -1638,7 +1638,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_mesocycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMesocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/queries.py#GetMesocycleUseCase"
         },
         {
           "method": "PATCH",
@@ -1663,7 +1663,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_mesocycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMesocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/commands.py#UpdateMesocycleUseCase"
         },
         {
           "method": "GET",
@@ -1686,7 +1686,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#list_microcycles",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListMicrocyclesUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/queries.py#ListMicrocyclesUseCase"
         },
         {
           "method": "POST",
@@ -1711,7 +1711,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#create_microcycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateMicrocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/commands.py#CreateMicrocycleUseCase"
         },
         {
           "method": "GET",
@@ -1735,7 +1735,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#get_microcycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetMicrocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/queries.py#GetMicrocycleUseCase"
         },
         {
           "method": "PATCH",
@@ -1760,7 +1760,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/planning.py#update_microcycle",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#UpdateMicrocycleUseCase"
+          "use_case_ref": "../../../../../src/training/application/planning/commands.py#UpdateMicrocycleUseCase"
         },
         {
           "method": "GET",
@@ -1786,7 +1786,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/execution.py#list_execution_records",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListExecutionRecordsUseCase"
+          "use_case_ref": "../../../../../src/training/application/execution/queries.py#ListExecutionRecordsUseCase"
         },
         {
           "method": "POST",
@@ -1811,7 +1811,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/execution.py#create_execution_record",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateExecutionRecordUseCase"
+          "use_case_ref": "../../../../../src/training/application/execution/commands.py#CreateExecutionRecordUseCase"
         },
         {
           "method": "GET",
@@ -1837,7 +1837,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/execution.py#get_execution_record",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetExecutionRecordUseCase"
+          "use_case_ref": "../../../../../src/training/application/execution/queries.py#GetExecutionRecordUseCase"
         },
         {
           "method": "GET",
@@ -1863,7 +1863,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/feedback.py#list_feedback_threads",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListFeedbackThreadsUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/queries.py#ListFeedbackThreadsUseCase"
         },
         {
           "method": "POST",
@@ -1890,7 +1890,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/feedback.py#create_feedback_thread",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateFeedbackThreadUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#CreateFeedbackThreadUseCase"
         },
         {
           "method": "POST",
@@ -1914,7 +1914,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/feedback.py#close_feedback_thread",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CloseFeedbackThreadUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#CloseFeedbackThreadUseCase"
         },
         {
           "method": "GET",
@@ -1940,7 +1940,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/execution.py#list_session_objectives",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListSessionObjectivesUseCase"
+          "use_case_ref": "../../../../../src/training/application/execution/queries.py#ListSessionObjectivesUseCase"
         },
         {
           "method": "POST",
@@ -1965,7 +1965,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/execution.py#create_session_objective",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateSessionObjectiveUseCase"
+          "use_case_ref": "../../../../../src/training/application/execution/commands.py#CreateSessionObjectiveUseCase"
         },
         {
           "method": "GET",
@@ -1989,7 +1989,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attention.py#list_attention_queue_items",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListAttentionQueueItemsUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/queries.py#ListAttentionQueueItemsUseCase"
         },
         {
           "method": "POST",
@@ -2013,7 +2013,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attention.py#resolve_attention_queue_item",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ResolveAttentionQueueItemUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#ResolveAttentionQueueItemUseCase"
         },
         {
           "method": "POST",
@@ -2037,7 +2037,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attention.py#dismiss_attention_queue_item",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissAttentionQueueItemUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#DismissAttentionQueueItemUseCase"
         },
         {
           "method": "POST",
@@ -2061,7 +2061,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/attention.py#escalate_attention_queue_item",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#EscalateAttentionQueueItemUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#EscalateAttentionQueueItemUseCase"
         },
         {
           "method": "GET",
@@ -2085,7 +2085,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#list_recommendations",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListRecommendationsUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/queries.py#ListRecommendationsUseCase"
         },
         {
           "method": "POST",
@@ -2109,7 +2109,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#accept_recommendation",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#AcceptRecommendationUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#AcceptRecommendationUseCase"
         },
         {
           "method": "POST",
@@ -2133,7 +2133,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/recommendations.py#dismiss_recommendation",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#DismissRecommendationUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#DismissRecommendationUseCase"
         },
         {
           "method": "GET",
@@ -2157,7 +2157,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/eligibility.py#get_ineligibility_status",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetIneligibilityStatusUseCase"
+          "use_case_ref": "../../../../../src/training/application/eligibility/queries.py#GetIneligibilityStatusUseCase"
         },
         {
           "method": "POST",
@@ -2182,7 +2182,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/eligibility.py#submit_ineligibility_declaration",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitIneligibilityDeclarationUseCase"
+          "use_case_ref": "../../../../../src/training/application/eligibility/commands.py#SubmitIneligibilityDeclarationUseCase"
         },
         {
           "method": "GET",
@@ -2205,7 +2205,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/analytics.py#get_load_chart",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#GetLoadChartUseCase"
+          "use_case_ref": "../../../../../src/training/application/analytics/queries.py#GetLoadChartUseCase"
         },
         {
           "method": "GET",
@@ -2229,7 +2229,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/chat.py#list_chat_messages",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#ListChatMessagesUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/queries.py#ListChatMessagesUseCase"
         },
         {
           "method": "POST",
@@ -2253,7 +2253,7 @@
             "member"
           ],
           "runtime_handler_ref": "../../../../../src/training/api/chat.py#submit_training_suggestion",
-          "use_case_ref": "../../../../../src/training/application/use_cases.py#SubmitTrainingSuggestionUseCase"
+          "use_case_ref": "../../../../../src/training/application/communication/commands.py#SubmitTrainingSuggestionUseCase"
         }
       ]
     },
@@ -2282,7 +2282,7 @@
           "member"
         ],
         "runtime_handler_ref": "../../../../../src/training/api/execution.py#list_execution_records",
-        "use_case_ref": "../../../../../src/training/application/use_cases.py#ListExecutionRecordsUseCase"
+        "use_case_ref": "../../../../../src/training/application/execution/queries.py#ListExecutionRecordsUseCase"
       },
       {
         "method": "POST",
@@ -2307,7 +2307,7 @@
           "member"
         ],
         "runtime_handler_ref": "../../../../../src/training/api/execution.py#create_execution_record",
-        "use_case_ref": "../../../../../src/training/application/use_cases.py#CreateExecutionRecordUseCase"
+        "use_case_ref": "../../../../../src/training/application/execution/commands.py#CreateExecutionRecordUseCase"
       },
       {
         "method": "GET",
@@ -2333,7 +2333,7 @@
           "member"
         ],
         "runtime_handler_ref": "../../../../../src/training/api/execution.py#get_execution_record",
-        "use_case_ref": "../../../../../src/training/application/use_cases.py#GetExecutionRecordUseCase"
+        "use_case_ref": "../../../../../src/training/application/execution/queries.py#GetExecutionRecordUseCase"
       }
     ],
     "schema_contract_view": {
