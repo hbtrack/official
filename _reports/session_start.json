@@ -1,11 +1,11 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-21T22:00:09.604468+00:00",
+  "session_timestamp": "2026-04-22T00:55:31.675157+00:00",
   "branch": "refactor/training-decomposition",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 0,
+  "stage": 2,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -381,21 +381,35 @@
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/endpoints.yaml",
-      "sha256": "62c65a7a5176278bbf7d0106e72855e953dc90693805f02a1073267caf362137",
+      "sha256": "e3b71f7bef5815f47c35cb1fa6839c9b3c3b19d61b74654d63bea9241d4ae0fa",
       "created_at": "2026-04-21T21:49:36.506229+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-22T00:56:41.451744+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-      "sha256": "e7d8dc9c3da0aead90dbadef6eb9dac2219d4613085bf676239c50bf5728f687",
+      "sha256": "11ffe1f59f224042d0d832c387abd628b5777396c46f5898f6c6e823cb502800",
       "created_at": "2026-04-21T21:49:49.462276+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-04-22T00:57:00.407268+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/graph/entity_graph.yaml",
+      "sha256": "611ce2c2c77f5632f6328d80e5b23e70d378a9399c79d51d065e0aac39b25af4",
+      "created_at": "2026-04-22T00:57:04.220972+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
+      "sha256": "150ebf276c6a7f07ebad93a64f748583edfb9499b83620cf26f383b678ad8e6f",
+      "created_at": "2026-04-22T04:08:53.122652+00:00",
       "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-21T21:56:52.528342+00:00",
+  "hook_validated_at": "2026-04-22T04:08:28.379774+00:00",
   "module": "training",
   "module_focus": "training",
-  "roadmap_phase": 4
+  "roadmap_phase": 6
 }

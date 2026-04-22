@@ -1,0 +1,15 @@
+{
+  "waiver_id": "WAIVER_PACT_PROVIDER_GATE_TRAINING_20260422",
+  "gate_id": "PACT_PROVIDER_GATE",
+  "scope": "module",
+  "module": "training",
+  "target_artifact": "tests/pipeline_gates/test_pact_provider_gate.py",
+  "justification": "test_pact_provider_gate.py foi deletado durante o refactor training (Fases 0-6, branch refactor/training-decomposition). Evidencia: apenas .pyc orfao em tests/pipeline_gates/. O modulo training nao tem consumer contracts Pact ativos em pact/ — ausencia confirmada na analise adversarial (P6, 21/04/2026). Gate sera recriado em release N+1 apos contrato Pact de consumer ser formalmente emitido. Ver .dev/decisoes/rafatora_training.md secao 7.3 P6.",
+  "approved_by": "human:davis",
+  "approved_at_utc": "2026-04-22T00:00:00Z",
+  "expires_at_utc": "2026-07-22T00:00:00Z",
+  "fingerprint": {
+    "type": "sha256",
+    "value": "85ae298eac6244cd6516999c709b4552abf0874f49e9a6af0e0d353b4a792214"
+  }
+}

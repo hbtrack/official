@@ -1,10 +1,17 @@
 """
-Regras de domínio — módulo training.
+Regras de domínio — módulo training.  [SHIM PARCIAL — exceções serão migradas em N+2]
+
 Derivadas de:
   - docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
   - docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
   - docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
 ADR-008: RBAC flat de 5 roles.
+
+ATENÇÃO:
+  As classes de exceção neste módulo (InsufficientPrivilege, TrainingSessionNotFound, etc.)
+  são shims que herdam de training.domain.common.exceptions — serão movidas para
+  módulos por agregado (domain/<agregado>/exceptions.py) em release N+2.
+  As funções assert_* são CANÔNICAS neste módulo até redistribuição por agregado.
 """
 from __future__ import annotations
 

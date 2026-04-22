@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-04-21"
+data_ultima_sessao: "2026-04-22"
 branch_ativo: refactor/training-decomposition
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
@@ -8,33 +8,45 @@ fase_roadmap: 6
 roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: ROADMAP-PHASE6-TRAINING-DECOMPOSITION
+task_id: ROADMAP-TIER3-TRAINING-DECOMPOSITION
 resultado: DONE
-proxima_acao_permitida: "Fase 6 — commit dos fixes de source graph + PR"
+proxima_acao_permitida: "push branch + abrir PR refactor/training-decomposition → main"
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/precommit.latest.json"
-  - "generated/source_graph/training/training.bundle.yaml"
-  - "compiled_context/training/FT-001.json"
-  - "docs/hbtrack/modulos/training/graph/endpoints.yaml"
+  - "contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json"
+  - "docs/_canon/decisions/ADR-035-session-access-policy.md"
+  - "src/training/migrations/0007_training_session_execution_fields.py"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-**Sessão 2026-04-22 — Fase 6 (source graph + PR)**
+**Sessão 2026-04-22 — Tier 1/2/3 (pós Fase 6)**
 
-Fases 0–5 concluídas (ver `.dev/decisões/rafatora_training.md`). Fase 6 em andamento:
+Fases 0–6 + Tier 1 Adversarial + Tier 2 + Tier 3 concluídos (ver `.dev/decisões/rafatora_training.md` §6/§7/§8).
 
-**Fase 6.1 — source graph sync** (esta sessão):
-- `module_manifest.yaml`: `domain_entity` → `entities/__init__.py`
-- `entity_graph.yaml`: `runtime_entity_ref` → `entities/sessions.py#TrainingSession`
-- `endpoints.yaml`: 53 `use_cases.py#XxxUseCase` → paths reais nos subpacotes
-- `sessions.py` entidade: campos `closed_at`, `started_at`, `ended_at` adicionados (contrato)
-- `test_training_source_graph_integrity.py`: aceita `sessions.py` ou `entities.py`
-- Source graph + context bundle regenerados
+**Tier 1 — Adversarial bug fixes (e560168f):**
+- Migration `0007` + 12 campos ORM/repo (V1 — perda silenciosa de dados)
+- `CursorCodec` dual-key `TRAINING_CURSOR_SECRETS` CSV (V2 — cliff failure em rotação)
+- Q filter tie-break `(session_at, id)` + índice (V12 — duplicação com timestamps iguais)
+- Guard duplo ENV=production em `get_cursor_codec()` (V9)
+- IntegrityError/DataError retornam mensagem genérica (V10 — leak de schema)
+- `test_all_training_domain_errors_have_mapping` recursivo (V5)
 
-**Testes**: 375 passed, 19 skipped (baseline inalterado)
+**Tier 2 — N+1 housekeeping:**
+- N2.1: `DeprecationWarning` via `__getattr__` em 5 shims + `warnings.warn` em `use_cases.py`
+- N2.2: `TrainingServices` singleton via `__new__`
+- N2.3: waiver `PACT_PROVIDER_GATE_TRAINING_20260422.json` + `merge-readiness.json`
+- N2.4: `ADR-035-session-access-policy.md` (OWASP API1+API5)
+
+**Tier 3 — N+2 housekeeping:**
+- N3.1: `configure_for_testing`/`reset_testing_overrides`/`_resolve` em `TrainingServices` + 6 testes
+- N3.2: comentário 4-linhas nos imports `_gen_*` em `api/__init__.py`
+- N3.4: `VPS/runbooks/TRAINING_V1_DATA_RECOVERY.md`
+- N3.3/N3.5: BLOQUEADOS (aguardam PR merge + 2 releases em produção)
+
+**Testes**: 394 passed, 19 skipped
 
 ## Estado Geral
 

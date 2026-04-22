@@ -1,13 +1,33 @@
 """
-SHIM — application/use_cases.py
+SHIM — application/use_cases.py  [DEPRECATED — remover em release N+2]
 
 Re-exporta todos os *UseCase e *Input/*Output dos subpacotes para manter
 a surface pública inalterada. Os consumidores existentes (api/handlers/*)
 continuam a importar de `.use_cases` sem precisar de atualização.
 
-Fase 3 da refatoração training. Ver docs/rafatora_training.md.
+CAMINHOS NOVOS (use estes):
+  sessions:      training.application.sessions.{commands,queries,dto}
+  blocks:        training.application.blocks.{commands,queries,dto}
+  wellness:      training.application.wellness.{commands,queries,dto}
+  attendance:    training.application.attendance.{commands,queries,dto}
+  execution:     training.application.execution.{commands,queries,dto}
+  planning:      training.application.planning.{commands,queries,dto}
+  communication: training.application.communication.{commands,queries,dto}
+  eligibility:   training.application.eligibility.{commands,queries,dto}
+  analytics:     training.application.analytics.{queries,dto}
+
+Fase 3 da refatoração training. Ver .dev/decisões/rafatora_training.md.
 """
 from __future__ import annotations
+
+import warnings
+
+warnings.warn(
+    "'training.application.use_cases' é um shim de compatibilidade e será removido em release N+2. "
+    "Use o subpacote direto (ex: 'training.application.sessions.commands').",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 # sessions
 from .sessions.commands import (  # noqa: F401
