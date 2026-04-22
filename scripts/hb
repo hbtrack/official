@@ -1719,11 +1719,31 @@ class HBCLIv2:
         exit_map = {"PASS": 0, "WARN": 1, "BLOCK": 2}
         return exit_map.get(final_decision, 2)
 
-    def cmd_audit_prompts(self) -> int:
+    def _get_bridge_doc_paths(self) -> list[pathlib.Path]:
+        """Listar bridge docs que exigem disclaimer explícito."""
+        bridge_docs = [
+            self.root / "CLAUDE.md",
+            self.root / "AGENTS.md",
+            self.root / ".github" / "copilot-instructions.md",
+        ]
+
+        skills_dir = self.root / ".github" / "skills"
+        if skills_dir.exists():
+            bridge_docs.extend(sorted(skills_dir.glob("**/SKILL.md")))
+
+        return bridge_docs
+
+    @staticmethod
+    def _has_bridge_disclaimer(text: str) -> bool:
+        """Bridge docs devem declarar NON-SOVEREIGN ou BRIDGE ONLY."""
+        normalized = text.upper()
+        return "NON-SOVEREIGN" in normalized or "BRIDGE ONLY" in normalized
+
+    def cmd_audit_prompts(self, check_bridge_docs: bool = False) -> int:
         """Auditar agent_prompts vs TASK_CATALOG.yaml.
 
         Classifica cada .prompt.md como: active, frozen, orphan, legacy.
-        Retorna exit 1 se pelo menos um prompt for orphan.
+        Retorna exit 1 se pelo menos um prompt for orphan ou bridge doc sem disclaimer.
         """
         prompts_dir = self.root / ".contract_driven" / "agent_prompts"
         catalog_path = self.root / ".contract_driven" / "TASK_CATALOG.yaml"
@@ -1786,10 +1806,43 @@ class HBCLIv2:
 
         print(f"\n  Total: {total}  |  active: {active_n}  frozen: {frozen_n}  legacy: {legacy_n}  orphan: {orphans}")
 
-        if has_orphan:
-            print(f"\n❌ AUDIT FAIL — {orphans} prompt(s) órfão(s) encontrado(s).\n", file=sys.stderr)
+        bridge_violations: list[str] = []
+        if check_bridge_docs:
+            print("\n══ AUDIT: bridge docs disclaimers ══\n")
+            for doc_path in self._get_bridge_doc_paths():
+                rel_path = doc_path.relative_to(self.root)
+                if not doc_path.exists():
+                    bridge_violations.append(f"{rel_path} (arquivo ausente)")
+                    print(f"  {rel_path}  ❌ ausente")
+                    continue
+
+                try:
+                    text = doc_path.read_text(encoding="utf-8")
+                except OSError as exc:
+                    bridge_violations.append(f"{rel_path} (erro de leitura: {exc})")
+                    print(f"  {rel_path}  ❌ erro de leitura")
+                    continue
+
+                if self._has_bridge_disclaimer(text):
+                    print(f"  {rel_path}  ✅ disclaimer presente")
+                    continue
+
+                bridge_violations.append(f"{rel_path} (sem disclaimer BRIDGE ONLY/NON-SOVEREIGN)")
+                print(f"  {rel_path}  ❌ sem disclaimer")
+
+        if has_orphan or bridge_violations:
+            if has_orphan:
+                print(f"\n❌ AUDIT FAIL — {orphans} prompt(s) órfão(s) encontrado(s).", file=sys.stderr)
+            if bridge_violations:
+                print("\n❌ AUDIT FAIL — bridge docs sem disclaimer obrigatório:", file=sys.stderr)
+                for violation in bridge_violations:
+                    print(f"  - {violation}", file=sys.stderr)
+            print("", file=sys.stderr)
             return 1
-        print("\n✅ AUDIT PASS — todos os prompts estão catalogados.\n")
+        if check_bridge_docs:
+            print("\n✅ AUDIT PASS — prompts catalogados e bridge docs com disclaimer.\n")
+        else:
+            print("\n✅ AUDIT PASS — todos os prompts estão catalogados.\n")
         return 0
 
     def cmd_survival_suite(self) -> int:
@@ -2365,9 +2418,14 @@ class HBCLIv2:
         )
 
         # audit-prompts — verificar consistência de agent_prompts vs TASK_CATALOG
-        subparsers.add_parser(
+        audit_prompts_p = subparsers.add_parser(
             "audit-prompts",
             help="Auditar agent_prompts vs TASK_CATALOG.yaml (exit 1 se órfãos encontrados)",
+        )
+        audit_prompts_p.add_argument(
+            "--check-bridge-docs",
+            action="store_true",
+            help="Validar bridge docs e skills com disclaimer BRIDGE ONLY/NON-SOVEREIGN",
         )
 
         subparsers.add_parser(
@@ -2422,7 +2480,9 @@ class HBCLIv2:
                     module=parsed_args.module,
                 )
             elif parsed_args.command == "audit-prompts":
-                return self.cmd_audit_prompts()
+                return self.cmd_audit_prompts(
+                    check_bridge_docs=getattr(parsed_args, "check_bridge_docs", False),
+                )
             elif parsed_args.command == "stats":
                 return self.cmd_stats()
         except FileNotFoundError as e:
