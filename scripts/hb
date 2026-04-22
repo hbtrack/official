@@ -1748,6 +1748,40 @@ class HBCLIv2:
         finally:
             self._restore_state_artifacts(backups)
 
+    def _check_ir_freshness(self, module: str) -> bool:
+        """Verificar se o IR (source_graph) do módulo existe e está atualizado.
+
+        Retorna True se o IR estiver presente e mais recente que os contratos.
+        Retorna False se ausente ou desatualizado.
+        """
+        ir_dir = self.root / "generated" / "source_graph" / module
+        if not ir_dir.exists():
+            return False
+
+        # Verificar mtime: IR deve ser mais recente que os contratos do módulo
+        ir_mtime = max(
+            (f.stat().st_mtime for f in ir_dir.rglob("*") if f.is_file()),
+            default=0.0,
+        )
+        if ir_mtime == 0.0:
+            return False  # Diretório vazio
+
+        # Fontes de contrato a verificar
+        contract_sources: list[pathlib.Path] = []
+        openapi_path = self.root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+        schema_dir = self.root / "contracts" / "schemas" / module
+        if openapi_path.exists():
+            contract_sources.append(openapi_path)
+        if schema_dir.exists():
+            contract_sources.extend(f for f in schema_dir.rglob("*") if f.is_file())
+
+        if not contract_sources:
+            # Sem contratos para comparar — aceitar o IR como válido
+            return True
+
+        latest_contract_mtime = max(f.stat().st_mtime for f in contract_sources)
+        return ir_mtime >= latest_contract_mtime
+
     def cmd_generate(
         self,
         ir: bool = False,
@@ -1804,6 +1838,16 @@ class HBCLIv2:
 
             elif stage_name == "backend":
                 for mod in modules_to_process:
+                    if not self._check_ir_freshness(mod):
+                        print(
+                            f"  ❌ [BLOCKED] IR_STALE_OR_MISSING: A representação intermediária "
+                            f"para o módulo '{mod}' está ausente ou desatualizada."
+                        )
+                        print(
+                            f"     Execute 'python3 compile_source_graph.py --module {mod}' primeiro."
+                        )
+                        overall_exit = 1
+                        continue
                     print(f"  Gerando {mod}...")
                     result = subprocess.run(
                         [sys.executable, "scripts/generate/backend_codegen.py", "--module", mod],
