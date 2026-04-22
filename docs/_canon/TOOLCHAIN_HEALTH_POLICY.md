@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.1.0"
-last_reviewed: "2026-03-16"
+version: "1.2.0"
+last_reviewed: "2026-04-22"
 status: active
 ---
 
@@ -64,6 +64,42 @@ Antes de qualquer worker pré-contrato:
 2. verificar `TOOLING_CONFIG_GATE`;
 3. carregar esta policy quando o perfil de boot indicar validação, readiness ou handoff;
 4. registrar o resultado em evidência machine-readable.
+
+### 2A. Política operacional de health checks de deploy
+
+Para jobs de deploy em ambientes runtime, a política canônica separa dois objetivos distintos:
+- confirmar que a stack da aplicação subiu corretamente;
+- confirmar que a borda pública está acessível para o ambiente exposto.
+
+#### 2A.1 Staging sem portas públicas publicadas
+
+Quando o `docker-compose` do staging usa apenas `expose` e depende de um edge proxy externo para publicar o ambiente, o health check primário do deploy **deve** ser interno à VPS.
+
+Métodos canônicos aceitos:
+- `docker compose exec -T api curl http://localhost:8000/health`
+- `docker compose exec -T frontend wget -qO- http://localhost/`
+
+Objetivo:
+- validar API e frontend dentro da rede interna da stack;
+- eliminar falso-negativo causado por DNS, TLS, firewall ou ordem de deploy do edge.
+
+#### 2A.2 Freshness interna do build
+
+Quando o deploy valida `buildSha`, a verificação canônica em staging sem borda própria deve ocorrer internamente:
+- HTML do frontend precisa conter o marcador `hb-build-sha` com o SHA esperado;
+- `/health` da API precisa reportar o mesmo `buildSha`.
+
+#### 2A.3 Reachability pública continua obrigatória quando existir domínio exposto
+
+Checks internos **não substituem** o smoke check público do staging quando o ambiente possui domínio público esperado.
+
+Regra:
+- após a validação interna da stack, o workflow deve executar um check público separado de reachability;
+- esse check pode validar `GET /` ou endpoint equivalente da borda pública do staging;
+- falha na borda pública deve continuar bloqueando o deploy, mesmo com a stack interna saudável.
+
+Objetivo:
+- impedir PASS falso quando a aplicação sobe, mas o roteamento externo do staging está quebrado.
 
 ---
 
