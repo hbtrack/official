@@ -91,6 +91,7 @@ def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
     "/training-sessions/{id}/blocks/{block_id}",
     response={200: SessionBlockOut, 403: ErrorOut, 404: ErrorOut},
 )
+@map_exceptions
 def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
     from ..domain.rules import SessionBlockNotFound
     block_repo = TrainingServices().session_block_repo()
