@@ -2,7 +2,7 @@ name: HB Track — Deploy Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       force_env:
@@ -71,18 +71,14 @@ jobs:
           POSTGRES_USER: hbtrack
           POSTGRES_PASSWORD: testpassword
         options: >-
-          --health-cmd "pg_isready -U hbtrack"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
+          --health-cmd "pg_isready -U hbtrack" --health-interval 5s
+          --health-timeout 5s --health-retries 10
         ports:
           - 5432:5432
       redis:
         image: redis:7-alpine
         options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 5s
-          --health-timeout 3s
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s
           --health-retries 5
         ports:
           - 6379:6379
@@ -117,7 +113,8 @@ jobs:
       - name: Run migrations
         run: python manage.py migrate --noinput
       - name: Run tests (excluindo schemathesis e pipeline_gates)
-        run: pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short
+        run: pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates
+          --tb=short
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 3: Build da imagem Docker
@@ -560,7 +557,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             mkdir -p /opt/hbtrack/production
-            chmod 755 /opt/hbtrack/production
+            # chmod apenas se o usuário atual for dono do diretório (evita falha se criado por root)
+            [ "$(stat -c '%U' /opt/hbtrack/production)" = "$(whoami)" ] && chmod 755 /opt/hbtrack/production || true
 
       - name: Sincronizar infra para o servidor produção
         if: steps.check-prod.outputs.skip != 'true'
@@ -711,7 +709,8 @@ jobs:
           exit 1
 
       - name: Rollback automático em caso de falha
-        if: failure() && steps.healthcheck.outcome == 'failure' && steps.check-prod.outputs.skip != 'true'
+        if: failure() && steps.healthcheck.outcome == 'failure' &&
+          steps.check-prod.outputs.skip != 'true'
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST_PRODUCTION }}
