@@ -108,3 +108,29 @@ Regra:
 - drift de config/tooling → corrigir `package.json`, `redocly.yaml` ou instalação local;
 - mudança em input global → rodar `python3 scripts/contracts/validate/api/compile_api_policy.py --all`;
 - `DEGRADED` local → instalar a ferramenta ausente antes de promover o contrato.
+
+---
+
+## 6. Performance e Timeouts (Fase C4)
+
+### 6.1 Baseline esperado
+
+| Comando | Timeout | Observação |
+| --- | --- | --- |
+| `python3 scripts/hb validate --profile local` | 180s | gate: `test_validate_contracts_profile_local_passes` |
+| `hb generate --backend` (17 módulos) | ≤ 60s | ideal: < 30s (determinístico) |
+| `pytest tests/ -q -m "not slow"` (CI) | ≤ 180s | baseline |
+| `npm test` (frontend) | ≤ 30s | baseline |
+
+### 6.2 Monitoramento e Degradação
+
+**Histórico**: commit `b78bac4f` (2026-03-17) bumpou `test_validate_contracts_profile_local_passes` para 180s.
+
+**Root-cause identificado**: validação de contrato (`validate_contracts.py --profile local`) pode ser I/O-bound na leitura de YAML/compilação de Spectral ruleset quando os inputs (schemas, openapi) crescem com novos módulos.
+
+**Decisão C4**:
+- Se após codegen determinístico (Fase B3) o teste continuar flaky/lento, aceita-se manter 180s documentado.
+- Justificativa: não é uma regressão algorítmica (hashing, drift detection são O(n) linear); é limitação de toolchain I/O.
+- Próximas fases: considerar parallelização ou cache de Spectral ruleset compilado.
+
+**Não é bloqueador** para a implementação da arquitetura de codegen.

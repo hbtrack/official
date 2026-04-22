@@ -53,15 +53,32 @@ class SecurityHeadersMiddleware:
 class FlowIDMiddleware:
     """Middleware Django ASGI/WSGI que propaga X-Flow-ID em cada request."""
 
+    # UUID v4 regex canônico
+    _UUID_V4_RE = __import__("re").compile(
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    )
+
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        flow_id = request.headers.get("X-Flow-ID") or str(uuid.uuid4())
+        raw_flow_id = request.headers.get("X-Flow-ID", "")
+        # SEGURANÇA (F10): validar X-Flow-ID como UUID v4. Valores inválidos ou
+        # maliciosos (quebras de linha, scripts, strings arbitrárias) são
+        # descartados e substituídos por UUID gerado internamente.
+        # Isso previne log injection via header de cliente.
+        flow_id = self._sanitize_flow_id(raw_flow_id)
+        request.flow_id = flow_id  # expõe para views e testes
         set_flow_id(flow_id)
         response = self.get_response(request)
         response["X-Flow-ID"] = flow_id
         return response
+
+    def _sanitize_flow_id(self, value: str) -> str:
+        """Aceita apenas UUID v4 canônico lowercase. Qualquer outra coisa → novo UUID."""
+        if value and self._UUID_V4_RE.match(value.lower()):
+            return value.lower()
+        return str(uuid.uuid4())
 
 
 class JWTClaimsMiddleware:

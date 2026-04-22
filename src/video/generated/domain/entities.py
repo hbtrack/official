@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: video
-# source_fingerprint: ab9d82ce46289362fcb30359068ac5afdfdde694bd3a71a41baf4f66693b59b6
+# source_fingerprint: 5e6128dc84578428e8cd577bfae07817c1d05f7a4179786617f299ef68b0a04a
 
 from __future__ import annotations
 

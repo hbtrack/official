@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: wellness
-# source_fingerprint: 2923965e6091a98c0ca099ae9c24093df5d7569bbe450d0c46bf91fd0af1e8da
+# source_fingerprint: a24f3c120e4d8b8dc45cb4f9ba73487a28d49139390d01546769d9bed8ad2676
 
 from __future__ import annotations
 

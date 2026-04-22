@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: identity_access
-# source_fingerprint: 3cbb85fb5ad42c0bc87d71ad90397123507eb2f38f63a0d97ab87908b024d9e4
+# source_fingerprint: 24d30bf851b8fe22ac90a351a956abb92012681f9973ebb6a535ca89a736a777
 
 from __future__ import annotations
 

@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: seasons
-# source_fingerprint: a3d6c3128a160e6b05d05b91f61bcc574b694116e3bf4843437987c5fb791b69
+# source_fingerprint: c8531bbe3968da55de9e401ff654c4c4aaa50b22fdefb931037cc3258ac3ce2a
 
 from __future__ import annotations
 

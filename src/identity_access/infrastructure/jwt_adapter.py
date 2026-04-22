@@ -47,22 +47,21 @@ def _signing_key() -> str:
     alg = _get_algorithm()
     if alg in ("HS256", "HS384", "HS512"):
         secret = os.environ.get("JWT_SECRET", "")
-        return secret or "dev-insecure-secret-change-in-production"
-    # RS256/ES256: usa chave privada ou gera par RSA de dev (não usar em produção)
+        if not secret:
+            raise RuntimeError(
+                "[SEGURANÇA] JWT_SECRET não configurado. "
+                "Defina JWT_SECRET com um valor gerado seguro para usar HS256. "
+                "Exemplo: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+            )
+        return secret
+    # RS256/ES256: requer chave privada explícita — nunca gera chave efêmera
     private_key = _decode_key(os.environ.get("JWT_PRIVATE_KEY", ""))
-    if private_key:
-        return private_key
-    from cryptography.hazmat.primitives.asymmetric import rsa
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.backends import default_backend
-    key = rsa.generate_private_key(
-        public_exponent=65537, key_size=2048, backend=default_backend()
-    )
-    return key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption(),
-    ).decode()
+    if not private_key:
+        raise RuntimeError(
+            "[SEGURANÇA] JWT_PRIVATE_KEY não configurada para RS256. "
+            "Gere um par RSA e defina JWT_PRIVATE_KEY (PEM ou base64) e JWT_PUBLIC_KEY no ambiente."
+        )
+    return private_key
 
 
 def _verification_key() -> str:
@@ -70,14 +69,19 @@ def _verification_key() -> str:
     alg = _get_algorithm()
     if alg in ("HS256", "HS384", "HS512"):
         secret = os.environ.get("JWT_SECRET", "")
-        return secret or "dev-insecure-secret-change-in-production"
+        if not secret:
+            raise RuntimeError(
+                "[SEGURANÇA] JWT_SECRET não configurado. "
+                "Defina JWT_SECRET com um valor gerado seguro para usar HS256."
+            )
+        return secret
     public_key = _decode_key(os.environ.get("JWT_PUBLIC_KEY", ""))
-    if public_key:
-        return public_key
-    raise RuntimeError(
-        "JWT_PUBLIC_KEY não configurada. "
-        "Defina JWT_PRIVATE_KEY e JWT_PUBLIC_KEY para usar RS256 real."
-    )
+    if not public_key:
+        raise RuntimeError(
+            "[SEGURANÇA] JWT_PUBLIC_KEY não configurada. "
+            "Defina JWT_PRIVATE_KEY e JWT_PUBLIC_KEY para usar RS256 em produção."
+        )
+    return public_key
 
 
 class JWTAdapter:

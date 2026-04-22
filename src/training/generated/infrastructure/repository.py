@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: training
-# source_fingerprint: c1449a9d72794316820fa09c2951aefc13d988f995523890b3cda0f456a9b670
+# source_fingerprint: 8972fa763c21a1523af4b9b77f84333333a7b48005d6c91dadd03d2ab17b0223
 
 from __future__ import annotations
 

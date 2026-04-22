@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY.
 # generator: hbtrack_backend_codegen@0.1.0
 # module: training
-# source_fingerprint: c1449a9d72794316820fa09c2951aefc13d988f995523890b3cda0f456a9b670
+# source_fingerprint: 8972fa763c21a1523af4b9b77f84333333a7b48005d6c91dadd03d2ab17b0223
 
 from __future__ import annotations
 
@@ -129,45 +129,6 @@ class TrainingSessionOut(Schema):
 class TrainingSessionListOut(Schema):
     data: List[TrainingSessionOut]
     nextPageToken: Optional[str] = None
-
-
-class CreateTrainingSessionIn(Schema):
-    organizationId: UUID
-    teamId: Optional[UUID] = None
-    seasonId: Optional[UUID] = None
-    microcycleId: Optional[UUID] = None
-    sessionAt: str
-    durationPlannedMinutes: Optional[int] = None
-    location: Optional[str] = None
-    sessionType: str
-    mainObjective: Optional[str] = None
-    secondaryObjective: Optional[str] = None
-    plannedLoad: Optional[int] = None
-    intensityTarget: Optional[int] = None
-    sessionBlock: Optional[str] = None
-    focusAttackPositionalPct: Optional[float] = None
-    focusDefensePositionalPct: Optional[float] = None
-    focusTransitionOffensePct: Optional[float] = None
-    focusTransitionDefensePct: Optional[float] = None
-    focusAttackTechnicalPct: Optional[float] = None
-    focusDefenseTechnicalPct: Optional[float] = None
-    focusPhysicalPct: Optional[float] = None
-    phaseFocusDefense: Optional[bool] = None
-    phaseFocusAttack: Optional[bool] = None
-    phaseFocusTransitionOffense: Optional[bool] = None
-    phaseFocusTransitionDefense: Optional[bool] = None
-    standalone: Optional[bool] = None
-
-
-class UpdateTrainingSessionIn(Schema):
-    phase: Optional[str] = None
-    durationMinutes: Optional[int] = None
-    blockObjective: Optional[str] = None
-    intensity: Optional[str] = None
-    exerciseId: Optional[UUID] = None
-    exerciseVersionId: Optional[UUID] = None
-    notes: Optional[str] = None
-    isOptional: Optional[bool] = None
 
 
 class ErrorOut(Schema):

@@ -1587,6 +1587,135 @@ class HBCLIv2:
             return result.returncode
         finally:
             self._restore_state_artifacts(backups)
+
+    def cmd_generate(
+        self,
+        ir: bool = False,
+        backend: bool = False,
+        frontend: bool = False,
+        db: bool = False,
+        tests: bool = False,
+        all_generators: bool = False,
+        module: Optional[str] = None,
+    ) -> int:
+        """Orquestrar geradores de código (Fase C1).
+
+        Ordem canônica quando --all: IR → backend → frontend → tests → db
+
+        Exemplos:
+          hb generate --all               # Regenerar tudo (todos os módulos)
+          hb generate --backend --all     # Apenas backend, todos os módulos
+          hb generate --backend --module users    # Apenas backend, módulo users
+        """
+        print("\n══ CODEGEN — Orquestrador de Geradores ══")
+
+        # Determinar módulos a processar
+        all_modules = [
+            "reports", "analytics", "exercises", "notifications", "wellness",
+            "medical", "ai_ingestion", "seasons", "teams", "competitions",
+            "users", "matches", "scout", "video", "audit", "identity_access", "training",
+        ]
+        modules_to_process = [module] if module else all_modules
+
+        # Se nenhuma flag específica, assume --all
+        if not any([ir, backend, frontend, db, tests]):
+            all_generators = True
+
+        # Executar na ordem canônica
+        stages = []
+        if all_generators or ir:
+            stages.append(("ir", "compile_source_graph.py"))
+        if all_generators or backend:
+            stages.append(("backend", "backend_codegen.py"))
+        if all_generators or frontend:
+            stages.append(("frontend", "frontend_contract_codegen.py"))
+        if all_generators or tests:
+            stages.append(("tests", "test_codegen.py"))
+        if all_generators or db:
+            stages.append(("db", "db_projection_codegen.py"))
+
+        overall_exit = 0
+        for stage_name, generator_cmd in stages:
+            print(f"\n─ Estágio: {stage_name} ({generator_cmd})")
+
+            if stage_name == "ir":
+                # TODO: chamar compile_source_graph.py --all (quando implementado)
+                print(f"  ℹ️  {stage_name}: pré-implementado (nenhuma ação nesta versão)")
+
+            elif stage_name == "backend":
+                for mod in modules_to_process:
+                    print(f"  Gerando {mod}...")
+                    result = subprocess.run(
+                        [sys.executable, "scripts/generate/backend_codegen.py", "--module", mod],
+                        cwd=self.root,
+                        capture_output=True,
+                        text=True,
+                    )
+                    if result.returncode != 0:
+                        print(f"    ❌ {mod}: falhou (exit {result.returncode})")
+                        if result.stderr:
+                            print(f"       stderr: {result.stderr[:200]}")
+                        overall_exit = 1
+                    else:
+                        print(f"    ✅ {mod}")
+
+            elif stage_name == "frontend":
+                for mod in modules_to_process:
+                    print(f"  Gerando {mod}...")
+                    result = subprocess.run(
+                        [sys.executable, "scripts/generate/frontend_contract_codegen.py", "--module", mod],
+                        cwd=self.root,
+                        capture_output=True,
+                        text=True,
+                    )
+                    if result.returncode != 0:
+                        print(f"    ❌ {mod}: falhou (exit {result.returncode})")
+                        if result.stderr:
+                            print(f"       stderr: {result.stderr[:200]}")
+                        overall_exit = 1
+                    else:
+                        print(f"    ✅ {mod}")
+
+            elif stage_name == "tests":
+                for mod in modules_to_process:
+                    print(f"  Gerando {mod}...")
+                    result = subprocess.run(
+                        [sys.executable, "scripts/generate/test_codegen.py", "--module", mod],
+                        cwd=self.root,
+                        capture_output=True,
+                        text=True,
+                    )
+                    if result.returncode != 0:
+                        print(f"    ❌ {mod}: falhou (exit {result.returncode})")
+                        if result.stderr:
+                            print(f"       stderr: {result.stderr[:200]}")
+                        overall_exit = 1
+                    else:
+                        print(f"    ✅ {mod}")
+
+            elif stage_name == "db":
+                for mod in modules_to_process:
+                    print(f"  Gerando {mod}...")
+                    result = subprocess.run(
+                        [sys.executable, "scripts/generate/db_projection_codegen.py", "--module", mod],
+                        cwd=self.root,
+                        capture_output=True,
+                        text=True,
+                    )
+                    if result.returncode != 0:
+                        print(f"    ❌ {mod}: falhou (exit {result.returncode})")
+                        if result.stderr:
+                            print(f"       stderr: {result.stderr[:200]}")
+                        overall_exit = 1
+                    else:
+                        print(f"    ✅ {mod}")
+
+        if overall_exit == 0:
+            print(f"\n✅ Geração completa: todos os estágios PASS")
+        else:
+            print(f"\n❌ Geração com falhas (veja acima)")
+
+        return overall_exit
     
     @staticmethod
     def _calculate_file_hash(path: pathlib.Path) -> str:
@@ -1693,6 +1822,37 @@ class HBCLIv2:
             help="Perfil de CI: pr (rápido, sem slow) ou full (completo)",
         )
 
+        # generate -- novo subcomando para orquestração de geradores (Fase C1)
+        generate_p = subparsers.add_parser("generate", help="Rodar geradores de código (IR, backend, frontend, db, tests)")
+        generate_p.add_argument(
+            "--ir", action="store_true",
+            help="Regenerar IR (source_graph) — executar compile_source_graph.py"
+        )
+        generate_p.add_argument(
+            "--backend", action="store_true",
+            help="Regenerar código backend — executar backend_codegen.py"
+        )
+        generate_p.add_argument(
+            "--frontend", action="store_true",
+            help="Regenerar código frontend — executar frontend_contract_codegen.py (quando implementado)"
+        )
+        generate_p.add_argument(
+            "--db", action="store_true",
+            help="Regenerar candidate migrations — executar db_projection_codegen.py (quando implementado)"
+        )
+        generate_p.add_argument(
+            "--tests", action="store_true",
+            help="Regenerar contract tests — executar test_codegen.py (quando implementado)"
+        )
+        generate_p.add_argument(
+            "--all", action="store_true",
+            help="Executar todos os geradores na ordem canônica: IR → backend → frontend → tests → db"
+        )
+        generate_p.add_argument(
+            "--module", default=None,
+            help="Módulo específico (opcional). Se omitido com --backend/--frontend/--db/--tests, roda para todos."
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -1728,6 +1888,16 @@ class HBCLIv2:
                 return self.cmd_validate(parsed_args.profile)
             elif parsed_args.command == "ci":
                 return self.cmd_ci(parsed_args.profile)
+            elif parsed_args.command == "generate":
+                return self.cmd_generate(
+                    ir=parsed_args.ir,
+                    backend=parsed_args.backend,
+                    frontend=parsed_args.frontend,
+                    db=parsed_args.db,
+                    tests=parsed_args.tests,
+                    all_generators=parsed_args.all,
+                    module=parsed_args.module,
+                )
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2
