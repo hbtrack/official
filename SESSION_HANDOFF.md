@@ -10,93 +10,64 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: ROADMAP-FASE6-EDGE-PROXY
 resultado: PENDENTE
-proxima_acao_permitida: "fazer commit/push da branch com os novos artefatos de infra; depois executar migração manual no VPS (parar nginx legado, criar redes, rodar deploy-edge)"
+proxima_acao_permitida: "aguardar CI verde no PR #83; aprovar merge; verificar deploy-edge no VPS"
 bloqueios_ativos: []
 evidence_paths:
   - "infra/docker-compose.edge.yml"
-  - "infra/docker-compose.staging.yml"
   - "infra/docker-compose.prod.yml"
-  - "infra/nginx/nginx.edge.conf"
-  - "infra/nginx/nginx.edge.bootstrap.conf"
   - ".github/workflows/deploy.yml"
 ---
 # SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-**Sessão 2026-04-23 — Arquitetura Edge Proxy (resolve BLOCKED_SHARED_EDGE_HOST)**
+Fase 6 — Edge Proxy (resolve BLOCKED_SHARED_EDGE_HOST):
+- `infra/docker-compose.edge.yml` — nginx:1.27-alpine + certbot, portas 80/443
+- `infra/nginx/nginx.edge.conf` — 3 vhosts SSL; `nginx.edge.bootstrap.conf` — bootstrap HTTP
+- `infra/docker-compose.staging.yml` — staging sem nginx, rede `hbtrack-staging-net`
+- `infra/docker-compose.prod.yml` — nginx/certbot removidos, rede → `hbtrack-prod-net`
+- `deploy.yml` — health check interno (docker exec), certbot --webroot, job deploy-edge
 
-Implementada a arquitetura de proxy único de borda que elimina o conflito staging/produção nas portas 80/443 do mesmo VPS.
-
-### Artefatos criados/modificados
-
-| Arquivo | Ação | Descrição |
-|---------|------|-----------|
-| `infra/docker-compose.edge.yml` | NOVO | Stack edge: nginx:1.27-alpine + certbot nas portas 80/443 |
-| `infra/nginx/nginx.edge.conf` | NOVO | Config completa: 3 vhosts, upstreams por alias de rede, SSL |
-| `infra/nginx/nginx.edge.bootstrap.conf` | NOVO | Config bootstrap (sem SSL) para emissão inicial de certs ACME |
-| `infra/docker-compose.staging.yml` | NOVO | Stack staging: sem nginx, sem portas públicas, rede `hbtrack-staging-net` |
-| `infra/docker-compose.prod.yml` | MODIFICADO | Removidos nginx/certbot; rede renomeada para `hbtrack-prod-net`; aliases `prod-api`/`prod-frontend` |
-| `.github/workflows/deploy.yml` | MODIFICADO | Jobs `deploy-staging` e `deploy-production` simplificados; job `deploy-edge` (etapa 8) adicionado |
-
-### Arquitetura implementada
-
-```
-Internet → 80/443
-  └── nginx edge (hbtrack-edge stack)
-        ├── handballtrack.app / www → prod-frontend:80, prod-api:8000
-        └── staging.handballtrack.app → staging-frontend:80, staging-api:8000
-
-Redes internas (sem portas públicas):
-  hbtrack-prod-net    → production stack
-  hbtrack-staging-net → staging stack
-```
-
-### Funcionamento do deploy-edge (CI)
-
-1. Copia `infra/` para `/opt/hbtrack/edge` no VPS
-2. Cria redes Docker se ausentes (idempotente)
-3. Migra certs do volume legado `hbtrack-production_certbot_conf` → `hbtrack-edge_certbot_conf` (uma vez)
-4. Para nginx legado que ocupe 80/443 (se existir)
-5. Verifica quais certs existem; emite os ausentes via certbot standalone
-6. Sobe edge com `nginx.edge.conf` (SSL completo) ou `nginx.edge.bootstrap.conf` (aguardando DNS)
+CI fixes (branch `docs/codegen-canonization`, HEAD `c47b05e5`):
+- `scripts/hbtrack_lint/` (25 arquivos) restaurados — deletados por acidente em merge
+- `src/shared/middleware.py` — `_UUID4_RE` sanitiza X-Flow-ID, previne log injection (F10)
+- `tests/test_fase1_validation.py` — `test_flow_id_propagated` usa UUID v4 válido
 
 ## Estado Geral
 
 | Item | Status |
 |---|---|
-| Artefatos de infra criados | ✅ COMPLETO |
-| deploy.yml atualizado (8 etapas) | ✅ COMPLETO |
-| Commit/push na branch | ⏳ PENDENTE (humano) |
-| Migração manual no VPS | ⏳ PENDENTE (humano) |
-| Staging cert (staging.handballtrack.app) | ⏳ aguarda DNS + deploy-edge |
-| BLOCKED_SHARED_EDGE_HOST | ✅ RESOLVIDO (arquitetura) |
+| Artefatos edge + deploy.yml | ✅ commitados |
+| CI failures resolvidas (3 → 2) | ✅ `c47b05e5` |
+| PR #83 mergeable | ✅ |
+| Merge PR #83 | ⏳ aprovação humana |
+| Deploy-edge VPS | ⏳ após merge |
 
 ## Próxima ação permitida
 
-1. **Commit e push** dos artefatos criados (todos os arquivos modificados acima)
-2. **No VPS** — executar uma vez manualmente ou via primeiro deploy-edge do CI:
-   - Os containers de nginx da produção antiga serão parados automaticamente pelo script
-   - `docker network create hbtrack-prod-net` (se ainda não existir)
-   - `docker network create hbtrack-staging-net` (se ainda não existir)
-3. Verificar HTTPS nos 3 hostnames após deploy
-
-## Evidências
-
-- `infra/docker-compose.edge.yml` — stack edge criada (nginx:1.27-alpine + certbot, ports 80/443)
-- `infra/nginx/nginx.edge.conf` — roteamento multi-vhost completo com TLS
-- `infra/nginx/nginx.edge.bootstrap.conf` — config bootstrap HTTP-only para emissão de certs
-- `infra/docker-compose.staging.yml` — stack staging sem nginx, rede hbtrack-staging-net
-- `infra/docker-compose.prod.yml` — nginx/certbot removidos, rede → hbtrack-prod-net, aliases adicionados
-- `.github/workflows/deploy.yml` — job `deploy-edge` (etapa 8) adicionado na linha 681
+1. CI verde → aprovar merge do PR #83
+2. Verificar deploy-staging → deploy-production → deploy-edge no VPS
+3. Migrar imports em `src/training/api/` para paths canônicos (33 DeprecationWarnings)
 
 ## Bloqueios ativos
 
-Nenhum bloqueio técnico. Migração no VPS requer ação humana.
+Nenhum.
 
-## Próxima Sessão
+## Evidências
 
-1. Confirmar resultado do Deploy Pipeline (run em `main` após `cdfe57bc`)
-2. Se staging OK: marcar Fase 6.2 como DONE no ROADMAP
-3. Criar issue GitHub: `test_list_training_sessions_response_time` — falha pré-existente
-4. Migrar imports em `src/training/api/` de shims legados para paths canônicos (109 DeprecationWarnings)
+- `infra/docker-compose.edge.yml`, `nginx.edge.conf`, `nginx.edge.bootstrap.conf`
+- `infra/docker-compose.staging.yml`, `infra/docker-compose.prod.yml`
+- `.github/workflows/deploy.yml` — health check interno + certbot --webroot + deploy-edge
+- `scripts/hbtrack_lint/` (25 arquivos restaurados)
+- `src/shared/middleware.py` — _UUID4_RE sanitização F10
+
+## Falhas pré-existentes (não bloquear merge)
+
+- `test_session_handoff_md_under_budget` — resolvido por este handoff
+- `test_all_budgets_combined` — resolvido por este handoff
+- `test_list_training_sessions_response_time` — `TRAINING_CURSOR_SECRET` ausente no CI
+
+## Próxima sessão
+
+1. CI verde → aprovar merge do PR #83
+2. Verificar deploy automático após merge (staging → production → edge)
