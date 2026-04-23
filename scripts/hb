@@ -348,6 +348,56 @@ class HBCLIv2:
             return "architecture_decision"
         return "default"
 
+    def _enforce_selection_rules(self, task_type: str, profile_id: str) -> int:
+        """
+        Valida que o profile_id do TASK_CATALOG é coerente com as selection_rules
+        do BOOT_PROFILES.yaml. Retorna 1 com BLOCKED_PROFILE_MISMATCH se divergir.
+        """
+        selection_rules = self.boot_profiles.get("selection_rules", [])
+        if not selection_rules:
+            return 0
+
+        derived_profile = "default"
+        for rule in selection_rules:
+            if not isinstance(rule, dict):
+                continue
+
+            condition = str(rule.get("condition", "")).strip().strip('"')
+            action = str(rule.get("action", "")).strip().strip('"')
+
+            if condition == "always":
+                if action.startswith("use_profile:"):
+                    derived_profile = action.split(":", 1)[1]
+                break
+
+            if condition == "task_type.profile_id != null" and profile_id:
+                derived_profile = profile_id
+                break
+
+            if condition == f"task_type == {task_type}":
+                if action.startswith("use_profile:"):
+                    derived_profile = action.split(":", 1)[1]
+                break
+
+            if condition.startswith("task_type in [") and condition.endswith("]"):
+                tasks_str = condition[len("task_type in ["):-1]
+                tasks = [item.strip() for item in tasks_str.split(",") if item.strip()]
+                if task_type in tasks:
+                    if action.startswith("use_profile:"):
+                        derived_profile = action.split(":", 1)[1]
+                    break
+
+        if derived_profile != profile_id:
+            print(
+                f"❌ BLOCKED_PROFILE_MISMATCH: selection_rules derivam "
+                f"profile='{derived_profile}' mas TASK_CATALOG especifica "
+                f"profile='{profile_id}' para task_type='{task_type}'.",
+                file=sys.stderr,
+            )
+            return 1
+
+        return 0
+
     def _check_stage_allowed(self, task_type: str, stage: int) -> bool:
         """
         Valida que o stage atual está em stage_allowed para o task_type.
@@ -512,6 +562,39 @@ class HBCLIv2:
         if task_type in readonly_tasks or task_type.startswith("audit_"):
             return "readonly"
         return "contracts"
+
+    @staticmethod
+    def _validate_operation_mode_coherence(task_type: str, operation_mode: str) -> int:
+        """Bloquear combinações incoerentes entre task_type e operation_mode."""
+        is_roadmap_task = task_type == "execute_roadmap_phase"
+        if is_roadmap_task and operation_mode != "ROADMAP":
+            print(
+                f"❌ [BLOCKED] BLOCKED_MODE_MISMATCH: task_type '{task_type}' requer operation_mode=ROADMAP, mas recebeu '{operation_mode}'.",
+                file=sys.stderr,
+            )
+            return 1
+        if not is_roadmap_task and operation_mode == "ROADMAP":
+            print(
+                f"❌ [BLOCKED] BLOCKED_MODE_MISMATCH: task_type '{task_type}' pertence ao modo CDD e não pode iniciar com operation_mode=ROADMAP.",
+                file=sys.stderr,
+            )
+            return 1
+        return 0
+
+    def _write_execution_evidence(self, evidence: dict[str, Any]) -> None:
+        """Persistir evidência auditável da execução do hb verify."""
+        evidence_dir = self.root / "_reports" / "execution_evidence"
+        evidence_dir.mkdir(parents=True, exist_ok=True)
+
+        session_id = evidence.get("session_id")
+        if not session_id:
+            raise ValueError("execution evidence requer session_id")
+
+        evidence_path = evidence_dir / f"{session_id}.json"
+        evidence_path.write_text(
+            json.dumps(evidence, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
     
     def _save_session(self):
         """Salvar session_start.json."""
@@ -561,6 +644,7 @@ class HBCLIv2:
         module: Optional[str],
         roadmap_phase: Optional[int] = None,
         roadmap_task_id: Optional[str] = None,
+        check_context: Optional[str] = None,
     ) -> int:
         """
         FASE 0: SESSION_BOOT
@@ -614,11 +698,59 @@ class HBCLIv2:
             print(f"❌ Worker prompt não existe: {worker_path}", file=sys.stderr)
             return 1
 
+        worker_frontmatter = self._read_worker_frontmatter(worker_path)
+        frontmatter_task_type = worker_frontmatter.get("task_type")
+        if frontmatter_task_type and frontmatter_task_type != task_type:
+            print(
+                "❌ [BLOCKED] BLOCKED_WORKER_FRONTMATTER_MISMATCH: "
+                f"worker '{worker_path.relative_to(self.root)}' declara task_type='{frontmatter_task_type}', "
+                f"mas hb verify recebeu '{task_type}'.",
+                file=sys.stderr,
+            )
+            return 1
+        worker_prompt_sha256 = self._calculate_file_hash(worker_path)
+
         # Validação 4b: elegibilidade de módulo para generate_code (BLOCKED_GENERATION_INELIGIBLE)
         if task_type == "generate_code":
             rc = self._check_generate_code_eligibility(module)
             if rc != 0:
                 return rc
+
+        # Validação 4c: bundle_required check
+        bundle_required = task_config.get("bundle_required", False)
+        if bundle_required:
+            bundle_path_template = task_config.get("bundle_path_template", "")
+            if not bundle_path_template:
+                print(
+                    f"❌ task_type='{task_type}' declarado bundle_required=true "
+                    "mas bundle_path_template ausente em TASK_CATALOG",
+                    file=sys.stderr,
+                )
+                return 1
+
+            bundle_path_str = bundle_path_template.replace("{module}", module or "")
+            bundle_path_str = bundle_path_str.replace("{roadmap_task_id}", roadmap_task_id or "")
+            if roadmap_phase is not None:
+                bundle_path_str = bundle_path_str.replace("{roadmap_phase}", str(roadmap_phase))
+
+            unresolved_template = "{" in bundle_path_str and "}" in bundle_path_str
+            if unresolved_template:
+                bundle_path_str = bundle_path_str.split("{", 1)[0].rstrip("/")
+
+            bundle_path = self.root / bundle_path_str.rstrip("/")
+            if not bundle_path.exists():
+                print(f"❌ BLOCKED_BUNDLE_REQUIRED: bundle não encontrado em '{bundle_path}'", file=sys.stderr)
+                if module:
+                    print(
+                        f"   Execute: python3 scripts/compile/compile_context_bundle.py --module {module}",
+                        file=sys.stderr,
+                    )
+                if unresolved_template:
+                    print(
+                        "   O template contém placeholders não resolvidos nesta fase; o diretório-base do bundle também deve existir.",
+                        file=sys.stderr,
+                    )
+                return 1
 
         # Validação 5: boot_profile_id é válido?
         # Nota: profile_id=null em TASK_CATALOG (ex: audit tasks) → fallback para "default"
@@ -629,14 +761,9 @@ class HBCLIv2:
         if not boot_paths_valid or not required_sections_valid:
             return 1
 
-        # Validação 5b: selection_rules — coerência informativa (TASK_CATALOG prevalece)
-        selected_by_rules = self._apply_selection_rules(task_type)
-        if selected_by_rules != profile_id:
-            print(
-                f"⚠️  selection_rules → '{selected_by_rules}' vs TASK_CATALOG → '{profile_id}' "
-                "— TASK_CATALOG é a fonte de autoridade e prevalece.",
-                file=sys.stderr,
-            )
+        # Validação 5b: selection_rules — coerência obrigatória
+        if self._enforce_selection_rules(task_type, profile_id) != 0:
+            return 1
 
         # Validação 5c: required_sections — conteúdo mínimo (falha hard para arquivo vazio)
         if not self._validate_required_section_content(profile_id):
@@ -654,6 +781,35 @@ class HBCLIv2:
         # Derivar campos de modo
         operation_mode = "ROADMAP" if profile_id == "roadmap_execution" else "CDD"
         module_focus = module  # pode ser None em modo ROADMAP sem --module
+
+        if self._validate_operation_mode_coherence(task_type, operation_mode) != 0:
+            return 1
+
+        pr_fix_check: Optional[dict[str, Any]] = None
+        if task_type == "pr_fix":
+            if not check_context:
+                print(
+                    "❌ [BLOCKED] GAP_DE_PARIDADE: pr_fix requer --check-context com o nome exato do check do GitHub.",
+                    file=sys.stderr,
+                )
+                return 1
+            try:
+                merge_readiness = self._load_json(self.root / "merge-readiness.json")
+            except FileNotFoundError:
+                print(
+                    "❌ [BLOCKED] GAP_DE_PARIDADE: merge-readiness.json ausente para resolver --check-context.",
+                    file=sys.stderr,
+                )
+                return 1
+
+            checks = merge_readiness.get("checks", [])
+            pr_fix_check = next((item for item in checks if item.get("context") == check_context), None)
+            if pr_fix_check is None:
+                print(
+                    f"❌ [BLOCKED] GAP_DE_PARIDADE: check_context '{check_context}' não existe em merge-readiness.json.",
+                    file=sys.stderr,
+                )
+                return 1
 
         # Tudo OK — criar/atualizar sessão
         if module is not None:
@@ -680,6 +836,7 @@ class HBCLIv2:
             "git_user": self._get_git_user(),
             "git_email": self._get_git_email(),
             "operation_mode": operation_mode,
+            "worker_prompt_sha256": worker_prompt_sha256,
             "stage0_validation_results": {
                 "task_type_valid": True,
                 "module_valid": module_valid,
@@ -687,6 +844,9 @@ class HBCLIv2:
                 "boot_profile_exists": True,
                 "boot_paths_valid": boot_paths_valid,
                 "required_sections_resolvable": required_sections_valid,
+                "worker_frontmatter_validated": bool(worker_frontmatter),
+                "worker_frontmatter_matches_catalog": (frontmatter_task_type == task_type) if frontmatter_task_type else True,
+                "authority_source_used": "TASK_CATALOG",
             },
         }
 
@@ -699,6 +859,9 @@ class HBCLIv2:
             session_update["roadmap_phase"] = roadmap_phase
         if roadmap_task_id is not None:
             session_update["roadmap_task_id"] = roadmap_task_id
+        if pr_fix_check is not None:
+            session_update["stage0_validation_results"]["check_context"] = check_context
+            session_update["stage0_validation_results"]["local_equivalent"] = pr_fix_check.get("local_equivalent")
 
         self.session.update(session_update)
 
@@ -723,6 +886,24 @@ class HBCLIv2:
         
         self.session["stage0_exit_code"] = result.returncode
         self._save_session()
+
+        self._write_execution_evidence(
+            {
+                "session_id": self.session["session_id"],
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "task_type": task_type,
+                "module": module,
+                "worker_path": str(worker_path.relative_to(self.root)),
+                "worker_prompt_sha256": worker_prompt_sha256,
+                "worker_frontmatter": worker_frontmatter,
+                "write_scope": self.session.get("write_scope"),
+                "operation_mode": operation_mode,
+                "retries": 0,
+                "cause_ids": [],
+                "scope_overflow_detected": False,
+                "stage0_exit_code": result.returncode,
+            }
+        )
         
         print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
         return result.returncode
@@ -758,8 +939,13 @@ class HBCLIv2:
         
         print(f"✅ Sessão validada: task_type={self.session.get('task_type')}, module={module}")
 
-        # Validação informativa de stage_allowed para stage 1
+        # Validar pré-condições de lifecycle para tarefas de promoção (BKL-017)
         task_type_s = self.session.get("task_type", "")
+        if task_type_s in ("readiness_promotion", "implementation_promotion"):
+            if self._validate_lifecycle_preconditions(task_type_s, module) != 0:
+                return 1
+
+        # Validação informativa de stage_allowed para stage 1
         if task_type_s:
             self._check_stage_allowed(task_type_s, 1)
 
@@ -822,6 +1008,17 @@ class HBCLIv2:
         if not artifact_full.exists():
             print(f"❌ Artefato não existe: {artifact_path}", file=sys.stderr)
             return 1
+
+        if task_type_a in ("readiness_promotion", "implementation_promotion"):
+            module = self.session.get("module")
+            if not module:
+                print(
+                    "❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção requer um módulo válido na sessão.",
+                    file=sys.stderr,
+                )
+                return 1
+            if self._validate_promotion_evidence(task_type_a, module) != 0:
+                return 1
         
         # Calcular hash
         artifact_hash = self._calculate_file_hash(artifact_full)
@@ -923,10 +1120,175 @@ class HBCLIv2:
                 print(f"  {status} {art['path']} (hash: {art['sha256'][:8]}...)")
         
         return 0
+
+    def cmd_stats(self) -> int:
+        """Agregar evidências de execução por task_type."""
+        evidence_dir = self.root / "_reports" / "execution_evidence"
+        if not evidence_dir.exists() or not evidence_dir.is_dir():
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        evidence_files = sorted(evidence_dir.glob("*.json"))
+        if not evidence_files:
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        grouped: dict[str, dict[str, Any]] = {}
+        valid_files = 0
+
+        for evidence_file in evidence_files:
+            try:
+                payload = json.loads(evidence_file.read_text(encoding="utf-8"))
+            except Exception as exc:
+                print(f"⚠️  Ignorando evidência inválida: {evidence_file.name} ({exc})", file=sys.stderr)
+                continue
+
+            task_type = payload.get("task_type") or "<unknown>"
+            entry = grouped.setdefault(
+                task_type,
+                {
+                    "attempts": 0,
+                    "overflow_count": 0,
+                    "cause_counts": {},
+                },
+            )
+            entry["attempts"] += 1
+            valid_files += 1
+
+            if payload.get("scope_overflow_detected") is True:
+                entry["overflow_count"] += 1
+
+            for cause_id in payload.get("cause_ids", []):
+                if not cause_id:
+                    continue
+                entry["cause_counts"][cause_id] = entry["cause_counts"].get(cause_id, 0) + 1
+
+        if valid_files == 0:
+            print("Nenhuma evidência encontrada")
+            return 0
+
+        rows: list[tuple[str, int, int, str]] = []
+        for task_type, metrics in sorted(grouped.items()):
+            cause_counts = metrics["cause_counts"]
+            top_cause = "-"
+            if cause_counts:
+                top_cause = sorted(cause_counts.items(), key=lambda item: (-item[1], item[0]))[0][0]
+            rows.append((task_type, metrics["attempts"], metrics["overflow_count"], top_cause))
+
+        task_width = max(len("task_type"), *(len(row[0]) for row in rows))
+        attempts_width = max(len("attempts"), *(len(str(row[1])) for row in rows))
+        overflow_width = max(len("overflow_count"), *(len(str(row[2])) for row in rows))
+        top_cause_width = max(len("top_cause"), *(len(row[3]) for row in rows))
+
+        header = (
+            f"{'task_type':<{task_width}}  "
+            f"{'attempts':>{attempts_width}}  "
+            f"{'overflow_count':>{overflow_width}}  "
+            f"{'top_cause':<{top_cause_width}}"
+        )
+        print(header)
+        print(
+            f"{'-' * task_width}  {'-' * attempts_width}  {'-' * overflow_width}  {'-' * top_cause_width}"
+        )
+        for task_type, attempts, overflow_count, top_cause in rows:
+            print(
+                f"{task_type:<{task_width}}  "
+                f"{attempts:>{attempts_width}}  "
+                f"{overflow_count:>{overflow_width}}  "
+                f"{top_cause:<{top_cause_width}}"
+            )
+
+        return 0
     
     # ──────────────────────────────────────────────────────
     # Helpers de preflight
     # ──────────────────────────────────────────────────────
+
+    def _format_actionable_output(
+        self,
+        checks_failed: list,
+        semantic_findings: list,
+        reviewability_check: dict,
+    ) -> None:
+        """Imprimir saída acionável do preflight, agrupada por causa raiz.
+
+        Grupos de prioridade:
+          [CORRIGIR PRIMEIRO] — erros de sessão/handoff (BLOCKED_*, survival_suite,
+                                HANDOFF_COHERENCE, session_*)
+          [NÃO TOCAR]         — arquivos protegidos fora de escopo (schema_changed,
+                                governance_changed quando não há task relacionada)
+          [PRÓXIMA AÇÃO]      — validações de contrato OpenAPI/AsyncAPI/Arazzo
+
+        Regra de ouro: não altera a lógica de decisão — apenas formata a saída.
+        """
+        # Mapeamento: prefixo/palavra-chave → grupo
+        _SESSION_KEYS = ("BLOCKED_", "survival_suite", "HANDOFF_COHERENCE", "session_")
+        _CONTRACT_KEYS = ("openapi", "asyncapi", "arazzo", "spectral", "redocly",
+                          "contract", "schema", "json_schema", "HB Contract Gates")
+        _PROTECTED_KEYS = ("governance_changed", "session_contract_changed", "frontend_changed")
+
+        group_first: list[str] = []
+        group_contract: list[str] = []
+        group_protected: list[str] = []
+        group_other: list[str] = []
+
+        for item in checks_failed:
+            item_lower = item.lower()
+            if any(k.lower() in item_lower for k in _SESSION_KEYS):
+                group_first.append(item)
+            elif any(k.lower() in item_lower for k in _PROTECTED_KEYS):
+                group_protected.append(item)
+            elif any(k.lower() in item_lower for k in _CONTRACT_KEYS):
+                group_contract.append(item)
+            else:
+                group_contract.append(item)  # default: próxima ação de contrato
+
+        # Semantic findings bloqueantes → CORRIGIR PRIMEIRO
+        for finding in semantic_findings:
+            if finding.get("triggered") and finding.get("block_if_missing"):
+                label = f"[semântico] {finding['when']}: requer {finding.get('require', [])}"
+                group_first.append(label)
+
+        # Reviewability excedido → aviso de split
+        if reviewability_check.get("exceeded"):
+            c = reviewability_check
+            rv_msg = (
+                f"reviewability excedida — arquivos={c['changed_files']}/{c['max_changed_files']}, "
+                f"commits={c['commits']}/{c['max_commits']}, "
+                f"domínios={c['cross_domain_areas']}/{c['max_cross_domain_areas']}"
+            )
+            group_protected.append(rv_msg)
+
+        sep = "─" * 60
+        print(f"\n{sep}")
+        print("  RELATÓRIO ACIONÁVEL DE PREFLIGHT")
+        print(sep)
+
+        if group_first:
+            print(f"\n  ╔══ [CORRIGIR PRIMEIRO] ══╗  ({len(group_first)} item(s))")
+            for item in group_first:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Execute: python3 scripts/hb verify")
+            print(f"  ╚══════════════════════════╝")
+
+        if group_protected:
+            print(f"\n  ╔══ [NÃO TOCAR] ══╗  ({len(group_protected)} item(s))")
+            for item in group_protected:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Reduzir escopo do PR antes de fazer push.")
+            print(f"  ╚══════════════════╝")
+
+        if group_contract:
+            print(f"\n  ╔══ [PRÓXIMA AÇÃO] ══╗  ({len(group_contract)} item(s))")
+            for item in group_contract:
+                print(f"  ║  • {item}")
+            print(f"  ║  → Execute: python3 scripts/contracts/validate/validate_contracts.py --profile precommit")
+            print(f"  ╚══════════════════════╝")
+
+        if not group_first and not group_protected and not group_contract:
+            print("\n  Nenhum erro acionável encontrado.")
+
+        print(sep)
 
     @staticmethod
     def _match_diff_class(changed_files: list, patterns: list) -> bool:
@@ -1427,9 +1789,9 @@ class HBCLIv2:
         # Resumo final
         decision_icon = {"PASS": "✅", "WARN": "⚠️ ", "BLOCK": "❌"}.get(final_decision, "?")
         print(f"\n══ PREFLIGHT: {decision_icon} {final_decision} ══")
-        if checks_failed:
-            print(f"  Checks com falha: {checks_failed}")
-        if missing_evidence:
+        if checks_failed or semantic_findings or reviewability_check.get("exceeded"):
+            self._format_actionable_output(checks_failed, semantic_findings, reviewability_check)
+        elif missing_evidence:
             print(f"  Evidência ausente: {missing_evidence}")
         print(f"  Relatório: {output_report}")
 
@@ -1437,6 +1799,132 @@ class HBCLIv2:
         #   0 = PASS, 1 = WARN, 2 = BLOCK
         exit_map = {"PASS": 0, "WARN": 1, "BLOCK": 2}
         return exit_map.get(final_decision, 2)
+
+    def _get_bridge_doc_paths(self) -> list[pathlib.Path]:
+        """Listar bridge docs que exigem disclaimer explícito."""
+        bridge_docs = [
+            self.root / "CLAUDE.md",
+            self.root / "AGENTS.md",
+            self.root / ".github" / "copilot-instructions.md",
+        ]
+
+        skills_dir = self.root / ".github" / "skills"
+        if skills_dir.exists():
+            bridge_docs.extend(sorted(skills_dir.glob("**/SKILL.md")))
+
+        return bridge_docs
+
+    @staticmethod
+    def _has_bridge_disclaimer(text: str) -> bool:
+        """Bridge docs devem declarar NON-SOVEREIGN ou BRIDGE ONLY."""
+        normalized = text.upper()
+        return "NON-SOVEREIGN" in normalized or "BRIDGE ONLY" in normalized
+
+    def cmd_audit_prompts(self, check_bridge_docs: bool = False) -> int:
+        """Auditar agent_prompts vs TASK_CATALOG.yaml.
+
+        Classifica cada .prompt.md como: active, frozen, orphan, legacy.
+        Retorna exit 1 se pelo menos um prompt for orphan ou bridge doc sem disclaimer.
+        """
+        prompts_dir = self.root / ".contract_driven" / "agent_prompts"
+        catalog_path = self.root / ".contract_driven" / "TASK_CATALOG.yaml"
+
+        if not prompts_dir.exists():
+            print(f"❌ Diretório de prompts não encontrado: {prompts_dir}", file=sys.stderr)
+            return 2
+        if not catalog_path.exists():
+            print(f"❌ TASK_CATALOG.yaml não encontrado: {catalog_path}", file=sys.stderr)
+            return 2
+
+        catalog_data = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+        task_catalog = catalog_data.get("task_catalog", {})
+
+        # Mapear worker_path → status do catálogo
+        # Normalizar para path relativo ao repo
+        cataloged: dict[str, str] = {}  # basename_stem -> ("active" | "frozen")
+        for _task_key, task in task_catalog.items():
+            wp = task.get("worker_path", "")
+            if not wp:
+                continue
+            stem = pathlib.Path(wp).name  # ex: "create_module_docs.prompt.md"
+            status = task.get("status", "active")
+            if status == "frozen":
+                cataloged[stem] = "frozen"
+            else:
+                cataloged[stem] = "active"
+
+        prompt_files = sorted(prompts_dir.glob("*.prompt.md"))
+
+        results: list[tuple[str, str]] = []
+        has_orphan = False
+
+        for pf in prompt_files:
+            fname = pf.name
+            if fname.endswith("_legacy.prompt.md"):
+                cat = "legacy"
+            elif fname in cataloged:
+                cat = cataloged[fname]  # "active" ou "frozen"
+            else:
+                cat = "orphan"
+                has_orphan = True
+            results.append((fname, cat))
+
+        # Imprimir tabela
+        print("\n══ AUDIT: agent_prompts vs TASK_CATALOG ══\n")
+        _ICONS = {"active": "✅", "frozen": "🧊", "orphan": "❌", "legacy": "📦"}
+        col_w = max(len(r[0]) for r in results) + 2 if results else 40
+        print(f"  {'ARQUIVO':<{col_w}} CATEGORIA")
+        print(f"  {'-' * col_w} ---------")
+        for fname, cat in results:
+            icon = _ICONS.get(cat, "?")
+            print(f"  {fname:<{col_w}} {icon} {cat}")
+
+        total = len(results)
+        orphans = sum(1 for _, c in results if c == "orphan")
+        frozen_n = sum(1 for _, c in results if c == "frozen")
+        active_n = sum(1 for _, c in results if c == "active")
+        legacy_n = sum(1 for _, c in results if c == "legacy")
+
+        print(f"\n  Total: {total}  |  active: {active_n}  frozen: {frozen_n}  legacy: {legacy_n}  orphan: {orphans}")
+
+        bridge_violations: list[str] = []
+        if check_bridge_docs:
+            print("\n══ AUDIT: bridge docs disclaimers ══\n")
+            for doc_path in self._get_bridge_doc_paths():
+                rel_path = doc_path.relative_to(self.root)
+                if not doc_path.exists():
+                    bridge_violations.append(f"{rel_path} (arquivo ausente)")
+                    print(f"  {rel_path}  ❌ ausente")
+                    continue
+
+                try:
+                    text = doc_path.read_text(encoding="utf-8")
+                except OSError as exc:
+                    bridge_violations.append(f"{rel_path} (erro de leitura: {exc})")
+                    print(f"  {rel_path}  ❌ erro de leitura")
+                    continue
+
+                if self._has_bridge_disclaimer(text):
+                    print(f"  {rel_path}  ✅ disclaimer presente")
+                    continue
+
+                bridge_violations.append(f"{rel_path} (sem disclaimer BRIDGE ONLY/NON-SOVEREIGN)")
+                print(f"  {rel_path}  ❌ sem disclaimer")
+
+        if has_orphan or bridge_violations:
+            if has_orphan:
+                print(f"\n❌ AUDIT FAIL — {orphans} prompt(s) órfão(s) encontrado(s).", file=sys.stderr)
+            if bridge_violations:
+                print("\n❌ AUDIT FAIL — bridge docs sem disclaimer obrigatório:", file=sys.stderr)
+                for violation in bridge_violations:
+                    print(f"  - {violation}", file=sys.stderr)
+            print("", file=sys.stderr)
+            return 1
+        if check_bridge_docs:
+            print("\n✅ AUDIT PASS — prompts catalogados e bridge docs com disclaimer.\n")
+        else:
+            print("\n✅ AUDIT PASS — todos os prompts estão catalogados.\n")
+        return 0
 
     def cmd_survival_suite(self) -> int:
         """Rodar suíte de sobrevivência obrigatória.
@@ -1588,6 +2076,137 @@ class HBCLIv2:
         finally:
             self._restore_state_artifacts(backups)
 
+    def _validate_lifecycle_preconditions(self, task_type: str, module: str) -> int:
+        """Validar pré-condições de ciclo de vida do módulo para tarefas de promoção.
+
+        Retorna 0 se o status atual do módulo é compatível com a tarefa.
+        Retorna 1 (com mensagem de bloqueio) se houver LIFECYCLE_JUMP.
+        """
+        # Mapa: task_type -> status de origem exigido
+        _REQUIRED_STATUS: dict[str, str] = {
+            "readiness_promotion": "validated_contract",
+            "implementation_promotion": "implementation_ready",
+        }
+        required_status = _REQUIRED_STATUS.get(task_type)
+        if required_status is None:
+            # task_type não é uma promoção — sem validação de lifecycle
+            return 0
+
+        registry_path = self.root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+        if not registry_path.exists():
+            print(f"❌ MODULE_REGISTRY.yaml não encontrado em {registry_path}", file=sys.stderr)
+            return 1
+
+        registry_data = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+        modules = registry_data.get("modules", {})
+        module_entry = modules.get(module)
+        if module_entry is None:
+            print(
+                f"❌ [BLOCKED] LIFECYCLE_JUMP_REJECTED: Módulo '{module}' não encontrado em MODULE_REGISTRY.yaml.",
+                file=sys.stderr,
+            )
+            return 1
+
+        current_status = module_entry.get("status", "<sem status>")
+        if current_status != required_status:
+            print(
+                f"❌ [BLOCKED] LIFECYCLE_JUMP_REJECTED: Módulo '{module}' está em status "
+                f"'{current_status}', mas a tarefa '{task_type}' exige status '{required_status}'."
+            )
+            return 1
+
+        print(f"✅ Lifecycle OK: módulo '{module}' está em '{current_status}' — apto para '{task_type}'.")
+        return 0
+
+    def _validate_promotion_evidence(self, task_type: str, module: str) -> int:
+        """Validar evidências obrigatórias antes de registrar promoções no MODULE_REGISTRY."""
+        latest_report = self.root / "_reports" / "contract_gates" / "latest.json"
+        if not latest_report.exists():
+            print(
+                f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer _reports/contract_gates/latest.json.",
+                file=sys.stderr,
+            )
+            return 1
+
+        try:
+            latest_data = json.loads(latest_report.read_text(encoding="utf-8"))
+        except Exception as exc:
+            print(
+                f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer _reports/contract_gates/latest.json legível ({exc}).",
+                file=sys.stderr,
+            )
+            return 1
+
+        if latest_data.get("overall_status") != "PASS":
+            print(
+                f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer latest.json com overall_status=PASS.",
+                file=sys.stderr,
+            )
+            return 1
+
+        if task_type == "readiness_promotion":
+            scorecard = self.root / "_reports" / "evidence" / "module_readiness_scorecard.json"
+            if not scorecard.exists():
+                print(
+                    f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer _reports/evidence/module_readiness_scorecard.json.",
+                    file=sys.stderr,
+                )
+                return 1
+
+        if task_type == "implementation_promotion":
+            source_dir = self.root / "src" / module
+            if not source_dir.exists() or not source_dir.is_dir():
+                print(
+                    f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer src/{module}/ com código-fonte Python.",
+                    file=sys.stderr,
+                )
+                return 1
+
+            has_python_file = any(path.is_file() and path.suffix == ".py" for path in source_dir.rglob("*.py"))
+            if not has_python_file:
+                print(
+                    f"❌ [BLOCKED] MISSING_PROMOTION_EVIDENCE: A promoção do módulo '{module}' requer src/{module}/ com pelo menos um arquivo .py.",
+                    file=sys.stderr,
+                )
+                return 1
+
+        print(f"✅ Promotion evidence OK: módulo '{module}' apto para '{task_type}'.")
+        return 0
+
+    def _check_ir_freshness(self, module: str) -> bool:
+        """Verificar se o IR (source_graph) do módulo existe e está atualizado.
+
+        Retorna True se o IR estiver presente e mais recente que os contratos.
+        Retorna False se ausente ou desatualizado.
+        """
+        ir_dir = self.root / "generated" / "source_graph" / module
+        if not ir_dir.exists():
+            return False
+
+        # Verificar mtime: IR deve ser mais recente que os contratos do módulo
+        ir_mtime = max(
+            (f.stat().st_mtime for f in ir_dir.rglob("*") if f.is_file()),
+            default=0.0,
+        )
+        if ir_mtime == 0.0:
+            return False  # Diretório vazio
+
+        # Fontes de contrato a verificar
+        contract_sources: list[pathlib.Path] = []
+        openapi_path = self.root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+        schema_dir = self.root / "contracts" / "schemas" / module
+        if openapi_path.exists():
+            contract_sources.append(openapi_path)
+        if schema_dir.exists():
+            contract_sources.extend(f for f in schema_dir.rglob("*") if f.is_file())
+
+        if not contract_sources:
+            # Sem contratos para comparar — aceitar o IR como válido
+            return True
+
+        latest_contract_mtime = max(f.stat().st_mtime for f in contract_sources)
+        return ir_mtime >= latest_contract_mtime
+
     def cmd_generate(
         self,
         ir: bool = False,
@@ -1644,6 +2263,16 @@ class HBCLIv2:
 
             elif stage_name == "backend":
                 for mod in modules_to_process:
+                    if not self._check_ir_freshness(mod):
+                        print(
+                            f"  ❌ [BLOCKED] IR_STALE_OR_MISSING: A representação intermediária "
+                            f"para o módulo '{mod}' está ausente ou desatualizada."
+                        )
+                        print(
+                            f"     Execute 'python3 compile_source_graph.py --module {mod}' primeiro."
+                        )
+                        overall_exit = 1
+                        continue
                     print(f"  Gerando {mod}...")
                     result = subprocess.run(
                         [sys.executable, "scripts/generate/backend_codegen.py", "--module", mod],
@@ -1717,6 +2346,20 @@ class HBCLIv2:
 
         return overall_exit
     
+    def _read_worker_frontmatter(self, path: pathlib.Path) -> dict:
+        """Extrai frontmatter YAML delimitado por --- do arquivo de worker prompt.
+
+        Retorna dict com os campos do frontmatter, ou {} se ausente ou parse falhar.
+        """
+        try:
+            text = path.read_text(encoding="utf-8")
+            if not text.startswith("---"):
+                return {}
+            end_idx = text.index("---", 3)
+            return yaml.safe_load(text[3:end_idx]) or {}
+        except Exception:
+            return {}
+
     @staticmethod
     def _calculate_file_hash(path: pathlib.Path) -> str:
         """Calcular SHA-256 do arquivo."""
@@ -1772,6 +2415,8 @@ class HBCLIv2:
                               help="Fase do ROADMAP em execução (0-13). Usado apenas em modo ROADMAP.")
         verify_p.add_argument("--roadmap-task-id", default=None,
                               help="Identificador da tarefa roadmap (ex: 'phase-1-foundation').")
+        verify_p.add_argument("--check-context", default=None,
+                      help="Context exato do check do GitHub. Obrigatório para task_type=pr_fix.")
         
         # check
         check_p = subparsers.add_parser("check", help="Fase 1: Validação de módulo")
@@ -1853,6 +2498,22 @@ class HBCLIv2:
             help="Módulo específico (opcional). Se omitido com --backend/--frontend/--db/--tests, roda para todos."
         )
 
+        # audit-prompts — verificar consistência de agent_prompts vs TASK_CATALOG
+        audit_prompts_p = subparsers.add_parser(
+            "audit-prompts",
+            help="Auditar agent_prompts vs TASK_CATALOG.yaml (exit 1 se órfãos encontrados)",
+        )
+        audit_prompts_p.add_argument(
+            "--check-bridge-docs",
+            action="store_true",
+            help="Validar bridge docs e skills com disclaimer BRIDGE ONLY/NON-SOVEREIGN",
+        )
+
+        subparsers.add_parser(
+            "stats",
+            help="Agregar métricas de _reports/execution_evidence/ por task_type",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -1869,6 +2530,7 @@ class HBCLIv2:
                     parsed_args.module,
                     roadmap_phase=getattr(parsed_args, "roadmap_phase", None),
                     roadmap_task_id=getattr(parsed_args, "roadmap_task_id", None),
+                    check_context=getattr(parsed_args, "check_context", None),
                 )
             elif parsed_args.command == "check":
                 return self.cmd_check(parsed_args.module)
@@ -1898,6 +2560,12 @@ class HBCLIv2:
                     all_generators=parsed_args.all,
                     module=parsed_args.module,
                 )
+            elif parsed_args.command == "audit-prompts":
+                return self.cmd_audit_prompts(
+                    check_bridge_docs=getattr(parsed_args, "check_bridge_docs", False),
+                )
+            elif parsed_args.command == "stats":
+                return self.cmd_stats()
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2

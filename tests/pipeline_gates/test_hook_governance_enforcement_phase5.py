@@ -108,6 +108,14 @@ class TestPreCommitGovernancePaths:
 class TestPreCommitGovernanceMethods:
     """Hook v4: métodos de detecção e verificação de governança."""
 
+    def test_hook_initializes_task_catalog(self):
+        HBHookValidator = _load_hook_class()
+        validator = HBHookValidator()
+        assert hasattr(validator, "task_catalog"), (
+            "HBHookValidator deve inicializar task_catalog para validar artefatos derivados"
+        )
+        assert isinstance(validator.task_catalog, dict), "task_catalog deve ser um dict"
+
     def test_get_staged_governance_files_method_exists(self):
         HBHookValidator = _load_hook_class()
         assert hasattr(HBHookValidator, "get_staged_governance_files"), (
