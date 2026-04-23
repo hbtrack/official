@@ -354,9 +354,7 @@ jobs:
 
             echo "Aguardando frontend interno responder com o build esperado..."
             for i in $(seq 1 24); do
-              HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T frontend \
-                sh -lc 'wget -qO- "http://127.0.0.1/?deploy_sha='"${EXPECTED_SHA}"'" 2>/dev/null || true)"
-
+              HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T -e EXPECTED_SHA="${EXPECTED_SHA}" frontend sh -lc 'wget -qO- "http://127.0.0.1/?deploy_sha=${EXPECTED_SHA}" 2>/dev/null || true')"
               if printf "%s" "$HTML" | grep -F "hb-build-sha" >/dev/null \
                 && printf "%s" "$HTML" | grep -F "${EXPECTED_SHA}" >/dev/null; then
                 echo "✅ Frontend interno serve o SHA esperado (tentativa $i)"
