@@ -58,6 +58,7 @@ class SubmitWellnessPreUseCase:
             athlete_id=inp.athlete_id,
             readiness=inp.readiness,
             sleep_quality=inp.sleep_quality,
+            sleep_hours=inp.sleep_hours,
             mood=inp.mood,
             fatigue=inp.fatigue,
             muscle_soreness=inp.muscle_soreness,
@@ -120,7 +121,15 @@ class UpdateWellnessPreUseCase:
         wellness = self._wellness_repo.get_active(inp.session_id, inp.athlete_id)
         if not wellness:
             raise WellnessEntryNotFound("wellness_pre não encontrado para este atleta/sessão")
-        for field_name in ("readiness", "sleep_quality", "mood", "fatigue", "muscle_soreness", "notes"):
+        for field_name in (
+            "readiness",
+            "sleep_quality",
+            "sleep_hours",
+            "mood",
+            "fatigue",
+            "muscle_soreness",
+            "notes",
+        ):
             value = getattr(inp, field_name)
             if value is not None:
                 setattr(wellness, field_name, value)
