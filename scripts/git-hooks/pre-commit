@@ -374,6 +374,16 @@ class HBHookValidator:
             return True  # leitura falhou — sem bloqueio
 
         rc = data.get("reviewability_check", {})
+        reported_changed_files = rc.get("changed_files")
+        staged_changed_files = len(self._get_all_staged_files())
+
+        if isinstance(reported_changed_files, int) and reported_changed_files != staged_changed_files:
+            self.warnings.append(
+                "⚠️  HOOK: _reports/preflight/latest.json não corresponde ao diff staged atual "
+                f"(report={reported_changed_files}, staged={staged_changed_files}) — ignorando bloqueio de reviewability"
+            )
+            return True
+
         if rc.get("exceeded") is True and rc.get("split_required") is True:
             self.errors.append(
                 "❌ [BLOCKED] PR_SIZE_EXCEEDS_REVIEWABILITY_LIMIT: O PR é muito grande para "

@@ -2003,8 +2003,8 @@ class HBCLIv2:
         """
         # Mapa: task_type -> status de origem exigido
         _REQUIRED_STATUS: dict[str, str] = {
-            "readiness_promotion": "draft_contract",
-            "implementation_promotion": "validated_contract",
+            "readiness_promotion": "validated_contract",
+            "implementation_promotion": "implementation_ready",
         }
         required_status = _REQUIRED_STATUS.get(task_type)
         if required_status is None:
