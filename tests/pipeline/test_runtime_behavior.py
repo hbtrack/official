@@ -81,6 +81,14 @@ def _default_task_catalog() -> dict:
                 "profile_id": "contract_execution",
                 "stage_allowed": [3, 4],
             },
+            "implementation_promotion": {
+                "task_type": "implementation_promotion",
+                "worker_id": "implementation_promotion_worker",
+                "worker_path": ".contract_driven/agent_prompts/implementation_promotion.prompt.md",
+                "status": "active",
+                "profile_id": "contract_execution",
+                "stage_allowed": [3],
+            },
         }
     }
 
@@ -254,6 +262,46 @@ class TestIrLineage:
 
 
 class TestPromotionGuards:
+    def test_check_allows_readiness_promotion_from_validated_contract(self, tmp_path):
+        workspace = _build_workspace(tmp_path)
+        _write_json(
+            workspace / "_reports" / "session_start.json",
+            {
+                "session_id": "123e4567-e89b-42d3-a456-426614174000",
+                "pipeline_version": "1.0.0",
+                "task_type": "readiness_promotion",
+                "module": "users",
+                "stage0_exit_code": 0,
+            },
+        )
+
+        result = _run_hb(workspace, "check", "--module", "users")
+
+        assert result.returncode == 0, result.stderr
+        assert "Lifecycle OK" in result.stdout
+
+    def test_check_allows_implementation_promotion_from_implementation_ready(self, tmp_path):
+        workspace = _build_workspace(tmp_path)
+        _write_yaml(
+            workspace / "docs" / "_canon" / "MODULE_REGISTRY.yaml",
+            {"modules": {"users": {"status": "implementation_ready"}}},
+        )
+        _write_json(
+            workspace / "_reports" / "session_start.json",
+            {
+                "session_id": "123e4567-e89b-42d3-a456-426614174001",
+                "pipeline_version": "1.0.0",
+                "task_type": "implementation_promotion",
+                "module": "users",
+                "stage0_exit_code": 0,
+            },
+        )
+
+        result = _run_hb(workspace, "check", "--module", "users")
+
+        assert result.returncode == 0, result.stderr
+        assert "Lifecycle OK" in result.stdout
+
     def test_artifact_blocks_readiness_promotion_without_scorecard(self, tmp_path):
         workspace = _build_workspace(tmp_path)
         _write_text(workspace / "docs" / "_canon" / "MODULE_REGISTRY.yaml", "modules:\n  users: {}\n")

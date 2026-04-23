@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-22"
-branch_ativo: main
+branch_ativo: pr/backlog2-unificado
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: infra
@@ -10,11 +10,11 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: CI_CD_FORENSICS_AND_REMEDIATION
 resultado: PENDENTE
-proxima_acao_permitida: "commit/push do patch no deploy.yml e monitorar o próximo deploy"
+proxima_acao_permitida: "corrigir blockers de governança/runtime da branch e revalidar CI antes do merge"
 bloqueios_ativos: []
 evidence_paths:
   - ".github/workflows/deploy.yml"
-  - ".dev/deploy.md"
+  - ".dev/BACKLOG2.md"
 ---
 # SESSION HANDOFF — HB TRACK (CI FORENSICS)
 
@@ -49,9 +49,6 @@ Nenhum.
 
 ## Evidências
 
-- Log da falha analisado: `4. Deploy → Staging/5_Provisionar... via SSH.txt` em `24792649602`.
-- Report local de gates: `_reports/contract_gates/precommit.latest.json`.
-- Alteração no `deploy.yml`: uso de `GHCR_PULL_TOKEN || GITHUB_TOKEN` e `GHCR_PULL_USERNAME || github.actor`.
 
 ## Próxima sessão
 

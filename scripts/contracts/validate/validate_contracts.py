@@ -11119,7 +11119,9 @@ def run_pipeline(
                 return _skip(gate_id_hint, f"Pulado no estágio '{stage}'.", 0)
             return gate_fn()
         if profile == "task_focal":
-            if _focal_ids is not None and gate_id_hint in _focal_ids:
+            if _focal_ids is None:
+                return gate_fn()
+            if gate_id_hint in _focal_ids:
                 return gate_fn()
             return _skip(gate_id_hint, f"Pulado no perfil 'task_focal'.", 0)
         if profile == "ci":
