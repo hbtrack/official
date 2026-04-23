@@ -43,6 +43,33 @@ properties:
     description: >
       Self-reported hours of sleep. Domain [0, 24].
       SS-TRAIN-006. Enforced by INV-TRAIN-033.
+  readiness:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: >
+      Self-reported readiness scale 1–5.
+  mood:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: >
+      Self-reported mood scale 1–5.
+  fatigue:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: >
+      Self-reported fatigue scale 1–5.
+  muscleSoreness:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: >
+      Self-reported muscle soreness scale 1–5.
+  notes:
+    type: string
+    maxLength: 2000
   createdAt:
     type: string
     format: date-time
