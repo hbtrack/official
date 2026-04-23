@@ -16,6 +16,7 @@ class WellnessPreModel(models.Model):
     athlete_id = models.UUIDField(db_index=True)
     readiness = models.SmallIntegerField(null=True, blank=True)
     sleep_quality = models.SmallIntegerField(null=True, blank=True)
+    sleep_hours = models.FloatField(null=True, blank=True)
     mood = models.SmallIntegerField(null=True, blank=True)
     fatigue = models.SmallIntegerField(null=True, blank=True)
     muscle_soreness = models.SmallIntegerField(null=True, blank=True)
