@@ -29,6 +29,7 @@ class WellnessPre:
 
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
@@ -46,6 +47,8 @@ class WellnessPre:
         ]:
             if val is not None and not (1 <= val <= 5):
                 raise ValueError(f"{name} deve estar em [1..5]")
+        if self.sleep_hours is not None and not (0 <= self.sleep_hours <= 24):
+            raise ValueError("sleepHours deve estar em [0..24]")
 
 
 @dataclass
