@@ -111,9 +111,9 @@ class TestSessionStartSchemaV13:
             data["module"] = module
         return data
 
-    def test_schema_version_is_1_3_0(self, schema):
-        assert schema.get("version") == "1.3.0", (
-            f"Esperado version='1.3.0', obtido '{schema.get('version')}'"
+    def test_schema_version_is_1_4_0(self, schema):
+        assert schema.get("version") == "1.4.0", (
+            f"Esperado version='1.4.0', obtido '{schema.get('version')}'"
         )
 
     def test_new_contract_requires_module(self, schema):

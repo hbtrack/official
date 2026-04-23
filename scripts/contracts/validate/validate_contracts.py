@@ -109,6 +109,7 @@ BLOCKED_AXIOM_INTEGRITY = "BLOCKED_AXIOM_INTEGRITY"
 BLOCKED_FEATURE_COVERAGE_MISSING = "BLOCKED_FEATURE_COVERAGE_MISSING"
 BLOCKED_LEGACY_IN_CRITICAL_PATH = "BLOCKED_LEGACY_IN_CRITICAL_PATH"  # FASE 7
 BLOCKED_WORKER_PROMPT_AUTHORITY = "BLOCKED_WORKER_PROMPT_AUTHORITY"
+BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING = "BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING"
 BLOCKED_SCOPE_OVERFLOW = "BLOCKED_SCOPE_OVERFLOW"
 
 MODULE_STATUS_ORDER = (
@@ -190,6 +191,7 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_AXIOM_INTEGRITY,
     BLOCKED_FEATURE_COVERAGE_MISSING,
     BLOCKED_LEGACY_IN_CRITICAL_PATH,  # FASE 7
+    BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
 }
 
 
@@ -9657,6 +9659,198 @@ def _g_worker_prompt_authority(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _g_governance_regression(root: pathlib.Path) -> dict:
+    """GOVERNANCE_REGRESSION_GATE — detecta prompts órfãos e bindings quebrados.
+
+    Checks:
+      1. Todo .prompt.md em agent_prompts deve estar referenciado por worker_path no TASK_CATALOG.
+      2. Toda entrada não-frozen do TASK_CATALOG deve apontar para um worker_path real.
+      3. Se o prompt declara task_type em frontmatter, ele deve corresponder a pelo menos
+         uma task que referencia aquele worker_path.
+    """
+    t0 = time.monotonic()
+    gate_id = "GOVERNANCE_REGRESSION_GATE"
+    catalog_path = root / ".contract_driven" / "TASK_CATALOG.yaml"
+    prompts_dir = root / ".contract_driven" / "agent_prompts"
+
+    checked: list[str] = [str(catalog_path), str(prompts_dir)]
+    violations: list[dict] = []
+
+    if not catalog_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+            "TASK_CATALOG.yaml não encontrado.",
+            [str(catalog_path)],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": str(catalog_path),
+                "message": "TASK_CATALOG.yaml ausente — governança sem binding executável.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not prompts_dir.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+            "Diretório agent_prompts/ não encontrado.",
+            [str(prompts_dir)],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": str(prompts_dir),
+                "message": "Diretório .contract_driven/agent_prompts ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        catalog = _load_yaml(catalog_path)
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+            f"Falha ao carregar TASK_CATALOG.yaml: {exc}",
+            [str(catalog_path)],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": str(catalog_path),
+                "message": str(exc),
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    task_catalog = catalog.get("task_catalog") if isinstance(catalog, dict) else None
+    if not isinstance(task_catalog, dict):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+            "TASK_CATALOG.yaml não contém task_catalog válido.",
+            [str(catalog_path)],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": str(catalog_path),
+                "message": "Chave top-level 'task_catalog' ausente ou inválida.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    prompt_bindings: dict[str, list[str]] = {}
+
+    for task_key, task_entry in task_catalog.items():
+        if not isinstance(task_entry, dict):
+            continue
+
+        worker_path = task_entry.get("worker_path")
+        status = str(task_entry.get("status", "active")).strip().lower()
+        if worker_path:
+            normalized_worker_path = str(worker_path).replace("\\", "/")
+            prompt_bindings.setdefault(normalized_worker_path, []).append(task_key)
+            checked.append(str((root / normalized_worker_path).resolve()))
+
+        if status == "frozen":
+            continue
+
+        if not worker_path:
+            violations.append({
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": task_key,
+                "message": f"Task '{task_key}' está ativa mas não declara worker_path.",
+                "severity": "error",
+            })
+            continue
+
+        full_worker_path = root / normalized_worker_path
+        if not full_worker_path.exists():
+            violations.append({
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": normalized_worker_path,
+                "message": (
+                    f"Task '{task_key}' referencia worker_path '{normalized_worker_path}' "
+                    "mas o arquivo não existe."
+                ),
+                "severity": "error",
+            })
+
+    for prompt_path in sorted(prompts_dir.glob("*.prompt.md")):
+        checked.append(str(prompt_path))
+        rel_prompt = prompt_path.relative_to(root).as_posix()
+        bound_tasks = prompt_bindings.get(rel_prompt, [])
+
+        if not bound_tasks:
+            violations.append({
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": rel_prompt,
+                "message": f"Prompt órfão: '{rel_prompt}' não possui entry correspondente no TASK_CATALOG.",
+                "severity": "error",
+            })
+            continue
+
+        frontmatter = _parse_yaml_front_matter(prompt_path)
+        if not isinstance(frontmatter, dict):
+            continue
+
+        declared_task_type = frontmatter.get("task_type")
+        if declared_task_type and declared_task_type not in bound_tasks:
+            bound_tasks_label = ", ".join(sorted(bound_tasks))
+            violations.append({
+                "blocking_code": BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+                "artifact": rel_prompt,
+                "message": (
+                    f"Prompt '{rel_prompt}' declara task_type='{declared_task_type}', "
+                    f"mas TASK_CATALOG o vincula a: {bound_tasks_label}."
+                ),
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+            f"{len(violations)} problema(s) de binding entre TASK_CATALOG e agent_prompts.",
+            [str(catalog_path), str(prompts_dir)],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "TASK_CATALOG e agent_prompts estão coerentes e sem prompts órfãos.",
+        [str(catalog_path), str(prompts_dir)],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g_domain_glossary_consistency(root: pathlib.Path) -> dict:
     """DOMAIN_GLOSSARY_CONSISTENCY_GATE — Valida que DOMAIN_GLOSSARY.md existe,
     é bem-formado e que termos canônicos são usados consistentemente em contratos.
@@ -10855,6 +11049,7 @@ def run_pipeline(
         "ARAZZO_VALIDATION_GATE",              # Arazzo YAML parsing
         "ARAZZO_COMPLETENESS_GATE",            # Arazzo completeness
         "TOOLING_CONFIG_GATE",                 # redocly.yaml / .spectral.yaml presentes
+        "GOVERNANCE_REGRESSION_GATE",
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
@@ -10900,12 +11095,35 @@ def run_pipeline(
         if stage else None
     )
 
+    # task_focal: carrega focal_gate_set a partir de session_start.json + TASK_CATALOG.yaml
+    _focal_ids: "set[str] | None" = None
+    if profile == "task_focal":
+        try:
+            session_path = root / "_reports" / "session_start.json"
+            session_data = json.loads(session_path.read_text(encoding="utf-8"))
+            current_task_type = session_data.get("task_type")
+            catalog_path = root / ".contract_driven" / "TASK_CATALOG.yaml"
+            catalog = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+            task_entry = (catalog.get("task_catalog") or {}).get(current_task_type, {})
+            focal_list = task_entry.get("focal_gate_set") or []
+            _focal_ids = set(focal_list)
+            print(f"[task_focal] task_type={current_task_type!r}  focal_gates={sorted(_focal_ids)}")
+        except Exception as _e:
+            print(f"[task_focal] ERRO ao carregar focal_gate_set: {_e} — rodando todos os gates.", file=sys.stderr)
+            _focal_ids = None
+
     def _maybe(gate_fn, gate_id_hint: str) -> dict:
         if _stage_map is not None:
             allowed_for_stage = _stage_map.get(stage, set())  # type: ignore[arg-type]
             if gate_id_hint not in allowed_for_stage:
                 return _skip(gate_id_hint, f"Pulado no estágio '{stage}'.", 0)
             return gate_fn()
+        if profile == "task_focal":
+            if _focal_ids is None:
+                return gate_fn()
+            if gate_id_hint in _focal_ids:
+                return gate_fn()
+            return _skip(gate_id_hint, f"Pulado no perfil 'task_focal'.", 0)
         if profile == "ci":
             return gate_fn()
         allowed = _local_ids if profile == "local" else _precommit_ids
@@ -10967,6 +11185,7 @@ def run_pipeline(
         ("FEATURE_COVERAGE_GATE", lambda: _g_feature_coverage(root)),
         ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
         ("WORKER_PROMPT_AUTHORITY_GATE", lambda: _g_worker_prompt_authority(root)),
+        ("GOVERNANCE_REGRESSION_GATE", lambda: _g_governance_regression(root)),
         ("DOMAIN_GLOSSARY_CONSISTENCY_GATE", lambda: _g_domain_glossary_consistency(root)),
         ("CONTEXT_BUNDLE_FRESHNESS_GATE", lambda: _g_context_bundle_freshness(root)),
         ("IMPACT_ANALYSIS_GATE", lambda: _g_impact_analysis(root)),
@@ -11025,7 +11244,7 @@ def main() -> int:
     import argparse as _argparse
 
     parser = _argparse.ArgumentParser(description="HB Track Contract Gates")
-    parser.add_argument("--profile", choices=["local", "precommit", "ci"], default=None)
+    parser.add_argument("--profile", choices=["local", "precommit", "ci", "task_focal"], default=None)
     parser.add_argument(
         "--stage",
         choices=["session-start", "pre-authoring", "artifact"],

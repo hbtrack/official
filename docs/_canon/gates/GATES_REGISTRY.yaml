@@ -4,8 +4,8 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.2.0"
-last_reviewed: "2026-03-23"
+version: "1.3.0"
+last_reviewed: "2026-04-22"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
@@ -1085,6 +1085,25 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: GOVERNANCE_REGRESSION_GATE
+    order: "20J1"
+    name: "Governance Regression Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [ WORKER_PROMPT_AUTHORITY_GATE ]
+    description: >
+      Detecta regressões onde governança declarada perde binding executável.
+      Valida que todo worker prompt em .contract_driven/agent_prompts está
+      referenciado por worker_path no TASK_CATALOG, que toda task ativa aponta
+      para um worker_path existente, e que qualquer task_type declarado no
+      frontmatter do prompt coincide com o catálogo.
+    blocking_codes: [ BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
   - gate_id: DOMAIN_GLOSSARY_CONSISTENCY_GATE
     order: "20K"
     name: "Domain Glossary Consistency Gate"
@@ -1248,4 +1267,6 @@ gates:
     blocking_codes: [ CODEGEN_NOT_REPRODUCIBLE ]
     status: active
     integrated_in_validate_contracts: false
-    enhancement_notes: "Implementar lock.json em cada gerador (todos v0.1+). Gate será integrado no executor quando .lock.json for emitido pelos geradores (v0.2+)."
+    enhancement_notes: "Implementar lock.json em cada gerador (todos v0.1+). Gate
+      será integrado no executor quando .lock.json for emitido pelos geradores
+      (v0.2+)."
