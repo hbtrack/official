@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-11"
+version: "1.0.1"
+last_reviewed: "2026-04-22"
 status: active
 ---
 
@@ -208,6 +208,22 @@ Formato obrigatório:
 Nenhum outro exit code é canônico sem atualização deste documento.
 
 ⸻
+
+4.4 Perfis de execução escopada
+
+O perfil canônico de baseline continua sendo `profile=ci`.
+Somente ele pode substituir `_reports/contract_gates/latest.json` e representar o resultado global do pipeline.
+
+O perfil `profile=task_focal` é permitido apenas como execução escopada de pré-authoring ou triagem local.
+Sua finalidade normativa é reduzir ruído operacional antes da existência do artefato alvo, sem redefinir a semântica dos gates.
+
+Regras obrigatórias para `profile=task_focal`:
+
+- o conjunto de gates executado deve ser resolvido a partir do `task_type` corrente em `_reports/session_start.json`
+- o subconjunto permitido deve ser declarado no campo `focal_gate_set` da task correspondente em `.contract_driven/TASK_CATALOG.yaml`
+- `focal_gate_set` só restringe escopo de execução; ele não altera ordem, severidade, blocking semantics, evidência obrigatória ou autoridade dos gates
+- se `_reports/session_start.json` ou `.contract_driven/TASK_CATALOG.yaml` estiver ausente, inválido ou ilegível, o executor deve cair em fallback seguro e rodar o conjunto completo de gates aplicável, nunca pular validação silenciosamente
+- qualquer inclusão, remoção ou mudança semântica em `focal_gate_set` exige atualização coordenada do canon, do registro operacional e do enforcement técnico no mesmo ciclo de mudança
 
 5. Ordem Obrigatória dos Gates
 
