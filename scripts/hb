@@ -348,6 +348,56 @@ class HBCLIv2:
             return "architecture_decision"
         return "default"
 
+    def _enforce_selection_rules(self, task_type: str, profile_id: str) -> int:
+        """
+        Valida que o profile_id do TASK_CATALOG é coerente com as selection_rules
+        do BOOT_PROFILES.yaml. Retorna 1 com BLOCKED_PROFILE_MISMATCH se divergir.
+        """
+        selection_rules = self.boot_profiles.get("selection_rules", [])
+        if not selection_rules:
+            return 0
+
+        derived_profile = "default"
+        for rule in selection_rules:
+            if not isinstance(rule, dict):
+                continue
+
+            condition = str(rule.get("condition", "")).strip().strip('"')
+            action = str(rule.get("action", "")).strip().strip('"')
+
+            if condition == "always":
+                if action.startswith("use_profile:"):
+                    derived_profile = action.split(":", 1)[1]
+                break
+
+            if condition == "task_type.profile_id != null" and profile_id:
+                derived_profile = profile_id
+                break
+
+            if condition == f"task_type == {task_type}":
+                if action.startswith("use_profile:"):
+                    derived_profile = action.split(":", 1)[1]
+                break
+
+            if condition.startswith("task_type in [") and condition.endswith("]"):
+                tasks_str = condition[len("task_type in ["):-1]
+                tasks = [item.strip() for item in tasks_str.split(",") if item.strip()]
+                if task_type in tasks:
+                    if action.startswith("use_profile:"):
+                        derived_profile = action.split(":", 1)[1]
+                    break
+
+        if derived_profile != profile_id:
+            print(
+                f"❌ BLOCKED_PROFILE_MISMATCH: selection_rules derivam "
+                f"profile='{derived_profile}' mas TASK_CATALOG especifica "
+                f"profile='{profile_id}' para task_type='{task_type}'.",
+                file=sys.stderr,
+            )
+            return 1
+
+        return 0
+
     def _check_stage_allowed(self, task_type: str, stage: int) -> bool:
         """
         Valida que o stage atual está em stage_allowed para o task_type.
@@ -666,6 +716,42 @@ class HBCLIv2:
             if rc != 0:
                 return rc
 
+        # Validação 4c: bundle_required check
+        bundle_required = task_config.get("bundle_required", False)
+        if bundle_required:
+            bundle_path_template = task_config.get("bundle_path_template", "")
+            if not bundle_path_template:
+                print(
+                    f"❌ task_type='{task_type}' declarado bundle_required=true "
+                    "mas bundle_path_template ausente em TASK_CATALOG",
+                    file=sys.stderr,
+                )
+                return 1
+
+            bundle_path_str = bundle_path_template.replace("{module}", module or "")
+            bundle_path_str = bundle_path_str.replace("{roadmap_task_id}", roadmap_task_id or "")
+            if roadmap_phase is not None:
+                bundle_path_str = bundle_path_str.replace("{roadmap_phase}", str(roadmap_phase))
+
+            unresolved_template = "{" in bundle_path_str and "}" in bundle_path_str
+            if unresolved_template:
+                bundle_path_str = bundle_path_str.split("{", 1)[0].rstrip("/")
+
+            bundle_path = self.root / bundle_path_str.rstrip("/")
+            if not bundle_path.exists():
+                print(f"❌ BLOCKED_BUNDLE_REQUIRED: bundle não encontrado em '{bundle_path}'", file=sys.stderr)
+                if module:
+                    print(
+                        f"   Execute: python3 scripts/compile/compile_context_bundle.py --module {module}",
+                        file=sys.stderr,
+                    )
+                if unresolved_template:
+                    print(
+                        "   O template contém placeholders não resolvidos nesta fase; o diretório-base do bundle também deve existir.",
+                        file=sys.stderr,
+                    )
+                return 1
+
         # Validação 5: boot_profile_id é válido?
         # Nota: profile_id=null em TASK_CATALOG (ex: audit tasks) → fallback para "default"
         profile_id = task_config.get("profile_id") or "default"
@@ -675,14 +761,9 @@ class HBCLIv2:
         if not boot_paths_valid or not required_sections_valid:
             return 1
 
-        # Validação 5b: selection_rules — coerência informativa (TASK_CATALOG prevalece)
-        selected_by_rules = self._apply_selection_rules(task_type)
-        if selected_by_rules != profile_id:
-            print(
-                f"⚠️  selection_rules → '{selected_by_rules}' vs TASK_CATALOG → '{profile_id}' "
-                "— TASK_CATALOG é a fonte de autoridade e prevalece.",
-                file=sys.stderr,
-            )
+        # Validação 5b: selection_rules — coerência obrigatória
+        if self._enforce_selection_rules(task_type, profile_id) != 0:
+            return 1
 
         # Validação 5c: required_sections — conteúdo mínimo (falha hard para arquivo vazio)
         if not self._validate_required_section_content(profile_id):

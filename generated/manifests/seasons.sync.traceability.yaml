@@ -268,7 +268,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
     sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: generated/contracts/schemas/shared/session_start.schema.json
-    sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
+    sha256: 387211a1249195f6c0a7ec179cefb5045df00dd4bb44868bfb7ce6836e57f898
   - path: generated/contracts/schemas/shared/toolchain.schema.json
     sha256: 70bba8678d838900d02d089b15011d5e1a05945e23e9292b242ca8f61b0ff97a
   - path: generated/contracts/schemas/shared/waiver.schema.json
@@ -323,7 +323,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 026bfdd6415754f808db60990f7aa80740dd7015699a7ff4573e695f83502f62
+  generated_tree_sha256: ee3ba7e98911435b8931c1f7be656db7e61e883cd8fbe8493a3d37606700e754
   policy_path: generated/resolved_policy/seasons.sync.resolved.yaml
   policy_sha256: b90a7508b2deae2aac07b45443e37e35f02ff7a7d2b6982dba7e1ff4e88ad033
   source_contracts:
@@ -592,7 +592,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/session_handoff.schema.json
     sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
   - path: contracts/schemas/shared/session_start.schema.json
-    sha256: 39f5ed0e8ada1cce2f3c37aef8a8054124ad3555bd2b173f202adff2383c6af5
+    sha256: 387211a1249195f6c0a7ec179cefb5045df00dd4bb44868bfb7ce6836e57f898
   - path: contracts/schemas/shared/toolchain.schema.json
     sha256: 70bba8678d838900d02d089b15011d5e1a05945e23e9292b242ca8f61b0ff97a
   - path: contracts/schemas/shared/waiver.schema.json
@@ -658,4 +658,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
-  source_tree_sha256: 5ca48501ad4de6d1ef97b4b833a286171534a6a7394982667334ebaa8727b207
+  source_tree_sha256: b0c73d08195902c06560580b750817ce193ac6113d92250cfff292a384905ecc
