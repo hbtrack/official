@@ -352,16 +352,25 @@ jobs:
             cd /opt/hbtrack/staging
             EXPECTED_SHA="${{ github.sha }}"
 
-            HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T frontend \
-              wget -qO- "http://localhost/?deploy_sha=${EXPECTED_SHA}")"
-            if ! printf "%s" "$HTML" | grep -F "hb-build-sha" >/dev/null; then
-              echo "❌ HTML interno não contém meta hb-build-sha"
-              exit 1
-            fi
-            if ! printf "%s" "$HTML" | grep -F "${EXPECTED_SHA}" >/dev/null; then
-              echo "❌ HTML interno não contém o SHA esperado ${EXPECTED_SHA}"
-              exit 1
-            fi
+            echo "Aguardando frontend interno responder com o build esperado..."
+            for i in $(seq 1 24); do
+              HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T -e EXPECTED_SHA="${EXPECTED_SHA}" frontend sh -lc 'wget -qO- "http://127.0.0.1/?deploy_sha=${EXPECTED_SHA}" 2>/dev/null || true')"
+              if printf "%s" "$HTML" | grep -F "hb-build-sha" >/dev/null \
+                && printf "%s" "$HTML" | grep -F "${EXPECTED_SHA}" >/dev/null; then
+                echo "✅ Frontend interno serve o SHA esperado (tentativa $i)"
+                break
+              fi
+
+              if [ "$i" -eq 24 ]; then
+                echo "❌ Frontend interno não serviu o SHA esperado após 120s"
+                echo "--- HTML retornado (última tentativa) ---"
+                printf "%s\n" "$HTML"
+                exit 1
+              fi
+
+              echo "⏳ Tentativa $i/24 — frontend ainda não pronto"
+              sleep 5
+            done
 
             HEALTH="$(docker compose -f infra/docker-compose.staging.yml exec -T api \
               curl -sf --max-time 5 http://localhost:8000/health)"
