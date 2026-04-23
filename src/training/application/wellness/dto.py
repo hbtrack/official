@@ -15,6 +15,7 @@ class SubmitWellnessPreInput:
     actor_id: uuid.UUID
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
@@ -49,6 +50,7 @@ class UpdateWellnessPreInput:
     actor_id: uuid.UUID
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
