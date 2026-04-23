@@ -105,6 +105,7 @@ def _wellness_pre_to_out(wellness) -> WellnessPreOut:
         athlete_id=wellness.athlete_id,
         readiness=wellness.readiness,
         sleep_quality=wellness.sleep_quality,
+        sleep_hours=wellness.sleep_hours,
         mood=wellness.mood,
         fatigue=wellness.fatigue,
         muscle_soreness=wellness.muscle_soreness,
