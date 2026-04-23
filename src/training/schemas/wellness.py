@@ -19,6 +19,7 @@ class WellnessPreOut(Schema):
     updated_at: datetime
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
@@ -29,6 +30,7 @@ class SubmitWellnessPreIn(Schema):
     athlete_id: uuid.UUID
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
@@ -38,6 +40,7 @@ class SubmitWellnessPreIn(Schema):
 class UpdateWellnessPreIn(Schema):
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
