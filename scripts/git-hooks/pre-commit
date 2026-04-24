@@ -37,6 +37,7 @@ import hashlib
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import jsonschema
+import yaml
 
 
 class HBHookValidator:
@@ -67,6 +68,7 @@ class HBHookValidator:
             self.repo_root / "contracts" / "schemas" / "shared" / "session_start.schema.json"
         )
         self.validator_script = self.repo_root / "scripts" / "contracts" / "validate" / "validate_contracts.py"
+        self.task_catalog_file = self.repo_root / ".contract_driven" / "TASK_CATALOG.yaml"
 
         # Preferir Python da venv se disponível (git hook usa /usr/bin/python3 que pode não ter pytest)
         _venv_python = self.repo_root / ".venv" / "bin" / "python"
@@ -77,6 +79,28 @@ class HBHookValidator:
 
         self.errors: List[str] = []
         self.warnings: List[str] = []
+        self.task_catalog: Dict[str, Any] = self._load_task_catalog()
+
+    def _load_task_catalog(self) -> Dict[str, Any]:
+        """Carregar TASK_CATALOG.yaml para validações de artefatos derivados."""
+        if not self.task_catalog_file.exists():
+            self.warnings.append(
+                f"⚠️  HOOK: TASK_CATALOG ausente em {self.task_catalog_file.relative_to(self.repo_root)}"
+            )
+            return {}
+
+        try:
+            with open(self.task_catalog_file, encoding="utf-8") as f:
+                data = yaml.safe_load(f) or {}
+        except Exception as e:
+            self.warnings.append(f"⚠️  HOOK: Erro ao carregar TASK_CATALOG.yaml: {e}")
+            return {}
+
+        if not isinstance(data, dict):
+            self.warnings.append("⚠️  HOOK: TASK_CATALOG.yaml inválido — esperado objeto raiz")
+            return {}
+
+        return data
     
     @staticmethod
     def _get_repo_root() -> Path:
