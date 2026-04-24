@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.1.0"
-last_reviewed: "2026-03-23"
+version: "1.2.0"
+last_reviewed: "2026-04-24"
 status: active
 state_semantics: governance
 ---
@@ -36,23 +36,27 @@ Leitura obrigatoria:
 
 | Eixo | Evidencia local | Leitura correta |
 |------|------------------|-----------------|
-| Backend HTTP | `config/urls.py`, `config/settings.py`, `src/<module>/api.py` | existe um backend monolitico Django + Django Ninja com 17 apps e routers montados sob `/api/` |
-| Organizacao de codigo | `src/<module>/domain/`, `application/`, `infrastructure/`, `models.py`, `schemas.py` | a arquitetura de codigo atual usa Interface -> Application -> Domain -> Infrastructure |
-| Banco de dados local | `infra/docker-compose.yml`, `config/settings.py` | o ambiente dev materializado usa PostgreSQL em container local; o compose ainda esta em `postgres:12`, apesar do target-state aprovado apontar para PostgreSQL 16 |
-| Redis | `infra/docker-compose.yml` | Redis esta provisionado como infra local, mas isso ainda nao prova runtime Celery ativo |
-| Frontend | ausencia de `frontend/`; `package.json` contem apenas tooling de contratos | nao existe frontend materializado no workspace |
-| Workers assíncronos | ausencia de `config/celery.py` e de `src/<module>/tasks.py` | workers Celery ainda nao sao runtime comprovado |
-| WebSocket | ausencia de `CHANNEL_LAYERS` e de configuracao Channels | WebSocket/Channels ainda nao e runtime comprovado |
-| Health endpoint | ausencia de `/health` em `config/urls.py` e routers | deploy ponta a ponta ainda nao pode ser tratado como operacional |
+| Backend HTTP | `config/urls.py`, `config/settings.py`, `src/<module>/api.py` | backend monolitico Django 5.0.4 + Django Ninja com 17 apps e routers montados sob `/api/` |
+| Organizacao de codigo | `src/<module>/domain/`, `application/`, `infrastructure/`, `models.py`, `schemas.py` | arquitetura em camadas: Interface → Application → Domain → Infrastructure |
+| Banco de dados | `infra/docker-compose.yml` (`image: postgres:16`), `config/settings.py` | PostgreSQL 16 — tanto no compose local quanto no staging |
+| Redis | `infra/docker-compose.yml`, `config/settings.py` (`CHANNEL_LAYERS` + `CELERY_BROKER_URL`) | Redis 7 provisionado e configurado como broker Celery e backend de Channel Layer |
+| Workers assíncronos | `config/celery.py`, `src/notifications/tasks.py` | Celery 5.x configurado com broker Redis, autodiscover ativo, sinais `before_task_publish` e `task_prerun` propagando `X-Flow-ID` |
+| WebSocket / tempo real | `config/asgi.py` (`ProtocolTypeRouter`), `config/settings.py` (`CHANNEL_LAYERS`), `src/notifications/consumers.py` | Django Channels configurado com Redis Channel Layer; `NotificationConsumer` operacional; auth via subprotocolo ou header `Authorization` |
+| Health endpoint | `config/urls.py:144` (`path("health", health_check)`) | `GET /health` existe e verifica PostgreSQL e Redis |
+| Observabilidade / contexto | `src/shared/middleware.py` (`FlowIDMiddleware`), `src/shared/logging_formatters.py`, `config/settings.py` (`LOGGING`) | logging estruturado em JSON com `FlowIDFormatter`; `X-Flow-ID` propagado via `ContextVar` em HTTP, WebSocket e Celery |
+| Frontend | `frontend/src/`, `frontend/package.json` | estrutura React + Vite inicializada; desenvolvimento em andamento (Fase 5 do ROADMAP) |
+| ASGI runtime | `config/asgi.py`, `Dockerfile` (`UvicornWorker`) | servidor ASGI via Gunicorn + UvicornWorker; suporta HTTP e WebSocket simultaneamente |
 
 ## 2. Target-state aprovado
 
-Os seguintes itens estao aprovados arquiteturalmente, mas ainda nao podem ser lidos como runtime atual sem evidencia correspondente:
+Os seguintes itens estao aprovados arquiteturalmente e ainda nao sao runtime comprovado no repo:
 
-- stack backend consolidada em Django 5.x + Django Ninja 1.x + PostgreSQL 16 via [ADR-031](./decisions/ADR-031-backend-framework.md);
-- frontend web React + Vite como primeira superficie de UX via [ADR-030](./decisions/ADR-030-frontend-strategy.md) e [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md);
-- fila assíncrona via Celery + Redis e WebSocket via Channels como extensoes aprovadas do backend;
-- deploy com staging e `GET /health` via [DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md).
+- **Frontend completo**: React + Vite aprovado via [ADR-030](./decisions/ADR-030-frontend-strategy.md); `frontend/src` inicializado mas sem deploy de SPA em staging ou producao.
+- **Deploy de producao**: staging configurado em `infra/docker-compose.staging.yml`; ambiente VPS de producao ainda nao executado (Fase 6 do ROADMAP).
+- **Mobile**: nenhum artefato de app mobile presente.
+- **Observabilidade avancada**: integracao com APM externo (Sentry, Datadog, etc.) nao configurada.
+
+Os componentes Celery, Channels/WebSocket, `GET /health`, PostgreSQL 16, Redis, logging estruturado em JSON e FlowIDMiddleware **sao current-state comprovado** — nao devem ser listados como target-state.
 
 Regra operacional: enquanto os arquivos e pontos de entrada correspondentes nao existirem no repo, esses itens continuam sendo `target-state`, nao `current-state`.
 
@@ -107,17 +111,14 @@ Ela **nao** define:
 
 ## 5. Deltas arquiteturais ainda abertos
 
-Os principais deltas entre o repo atual e o target-state aprovado sao:
+Os deltas abaixo representam o que **ainda nao existe** no repo — itens aprovados no target-state mas sem evidencia de runtime comprovada:
 
-1. PostgreSQL 16 esta aprovado, mas o compose local ainda usa `postgres:12`.
-2. Redis existe como infra local, mas Celery nao esta configurado no codigo.
-3. Frontend web esta aprovado, mas `frontend/` ainda nao existe.
-4. WebSocket/Channels esta aprovado, mas nao ha configuracao correspondente.
-5. `GET /health` e requisito de deploy, mas ainda nao existe no backend.
-6. Middleware `X-Flow-ID` end-to-end (ADR-013) nao existe no runtime atual; apenas `correlation_id` pontual no modulo `audit`.
-7. Logging estruturado em JSON (ADR-013) nao esta configurado em `config/settings.py`.
+1. **Frontend completo**: `frontend/src` inicializado mas desenvolvimento em andamento (Fase 5 do ROADMAP); sem deploy de SPA em staging/producao.
+2. **Deploy de producao end-to-end**: staging configurado em `infra/docker-compose.staging.yml`; ambiente de producao VPS ainda nao executado (Fase 6 do ROADMAP).
+3. **Mobile**: nenhum artefato de app mobile presente no workspace.
+4. **Observabilidade avancada**: integracao com ferramentas externas de APM (Sentry, Datadog, etc.) nao configurada.
 
-Esses deltas nao bloqueiam leitura arquitetural, mas bloqueiam qualquer afirmacao de runtime operacional que dependa deles.
+Todos os componentes criticos de runtime listados na secao 1 — Celery, Channels/WebSocket, `/health`, PostgreSQL 16, Redis, logging estruturado, FlowIDMiddleware — sao **current-state comprovado**, nao target-state.
 
 Referencia factual completa do estado atual: [RUNTIME_CURRENT_STATE.md](./RUNTIME_CURRENT_STATE.md).
 

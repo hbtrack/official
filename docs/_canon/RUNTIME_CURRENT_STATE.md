@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-23"
+version: "1.1.0"
+last_reviewed: "2026-04-24"
 status: active
 state_semantics: current-state
 ---
@@ -50,8 +50,8 @@ Fonte de verdade: `src/`, `config/`, `infra/`, `tests/`, `contracts/`, `migratio
 | Item | Estado | Evidência |
 |------|--------|-----------|
 | Redis local em container | **provisionado** | `infra/docker-compose.yml` — serviço `redis` |
-| Redis usado como broker Celery | **ausente** | nenhuma configuração `CELERY_BROKER_URL` ou `config/celery.py` |
-| Redis usado por Django Channels | **ausente** | nenhuma configuração `CHANNEL_LAYERS` |
+| Redis usado como broker Celery | **materializado** | `config/settings.py` — `CELERY_BROKER_URL` configurado; `config/celery.py` existe |
+| Redis usado por Django Channels | **materializado** | `config/settings.py` — `CHANNEL_LAYERS` configurado com backend Redis |
 
 ### 1.4 Módulos backend (17/17)
 
@@ -110,10 +110,10 @@ Cada módulo possui as camadas: `Interface/API → Application → Domain → In
 | Item | Estado | Evidência |
 |------|--------|-----------|
 | `infra/docker-compose.yml` (dev) | **materializado** | `infra/docker-compose.yml` |
-| Dockerfile de produção | **ausente** | nenhum `Dockerfile` na raiz ou em `infra/` |
-| `docker-compose.prod.yml` | **ausente** | ausência confirmada |
-| `nginx.conf` | **ausente** | ausência confirmada |
-| Endpoint `GET /health` | **ausente** | `config/urls.py` não declara rota `/health` |
+| Dockerfile de produção | **materializado** | `Dockerfile` na raiz do repositório |
+| `docker-compose.prod.yml` / staging | **materializado** | `infra/docker-compose.staging.yml` existe |
+| `nginx.conf` | **materializado** | `infra/nginx.conf`, `infra/nginx.production.conf`, `infra/nginx.staging.conf` e variantes |
+| Endpoint `GET /health` | **materializado** | `config/urls.py:144` — `path("health", health_check)` |
 
 ---
 
@@ -122,12 +122,9 @@ Cada módulo possui as camadas: `Interface/API → Application → Domain → In
 | Item | Estado | Evidência |
 |------|--------|-----------|
 | `correlation_id` no módulo `audit` | **implementado** (pontual) | `src/audit/domain/entities.py`, `schemas.py`, `infrastructure/models.py` |
-| Middleware de propagação `X-Flow-ID` end-to-end | **ausente** | nenhum middleware em `config/` |
-| Logging estruturado em JSON (`structlog` ou equivalente) | **ausente** | nenhuma configuração de structlog em `config/settings.py` |
-| Rastreabilidade de requests entre módulos | **ausente** | substituída por `correlation_id` opcional no `audit` |
-
-Leitura correta: ADR-013 define `X-Flow-ID` como target-state. A implementação atual consiste
-apenas no campo `correlation_id` no módulo `audit`, sem propagação automática de header.
+| Middleware de propagação `X-Flow-ID` end-to-end | **materializado** | `config/settings.py:80` — `shared.middleware.FlowIDMiddleware` em `MIDDLEWARE` |
+| Logging estruturado em JSON (`structlog` ou equivalente) | **materializado** | `config/settings.py:208` — `FlowIDFormatter` configurado; `src/shared/logging_formatters.py` |
+| Rastreabilidade de requests entre módulos | **materializado** | `X-Flow-ID` propagado via `FlowIDMiddleware` em todos os requests |
 
 ---
 
@@ -135,25 +132,21 @@ apenas no campo `correlation_id` no módulo `audit`, sem propagação automátic
 
 | Item | Estado | Evidência |
 |------|--------|-----------|
-| Diretório `frontend/` | **ausente** | não existe no workspace |
-| Toolchain React/Vite | **ausente** | `package.json` contém apenas ferramentas de contratos |
-| Tipos gerados `schema.d.ts` | **ausente** | sem `npm run api:generate` executado ainda |
+| Diretório `frontend/` | **materializado** | `frontend/` existe com `src/`, `package.json`, `vite.config.ts` |
+| Toolchain React/Vite | **materializado** | `frontend/package.json`, `frontend/vite.config.ts`, `frontend/tailwind.config.ts` |
+| Tipos gerados `schema.d.ts` | **parcial** | `frontend/src/` existe; execução de `npm run api:generate` pendente de verificação |
 
 ---
 
 ## 7. Target-state aprovado (não materializado)
 
-Os itens abaixo têm aprovação arquitetural formal mas **não existem ainda no repo**:
+Os itens abaixo têm aprovação arquitetural formal mas **ainda não estão completamente materializados** ou dependem de provisionamento externo:
 
 | Item | Aprovação | Bloqueio atual |
 |------|-----------|----------------|
-| Worker Celery + Redis broker | ADR-031 | sem `config/celery.py` e sem `tasks.py` |
-| WebSocket / Channels | ADR-031 | sem `CHANNEL_LAYERS` no settings |
-| Frontend React + Vite | ADR-030 | `frontend/` inexiste |
-| `GET /health` | DEPLOY_PIPELINE.md | ausente em `config/urls.py` |
-| Middleware X-Flow-ID end-to-end | ADR-013 | nenhuma implementação de middleware |
-| Logging JSON estruturado | ADR-013 | nenhuma config de structlog |
-| Dockerfile + deploy assets | DEPLOY_PIPELINE.md | ausência confirmada |
+| Worker Celery em produção (container separado) | ADR-031 | `config/celery.py` e `tasks.py` existem; container de worker precisa de provisionamento infra |
+| WebSocket / Channels em produção | ADR-031 | `CHANNEL_LAYERS` configurado; requer ASGI server (Daphne/uvicorn) em produção |
+| Tipos gerados `schema.d.ts` via `npm run api:generate` | ADR-030 | `frontend/` existe; geração precisa ser executada no CI |
 
 ---
 

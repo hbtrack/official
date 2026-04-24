@@ -1,25 +1,28 @@
 ---
 data_ultima_sessao: "2026-04-24"
-branch_ativo: feat/training-module-phase4
+branch_ativo: feat/c4-architecture-reality-alignment
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
-fase_roadmap: 6
-roadmap_phase: 6
+fase_roadmap: 1
+roadmap_phase: 1
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: CI_CD_FORENSICS_AND_REMEDIATION
-resultado: PENDENTE
-proxima_acao_permitida: "commitar fixes (traceId ProblemOut + compile_api_policy --all + scripts/hb TRAINING_CURSOR_SECRET) e fazer push para feat/training-module-phase4"
+task_id: ARCHITECTURE_REALITY_ALIGNMENT
+resultado: DONE
+proxima_acao_permitida: "criar branch feat/c4-architecture-reality-alignment e abrir PR com arquivos de backend hardening + alinhamento de docs"
 bloqueios_ativos: []
 evidence_paths:
-  - "src/identity_access/schemas.py"
-  - "src/users/schemas.py"
-  - "src/video/schemas.py"
-  - "scripts/hb"
-  - "generated/manifests/"
+  - "docs/_canon/ARCHITECTURE.md"
+  - "src/notifications/tasks.py"
+  - "src/notifications/middleware.py"
+  - "src/shared/middleware.py"
+  - "src/shared/logging_formatters.py"
+  - "infra/docker-compose.staging.yml"
+  - "Dockerfile"
+  - "tests/security/test_backend_hardening.py"
 ---
-# SESSION HANDOFF — HB TRACK (CI FORENSICS)
+# SESSION HANDOFF — HB TRACK (ARCHITECTURE REALITY ALIGNMENT)
 
 ## O que foi feito
 

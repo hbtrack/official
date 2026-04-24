@@ -3,15 +3,18 @@ FlowIDMiddleware — HB Track
 Garante que todo request tenha um X-Flow-ID rastreável.
 - Gera UUID v4 se o request não trazer o header.
 - Propaga X-Flow-ID em todos os responses.
-- Armazena no thread-local para ser usado em tasks Celery e logs.
+- Armazena em ContextVar (seguro para ASGI, Channels e Celery).
 """
 from __future__ import annotations
 
+import logging
 import re
-import threading
 import uuid
+from contextvars import ContextVar
 
-_flow_store = threading.local()
+logger = logging.getLogger(__name__)
+
+_flow_id_var: ContextVar[str] = ContextVar("flow_id", default="")
 
 _UUID4_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
@@ -27,16 +30,16 @@ def _sanitize_flow_id(value: str | None) -> str:
 
 
 def get_current_flow_id() -> str:
-    """Retorna o flow_id da thread atual (ou gera um novo se não houver)."""
-    fid = getattr(_flow_store, "flow_id", None)
+    """Retorna o flow_id do contexto atual (ou gera um novo se não houver)."""
+    fid = _flow_id_var.get()
     if not fid:
         fid = str(uuid.uuid4())
-        _flow_store.flow_id = fid
+        _flow_id_var.set(fid)
     return fid
 
 
 def set_flow_id(flow_id: str) -> None:
-    _flow_store.flow_id = flow_id
+    _flow_id_var.set(flow_id)
 
 
 class SecurityHeadersMiddleware:
@@ -100,7 +103,7 @@ class JWTClaimsMiddleware:
         if auth_header.startswith("Bearer "):
             token = auth_header[len("Bearer "):]
             try:
-                from src.identity_access.infrastructure.jwt_adapter import JWTAdapter
+                from identity_access.infrastructure.jwt_adapter import JWTAdapter
                 import uuid as _uuid
 
                 payload = JWTAdapter().verify_access_token(token)
@@ -117,8 +120,20 @@ class JWTClaimsMiddleware:
                         request._session_id = _uuid.UUID(str(session_id))
                     request._role_labels = roles
                     request._actor_role = roles[0] if roles else None
-            except Exception:
-                pass  # token inválido → atributos não preenchidos → 401 nos endpoints
+            except (ValueError, KeyError) as exc:
+                # Claims malformados (UUID inválido, campo ausente) — token rejeitado silenciosamente
+                logger.info(
+                    "JWTClaimsMiddleware: claims inválidos flow_id=%s erro=%s",
+                    get_current_flow_id(),
+                    type(exc).__name__,
+                )
+            except Exception as exc:  # noqa: BLE001
+                # Falha de verificação (assinatura, expiração, chave) — logar e prosseguir sem claims
+                logger.warning(
+                    "JWTClaimsMiddleware: verificação falhou flow_id=%s erro=%s",
+                    get_current_flow_id(),
+                    type(exc).__name__,
+                )
 
         return self.get_response(request)
 
