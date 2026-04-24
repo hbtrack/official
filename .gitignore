@@ -61,6 +61,7 @@ docs/_generated/
 
 # ── Agent runtime signals (ephemeral, never version) ────────────────────────
 _reports/dispatch/
+_reports/execution_evidence/
 _reports/runs/
 _reports/ARQUITETO.yaml
 _reports/EXECUTOR.yaml
@@ -89,6 +90,9 @@ _reports/TESTADOR.yaml
 # Histórico sem consumidor ativo — ignorar novos arquivos:
 _reports/enforcement/
 _reports/parity/
+_reports/RED_TEAM_AUDIT_LATEST.json
+_reports/SOVEREIGN_INTEGRITY_AUDIT_LATEST.json
+_reports/staging_revalidation/
 # Nota: 118 arquivos raiz de histórico de sessão (AUDIT_*, BACKLOG_2C_*, C4_*, etc.)
 # já estão commitados como registro histórico congelado. Não adicionar novos.
 # Para destravar: `git rm --cached _reports/enforcement/ _reports/parity/` quando conveniente.

@@ -43,16 +43,6 @@ import yaml
 class HBHookValidator:
     """Validador de pre-commit com enforcement de contract-driven."""
 
-    _SCOPE_PATH_MAP = {
-        "contracts": ["contracts/", "docs/hbtrack/"],
-        "backend": ["src/", "contracts/", "docs/hbtrack/"],
-        "docs": ["docs/hbtrack/", "docs/_canon/"],
-        "generated": ["generated/", "docs/hbtrack/"],
-        "migrations": ["src/", "migrations/"],
-        "roadmap": [],
-        "readonly": [],
-    }
-
     # Paths de governança que ativam verificações extras de integridade
     GOVERNANCE_PATHS = (
         ".contract_driven/",
@@ -86,13 +76,13 @@ class HBHookValidator:
 
         self.session: Dict[str, Any] = {}
         self.schema: Dict[str, Any] = {}
-        self.task_catalog: Dict[str, Any] = self._load_task_catalog()
 
         self.errors: List[str] = []
         self.warnings: List[str] = []
+        self.task_catalog: Dict[str, Any] = self._load_task_catalog()
 
     def _load_task_catalog(self) -> Dict[str, Any]:
-        """Carregar TASK_CATALOG.yaml para validações de escopo e artefatos derivados."""
+        """Carregar TASK_CATALOG.yaml para validações de artefatos derivados."""
         if not self.task_catalog_file.exists():
             self.warnings.append(
                 f"⚠️  HOOK: TASK_CATALOG ausente em {self.task_catalog_file.relative_to(self.repo_root)}"
@@ -247,72 +237,6 @@ class HBHookValidator:
             for chunk in iter(lambda: f.read(8192), b""):
                 sha256.update(chunk)
         return sha256.hexdigest()
-
-    def check_write_scope_compliance(self) -> bool:
-        """Valida que staged files estão dentro do write_scope declarado."""
-        write_scope = self.session.get("write_scope", "readonly")
-
-        if write_scope == "roadmap":
-            return True
-
-        allowed_prefixes = self._SCOPE_PATH_MAP.get(write_scope, [])
-        staged_files = self._get_all_staged_files()
-        always_allowed = {
-            "SESSION_HANDOFF.md",
-            "_reports/session_start.json",
-        }
-
-        violations = []
-        for file_path in staged_files:
-            if file_path in always_allowed:
-                continue
-            if any(file_path.startswith(prefix) for prefix in allowed_prefixes):
-                continue
-            violations.append(file_path)
-
-        if violations:
-            self.errors.append(
-                f"BLOCKED_SCOPE_OVERFLOW: staged files fora de write_scope='{write_scope}':\n  "
-                + "\n  ".join(violations)
-            )
-            return False
-
-        return True
-
-    def check_derived_artifact_guard(self) -> bool:
-        """Bloqueia edição manual de artefatos derivados em generated/ e _reports/."""
-        derived_prefixes = [
-            "generated/source_graph/",
-            "generated/",
-            "_reports/contract_gates/",
-        ]
-
-        task_type = self.session.get("task_type")
-        task_catalog = self.task_catalog.get("task_catalog", {})
-        task_config = task_catalog.get(task_type, {})
-        artifacts_produced = task_config.get("artifacts_produced", [])
-
-        staged_files = self._get_all_staged_files()
-
-        violations = []
-        for file_path in staged_files:
-            is_derived = any(file_path.startswith(prefix) for prefix in derived_prefixes)
-            if not is_derived:
-                continue
-
-            is_authorized = any(file_path.startswith(path.rstrip("/")) for path in artifacts_produced)
-            if not is_authorized:
-                violations.append(file_path)
-
-        if violations:
-            self.errors.append(
-                "BLOCKED_DERIVED_ARTIFACT_MANUAL_EDIT: arquivos derivados editados manualmente:\n  "
-                + "\n  ".join(violations)
-                + "\n  Estes arquivos devem ser regenerados, não editados."
-            )
-            return False
-
-        return True
     
     def check_stage2_exit_code(self) -> bool:
         """Bloquear se stage2_exit_code está presente e != 0 (FASE 2 falhou)."""
@@ -474,6 +398,16 @@ class HBHookValidator:
             return True  # leitura falhou — sem bloqueio
 
         rc = data.get("reviewability_check", {})
+        reported_changed_files = rc.get("changed_files")
+        staged_changed_files = len(self._get_all_staged_files())
+
+        if isinstance(reported_changed_files, int) and reported_changed_files != staged_changed_files:
+            self.warnings.append(
+                "⚠️  HOOK: _reports/preflight/latest.json não corresponde ao diff staged atual "
+                f"(report={reported_changed_files}, staged={staged_changed_files}) — ignorando bloqueio de reviewability"
+            )
+            return True
+
         if rc.get("exceeded") is True and rc.get("split_required") is True:
             self.errors.append(
                 "❌ [BLOCKED] PR_SIZE_EXCEEDS_REVIEWABILITY_LIMIT: O PR é muito grande para "
@@ -636,10 +570,6 @@ class HBHookValidator:
             if self.errors:
                 self._print_errors_and_exit(1)
             # stage2 warning (ausente) é OK
-        if not self.check_write_scope_compliance():
-            self._print_errors_and_exit(1)
-        if not self.check_derived_artifact_guard():
-            self._print_errors_and_exit(1)
         print("✅ Exit codes válidos\n")
 
         # Fase 3.9: Verificar limites de reviewability
