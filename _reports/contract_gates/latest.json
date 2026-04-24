@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-22T10:20:57Z",
+  "timestamp_utc": "2026-04-24T09:17:41Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "13d1003f",
+    "git_commit": "92f0a946",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260422T102057_ad5aee"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260424T091741_42921d"
   },
   "status_detail": {
-    "active_gates_passed": 55,
+    "active_gates_passed": 58,
     "skip_count": 5,
     "critical_gates": [
       {
@@ -91,7 +91,7 @@
       },
       {
         "gate_id": "SHADOW_AUTHORITY_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "DECISION_IR_CONFORMANCE_GATE",
@@ -214,6 +214,10 @@
         "status": "PASS"
       },
       {
+        "gate_id": "GOVERNANCE_REGRESSION_GATE",
+        "status": "PASS"
+      },
+      {
         "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
         "status": "PASS"
       },
@@ -239,7 +243,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -261,7 +265,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 53
       }
     },
     {
@@ -286,7 +290,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3810
+        "duration_ms": 512
       }
     },
     {
@@ -491,7 +495,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 10
       }
     },
     {
@@ -621,7 +625,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 150
+        "duration_ms": 121
       }
     },
     {
@@ -678,7 +682,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 2
       }
     },
     {
@@ -699,7 +703,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 44
       }
     },
     {
@@ -720,7 +724,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 35
       }
     },
     {
@@ -741,7 +745,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 15
       }
     },
     {
@@ -783,7 +787,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 51
       }
     },
     {
@@ -825,7 +829,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 314
+        "duration_ms": 309
       }
     },
     {
@@ -846,7 +850,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 31
       }
     },
     {
@@ -855,7 +859,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Evidência pré-contrato presente para 18 execução(ões) aplicáveis.",
+      "summary": "Evidência pré-contrato presente para 17 execução(ões) aplicáveis.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
@@ -877,8 +881,7 @@
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_teams_baseline_backfill.json",
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_users_baseline_backfill.json",
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_video_baseline_backfill.json",
-        "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_wellness_baseline_backfill.json",
-        "/home/davis/HB-TRACK/_reports/agent_execution/latest.json"
+        "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_wellness_baseline_backfill.json"
       ],
       "evidence_files": [
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-16_550e8400-e29b-41d4-a716-446655441111.json",
@@ -897,24 +900,23 @@
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_teams_baseline_backfill.json",
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_users_baseline_backfill.json",
         "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_video_baseline_backfill.json",
-        "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_wellness_baseline_backfill.json",
-        "/home/davis/HB-TRACK/_reports/agent_execution/latest.json"
+        "/home/davis/HB-TRACK/_reports/agent_execution/2026-03-23_wellness_baseline_backfill.json"
       ],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 7
       }
     },
     {
       "gate_id": "SHADOW_AUTHORITY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_SHADOW_AUTHORITY",
-      "summary": "1 documento(s) com shadow authority detectado(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Nenhum shadow authority detectado nos docs DSS verificados.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/hbtrack/decisoes",
@@ -961,19 +963,12 @@
         "/home/davis/HB-TRACK/docs/guias/video.md"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_SHADOW_AUTHORITY",
-          "artifact": "IMPLEMENTATION_SUMMARY_CODEGEN_ARCHITECTURE_20260422.md",
-          "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 44
+        "violations": 0,
+        "duration_ms": 28
       }
     },
     {
@@ -1000,7 +995,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 131
+        "duration_ms": 121
       }
     },
     {
@@ -1479,7 +1474,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 31
       }
     },
     {
@@ -1565,7 +1560,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 857
+        "duration_ms": 717
       }
     },
     {
@@ -1588,7 +1583,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1366
+        "duration_ms": 1102
       }
     },
     {
@@ -1610,7 +1605,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3237
+        "duration_ms": 1299
       }
     },
     {
@@ -1649,7 +1644,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 570
+        "duration_ms": 594
       }
     },
     {
@@ -4601,7 +4596,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 2419
+        "duration_ms": 1960
       }
     },
     {
@@ -5286,7 +5281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1808
+        "duration_ms": 1766
       }
     },
     {
@@ -5310,7 +5305,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2595
+        "duration_ms": 1741
       }
     },
     {
@@ -5330,7 +5325,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       }
     },
     {
@@ -5370,7 +5365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2604
+        "duration_ms": 1897
       }
     },
     {
@@ -5413,7 +5408,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 60
       }
     },
     {
@@ -5435,7 +5430,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1827
+        "duration_ms": 1832
       }
     },
     {
@@ -5491,7 +5486,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 74
+        "duration_ms": 61
       }
     },
     {
@@ -5511,7 +5506,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       }
     },
     {
@@ -5592,7 +5587,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 590
+        "duration_ms": 209
       }
     },
     {
@@ -5612,7 +5607,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44678
+        "duration_ms": 42911
       }
     },
     {
@@ -5648,7 +5643,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 10
       }
     },
     {
@@ -5668,7 +5663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 22
       }
     },
     {
@@ -5824,16 +5819,22 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
-        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-035-session-access-policy.md"
+        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
+        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/generated/manifests"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
-        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-035-session-access-policy.md"
+        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
+        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/generated/manifests"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5841,7 +5842,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 16
       }
     },
     {
@@ -5863,7 +5864,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 182
+        "duration_ms": 212
       }
     },
     {
@@ -6272,7 +6273,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 985
+        "duration_ms": 1083
       }
     },
     {
@@ -6297,7 +6298,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 19
       }
     },
     {
@@ -6319,7 +6320,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 23
       }
     },
     {
@@ -6337,7 +6338,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 7
       }
     },
     {
@@ -6358,7 +6359,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 32
       }
     },
     {
@@ -6381,7 +6382,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 24
       }
     },
     {
@@ -6402,7 +6403,77 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 36
+      }
+    },
+    {
+      "gate_id": "GOVERNANCE_REGRESSION_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "TASK_CATALOG e agent_prompts estão coerentes e sem prompts órfãos.",
+      "inputs": [
+        "/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_module_docs.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/feature_update.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_asyncapi_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_arazzo_workflow.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_json_schema_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_state_model.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_ui_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/readiness_promotion.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/decision_discovery.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/decision_discovery.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_code.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_frontend.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/adversarial_analysis.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_sovereign_integrity.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_context_efficiency.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_red_team_pipeline.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_gate_coverage.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_domain_completeness.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/implementation_promotion.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pr_fix.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/adversarial_analysis.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_context_efficiency.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_domain_completeness.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_gate_coverage.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_red_team_pipeline.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_sovereign_integrity.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_arazzo_workflow.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_asyncapi_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_json_schema_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_module_docs.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_state_model.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/create_ui_contract.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/decision_discovery.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/feature_update.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_code.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_frontend.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/implementation_promotion.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pr_fix.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/readiness_promotion.prompt.md"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 37
       }
     },
     {
@@ -6422,7 +6493,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 1
       }
     },
     {
@@ -6502,7 +6573,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 6
       }
     },
     {
@@ -6520,7 +6591,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 32
       }
     },
     {
@@ -6538,7 +6609,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 4
       }
     },
     {
@@ -6564,7 +6635,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 41
+        "duration_ms": 50
       }
     },
     {
@@ -6586,7 +6657,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 57
       }
     },
     {
@@ -6613,11 +6684,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 57 PASS, 5 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

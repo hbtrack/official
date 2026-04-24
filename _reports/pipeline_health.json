@@ -1,11 +1,11 @@
 {
-  "run_id": "20260422T124741_858f9e",
-  "timestamp_utc": "2026-04-22T12:47:41Z",
-  "health_score": 97,
-  "gates_total": 62,
-  "gates_passed": 60,
-  "gates_failed": 2,
-  "blocking_fails": 1,
+  "run_id": "20260423T083508_edf167",
+  "timestamp_utc": "2026-04-23T08:35:08Z",
+  "health_score": 94,
+  "gates_total": 63,
+  "gates_passed": 59,
+  "gates_failed": 4,
+  "blocking_fails": 3,
   "overall_status": "FAIL",
   "exit_code": 2
 }

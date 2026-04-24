@@ -1,57 +1,61 @@
 ---
-data_ultima_sessao: "2026-04-22"
-branch_ativo: pr/backlog2-unificado
-modo_operacao: ROADMAP
-ci_status: UNKNOWN
-modulo_foco: infra
-fase_roadmap: 6
-roadmap_phase: 6
-task_type: execute_roadmap_phase
-boot_profile_id: roadmap_execution
-task_id: CI_CD_FORENSICS_AND_REMEDIATION
-resultado: PENDENTE
-proxima_acao_permitida: "corrigir blockers de governança/runtime da branch e revalidar CI antes do merge"
+data_ultima_sessao: "2026-04-24"
+branch_ativo: chore/generated-manifests-governance-skills
+modo_operacao: CDD
+ci_status: PASS
+modulo_foco: training
+fase_roadmap: 4
+roadmap_phase: 4
+task_type: contract_revision
+boot_profile_id: contract_execution
+task_id: TRAINING_MODULE_REMEDIATION
+resultado: DONE
+proxima_acao_permitida: "PRs #90 e #91 abertos. Aguardar merge e avançar para fase 5 do ROADMAP."
 bloqueios_ativos: []
 evidence_paths:
-  - ".github/workflows/deploy.yml"
-  - ".dev/BACKLOG2.md"
+  - "_reports/ai_audit/07-remediation/IMPACT.md"
+  - "_reports/contract_gates/latest.json"
+  - "src/training/tests/integration/test_training_api.py"
+  - "src/training/infrastructure/models/wellness.py"
+  - "generated/contracts/openapi/paths/training.yaml"
+  - "generated/manifests/"
 ---
-# SESSION HANDOFF — HB TRACK (CI FORENSICS)
-
-## O que foi feito
-
-Investigação forense das falhas de deployment na branch `main`:
-- **Run 24766628453:** falha de permissão em `/opt/hbtrack/production`; o workflow já tinha sido endurecido com guardas de owner/stat.
-- **Run 24785900356:** falha no gate de testes por execução de casos `slow`; o workflow já tinha sido ajustado para `-m "not slow"`.
-- **Run 24792649602:** falha de autenticação ao fazer pull da imagem no VPS de staging (`Error response from daemon: denied`).
-- `.github/workflows/deploy.yml` ajustado para usar `GHCR_PULL_TOKEN` e `GHCR_PULL_USERNAME` como credenciais persistentes de pull no VPS.
-- Secrets `GHCR_PULL_TOKEN` e `GHCR_PULL_USERNAME` criadas no repositório `hbtrack/official` via API do GitHub.
+# SESSION HANDOFF — HB TRACK
+> **Data:** 2026-04-24 | **Branch:** chore/generated-manifests-governance-skills | **CI:** PASS
+> **Modo:** CDD | **task_id:** TRAINING_MODULE_REMEDIATION | **Resultado:** DONE
 
 ## Estado Geral
+**Data:** 2026-04-24 | **Branch:** chore/generated-manifests-governance-skills | **CI:** PASS
+**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
+**Módulo foco:** training | **Fase ROADMAP:** 4 | **task_id:** TRAINING_MODULE_REMEDIATION | **Resultado:** DONE
 
-| Item | Status |
+## O que foi feito
+- **Gap R8** — `UniqueConstraint(fields=["session_id","athlete_id"])` adicionado ao `WellnessPreModel.Meta`; migration `0010` criada e aplicada
+- **Gap TEST-3** — asserções específicas de campo adicionadas ao teste `test_wellness_pre_required_fields`
+- **Gap DOC-3** — Seção 3 do IMPACT.md atualizada com estado pós-PASSO
+- **Fix cirúrgico** — `IndentationError` em `test_training_api.py` corrigido
+- **GAP-NEW-4** — tri-state PATCH implementado
+- **DRIFT-1/2** — manifests e SESSION_HANDOFF realinhados
+- **HANDOFF_COHERENCE** — SESSION_HANDOFF corrigido: branch, evidência 0010 removida, seção `## Estado Geral` adicionada, evidence_path atualizado para `latest.json`
+- **DERIVED_DRIFT** — 17 manifests de rastreabilidade regenerados com hashes corretos do branch governance
+- **PR #91 atualizado** — push `3a0390fb` incluindo todas as correções de gate
+
+## Estado
+| Checks | Status |
 |---|---|
-| Reparo de Permissões VPS | ✅ Aplicado |
-| Reparo de Testes (not slow) | ✅ Aplicado |
-| Reparo de Autenticação GHCR | ✅ Patch aplicado |
-| Bug de Imports Generated Schemas | ✅ Corrigido no merge do PR #84 |
-| Secrets de pull GHCR no repositório | ✅ Criadas |
-
-## Próxima ação permitida
-
-1. Commit e push da alteração de `.github/workflows/deploy.yml` para `main`.
-2. Monitorar o próximo run automático do deploy pipeline em staging.
-3. Se staging ficar verde, seguir para a etapa humana de aprovação de produção.
-
-## Bloqueios ativos
-
-Nenhum.
+| Suite training | ✅ 407 passed, 19 skipped |
+| validate_contracts.py (--profile ci) | ✅ PASS — 55 gates |
+| DERIVED_DRIFT_GATE | ✅ Manifests regenerados |
+| HANDOFF_COHERENCE_GATE | ✅ SESSION_HANDOFF coerente |
+| GOVERNANCE_REGRESSION_GATE | ✅ Registrado |
+| source_graph training | ✅ Regenerado |
 
 ## Evidências
+- `_reports/ai_audit/07-remediation/IMPACT.md`
+- `_reports/contract_gates/latest.json`
 
+## Próxima ação permitida
+Avançar para fase 5 do ROADMAP ou iniciar revisão de outro módulo.
 
-## Próxima sessão
-
-1. Confirmar que o commit do workflow entrou na `main`.
-2. Monitorar o pipeline de deploy na `main`.
-3. Prosseguir com a Fase 6 do Roadmap assim que staging e produção estabilizarem.
+## Bloqueios ativos
+Nenhum.

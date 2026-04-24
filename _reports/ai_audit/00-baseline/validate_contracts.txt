@@ -1,0 +1,87 @@
+
+══════════════════════════════════════════════════════════════
+  PIPELINE COMPLETO
+══════════════════════════════════════════════════════════════
+
+--------------------------------------------------------------
+  HB TRACK CONTRACT GATES  --  FAIL
+--------------------------------------------------------------
+  + [PASS                    ] AXIOM_INTEGRITY_GATE
+  + [PASS                    ] PATH_CANONICALITY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] REQUIRED_ARTIFACT_PRESENCE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] MODULE_DOC_CROSSREF_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] API_NORMATIVE_DUPLICATION_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] OWASP_API_CONTROL_MATRIX_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+  + [PASS                    ] MODULE_REGISTRY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] BOUNDARY_USERS_IDENTITY_ACCESS_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] WELLNESS_MEDICAL_BOUNDARY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] SCOUT_TAXONOMY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] ASYNC_REQUIRED_MODULE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] EXTERNAL_SOURCE_AUTHORITY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] PRE_CONTRACT_EVIDENCE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] SHADOW_AUTHORITY_GATE
+  + [PASS                    ] DECISION_IR_CONFORMANCE_GATE
+  + [PASS                    ] CANON_ALLOWLIST_GATE
+  + [PASS                    ] PLACEHOLDER_RESIDUE_GATE
+  + [PASS                    ] REF_HERMETICITY_GATE
+  + [PASS                    ] TOOLING_CONFIG_GATE
+  + [PASS                    ] OPENAPI_ROOT_STRUCTURE_GATE
+  + [PASS                    ] OPENAPI_ROOT_MODULE_SYNC_GATE
+  + [PASS                    ] OPENAPI_POLICY_RULESET_GATE
+  + [PASS                    ] JSON_SCHEMA_VALIDATION_GATE
+  + [PASS                    ] CROSS_SPEC_ALIGNMENT_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] CONTRACT_BREAKING_CHANGE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] TRANSFORMATION_FEASIBILITY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] HTTP_RUNTIME_CONTRACT_GATE
+  + [PASS                    ] ASYNCAPI_VALIDATION_GATE
+  + [PASS                    ] ARAZZO_VALIDATION_GATE
+  + [PASS                    ] SPECTRAL_LINTING_GATE
+  + [PASS                    ] ARAZZO_COMPLETENESS_GATE
+  + [PASS                    ] UI_DOC_VALIDATION_GATE
+  + [PASS                    ] FRONTEND_CONTRACT_GATE
+  ! [FAIL                    ] DERIVED_DRIFT_GATE
+       Manifests de rastreabilidade inválidos: 30 erro(s).
+       - Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=39f5ed0e8ad
+       - Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=39f5ed0e8ad
+       - Hash sha256 divergente para contracts/schemas/shared/session_start.schema.json (manifest=39f5ed0e8ad
+  + [PASS                    ] ADVERSARIAL_ANALYSIS_GATE
+  + [PASS                    ] FEATURE_READINESS_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] VERSIONING_POLICY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] PACT_PROVIDER_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] CODE_ARCHITECTURE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] DEPLOY_READINESS_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] DATA_MIGRATION_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] MONITORING_POLICY_GATE
+  ! [FAIL                    ] HANDOFF_COHERENCE_GATE
+       SESSION_HANDOFF.md com 3 inconsistência(s).
+       - Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='in
+       - Divergência de fase: session_start.roadmap_phase=1 != SESSION_HANDOFF.fase_roadmap=6.
+       - Divergência: SESSION_HANDOFF.roadmap_phase=6 != session_start.roadmap_phase=1.
+  + [PASS                    ] MODULE_STATUS_COHERENCE_GATE
+  + [PASS                    ] SURFACE_PROMOTION_COHERENCE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] CROSS_MODULE_BOUNDARY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] MODULE_DEPENDENCY_RESOLUTION_GATE
+  + [PASS                    ] WAIVER_VALIDITY_GATE
+  + [PASS                    ] READINESS_GENERATION_COMPATIBILITY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] READINESS_HUMAN_CONFIRMATION_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] FEATURE_COVERAGE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] LEGACY_CRITICAL_PATH_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] WORKER_PROMPT_AUTHORITY_GATE
+  + [PASS                    ] GOVERNANCE_REGRESSION_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] DOMAIN_GLOSSARY_CONSISTENCY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] CONTEXT_BUNDLE_FRESHNESS_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] IMPACT_ANALYSIS_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] PARTIAL_UPDATE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] DOC_USAGE_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] CANON_CONTRACT_DRIVEN_PARITY_GATE
+  ~ [SKIP_NOT_APPLICABLE     ] HBTRACK_CANON_PARITY_GATE
+  ! [FAIL                    ] READINESS_SUMMARY_GATE
+       Pipeline FAIL: 2 gate(s) bloqueante(s) falharam.
+--------------------------------------------------------------
+  STATUS   : FAIL
+  Report   : /home/davis/HB-TRACK/_reports/contract_gates/local.latest.json
+--------------------------------------------------------------
+
+DONE = exitcode 0  |  atual exitcode = 2
+
