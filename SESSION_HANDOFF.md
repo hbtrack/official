@@ -36,6 +36,9 @@ evidence_paths:
 - **Fix cirúrgico** — `IndentationError` em `test_training_api.py` corrigido
 - **GAP-NEW-4** — tri-state PATCH implementado
 - **DRIFT-1/2** — manifests e SESSION_HANDOFF realinhados
+- **HANDOFF_COHERENCE** — SESSION_HANDOFF corrigido: branch, evidência 0010 removida, seção `## Estado Geral` adicionada, evidence_path atualizado para `latest.json`
+- **DERIVED_DRIFT** — 17 manifests de rastreabilidade regenerados com hashes corretos do branch governance
+- **PR #91 atualizado** — push `3a0390fb` incluindo todas as correções de gate
 
 ## Estado
 | Checks | Status |
