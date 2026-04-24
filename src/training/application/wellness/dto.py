@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from ...domain.rules import RoleLabel
@@ -15,6 +15,7 @@ class SubmitWellnessPreInput:
     actor_id: uuid.UUID
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
@@ -49,10 +50,14 @@ class UpdateWellnessPreInput:
     actor_id: uuid.UUID
     readiness: Optional[int] = None
     sleep_quality: Optional[int] = None
+    sleep_hours: Optional[float] = None
     mood: Optional[int] = None
     fatigue: Optional[int] = None
     muscle_soreness: Optional[int] = None
     notes: Optional[str] = None
+    # Conjunto de campos explicitamente presentes no payload (tri-state PATCH):
+    # ausente → não altera; presente com valor → altera; presente com null → limpa
+    provided_fields: frozenset = field(default_factory=frozenset)
 
 
 @dataclass

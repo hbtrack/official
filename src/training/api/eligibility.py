@@ -9,6 +9,7 @@ import uuid
 from typing import Optional
 
 from ninja import Router
+from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
@@ -18,19 +19,19 @@ from ..application.use_cases import (
 )
 from ..schemas import (
     AthleteIneligibilityDeclarationOut,
-    ErrorOut,
+    ProblemOut,
     SubmitIneligibilityDeclarationIn,
 )
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _ineligibility_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/ineligibility",
-    response={200: AthleteIneligibilityDeclarationOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: AthleteIneligibilityDeclarationOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def get_ineligibility_status(request, id: uuid.UUID, athleteId: Optional[uuid.UUID] = None):
@@ -50,10 +51,10 @@ def get_ineligibility_status(request, id: uuid.UUID, athleteId: Optional[uuid.UU
     "/training-sessions/{id}/ineligibility",
     response={
         201: AthleteIneligibilityDeclarationOut,
-        400: ErrorOut,
-        403: ErrorOut,
-        404: ErrorOut,
-        409: ErrorOut,
+        400: ProblemOut,
+        403: ProblemOut,
+        404: ProblemOut,
+        409: ProblemOut,
     },
 )
 @map_exceptions

@@ -12,6 +12,7 @@ Endpoints:
 import uuid
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -23,7 +24,7 @@ from ..application.use_cases import (
     UpdateWellnessPreInput,
 )
 from ..schemas import (
-    ErrorOut,
+    ProblemOut,
     SubmitWellnessPostIn,
     SubmitWellnessPreIn,
     UpdateWellnessPostIn,
@@ -35,7 +36,7 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _wellness_post_to_out, _wellness_pre_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 # ---------------------------------------------------------------------------
@@ -46,11 +47,11 @@ router = Router()
     "/training-sessions/{id}/wellness-pre",
     response={
         201: WellnessPreOut,
-        400: ErrorOut,
-        401: ErrorOut,
-        403: ErrorOut,
-        404: ErrorOut,
-        409: ErrorOut,
+        400: ProblemOut,
+        401: ProblemOut,
+        403: ProblemOut,
+        404: ProblemOut,
+        409: ProblemOut,
     },
 )
 @map_exceptions
@@ -64,6 +65,7 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
             actor_id=_get_actor_id(request),
             readiness=body.readiness,
             sleep_quality=body.sleep_quality,
+            sleep_hours=body.sleep_hours,
             mood=body.mood,
             fatigue=body.fatigue,
             muscle_soreness=body.muscle_soreness,
@@ -75,7 +77,7 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
 
 @router.get(
     "/training-sessions/{id}/wellness-pre/{athleteId}",
-    response={200: WellnessPreOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: WellnessPreOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def get_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID):
@@ -93,7 +95,7 @@ def get_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID):
 
 @router.patch(
     "/training-sessions/{id}/wellness-pre/{athleteId}",
-    response={200: WellnessPreOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: WellnessPreOut, 400: ProblemOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def update_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID, body: UpdateWellnessPreIn):
@@ -106,10 +108,12 @@ def update_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID, body: Upda
             actor_id=_get_actor_id(request),
             readiness=body.readiness,
             sleep_quality=body.sleep_quality,
+            sleep_hours=body.sleep_hours,
             mood=body.mood,
             fatigue=body.fatigue,
             muscle_soreness=body.muscle_soreness,
             notes=body.notes,
+            provided_fields=frozenset(body.model_fields_set),
         )
     )
     return 200, _wellness_pre_to_out(wellness)
@@ -123,11 +127,11 @@ def update_wellness_pre(request, id: uuid.UUID, athleteId: uuid.UUID, body: Upda
     "/training-sessions/{id}/wellness-post",
     response={
         201: WellnessPostOut,
-        400: ErrorOut,
-        401: ErrorOut,
-        403: ErrorOut,
-        404: ErrorOut,
-        409: ErrorOut,
+        400: ProblemOut,
+        401: ProblemOut,
+        403: ProblemOut,
+        404: ProblemOut,
+        409: ProblemOut,
     },
 )
 @map_exceptions
@@ -150,7 +154,7 @@ def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
 
 @router.get(
     "/training-sessions/{id}/wellness-post/{athleteId}",
-    response={200: WellnessPostOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: WellnessPostOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def get_wellness_post(request, id: uuid.UUID, athleteId: uuid.UUID):
@@ -168,7 +172,7 @@ def get_wellness_post(request, id: uuid.UUID, athleteId: uuid.UUID):
 
 @router.patch(
     "/training-sessions/{id}/wellness-post/{athleteId}",
-    response={200: WellnessPostOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: WellnessPostOut, 400: ProblemOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def update_wellness_post(

@@ -3,15 +3,16 @@
 Endpoints:
   GET    /training-sessions/{id}/blocks
   POST   /training-sessions/{id}/blocks
-  GET    /training-sessions/{id}/blocks/{block_id}
-  PATCH  /training-sessions/{id}/blocks/{block_id}
-  DELETE /training-sessions/{id}/blocks/{block_id}
+  GET    /training-sessions/{id}/blocks/{blockId}
+  PATCH  /training-sessions/{id}/blocks/{blockId}
+  DELETE /training-sessions/{id}/blocks/{blockId}
   POST   /training-sessions/{id}/blocks/reorder
 """
 
 import uuid
 
 from ninja import Router
+from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
@@ -24,7 +25,7 @@ from ..application.use_cases import (
 )
 from ..schemas import (
     AddSessionBlockIn,
-    ErrorOut,
+    ProblemOut,
     ReorderSessionBlocksIn,
     SessionBlockListOut,
     SessionBlockOut,
@@ -34,12 +35,12 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _block_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/blocks",
-    response={200: SessionBlockListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: SessionBlockListOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_session_blocks(request, id: uuid.UUID):
@@ -58,11 +59,11 @@ def list_session_blocks(request, id: uuid.UUID):
     "/training-sessions/{id}/blocks",
     response={
         201: SessionBlockOut,
-        401: ErrorOut,
-        403: ErrorOut,
-        404: ErrorOut,
-        409: ErrorOut,
-        422: ErrorOut,
+        401: ProblemOut,
+        403: ProblemOut,
+        404: ProblemOut,
+        409: ProblemOut,
+        422: ProblemOut,
     },
 )
 @map_exceptions
@@ -88,30 +89,30 @@ def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
 
 
 @router.get(
-    "/training-sessions/{id}/blocks/{block_id}",
-    response={200: SessionBlockOut, 403: ErrorOut, 404: ErrorOut},
+    "/training-sessions/{id}/blocks/{blockId}",
+    response={200: SessionBlockOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
-def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
+def get_session_block(request, id: uuid.UUID, blockId: uuid.UUID):
     from ..domain.rules import SessionBlockNotFound
     block_repo = TrainingServices().session_block_repo()
-    block = block_repo.get_by_id(block_id)
+    block = block_repo.get_by_id(blockId)
     if not block or block.session_id != id:
         raise SessionBlockNotFound("Bloco não encontrado")
     return 200, _block_to_out(block)
 
 
 @router.patch(
-    "/training-sessions/{id}/blocks/{block_id}",
-    response={200: SessionBlockOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    "/training-sessions/{id}/blocks/{blockId}",
+    response={200: SessionBlockOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
-def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: UpdateSessionBlockIn):
+def update_session_block(request, id: uuid.UUID, blockId: uuid.UUID, body: UpdateSessionBlockIn):
     svc = TrainingServices()
     block = svc.update_session_block_uc().execute(
         UpdateSessionBlockInput(
             session_id=id,
-            block_id=block_id,
+            block_id=blockId,
             actor_role=_get_actor_role(request),
             duration_minutes=body.duration_minutes,
             block_objective=body.block_objective,
@@ -127,16 +128,16 @@ def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: Upda
 
 
 @router.delete(
-    "/training-sessions/{id}/blocks/{block_id}",
-    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    "/training-sessions/{id}/blocks/{blockId}",
+    response={204: None, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
-def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
+def delete_session_block(request, id: uuid.UUID, blockId: uuid.UUID):
     svc = TrainingServices()
     svc.delete_session_block_uc().execute(
         DeleteSessionBlockInput(
             session_id=id,
-            block_id=block_id,
+            block_id=blockId,
             actor_role=_get_actor_role(request),
         )
     )
@@ -145,7 +146,7 @@ def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/blocks/reorder",
-    response={200: SessionBlockListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={200: SessionBlockListOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
 def reorder_session_blocks(request, id: uuid.UUID, body: ReorderSessionBlocksIn):

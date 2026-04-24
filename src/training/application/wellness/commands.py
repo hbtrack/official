@@ -58,6 +58,7 @@ class SubmitWellnessPreUseCase:
             athlete_id=inp.athlete_id,
             readiness=inp.readiness,
             sleep_quality=inp.sleep_quality,
+            sleep_hours=inp.sleep_hours,
             mood=inp.mood,
             fatigue=inp.fatigue,
             muscle_soreness=inp.muscle_soreness,
@@ -120,9 +121,16 @@ class UpdateWellnessPreUseCase:
         wellness = self._wellness_repo.get_active(inp.session_id, inp.athlete_id)
         if not wellness:
             raise WellnessEntryNotFound("wellness_pre não encontrado para este atleta/sessão")
-        for field_name in ("readiness", "sleep_quality", "mood", "fatigue", "muscle_soreness", "notes"):
-            value = getattr(inp, field_name)
-            if value is not None:
+        # Tri-state PATCH: apenas campos presentes no payload são processados.
+        # provided_fields diferencia "ausente" (não altera) de "null explícito" (limpa).
+        # Campos imutáveis (session_id, athlete_id) nunca entram nesta lista.
+        _PATCHABLE = frozenset({"readiness", "sleep_quality", "sleep_hours", "mood", "fatigue", "muscle_soreness", "notes"})
+        for field_name in _PATCHABLE:
+            if field_name in inp.provided_fields:
+                value = getattr(inp, field_name)
+                # notes: ORM não tem null=True — null explícito é traduzido para "" (limpar)
+                if field_name == "notes" and value is None:
+                    value = ""
                 setattr(wellness, field_name, value)
         wellness.updated_at = datetime.now(tz=timezone.utc)
         wellness.validate_invariants()

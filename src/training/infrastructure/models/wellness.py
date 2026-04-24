@@ -16,6 +16,7 @@ class WellnessPreModel(models.Model):
     athlete_id = models.UUIDField(db_index=True)
     readiness = models.SmallIntegerField(null=True, blank=True)
     sleep_quality = models.SmallIntegerField(null=True, blank=True)
+    sleep_hours = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     mood = models.SmallIntegerField(null=True, blank=True)
     fatigue = models.SmallIntegerField(null=True, blank=True)
     muscle_soreness = models.SmallIntegerField(null=True, blank=True)
@@ -28,6 +29,16 @@ class WellnessPreModel(models.Model):
     class Meta:
         db_table = "training_wellness_pre"
         app_label = "training"
+        constraints = [
+            # INV-TRAIN-009: unicidade por (session_id, athlete_id) para registros ativos.
+            # Constraint parcial (WHERE deleted_at IS NULL) permite soft-deletion: um par
+            # arquivado pode coexistir com um novo registro ativo para a mesma combinação.
+            models.UniqueConstraint(
+                fields=["session_id", "athlete_id"],
+                condition=models.Q(deleted_at__isnull=True),
+                name="training_wellness_pre_unique_active_per_session_athlete",
+            ),
+        ]
 
     def __str__(self) -> str:
         return f"WellnessPre(session={self.session_id}, athlete={self.athlete_id})"

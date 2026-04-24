@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -12,6 +16,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class SessionBlockOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     phase: str
@@ -28,10 +33,12 @@ class SessionBlockOut(Schema):
 
 
 class SessionBlockListOut(Schema):
+    model_config = _CAMEL
     data: List[SessionBlockOut]
 
 
 class AddSessionBlockIn(Schema):
+    model_config = _CAMEL
     phase: str
     order_index: int
     duration_minutes: int
@@ -44,6 +51,7 @@ class AddSessionBlockIn(Schema):
 
 
 class UpdateSessionBlockIn(Schema):
+    model_config = _CAMEL
     phase: Optional[str] = None
     duration_minutes: Optional[int] = None
     block_objective: Optional[str] = None
@@ -55,4 +63,5 @@ class UpdateSessionBlockIn(Schema):
 
 
 class ReorderSessionBlocksIn(Schema):
+    model_config = _CAMEL
     block_ids: List[uuid.UUID]

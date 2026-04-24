@@ -8,6 +8,8 @@ from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     assert_can_create_session,
     assert_session_not_historical,
+    assert_publish_preconditions,
+    assert_schedule_preconditions,
 )
 from ...infrastructure.repository import TrainingSessionRepository
 from .dto import (
@@ -70,6 +72,10 @@ class TransitionTrainingSessionUseCase:
 
     def execute(self, inp: TransitionTrainingSessionInput) -> TrainingSession:
         session = self._guard.load_for_transition(inp.id, inp.target_status, inp.actor_role)
+        if inp.target_status == TrainingSessionStatus.PUBLISHED:
+            assert_publish_preconditions(session)
+        if inp.target_status == TrainingSessionStatus.SCHEDULED:
+            assert_schedule_preconditions(session)
         session.status = inp.target_status
         session.updated_at = datetime.now(tz=timezone.utc)
         return self._repo.save(session)

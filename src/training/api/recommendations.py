@@ -10,6 +10,7 @@ import uuid
 from typing import Optional
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -20,7 +21,7 @@ from ..application.use_cases import (
 from ..schemas import (
     AcceptRecommendationIn,
     DismissRecommendationIn,
-    ErrorOut,
+    ProblemOut,
     RecommendationListOut,
     RecommendationOut,
 )
@@ -28,12 +29,12 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _recommendation_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/recommendations",
-    response={200: RecommendationListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: RecommendationListOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_recommendations(request, id: uuid.UUID, status: Optional[str] = None):
@@ -50,7 +51,7 @@ def list_recommendations(request, id: uuid.UUID, status: Optional[str] = None):
 
 @router.post(
     "/training-sessions/{id}/recommendations/{rec_id}/accept",
-    response={200: RecommendationOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: RecommendationOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def accept_recommendation(
@@ -71,7 +72,7 @@ def accept_recommendation(
 
 @router.post(
     "/training-sessions/{id}/recommendations/{rec_id}/dismiss",
-    response={200: RecommendationOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: RecommendationOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def dismiss_recommendation(

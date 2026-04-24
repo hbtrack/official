@@ -52,7 +52,16 @@ class TestAttentionQueueItemFields:
         assert item.reason is not None
         assert item.severity is not None
 
-    @pytest.mark.skip(reason="target-state: AttentionQueueItem.validate_invariants() not yet implemented")
+    @pytest.mark.skip(
+        reason=(
+            "target-state: drift estrutural impede implementação. "
+            "INV-TRAIN-094 exige severity+reasonCode+targetEntityType+targetEntityId, "
+            "mas entidade tem: (1) campo 'reason' no lugar de 'reason_code' com enum canônico; "
+            "(2) targetEntityType e targetEntityId ausentes; "
+            "(3) _make_attention_item usa reason='WELLNESS_ANOMALY' que não existe no enum "
+            "(canônico: WELLNESS_ALERT). Requer refactor da entidade antes de implementar validate_invariants()."
+        )
+    )
     def test_invalid_severity_raises(self):
         pass
 

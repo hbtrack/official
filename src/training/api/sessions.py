@@ -18,6 +18,7 @@ import uuid
 from typing import Optional
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -31,7 +32,7 @@ from ..application.use_cases import (
 from ..domain.entities import TrainingSessionStatus
 from ..schemas import (
     CreateTrainingSessionIn,
-    ErrorOut,
+    ProblemOut,
     TransitionOut,
     TrainingSessionListOut,
     TrainingSessionOut,
@@ -41,7 +42,7 @@ from .deps import _get_actor_id, _get_actor_role, get_cursor_codec, resolve_acce
 from .errors import map_exceptions
 from .mappers import _session_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 # ---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ router = Router()
 
 @router.get(
     "/training-sessions",
-    response={200: TrainingSessionListOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut},
+    response={200: TrainingSessionListOut, 400: ProblemOut, 401: ProblemOut, 403: ProblemOut},
 )
 @map_exceptions
 def list_training_sessions(
@@ -87,10 +88,10 @@ def list_training_sessions(
     "/training-sessions",
     response={
         201: TrainingSessionOut,
-        400: ErrorOut,
-        401: ErrorOut,
-        403: ErrorOut,
-        422: ErrorOut,
+        400: ProblemOut,
+        401: ProblemOut,
+        403: ProblemOut,
+        422: ProblemOut,
     },
 )
 @map_exceptions
@@ -132,7 +133,7 @@ def create_training_session(request, body: CreateTrainingSessionIn):
 
 @router.get(
     "/training-sessions/{id}",
-    response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: TrainingSessionOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def get_training_session(request, id: uuid.UUID):
@@ -151,10 +152,10 @@ def get_training_session(request, id: uuid.UUID):
     "/training-sessions/{id}",
     response={
         200: TrainingSessionOut,
-        401: ErrorOut,
-        403: ErrorOut,
-        404: ErrorOut,
-        422: ErrorOut,
+        401: ProblemOut,
+        403: ProblemOut,
+        404: ProblemOut,
+        422: ProblemOut,
     },
 )
 @map_exceptions
@@ -193,7 +194,7 @@ def update_training_session(request, id: uuid.UUID, body: UpdateTrainingSessionI
 
 @router.delete(
     "/training-sessions/{id}",
-    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={204: None, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
 def delete_training_session(request, id: uuid.UUID, deleted_reason: str = ""):
@@ -227,10 +228,10 @@ def _do_transition(request, id: uuid.UUID, target_status: TrainingSessionStatus)
 
 _TRANSITION_RESPONSE = {
     200: TransitionOut,
-    401: ErrorOut,
-    403: ErrorOut,
-    404: ErrorOut,
-    422: ErrorOut,
+    401: ProblemOut,
+    403: ProblemOut,
+    404: ProblemOut,
+    422: ProblemOut,
 }
 
 

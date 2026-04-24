@@ -3,7 +3,7 @@
 Endpoints:
   GET  /training-sessions/{id}/execution-records
   POST /training-sessions/{id}/execution-records
-  GET  /training-sessions/{id}/execution-records/{record_id}
+  GET  /training-sessions/{id}/execution-records/{recordId}
   GET  /training-sessions/{id}/objectives
   POST /training-sessions/{id}/objectives
 """
@@ -11,6 +11,7 @@ Endpoints:
 import uuid
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -23,7 +24,7 @@ from ..application.use_cases import (
 from ..schemas import (
     CreateExecutionRecordIn,
     CreateSessionObjectiveIn,
-    ErrorOut,
+    ProblemOut,
     ExecutionRecordListOut,
     ExecutionRecordOut,
     SessionObjectiveListOut,
@@ -33,7 +34,7 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _execution_record_to_out, _session_objective_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 # ---------------------------------------------------------------------------
@@ -42,7 +43,7 @@ router = Router()
 
 @router.get(
     "/training-sessions/{id}/execution-records",
-    response={200: ExecutionRecordListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: ExecutionRecordListOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_execution_records(request, id: uuid.UUID):
@@ -55,7 +56,7 @@ def list_execution_records(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/execution-records",
-    response={201: ExecutionRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={201: ExecutionRecordOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
 def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordIn):
@@ -81,16 +82,16 @@ def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordI
 
 
 @router.get(
-    "/training-sessions/{id}/execution-records/{record_id}",
-    response={200: ExecutionRecordOut, 403: ErrorOut, 404: ErrorOut},
+    "/training-sessions/{id}/execution-records/{recordId}",
+    response={200: ExecutionRecordOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
-def get_execution_record(request, id: uuid.UUID, record_id: uuid.UUID):
+def get_execution_record(request, id: uuid.UUID, recordId: uuid.UUID):
     svc = TrainingServices()
     record = svc.get_execution_record_uc().execute(
         GetExecutionRecordInput(
             session_id=id,
-            record_id=record_id,
+            record_id=recordId,
             actor_role=_get_actor_role(request),
             actor_id=_get_actor_id(request),
         )
@@ -104,7 +105,7 @@ def get_execution_record(request, id: uuid.UUID, record_id: uuid.UUID):
 
 @router.get(
     "/training-sessions/{id}/objectives",
-    response={200: SessionObjectiveListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: SessionObjectiveListOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_session_objectives(request, id: uuid.UUID):
@@ -117,7 +118,7 @@ def list_session_objectives(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/objectives",
-    response={201: SessionObjectiveOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={201: SessionObjectiveOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut},
 )
 @map_exceptions
 def create_session_objective(request, id: uuid.UUID, body: CreateSessionObjectiveIn):

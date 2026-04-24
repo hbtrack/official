@@ -7,22 +7,23 @@ Endpoints:
 import uuid
 
 from ninja import Router
+from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
     GetLoadChartInput,
 )
-from ..schemas import ErrorOut, LoadChartEntryOut, LoadChartOut
+from ..schemas import ProblemOut, LoadChartEntryOut, LoadChartOut
 from .deps import _get_actor_role
 from .errors import map_exceptions
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/load-chart",
-    response={200: LoadChartOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: LoadChartOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def get_load_chart(request, id: uuid.UUID):

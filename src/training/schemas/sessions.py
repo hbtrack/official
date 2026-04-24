@@ -6,6 +6,10 @@ from decimal import Decimal
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -13,6 +17,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class TrainingSessionOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     organization_id: uuid.UUID
     session_at: datetime
@@ -49,11 +54,13 @@ class TrainingSessionOut(Schema):
 
 
 class TrainingSessionListOut(Schema):
+    model_config = _CAMEL
     items: List[TrainingSessionOut]
     next_page_token: Optional[str] = None
 
 
 class CreateTrainingSessionIn(Schema):
+    model_config = _CAMEL
     organization_id: uuid.UUID
     session_at: datetime
     session_type: str
@@ -82,6 +89,7 @@ class CreateTrainingSessionIn(Schema):
 
 
 class UpdateTrainingSessionIn(Schema):
+    model_config = _CAMEL
     session_at: Optional[datetime] = None
     session_type: Optional[str] = None
     duration_planned_minutes: Optional[int] = None
@@ -107,14 +115,31 @@ class UpdateTrainingSessionIn(Schema):
 
 
 class TransitionOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     status: str
     updated_at: datetime
 
 
 # ---------------------------------------------------------------------------
-# General error schema
+# General error schema (legacy — mantido para compatibilidade retroativa)
 # ---------------------------------------------------------------------------
 
 class ErrorOut(Schema):
+    model_config = _CAMEL
+    detail: str
+
+
+# ---------------------------------------------------------------------------
+# RFC 9457 Problem Details schema — application/problem+json
+# Produzido pelo _problem_response() em config/urls.py via handlers globais.
+# Usado nos response dicts dos handlers para documentar o OpenAPI corretamente.
+# ---------------------------------------------------------------------------
+
+class ProblemOut(Schema):
+    model_config = _CAMEL
+    type: str
+    title: str
+    status: int
+    traceId: str
     detail: str

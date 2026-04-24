@@ -1308,6 +1308,29 @@
                 minimum: 0
                 maximum: 24
                 description: "Self-reported sleep hours [0, 24] (SS-TRAIN-006, INV-TRAIN-033)"
+              readiness:
+                type: integer
+                minimum: 1
+                maximum: 5
+                description: "Perceived readiness 1–5: 1=very poor, 5=excellent. Hooper Index."
+              mood:
+                type: integer
+                minimum: 1
+                maximum: 5
+                description: "Mood 1–5: 1=very poor, 5=excellent. Hooper Index."
+              fatigue:
+                type: integer
+                minimum: 1
+                maximum: 5
+                description: "Fatigue 1–5: 1=very low, 5=extreme. Hooper Index."
+              muscleSoreness:
+                type: integer
+                minimum: 1
+                maximum: 5
+                description: "Muscle soreness 1–5: 1=none, 5=extreme. Hooper Index."
+              notes:
+                type: string
+                description: "Free-text observations from the athlete."
     responses:
       "201":
         description: Wellness pre submitted
@@ -1451,13 +1474,36 @@
             additionalProperties: false
             properties:
               sleepQuality:
-                type: integer
+                type: [integer, "null"]
                 minimum: 1
                 maximum: 5
               sleepHours:
-                type: number
+                type: [number, "null"]
                 minimum: 0
                 maximum: 24
+              readiness:
+                type: [integer, "null"]
+                minimum: 1
+                maximum: 5
+                description: "Perceived readiness 1–5: 1=very poor, 5=excellent. Hooper Index."
+              mood:
+                type: [integer, "null"]
+                minimum: 1
+                maximum: 5
+                description: "Mood 1–5: 1=very poor, 5=excellent. Hooper Index."
+              fatigue:
+                type: [integer, "null"]
+                minimum: 1
+                maximum: 5
+                description: "Fatigue 1–5: 1=very low, 5=extreme. Hooper Index."
+              muscleSoreness:
+                type: [integer, "null"]
+                minimum: 1
+                maximum: 5
+                description: "Muscle soreness 1–5: 1=none, 5=extreme. Hooper Index."
+              notes:
+                type: [string, "null"]
+                description: "Free-text observations. null limpa o campo (gravado como string vazia)."
     responses:
       "200":
         description: Updated

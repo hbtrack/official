@@ -10,6 +10,7 @@ import uuid
 from typing import Optional
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -20,7 +21,7 @@ from ..application.use_cases import (
 from ..schemas import (
     CloseFeedbackThreadIn,
     CreateFeedbackThreadIn,
-    ErrorOut,
+    ProblemOut,
     FeedbackThreadListOut,
     FeedbackThreadOut,
 )
@@ -28,12 +29,12 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _feedback_thread_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/feedback-threads",
-    response={200: FeedbackThreadListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: FeedbackThreadListOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_feedback_threads(
@@ -56,7 +57,7 @@ def list_feedback_threads(
 
 @router.post(
     "/training-sessions/{id}/feedback-threads",
-    response={201: FeedbackThreadOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={201: FeedbackThreadOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def create_feedback_thread(request, id: uuid.UUID, body: CreateFeedbackThreadIn):
@@ -81,7 +82,7 @@ def create_feedback_thread(request, id: uuid.UUID, body: CreateFeedbackThreadIn)
 
 @router.post(
     "/training-sessions/{id}/feedback-threads/{thread_id}/close",
-    response={200: FeedbackThreadOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: FeedbackThreadOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def close_feedback_thread(

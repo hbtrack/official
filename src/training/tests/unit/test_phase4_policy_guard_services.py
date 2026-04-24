@@ -139,16 +139,17 @@ class TestRequireInProgress:
 # ---------------------------------------------------------------------------
 
 class TestRequireValidTransition:
-    def test_staff_can_transition_draft_to_published(self, policy, session_draft):
+    def test_staff_can_transition_draft_to_scheduled(self, policy, session_draft):
+        """DRAFT → SCHEDULED é válida pelo FSM canônico."""
         for role in STAFF_ROLES:
             policy.require_valid_transition(
-                session_draft, TrainingSessionStatus.PUBLISHED, role
+                session_draft, TrainingSessionStatus.SCHEDULED, role
             )
 
     def test_non_staff_cannot_transition(self, policy, session_draft):
         with pytest.raises(InsufficientPrivilege):
             policy.require_valid_transition(
-                session_draft, TrainingSessionStatus.PUBLISHED, RoleLabel.ATHLETE
+                session_draft, TrainingSessionStatus.SCHEDULED, RoleLabel.ATHLETE
             )
 
     def test_non_archive_role_cannot_archive(self, policy, session_completed):
@@ -241,10 +242,11 @@ class TestSessionGuard:
             guard.load_for_in_progress(session.id, RoleLabel.ADMIN)
 
     def test_load_for_transition_valid(self):
+        """DRAFT → SCHEDULED é uma transição válida pelo FSM canônico."""
         session = _make_session(TrainingSessionStatus.DRAFT)
         guard = SessionGuard(_mock_repo(session))
         result = guard.load_for_transition(
-            session.id, TrainingSessionStatus.PUBLISHED, RoleLabel.ADMIN
+            session.id, TrainingSessionStatus.SCHEDULED, RoleLabel.ADMIN
         )
         assert result is session
 

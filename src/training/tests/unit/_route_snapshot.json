@@ -281,7 +281,7 @@
     "methods": [
       "DELETE"
     ],
-    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "path": "/training-sessions/{id}/blocks/{blockId}",
     "response_codes": [
       "204",
       "401",
@@ -294,7 +294,7 @@
     "methods": [
       "GET"
     ],
-    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "path": "/training-sessions/{id}/blocks/{blockId}",
     "response_codes": [
       "200",
       "403",
@@ -305,7 +305,7 @@
     "methods": [
       "PATCH"
     ],
-    "path": "/training-sessions/{id}/blocks/{block_id}",
+    "path": "/training-sessions/{id}/blocks/{blockId}",
     "response_codes": [
       "200",
       "401",
@@ -368,7 +368,7 @@
     "methods": [
       "GET"
     ],
-    "path": "/training-sessions/{id}/execution-records/{record_id}",
+    "path": "/training-sessions/{id}/execution-records/{recordId}",
     "response_codes": [
       "200",
       "403",

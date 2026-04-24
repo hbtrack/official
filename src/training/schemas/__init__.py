@@ -27,6 +27,7 @@ _DEPRECATED_EXPORTS: dict[str, str] = {
     "UpdateTrainingSessionIn": "training.schemas.sessions",
     "TransitionOut": "training.schemas.sessions",
     "ErrorOut": "training.schemas.sessions",
+    "ProblemOut": "training.schemas.sessions",
     # blocks
     "SessionBlockOut": "training.schemas.blocks",
     "SessionBlockListOut": "training.schemas.blocks",
@@ -90,6 +91,7 @@ __all__ = [
     "UpdateTrainingSessionIn",
     "TransitionOut",
     "ErrorOut",
+    "ProblemOut",
     # blocks
     "SessionBlockOut",
     "SessionBlockListOut",

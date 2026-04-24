@@ -8,6 +8,7 @@ Endpoints:
 import uuid
 
 from ninja import Router
+from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
@@ -18,19 +19,19 @@ from ..application.use_cases import (
 from ..schemas import (
     AttendanceListOut,
     AttendanceRecordOut,
-    ErrorOut,
+    ProblemOut,
     RecordSessionAttendanceIn,
 )
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _attendance_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/attendance",
-    response={200: AttendanceListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: AttendanceListOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_session_attendance(request, id: uuid.UUID):
@@ -47,7 +48,7 @@ def list_session_attendance(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/attendance",
-    response={201: AttendanceRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut},
+    response={201: AttendanceRecordOut, 401: ProblemOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def record_session_attendance(request, id: uuid.UUID, body: RecordSessionAttendanceIn):
