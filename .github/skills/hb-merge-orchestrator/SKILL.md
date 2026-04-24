@@ -72,7 +72,7 @@ Antes de qualquer ação:
 - [ ] **M3** — Detectar governance_changed:
   ```bash
   git diff --name-only $(git merge-base origin/main HEAD)...HEAD \
-    | grep -qE "^\.(contract_driven|contracts|docs/_canon)/" \
+    | grep -qE "^(\.contract_driven|contracts|docs/_canon)/" \
     && echo "GOVERNANCE_CHANGED=true" || echo "GOVERNANCE_CHANGED=false"
   ```
   Se `GOVERNANCE_CHANGED=true` → executar **M4-GOVERNANCE** antes de continuar.
@@ -254,7 +254,7 @@ curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
 - [ ] **CF3** — Para checks `conditional`: verificar se governance_changed=true:
   ```bash
   git diff --name-only $(git merge-base origin/main HEAD)...HEAD \
-    | grep -qE "^\.(contract_driven|contracts|docs/_canon)/" \
+    | grep -qE "^(\.contract_driven|contracts|docs/_canon)/" \
     && echo "governance_changed=true" || echo "governance_changed=false"
   ```
   Se `governance_changed=false` e o check é conditional → o check não deveria ter ativado.
