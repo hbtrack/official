@@ -1,0 +1,3 @@
+Migrations for 'training':
+  src/training/migrations/0008_remove_trainingsessionmodel_training_session_at_id_idx.py
+    - Remove index training_session_at_id_idx from trainingsessionmodel

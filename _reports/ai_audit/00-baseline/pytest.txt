@@ -1,0 +1,632 @@
+........................................................................ [  3%]
+..sF.................................................................... [  7%]
+........................................................................ [ 10%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+..............................................................ss.s...... [ 35%]
+.......................................ss............................... [ 38%]
+........................................................................ [ 42%]
+.....ssssss..........................ss................................. [ 45%]
+..............................................ss..ss.................ss. [ 49%]
+........................................................................ [ 52%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+...........................................F............................ [ 80%]
+........................................................................ [ 84%]
+...s.................................................................... [ 87%]
+........................................................................ [ 91%]
+................................s........s.........s.........s.........s [ 94%]
+.........s.............................................................. [ 98%]
+.......................................F.                                [100%]
+=================================== FAILURES ===================================
+_______ TestPerformancePhase4.test_list_training_sessions_response_time ________
+
+self = <tests.test_performance_phase4.TestPerformancePhase4 object at 0x767a407a5490>
+seed_demo_data = {'admin_id': UUID('00000000-0000-0000-0000-000000000010'), 'coach_id': UUID('00000000-0000-0000-0000-000000000011'), 'org_id': UUID('00000000-0000-0000-0000-000000000001'), 'season_id': UUID('00000000-0000-0000-0000-000000000030'), ...}
+
+    def test_list_training_sessions_response_time(self, seed_demo_data):
+        """Validar que GET /api/training-sessions/ responde em < 200ms"""
+        token = _make_jwt(COACH_ID, "coach")
+        auth = f"Bearer {token}"
+        client = Client()
+>       _warm_up_django(client, auth)
+
+tests/test_performance_phase4.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_performance_phase4.py:163: in _warm_up_django
+    client.get("/api/training/training-sessions", HTTP_AUTHORIZATION=auth_header)
+.venv-contract/lib/python3.12/site-packages/django/test/client.py:1049: in get
+    response = super().get(path, data=data, secure=secure, headers=headers, **extra)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/django/test/client.py:465: in get
+    return self.generic(
+.venv-contract/lib/python3.12/site-packages/django/test/client.py:617: in generic
+    return self.request(**r)
+           ^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/django/test/client.py:1013: in request
+    self.check_exception(response)
+.venv-contract/lib/python3.12/site-packages/django/test/client.py:743: in check_exception
+    raise exc_value
+.venv-contract/lib/python3.12/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/operation.py:661: in sync_view_wrapper
+    return self._sync_view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/operation.py:673: in _sync_view
+    return operation.run(request, *a, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/operation.py:225: in run
+    return self.api.on_exception(request, e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/main.py:617: in on_exception
+    return handler(request, exc)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/errors.py:129: in _default_exception
+    raise exc  # let django deal with it
+    ^^^^^^^^^
+.venv-contract/lib/python3.12/site-packages/ninja/operation.py:216: in run
+    result = self.view_func(request, **values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/training/api/errors.py:81: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+src/training/api/sessions.py:66: in list_training_sessions
+    codec = get_cursor_codec()
+            ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_cursor_codec() -> CursorCodec:
+        """Fábrica de CursorCodec resolvida a partir de variável de ambiente.
+    
+        Resolução em ordem:
+          1. TRAINING_CURSOR_SECRETS (CSV de secrets, novo,antigo) — suporte a rotação dual-key.
+          2. TRAINING_CURSOR_SECRET (singular, backward compat).
+          3. Fallback para SECRET_KEY do Django APENAS em ambiente não-produção
+             (DEBUG=True E ENV não é "production"/"prod").
+    
+        Em produção, a ausência de TRAINING_CURSOR_SECRET(S) levanta RuntimeError.
+        """
+        # 1. Lista de secrets para rotação dual-key
+        secrets_csv = os.environ.get("TRAINING_CURSOR_SECRETS", "").strip()
+        if secrets_csv:
+            secrets = [s.encode() for s in secrets_csv.split(",") if s.strip()]
+            if secrets:
+                return CursorCodec(secrets=secrets)
+    
+        # 2. Secret único (backward compat)
+        secret_str = os.environ.get("TRAINING_CURSOR_SECRET")
+        if secret_str:
+            return CursorCodec(secret=secret_str.encode())
+    
+        # 3. Fallback para SECRET_KEY — apenas em dev (DEBUG=True E ENV != production)
+        try:
+            from django.conf import settings  # noqa: PLC0415
+    
+            is_debug = getattr(settings, "DEBUG", False)
+            env_name = os.environ.get("ENV", "").lower()
+            is_production = env_name in ("production", "prod")
+    
+            if is_production or not is_debug:
+>               raise RuntimeError(
+                    "TRAINING_CURSOR_SECRET não definida. "
+                    "Em produção, defina TRAINING_CURSOR_SECRET ou TRAINING_CURSOR_SECRETS "
+                    "explicitamente."
+                )
+E               RuntimeError: TRAINING_CURSOR_SECRET não definida. Em produção, defina TRAINING_CURSOR_SECRET ou TRAINING_CURSOR_SECRETS explicitamente.
+
+src/training/api/deps.py:94: RuntimeError
+----------------------------- Captured stderr call -----------------------------
+{"time": "2026-04-23 08:33:32,880", "level": "ERROR", "module": "django.request", "message": "Internal Server Error: /api/training/training-sessions", "flow_id": "212f7500-8bca-4860-98c0-b4147ce74321"}
+__________ TestGateRegistryParity.test_executor_gates_all_in_registry __________
+
+self = <test_gate_registry_parity.TestGateRegistryParity object at 0x767a40d65400>
+
+    def test_executor_gates_all_in_registry(self):
+        """
+        Todo gate executado inline em validate_contracts.py deve estar no registry.
+        Falha com lista dos gates faltando para forçar registro antes de execução.
+        """
+        executor_ids = _executor_gate_ids()
+        registry_ids = _all_registry_ids()
+    
+        missing_from_registry = executor_ids - registry_ids
+    
+>       assert not missing_from_registry, (
+            f"Gates executados em validate_contracts.py mas AUSENTES do GATES_REGISTRY.yaml:\n"
+            + "\n".join(f"  - {g}" for g in sorted(missing_from_registry))
+            + "\n\nAdicione esses gates ao registro antes de continuar."
+        )
+E       AssertionError: Gates executados em validate_contracts.py mas AUSENTES do GATES_REGISTRY.yaml:
+E           - GOVERNANCE_REGRESSION_GATE
+E         
+E         Adicione esses gates ao registro antes de continuar.
+E       assert not {'GOVERNANCE_REGRESSION_GATE'}
+
+tests/pipeline_gates/test_gate_registry_parity.py:107: AssertionError
+_____________ TestVideoModuleIntegration.test_contract_gates_pass ______________
+
+self = <tests.test_video_module.TestVideoModuleIntegration object at 0x767a40610f80>
+repo_root = PosixPath('/home/davis/HB-TRACK')
+
+    @pytest.mark.slow
+    def test_contract_gates_pass(self, repo_root: pathlib.Path):
+        """Contract gates must pass (FASE 3 validation).
+    
+        Marcado slow: depende de latest.json de --profile ci.
+        Excluído do CI padrão (-m "not slow") — CI tem job separado contract-gates.yml.
+        """
+        report_path = repo_root / "_reports/contract_gates/latest.json"
+        if not report_path.exists():
+            pytest.skip("latest.json ausente — executar validate_contracts.py --profile ci antes.")
+        report = load_json(report_path)
+        canonical_scope = report.get("execution_context", {}).get("canonical_scope")
+        if canonical_scope != "full_pipeline":
+            pytest.skip(
+                f"latest.json tem canonical_scope={canonical_scope!r} — "
+                "não é full_pipeline (requer --profile ci)."
+            )
+>       assert report.get("overall_status") == "PASS", \
+            f"Contract gates failed: {report.get('overall_status')}"
+E       AssertionError: Contract gates failed: FAIL
+E       assert 'FAIL' == 'PASS'
+E         
+E         - PASS
+E         + FAIL
+
+tests/test_video_module.py:652: AssertionError
+=============================== warnings summary ===============================
+.venv-contract/lib/python3.12/site-packages/_hypothesis_pytestplugin.py:481
+.venv-contract/lib/python3.12/site-packages/_hypothesis_pytestplugin.py:481
+  /home/davis/HB-TRACK/.venv-contract/lib/python3.12/site-packages/_hypothesis_pytestplugin.py:481: UserWarning: Skipping collection of '.hypothesis' directory - this usually means you've explicitly set the `norecursedirs` pytest config option, replacing rather than extending the default ignores.
+    warnings.warn(
+
+scripts/generate/test_codegen.py:36
+  /home/davis/HB-TRACK/scripts/generate/test_codegen.py:36: PytestCollectionWarning: cannot collect test class 'TestCodegenError' because it has a __init__ constructor (from: scripts/generate/test_codegen.py)
+    class TestCodegenError(RuntimeError):
+
+src/training/domain/rules.py:32
+  /home/davis/HB-TRACK/src/training/domain/rules.py:32: DeprecationWarning: Importar 'AttendanceSource' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
+
+src/training/domain/rules.py:32
+  /home/davis/HB-TRACK/src/training/domain/rules.py:32: DeprecationWarning: Importar 'AttendanceStatus' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
+
+src/training/domain/rules.py:32
+  /home/davis/HB-TRACK/src/training/domain/rules.py:32: DeprecationWarning: Importar 'TrainingSessionStatus' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'AttentionQueueItem' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.communication' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'Recommendation' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.communication' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'RecommendationActionType' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'RecommendationPriority' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'RecommendationStatus' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:14
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:14: DeprecationWarning: Importar 'TrainingSession' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.sessions' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/integration/test_training_api.py:23
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:23: DeprecationWarning: Importar 'AttentionQueueRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.communication' diretamente. Este shim será removido em release N+2.
+    from training.infrastructure.repository import (
+
+src/training/infrastructure/repository/communication.py:7
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/communication.py:7: DeprecationWarning: Importar 'ConversationOutcome' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import (
+
+src/training/infrastructure/repository/communication.py:7
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/communication.py:7: DeprecationWarning: Importar 'FeedbackThread' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.communication' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import (
+
+src/training/infrastructure/repository/communication.py:16
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/communication.py:16: DeprecationWarning: Importar 'AttentionQueueItemModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.communication' diretamente. Este shim será removido em release N+2.
+    from ..models import (
+
+src/training/infrastructure/repository/communication.py:16
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/communication.py:16: DeprecationWarning: Importar 'FeedbackThreadModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.communication' diretamente. Este shim será removido em release N+2.
+    from ..models import (
+
+src/training/infrastructure/repository/communication.py:16
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/communication.py:16: DeprecationWarning: Importar 'RecommendationModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.communication' diretamente. Este shim será removido em release N+2.
+    from ..models import (
+
+src/training/tests/integration/test_training_api.py:23
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:23: DeprecationWarning: Importar 'RecommendationRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.communication' diretamente. Este shim será removido em release N+2.
+    from training.infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py:23
+  /home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py:23: DeprecationWarning: Importar 'TrainingSessionRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.sessions' diretamente. Este shim será removido em release N+2.
+    from training.infrastructure.repository import (
+
+src/training/infrastructure/repository/sessions.py:8
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/sessions.py:8: DeprecationWarning: Importar 'SessionObjective' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.sessions' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import (
+
+src/training/infrastructure/repository/sessions.py:8
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/sessions.py:8: DeprecationWarning: Importar 'SessionObjectiveOrigin' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import (
+
+src/training/infrastructure/repository/sessions.py:14
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/sessions.py:14: DeprecationWarning: Importar 'SessionObjectiveModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.sessions' diretamente. Este shim será removido em release N+2.
+    from ..models import SessionObjectiveModel, TrainingSessionModel
+
+src/training/infrastructure/repository/sessions.py:14
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/sessions.py:14: DeprecationWarning: Importar 'TrainingSessionModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.sessions' diretamente. Este shim será removido em release N+2.
+    from ..models import SessionObjectiveModel, TrainingSessionModel
+
+src/training/tests/unit/conftest.py:9
+  /home/davis/HB-TRACK/src/training/tests/unit/conftest.py:9: DeprecationWarning: Importar 'SessionBlock' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.blocks' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/conftest.py:9
+  /home/davis/HB-TRACK/src/training/tests/unit/conftest.py:9: DeprecationWarning: Importar 'SessionBlockIntensity' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/conftest.py:9
+  /home/davis/HB-TRACK/src/training/tests/unit/conftest.py:9: DeprecationWarning: Importar 'SessionBlockPhase' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/test_domain_rules.py:11
+  /home/davis/HB-TRACK/src/training/tests/unit/test_domain_rules.py:11: DeprecationWarning: Importar 'IndividualizationMode' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/test_domain_rules.py:11
+  /home/davis/HB-TRACK/src/training/tests/unit/test_domain_rules.py:11: DeprecationWarning: Importar 'Mesocycle' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.planning' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/test_domain_rules.py:11
+  /home/davis/HB-TRACK/src/training/tests/unit/test_domain_rules.py:11: DeprecationWarning: Importar 'Microcycle' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.planning' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/test_domain_rules.py:11
+  /home/davis/HB-TRACK/src/training/tests/unit/test_domain_rules.py:11: DeprecationWarning: Importar 'WellnessPost' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.wellness' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import (
+
+src/training/tests/unit/test_execution_records.py:10
+  /home/davis/HB-TRACK/src/training/tests/unit/test_execution_records.py:10: DeprecationWarning: Importar 'ExecutionRecord' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.execution' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import ExecutionRecord, ExecutionType
+
+src/training/tests/unit/test_execution_records.py:10
+  /home/davis/HB-TRACK/src/training/tests/unit/test_execution_records.py:10: DeprecationWarning: Importar 'ExecutionType' de 'training.domain.entities' é depreciádo. Use 'training.domain.common.enums' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import ExecutionRecord, ExecutionType
+
+src/training/tests/unit/test_sensitive_data.py:11
+  /home/davis/HB-TRACK/src/training/tests/unit/test_sensitive_data.py:11: DeprecationWarning: Importar 'WellnessPre' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.wellness' diretamente. Este shim será removido em release N+2.
+    from training.domain.entities import WellnessPre
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/analytics/queries.py:5: DeprecationWarning: Importar 'ExecutionRecordRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.execution' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import ExecutionRecordRepository, TrainingSessionRepository
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/execution.py:8: DeprecationWarning: Importar 'ExecutionRecordModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.execution' diretamente. Este shim será removido em release N+2.
+    from ..models import ExecutionRecordModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/attendance/commands.py:6: DeprecationWarning: Importar 'AttendanceRecord' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.attendance' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import AttendanceRecord, AttendanceSource, AttendanceStatus
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/attendance/commands.py:13: DeprecationWarning: Importar 'AttendanceRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.attendance' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import AttendanceRepository, TrainingSessionRepository
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/attendance.py:7: DeprecationWarning: Importar 'AttendanceRecordModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.attendance' diretamente. Este shim será removido em release N+2.
+    from ..models import AttendanceRecordModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/blocks/commands.py:12: DeprecationWarning: Importar 'SessionBlockRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.blocks' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import SessionBlockRepository, TrainingSessionRepository
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/blocks.py:8: DeprecationWarning: Importar 'SessionBlockModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.blocks' diretamente. Este shim será removido em release N+2.
+    from ..models import SessionBlockModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/communication/commands.py:28: DeprecationWarning: Importar 'FeedbackThreadRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.communication' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/eligibility/commands.py:6: DeprecationWarning: Importar 'AthleteIneligibilityDeclaration' de 'training.domain.entities' é depreciádo. Use 'training.domain.entities.eligibility' diretamente. Este shim será removido em release N+2.
+    from ...domain.entities import AthleteIneligibilityDeclaration, TrainingSessionStatus
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/eligibility/commands.py:13: DeprecationWarning: Importar 'AthleteIneligibilityDeclarationRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.eligibility' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/eligibility.py:8: DeprecationWarning: Importar 'AthleteIneligibilityDeclarationModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.eligibility' diretamente. Este shim será removido em release N+2.
+    from ..models import AthleteIneligibilityDeclarationModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/execution/commands.py:13: DeprecationWarning: Importar 'SessionObjectiveRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.sessions' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/planning/commands.py:12: DeprecationWarning: Importar 'MesocycleRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.planning' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import MesocycleRepository, MicrocycleRepository
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/planning.py:8: DeprecationWarning: Importar 'MesocycleModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.planning' diretamente. Este shim será removido em release N+2.
+    from ..models import MesocycleModel, MicrocycleModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/planning.py:8: DeprecationWarning: Importar 'MicrocycleModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.planning' diretamente. Este shim será removido em release N+2.
+    from ..models import MesocycleModel, MicrocycleModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/planning/commands.py:12: DeprecationWarning: Importar 'MicrocycleRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.planning' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import MesocycleRepository, MicrocycleRepository
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/wellness/commands.py:21: DeprecationWarning: Importar 'WellnessPostRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.wellness' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/wellness.py:8: DeprecationWarning: Importar 'WellnessPostModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.wellness' diretamente. Este shim será removido em release N+2.
+    from ..models import WellnessPostModel, WellnessPreModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/infrastructure/repository/wellness.py:8: DeprecationWarning: Importar 'WellnessPreModel' de 'training.infrastructure.models' é depreciádo. Use 'training.infrastructure.models.wellness' diretamente. Este shim será removido em release N+2.
+    from ..models import WellnessPostModel, WellnessPreModel
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/application/wellness/commands.py:21: DeprecationWarning: Importar 'WellnessPreRepository' de 'training.infrastructure.repository' é depreciádo. Use 'training.infrastructure.repository.wellness' diretamente. Este shim será removido em release N+2.
+    from ...infrastructure.repository import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/analytics.py:13: DeprecationWarning: 'training.application.use_cases' é um shim de compatibilidade e será removido em release N+2. Use o subpacote direto (ex: 'training.application.sessions.commands').
+    from ..application.use_cases import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/analytics.py:16: DeprecationWarning: Importar 'ErrorOut' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import ErrorOut, LoadChartEntryOut, LoadChartOut
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/analytics.py:16: DeprecationWarning: Importar 'LoadChartEntryOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import ErrorOut, LoadChartEntryOut, LoadChartOut
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/analytics.py:16: DeprecationWarning: Importar 'LoadChartOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import ErrorOut, LoadChartEntryOut, LoadChartOut
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attendance.py:18: DeprecationWarning: Importar 'AttendanceListOut' de 'training.schemas' é depreciado. Use 'training.schemas.attendance' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attendance.py:18: DeprecationWarning: Importar 'AttendanceRecordOut' de 'training.schemas' é depreciado. Use 'training.schemas.attendance' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attendance.py:18: DeprecationWarning: Importar 'RecordSessionAttendanceIn' de 'training.schemas' é depreciado. Use 'training.schemas.attendance' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'AthleteIneligibilityDeclarationOut' de 'training.schemas' é depreciado. Use 'training.schemas.eligibility' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'AttentionQueueItemOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'ExecutionRecordOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'FeedbackThreadOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'MesocycleOut' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'MicrocycleOut' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'RecommendationOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'SessionBlockOut' de 'training.schemas' é depreciado. Use 'training.schemas.blocks' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'SessionObjectiveOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'TrainingSessionOut' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'WellnessPostOut' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/mappers.py:16: DeprecationWarning: Importar 'WellnessPreOut' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attention.py:22: DeprecationWarning: Importar 'AttentionQueueListOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attention.py:22: DeprecationWarning: Importar 'DismissAttentionQueueItemIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attention.py:22: DeprecationWarning: Importar 'EscalateAttentionQueueItemIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/attention.py:22: DeprecationWarning: Importar 'ResolveAttentionQueueItemIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/blocks.py:25: DeprecationWarning: Importar 'AddSessionBlockIn' de 'training.schemas' é depreciado. Use 'training.schemas.blocks' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/blocks.py:25: DeprecationWarning: Importar 'ReorderSessionBlocksIn' de 'training.schemas' é depreciado. Use 'training.schemas.blocks' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/blocks.py:25: DeprecationWarning: Importar 'SessionBlockListOut' de 'training.schemas' é depreciado. Use 'training.schemas.blocks' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/blocks.py:25: DeprecationWarning: Importar 'UpdateSessionBlockIn' de 'training.schemas' é depreciado. Use 'training.schemas.blocks' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/chat.py:17: DeprecationWarning: Importar 'FeedbackThreadListOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/chat.py:17: DeprecationWarning: Importar 'SubmitTrainingSuggestionIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/eligibility.py:19: DeprecationWarning: Importar 'SubmitIneligibilityDeclarationIn' de 'training.schemas' é depreciado. Use 'training.schemas.eligibility' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/execution.py:23: DeprecationWarning: Importar 'CreateExecutionRecordIn' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/execution.py:23: DeprecationWarning: Importar 'CreateSessionObjectiveIn' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/execution.py:23: DeprecationWarning: Importar 'ExecutionRecordListOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/execution.py:23: DeprecationWarning: Importar 'SessionObjectiveListOut' de 'training.schemas' é depreciado. Use 'training.schemas.execution' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/feedback.py:20: DeprecationWarning: Importar 'CloseFeedbackThreadIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/feedback.py:20: DeprecationWarning: Importar 'CreateFeedbackThreadIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'CreateMesocycleIn' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'CreateMicrocycleIn' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'MesocycleListOut' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'MicrocycleListOut' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'UpdateMesocycleIn' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/planning.py:32: DeprecationWarning: Importar 'UpdateMicrocycleIn' de 'training.schemas' é depreciado. Use 'training.schemas.planning' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/recommendations.py:20: DeprecationWarning: Importar 'AcceptRecommendationIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/recommendations.py:20: DeprecationWarning: Importar 'DismissRecommendationIn' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/recommendations.py:20: DeprecationWarning: Importar 'RecommendationListOut' de 'training.schemas' é depreciado. Use 'training.schemas.communication' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/sessions.py:32: DeprecationWarning: Importar 'CreateTrainingSessionIn' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/sessions.py:32: DeprecationWarning: Importar 'TransitionOut' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/sessions.py:32: DeprecationWarning: Importar 'TrainingSessionListOut' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/sessions.py:32: DeprecationWarning: Importar 'UpdateTrainingSessionIn' de 'training.schemas' é depreciado. Use 'training.schemas.sessions' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/wellness.py:25: DeprecationWarning: Importar 'SubmitWellnessPostIn' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/wellness.py:25: DeprecationWarning: Importar 'SubmitWellnessPreIn' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/wellness.py:25: DeprecationWarning: Importar 'UpdateWellnessPostIn' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/src/training/api/wellness.py:25: DeprecationWarning: Importar 'UpdateWellnessPreIn' de 'training.schemas' é depreciado. Use 'training.schemas.wellness' diretamente. Este shim será removido em release N+2.
+    from ..schemas import (
+
+src/training/tests/integration/test_training_api.py::TestAttendanceEndpoints::test_record_and_list_attendance
+  /home/davis/HB-TRACK/.venv-contract/lib/python3.12/site-packages/ninja/schema.py:181: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    result = super().__new__(cls, name, bases, namespace, **kwargs)
+
+src/training/tests/integration/test_training_api.py: 33 warnings
+src/video/tests/integration/test_video_api.py: 10 warnings
+tests/test_fase1_validation.py: 2 warnings
+tests/test_performance_phase4.py: 1 warning
+  /home/davis/HB-TRACK/.venv-contract/lib/python3.12/site-packages/ninja/operation.py:219: DeprecationWarning: Returning tuple (status_code, response) is deprecated. Use Status(status_code, response) instead.
+    return self._result_to_response(request, result, temporal_response)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_performance_phase4.py::TestPerformancePhase4::test_list_training_sessions_response_time
+FAILED tests/pipeline_gates/test_gate_registry_parity.py::TestGateRegistryParity::test_executor_gates_all_in_registry
+FAILED tests/test_video_module.py::TestVideoModuleIntegration::test_contract_gates_pass
+3 failed, 2027 passed, 27 skipped, 154 warnings in 140.30s (0:02:20)
