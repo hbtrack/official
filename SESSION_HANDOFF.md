@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-24"
-branch_ativo: main
+branch_ativo: chore/generated-manifests-governance-skills
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: training
@@ -10,19 +10,24 @@ task_type: contract_revision
 boot_profile_id: contract_execution
 task_id: TRAINING_MODULE_REMEDIATION
 resultado: DONE
-proxima_acao_permitida: "Todos os gaps do REM-1E foram resolvidos. Próxima ação: avançar para próxima fase do ROADMAP ou iniciar revisão de outro módulo."
+proxima_acao_permitida: "PRs #90 e #91 abertos. Aguardar merge e avançar para fase 5 do ROADMAP."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/ai_audit/07-remediation/IMPACT.md"
+  - "_reports/contract_gates/latest.json"
   - "src/training/tests/integration/test_training_api.py"
   - "src/training/infrastructure/models/wellness.py"
-  - "src/training/migrations/0010_add_unique_constraint_wellness_pre.py"
   - "generated/contracts/openapi/paths/training.yaml"
   - "generated/manifests/"
 ---
 # SESSION HANDOFF — HB TRACK
-> **Data:** 2026-04-24 | **Branch:** main | **CI:** PASS
+> **Data:** 2026-04-24 | **Branch:** chore/generated-manifests-governance-skills | **CI:** PASS
 > **Modo:** CDD | **task_id:** TRAINING_MODULE_REMEDIATION | **Resultado:** DONE
+
+## Estado Geral
+**Data:** 2026-04-24 | **Branch:** chore/generated-manifests-governance-skills | **CI:** PASS
+**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
+**Módulo foco:** training | **Fase ROADMAP:** 4 | **task_id:** TRAINING_MODULE_REMEDIATION | **Resultado:** DONE
 
 ## O que foi feito
 - **Gap R8** — `UniqueConstraint(fields=["session_id","athlete_id"])` adicionado ao `WellnessPreModel.Meta`; migration `0010` criada e aplicada
@@ -36,13 +41,15 @@ evidence_paths:
 | Checks | Status |
 |---|---|
 | Suite training | ✅ 407 passed, 19 skipped |
-| validate_contracts.py | ✅ PASS |
-| GATES_REGISTRY (GOVERNANCE_REGRESSION_GATE) | ✅ Registrado |
+| validate_contracts.py (--profile ci) | ✅ PASS — 55 gates |
+| DERIVED_DRIFT_GATE | ✅ Manifests regenerados |
+| HANDOFF_COHERENCE_GATE | ✅ SESSION_HANDOFF coerente |
+| GOVERNANCE_REGRESSION_GATE | ✅ Registrado |
 | source_graph training | ✅ Regenerado |
 
 ## Evidências
 - `_reports/ai_audit/07-remediation/IMPACT.md`
-- `_reports/contract_gates/precommit.latest.json`
+- `_reports/contract_gates/latest.json`
 
 ## Próxima ação permitida
 Avançar para fase 5 do ROADMAP ou iniciar revisão de outro módulo.
