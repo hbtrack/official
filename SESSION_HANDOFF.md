@@ -1,20 +1,23 @@
 ---
-data_ultima_sessao: "2026-04-22"
-branch_ativo: pr/backlog2-unificado
+data_ultima_sessao: "2026-04-24"
+branch_ativo: feat/training-module-phase4
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: infra
+modulo_foco: training
 fase_roadmap: 6
 roadmap_phase: 6
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: CI_CD_FORENSICS_AND_REMEDIATION
 resultado: PENDENTE
-proxima_acao_permitida: "corrigir blockers de governança/runtime da branch e revalidar CI antes do merge"
+proxima_acao_permitida: "commitar fixes (traceId ProblemOut + compile_api_policy --all + scripts/hb TRAINING_CURSOR_SECRET) e fazer push para feat/training-module-phase4"
 bloqueios_ativos: []
 evidence_paths:
-  - ".github/workflows/deploy.yml"
-  - ".dev/BACKLOG2.md"
+  - "src/identity_access/schemas.py"
+  - "src/users/schemas.py"
+  - "src/video/schemas.py"
+  - "scripts/hb"
+  - "generated/manifests/"
 ---
 # SESSION HANDOFF — HB TRACK (CI FORENSICS)
 

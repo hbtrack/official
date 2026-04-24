@@ -17,6 +17,8 @@ from typing import List, Optional
 from uuid import UUID
 
 from ninja import Schema
+from pydantic import Field
+from shared.middleware import get_current_flow_id as _get_flow_id
 
 # ── AuthSession (contrato: auth_session.schema.json) ─────────────────────────
 
@@ -131,3 +133,4 @@ class ProblemOut(Schema):
     status: int
     detail: Optional[str] = None
     instance: Optional[str] = None
+    traceId: str = Field(default_factory=_get_flow_id)

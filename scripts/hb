@@ -2015,6 +2015,7 @@ class HBCLIv2:
             "LOG_LEVEL": "WARNING",
             "JWT_ALGORITHM": "HS256",
             "JWT_SECRET": "ci-jwt-secret-for-testing-only",
+            "TRAINING_CURSOR_SECRET": "ci-training-cursor-secret-for-testing-only",
         }
 
     def cmd_validate(self, profile: str = "ci") -> int:
