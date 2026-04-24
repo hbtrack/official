@@ -99,7 +99,7 @@
     },
     {
       "relpath": "generated/source_graph/training/training.bundle.yaml",
-      "sha256": "e19ddd237abf4d4faa1c3935e08966fa902769c87f6da8b485688a25a30f62da"
+      "sha256": "eb43f758042c34f5a4a5007ef97f25e1dceeefbc4e37e0645603046c7e9462d0"
     },
     {
       "relpath": "generated/source_graph/training/training.schema_contract_view.yaml",
@@ -111,7 +111,7 @@
     },
     {
       "relpath": "generated/source_graph/training/impact_report.json",
-      "sha256": "36b6c6b28c0c6629606c1649abd88aa015efe67876ac0a689c5f5bf6c9994dc3"
+      "sha256": "22df20df61793dd56acc28853951c6a8f250123a215e6f48ed410dad9d021cde"
     }
   ],
   "module": "training",
@@ -147,7 +147,7 @@
     "domain_rules": "src/training/domain/rules.py",
     "use_cases": "src/training/application/use_cases.py"
   },
-  "source_fingerprint": "19140d71be5974e10d09727cbffd0a69dd12781679a237b1b4435059b1d3765c",
+  "source_fingerprint": "826472807d3d2c8ea73bab359c65de9489338fb6df6857744b22a31f44167ab3",
   "source_graph": {
     "entities": {
       "TrainingSession": {
@@ -778,7 +778,7 @@
         "microcycleId referencia planejamento periódico (Mesocycle/Microcycle) — sem schema JSON canônico para mesocycle/microcycle (somente YAML OpenAPI projection).",
         "FT-010 estendido para cobrir atenção, recomendações, inelegibilidade, load-chart e HB Pro Coach endpoints — endpoints extras documentados nesta edição do source graph."
       ],
-      "source_fingerprint": "8972fa763c21a1523af4b9b77f84333333a7b48005d6c91dadd03d2ab17b0223"
+      "source_fingerprint": "a12745c83748808df596616f1f1376d2e7a272fa6aadf43a2afb0f00610581ff"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-24T09:17:41Z",
+  "timestamp_utc": "2026-04-24T10:43:07Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "92f0a946",
+    "git_commit": "25363a70",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260424T091741_42921d"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260424T104307_9992c5"
   },
   "status_detail": {
     "active_gates_passed": 58,
@@ -265,7 +265,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 165
       }
     },
     {
@@ -290,7 +290,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 512
+        "duration_ms": 5326
       }
     },
     {
@@ -495,7 +495,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 14
       }
     },
     {
@@ -625,7 +625,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 121
+        "duration_ms": 147
       }
     },
     {
@@ -682,7 +682,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 11
       }
     },
     {
@@ -703,7 +703,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 46
       }
     },
     {
@@ -724,7 +724,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 36
       }
     },
     {
@@ -766,7 +766,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 98
+        "duration_ms": 94
       }
     },
     {
@@ -787,7 +787,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51
+        "duration_ms": 55
       }
     },
     {
@@ -808,7 +808,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 49
       }
     },
     {
@@ -829,7 +829,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 309
+        "duration_ms": 322
       }
     },
     {
@@ -850,7 +850,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 43
       }
     },
     {
@@ -907,7 +907,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 12
       }
     },
     {
@@ -968,7 +968,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 78
       }
     },
     {
@@ -995,7 +995,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 121
+        "duration_ms": 130
       }
     },
     {
@@ -1474,7 +1474,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 76
       }
     },
     {
@@ -1560,7 +1560,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 717
+        "duration_ms": 764
       }
     },
     {
@@ -1583,7 +1583,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1102
+        "duration_ms": 2581
       }
     },
     {
@@ -1605,7 +1605,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1299
+        "duration_ms": 2278
       }
     },
     {
@@ -1644,7 +1644,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 594
+        "duration_ms": 598
       }
     },
     {
@@ -4098,11 +4098,11 @@
           ],
           "range": {
             "start": {
-              "line": 2433,
+              "line": 2479,
               "character": 8
             },
             "end": {
-              "line": 2433,
+              "line": 2479,
               "character": 25
             }
           }
@@ -4120,11 +4120,11 @@
           ],
           "range": {
             "start": {
-              "line": 2512,
+              "line": 2558,
               "character": 8
             },
             "end": {
-              "line": 2512,
+              "line": 2558,
               "character": 25
             }
           }
@@ -4142,11 +4142,11 @@
           ],
           "range": {
             "start": {
-              "line": 2621,
+              "line": 2667,
               "character": 8
             },
             "end": {
-              "line": 2621,
+              "line": 2667,
               "character": 25
             }
           }
@@ -4164,11 +4164,11 @@
           ],
           "range": {
             "start": {
-              "line": 2698,
+              "line": 2744,
               "character": 8
             },
             "end": {
-              "line": 2698,
+              "line": 2744,
               "character": 25
             }
           }
@@ -4186,11 +4186,11 @@
           ],
           "range": {
             "start": {
-              "line": 2781,
+              "line": 2827,
               "character": 8
             },
             "end": {
-              "line": 2781,
+              "line": 2827,
               "character": 25
             }
           }
@@ -4208,11 +4208,11 @@
           ],
           "range": {
             "start": {
-              "line": 2827,
+              "line": 2873,
               "character": 8
             },
             "end": {
-              "line": 2827,
+              "line": 2873,
               "character": 24
             }
           }
@@ -4230,11 +4230,11 @@
           ],
           "range": {
             "start": {
-              "line": 2891,
+              "line": 2937,
               "character": 8
             },
             "end": {
-              "line": 2891,
+              "line": 2937,
               "character": 24
             }
           }
@@ -4252,11 +4252,11 @@
           ],
           "range": {
             "start": {
-              "line": 2958,
+              "line": 3004,
               "character": 8
             },
             "end": {
-              "line": 2958,
+              "line": 3004,
               "character": 26
             }
           }
@@ -4274,11 +4274,11 @@
           ],
           "range": {
             "start": {
-              "line": 3005,
+              "line": 3051,
               "character": 8
             },
             "end": {
-              "line": 3005,
+              "line": 3051,
               "character": 26
             }
           }
@@ -4296,11 +4296,11 @@
           ],
           "range": {
             "start": {
-              "line": 3072,
+              "line": 3118,
               "character": 8
             },
             "end": {
-              "line": 3072,
+              "line": 3118,
               "character": 23
             }
           }
@@ -4318,11 +4318,11 @@
           ],
           "range": {
             "start": {
-              "line": 3137,
+              "line": 3183,
               "character": 8
             },
             "end": {
-              "line": 3137,
+              "line": 3183,
               "character": 25
             }
           }
@@ -4340,11 +4340,11 @@
           ],
           "range": {
             "start": {
-              "line": 3218,
+              "line": 3264,
               "character": 8
             },
             "end": {
-              "line": 3218,
+              "line": 3264,
               "character": 25
             }
           }
@@ -4362,11 +4362,11 @@
           ],
           "range": {
             "start": {
-              "line": 3293,
+              "line": 3339,
               "character": 8
             },
             "end": {
-              "line": 3293,
+              "line": 3339,
               "character": 25
             }
           }
@@ -4384,11 +4384,11 @@
           ],
           "range": {
             "start": {
-              "line": 3371,
+              "line": 3417,
               "character": 8
             },
             "end": {
-              "line": 3371,
+              "line": 3417,
               "character": 25
             }
           }
@@ -4406,11 +4406,11 @@
           ],
           "range": {
             "start": {
-              "line": 3451,
+              "line": 3497,
               "character": 8
             },
             "end": {
-              "line": 3451,
+              "line": 3497,
               "character": 23
             }
           }
@@ -4428,11 +4428,11 @@
           ],
           "range": {
             "start": {
-              "line": 3517,
+              "line": 3563,
               "character": 8
             },
             "end": {
-              "line": 3517,
+              "line": 3563,
               "character": 23
             }
           }
@@ -4450,11 +4450,11 @@
           ],
           "range": {
             "start": {
-              "line": 3598,
+              "line": 3644,
               "character": 8
             },
             "end": {
-              "line": 3598,
+              "line": 3644,
               "character": 23
             }
           }
@@ -4472,11 +4472,11 @@
           ],
           "range": {
             "start": {
-              "line": 3688,
+              "line": 3734,
               "character": 8
             },
             "end": {
-              "line": 3688,
+              "line": 3734,
               "character": 24
             }
           }
@@ -4494,11 +4494,11 @@
           ],
           "range": {
             "start": {
-              "line": 3757,
+              "line": 3803,
               "character": 8
             },
             "end": {
-              "line": 3757,
+              "line": 3803,
               "character": 24
             }
           }
@@ -4516,11 +4516,11 @@
           ],
           "range": {
             "start": {
-              "line": 3817,
+              "line": 3863,
               "character": 8
             },
             "end": {
-              "line": 3817,
+              "line": 3863,
               "character": 23
             }
           }
@@ -4538,11 +4538,11 @@
           ],
           "range": {
             "start": {
-              "line": 3900,
+              "line": 3946,
               "character": 8
             },
             "end": {
-              "line": 3900,
+              "line": 3946,
               "character": 23
             }
           }
@@ -4560,11 +4560,11 @@
           ],
           "range": {
             "start": {
-              "line": 3983,
+              "line": 4029,
               "character": 8
             },
             "end": {
-              "line": 3983,
+              "line": 4029,
               "character": 23
             }
           }
@@ -4582,11 +4582,11 @@
           ],
           "range": {
             "start": {
-              "line": 4080,
+              "line": 4126,
               "character": 8
             },
             "end": {
-              "line": 4080,
+              "line": 4126,
               "character": 24
             }
           }
@@ -4596,7 +4596,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 1960
+        "duration_ms": 2692
       }
     },
     {
@@ -5281,7 +5281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1766
+        "duration_ms": 1841
       }
     },
     {
@@ -5305,7 +5305,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1741
+        "duration_ms": 3152
       }
     },
     {
@@ -5325,7 +5325,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 7
       }
     },
     {
@@ -5365,7 +5365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1897
+        "duration_ms": 2273
       }
     },
     {
@@ -5408,7 +5408,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 63
       }
     },
     {
@@ -5430,7 +5430,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1832
+        "duration_ms": 1448
       }
     },
     {
@@ -5486,7 +5486,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 66
       }
     },
     {
@@ -5506,7 +5506,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 4
       }
     },
     {
@@ -5587,7 +5587,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 209
+        "duration_ms": 353
       }
     },
     {
@@ -5607,7 +5607,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42911
+        "duration_ms": 43531
       }
     },
     {
@@ -5643,7 +5643,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 14
       }
     },
     {
@@ -5663,7 +5663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 23
       }
     },
     {
@@ -5741,7 +5741,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 12
       }
     },
     {
@@ -5819,21 +5819,19 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
-        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
-        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/src/identity_access/schemas.py",
+        "/home/davis/HB-TRACK/src/users/schemas.py",
+        "/home/davis/HB-TRACK/src/video/schemas.py",
+        "/home/davis/HB-TRACK/scripts/hb",
         "/home/davis/HB-TRACK/generated/manifests"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
-        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
-        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/src/identity_access/schemas.py",
+        "/home/davis/HB-TRACK/src/users/schemas.py",
+        "/home/davis/HB-TRACK/src/video/schemas.py",
+        "/home/davis/HB-TRACK/scripts/hb",
         "/home/davis/HB-TRACK/generated/manifests"
       ],
       "evidence_files": [],
@@ -5842,7 +5840,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 12
       }
     },
     {
@@ -5864,7 +5862,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 212
+        "duration_ms": 187
       }
     },
     {
@@ -5908,7 +5906,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 25
       }
     },
     {
@@ -6273,7 +6271,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1083
+        "duration_ms": 1002
       }
     },
     {
@@ -6298,7 +6296,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 16
       }
     },
     {
@@ -6320,7 +6318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 18
       }
     },
     {
@@ -6359,7 +6357,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 32
+        "duration_ms": 30
       }
     },
     {
@@ -6382,7 +6380,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 12
       }
     },
     {
@@ -6403,7 +6401,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 31
       }
     },
     {
@@ -6473,7 +6471,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 31
       }
     },
     {
@@ -6573,7 +6571,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 3
       }
     },
     {
@@ -6591,7 +6589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 32
+        "duration_ms": 4
       }
     },
     {
@@ -6609,7 +6607,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -6635,7 +6633,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 50
+        "duration_ms": 40
       }
     },
     {
@@ -6657,7 +6655,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 60
       }
     },
     {
@@ -6679,7 +6677,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 9
       }
     },
     {

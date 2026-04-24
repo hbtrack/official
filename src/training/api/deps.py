@@ -10,11 +10,44 @@ from __future__ import annotations
 import os
 import uuid
 
+from ninja import Router
 from ninja.errors import HttpError
 
 from ..application.common.access import AccessContext
 from ..application.common.paging import CursorCodec
 from ..domain.rules import RoleLabel
+
+
+# ---------------------------------------------------------------------------
+# CamelRouter — defaults by_alias=True em todas as operações HTTP
+# ---------------------------------------------------------------------------
+
+class CamelRouter(Router):
+    """Subclasse de Router que injeta by_alias=True em todos os endpoints.
+
+    Isso faz com que os schemas com alias_generator=to_camel emitam chaves
+    camelCase na resposta JSON, alinhado ao contrato OpenAPI.
+    """
+
+    def get(self, path, **kwargs):
+        kwargs.setdefault("by_alias", True)
+        return super().get(path, **kwargs)
+
+    def post(self, path, **kwargs):
+        kwargs.setdefault("by_alias", True)
+        return super().post(path, **kwargs)
+
+    def patch(self, path, **kwargs):
+        kwargs.setdefault("by_alias", True)
+        return super().patch(path, **kwargs)
+
+    def put(self, path, **kwargs):
+        kwargs.setdefault("by_alias", True)
+        return super().put(path, **kwargs)
+
+    def delete(self, path, **kwargs):
+        kwargs.setdefault("by_alias", True)
+        return super().delete(path, **kwargs)
 
 
 def _get_actor_role(request) -> RoleLabel:

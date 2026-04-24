@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -12,6 +16,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class AthleteIneligibilityDeclarationOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     athlete_id: uuid.UUID
@@ -24,6 +29,7 @@ class AthleteIneligibilityDeclarationOut(Schema):
 
 
 class SubmitIneligibilityDeclarationIn(Schema):
+    model_config = _CAMEL
     athlete_id: uuid.UUID
     reason_flags: List[str]
     reason_other: Optional[str] = None

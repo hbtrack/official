@@ -5,7 +5,10 @@ from datetime import datetime
 from typing import Annotated, List, Optional
 
 from ninja import Schema
-from pydantic import Field
+from pydantic import ConfigDict, Field
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # SmallIntegerField range; domain rule: >= 1
@@ -19,6 +22,7 @@ _PlannedCount = Annotated[int, Field(ge=0, le=32767)]
 # ---------------------------------------------------------------------------
 
 class MesocycleOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     organization_id: uuid.UUID
     name: str
@@ -33,10 +37,12 @@ class MesocycleOut(Schema):
 
 
 class MesocycleListOut(Schema):
+    model_config = _CAMEL
     items: List[MesocycleOut]
 
 
 class CreateMesocycleIn(Schema):
+    model_config = _CAMEL
     organization_id: uuid.UUID
     name: str
     started_at: datetime
@@ -48,6 +54,7 @@ class CreateMesocycleIn(Schema):
 
 
 class UpdateMesocycleIn(Schema):
+    model_config = _CAMEL
     name: Optional[str] = None
     started_at: Optional[datetime] = None
     ended_at: Optional[datetime] = None
@@ -62,6 +69,7 @@ class UpdateMesocycleIn(Schema):
 # ---------------------------------------------------------------------------
 
 class MicrocycleOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     organization_id: uuid.UUID
     mesocycle_id: uuid.UUID
@@ -78,10 +86,12 @@ class MicrocycleOut(Schema):
 
 
 class MicrocycleListOut(Schema):
+    model_config = _CAMEL
     items: List[MicrocycleOut]
 
 
 class CreateMicrocycleIn(Schema):
+    model_config = _CAMEL
     organization_id: uuid.UUID
     mesocycle_id: uuid.UUID
     week_number: _WeekNumber
@@ -95,6 +105,7 @@ class CreateMicrocycleIn(Schema):
 
 
 class UpdateMicrocycleIn(Schema):
+    model_config = _CAMEL
     week_number: Optional[_WeekNumber] = None
     started_at: Optional[datetime] = None
     ended_at: Optional[datetime] = None

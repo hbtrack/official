@@ -15,6 +15,8 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
+from pydantic import Field
+from shared.middleware import get_current_flow_id as _get_flow_id
 
 # ── Enums (alinhados com contracts/schemas/video/) ────────────────────────────
 
@@ -170,3 +172,4 @@ class ProblemOut(Schema):
     title: str
     status: int
     detail: Optional[str] = None
+    traceId: str = Field(default_factory=_get_flow_id)

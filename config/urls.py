@@ -3,11 +3,14 @@ URL configuration — HB Track
 Monta os routers Django Ninja de cada módulo.
 """
 import json
+import uuid
 
 from django.http import HttpResponse
 from django.urls import path
 from ninja import NinjaAPI
 from ninja.errors import HttpError, ValidationError as NinjaValidationError
+
+from shared.middleware import get_current_flow_id
 
 from video.api import router as video_router
 from identity_access.api import router as identity_access_router
@@ -50,10 +53,12 @@ _HTTP_STATUS_TITLES: dict[int, str] = {
 
 def _problem_response(status: int, detail: str) -> HttpResponse:
     title = _HTTP_STATUS_TITLES.get(status, "Error")
+    flow_id = get_current_flow_id()
     body = json.dumps({
-        "type": "about:blank",
+        "type": f"https://hbtrack.app/errors/{status}",
         "title": title,
         "status": status,
+        "traceId": flow_id,
         "detail": detail,
     })
     return HttpResponse(body, content_type="application/problem+json", status=status)

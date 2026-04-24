@@ -14,6 +14,8 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
+from pydantic import Field
+from shared.middleware import get_current_flow_id as _get_flow_id
 
 UUID_PATTERN = r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 
@@ -73,3 +75,4 @@ class ProblemOut(Schema):
     title: str
     status: int
     detail: Optional[str] = None
+    traceId: str = Field(default_factory=_get_flow_id)

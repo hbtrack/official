@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -12,6 +16,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class ExecutionRecordOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     execution_type: str
@@ -30,10 +35,12 @@ class ExecutionRecordOut(Schema):
 
 
 class ExecutionRecordListOut(Schema):
+    model_config = _CAMEL
     data: List[ExecutionRecordOut]
 
 
 class CreateExecutionRecordIn(Schema):
+    model_config = _CAMEL
     execution_type: str
     recorded_at: datetime
     block_id: Optional[uuid.UUID] = None
@@ -51,6 +58,7 @@ class CreateExecutionRecordIn(Schema):
 # ---------------------------------------------------------------------------
 
 class SessionObjectiveOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     origin: str
@@ -63,10 +71,12 @@ class SessionObjectiveOut(Schema):
 
 
 class SessionObjectiveListOut(Schema):
+    model_config = _CAMEL
     data: List[SessionObjectiveOut]
 
 
 class CreateSessionObjectiveIn(Schema):
+    model_config = _CAMEL
     origin: str
     objective_type: str
     description: str
@@ -79,6 +89,7 @@ class CreateSessionObjectiveIn(Schema):
 # ---------------------------------------------------------------------------
 
 class LoadChartEntryOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     recorded_at: datetime
     planned_value: Optional[float] = None
@@ -89,6 +100,7 @@ class LoadChartEntryOut(Schema):
 
 
 class LoadChartOut(Schema):
+    model_config = _CAMEL
     session_id: uuid.UUID
     planned_load: Optional[int] = None
     actual_load_recorded: Optional[int] = None

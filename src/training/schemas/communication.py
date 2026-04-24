@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -12,6 +16,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class FeedbackThreadOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     context_type: str
@@ -28,10 +33,12 @@ class FeedbackThreadOut(Schema):
 
 
 class FeedbackThreadListOut(Schema):
+    model_config = _CAMEL
     data: List[FeedbackThreadOut]
 
 
 class CreateFeedbackThreadIn(Schema):
+    model_config = _CAMEL
     context_type: str
     context_ref_id: uuid.UUID
     conversation_outcome: str
@@ -43,6 +50,7 @@ class CreateFeedbackThreadIn(Schema):
 
 
 class CloseFeedbackThreadIn(Schema):
+    model_config = _CAMEL
     resolution_summary: str
 
 
@@ -51,6 +59,7 @@ class CloseFeedbackThreadIn(Schema):
 # ---------------------------------------------------------------------------
 
 class AttentionQueueItemOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     severity: str
@@ -64,18 +73,22 @@ class AttentionQueueItemOut(Schema):
 
 
 class AttentionQueueListOut(Schema):
+    model_config = _CAMEL
     data: List[AttentionQueueItemOut]
 
 
 class ResolveAttentionQueueItemIn(Schema):
+    model_config = _CAMEL
     resolution_evidence: str
 
 
 class DismissAttentionQueueItemIn(Schema):
+    model_config = _CAMEL
     dismissal_reason: str
 
 
 class EscalateAttentionQueueItemIn(Schema):
+    model_config = _CAMEL
     escalation_target: str
     escalation_note: str
 
@@ -85,6 +98,7 @@ class EscalateAttentionQueueItemIn(Schema):
 # ---------------------------------------------------------------------------
 
 class RecommendationOut(Schema):
+    model_config = _CAMEL
     id: uuid.UUID
     session_id: uuid.UUID
     generated_by_rule: str
@@ -102,14 +116,17 @@ class RecommendationOut(Schema):
 
 
 class RecommendationListOut(Schema):
+    model_config = _CAMEL
     data: List[RecommendationOut]
 
 
 class AcceptRecommendationIn(Schema):
+    model_config = _CAMEL
     coach_note: Optional[str] = None
 
 
 class DismissRecommendationIn(Schema):
+    model_config = _CAMEL
     dismissal_reason: str
 
 
@@ -118,6 +135,7 @@ class DismissRecommendationIn(Schema):
 # ---------------------------------------------------------------------------
 
 class SubmitTrainingSuggestionIn(Schema):
+    model_config = _CAMEL
     athlete_id: uuid.UUID
     subject: str
     body: str

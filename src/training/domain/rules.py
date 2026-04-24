@@ -112,6 +112,14 @@ class ElasticSumRuleViolation(ValidationError):
     """INV-TRAIN-083: soma de duração dos blocos excede limite elástico."""
 
 
+class PublishPreconditionViolated(PreconditionError):
+    """INV-TRAIN-086: precondições de publicação não satisfeitas."""
+
+
+class SchedulePreconditionViolated(PreconditionError):
+    """DR-TRAIN-011: session_at obrigatório para agendamento."""
+
+
 # ---------------------------------------------------------------------------
 # Exceções de conflito de estado — preservam ValueError para compat com
 # consumidores legados que fazem `except ValueError`.
@@ -136,12 +144,10 @@ class SuggestionStateConflict(ConflictError, ValueError):
 VALID_TRANSITIONS: dict[TrainingSessionStatus, set[TrainingSessionStatus]] = {
     TrainingSessionStatus.DRAFT: {
         TrainingSessionStatus.SCHEDULED,
-        TrainingSessionStatus.PUBLISHED,
         TrainingSessionStatus.CANCELLED,
     },
     TrainingSessionStatus.SCHEDULED: {
         TrainingSessionStatus.PUBLISHED,
-        TrainingSessionStatus.IN_PROGRESS,
         TrainingSessionStatus.CANCELLED,
     },
     TrainingSessionStatus.PUBLISHED: {
@@ -175,6 +181,27 @@ def assert_valid_transition(
     if target not in VALID_TRANSITIONS.get(current, set()):
         raise InvalidStatusTransition(
             f"INV-TRAIN-006: transição {current} → {target} é inválida"
+        )
+
+
+def assert_publish_preconditions(session) -> None:
+    """INV-TRAIN-086: individualizationMode e sessionAt obrigatórios para publicação."""
+    errors: list[str] = []
+    if not session.individualization_mode:
+        errors.append("individualizationMode ausente")
+    if not session.session_at:
+        errors.append("sessionAt ausente")
+    if errors:
+        raise PublishPreconditionViolated(
+            f"INV-TRAIN-086: {'; '.join(errors)}"
+        )
+
+
+def assert_schedule_preconditions(session) -> None:
+    """DR-TRAIN-011: session_at obrigatório para SCHEDULED."""
+    if not session.session_at:
+        raise SchedulePreconditionViolated(
+            "DR-TRAIN-011: session_at obrigatório para agendamento"
         )
 
 

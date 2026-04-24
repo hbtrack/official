@@ -16,6 +16,7 @@ from typing import Optional
 
 from django.db import DataError, IntegrityError
 from ninja import Router
+from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
@@ -32,7 +33,7 @@ from ..application.use_cases import (
 from ..schemas import (
     CreateMesocycleIn,
     CreateMicrocycleIn,
-    ErrorOut,
+    ProblemOut,
     MesocycleListOut,
     MesocycleOut,
     MicrocycleListOut,
@@ -44,14 +45,14 @@ from .deps import _get_actor_role
 from .errors import map_exceptions
 from .mappers import _mesocycle_to_out, _microcycle_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 # ---------------------------------------------------------------------------
 # Mesocycles
 # ---------------------------------------------------------------------------
 
-@router.get("/mesocycles", response={200: MesocycleListOut, 403: ErrorOut})
+@router.get("/mesocycles", response={200: MesocycleListOut, 403: ProblemOut})
 @map_exceptions
 def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
     svc = TrainingServices()
@@ -61,7 +62,7 @@ def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
     return 200, MesocycleListOut(items=[_mesocycle_to_out(m) for m in items])
 
 
-@router.post("/mesocycles", response={201: MesocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
+@router.post("/mesocycles", response={201: MesocycleOut, 401: ProblemOut, 403: ProblemOut, 422: ProblemOut})
 @map_exceptions
 def create_mesocycle(request, body: CreateMesocycleIn):
     svc = TrainingServices()
@@ -81,7 +82,7 @@ def create_mesocycle(request, body: CreateMesocycleIn):
     return 201, _mesocycle_to_out(meso)
 
 
-@router.get("/mesocycles/{id}", response={200: MesocycleOut, 404: ErrorOut})
+@router.get("/mesocycles/{id}", response={200: MesocycleOut, 404: ProblemOut})
 @map_exceptions
 def get_mesocycle(request, id: uuid.UUID):
     svc = TrainingServices()
@@ -89,7 +90,7 @@ def get_mesocycle(request, id: uuid.UUID):
     return 200, _mesocycle_to_out(meso)
 
 
-@router.patch("/mesocycles/{id}", response={200: MesocycleOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.patch("/mesocycles/{id}", response={200: MesocycleOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut})
 @map_exceptions
 def update_mesocycle(request, id: uuid.UUID, body: UpdateMesocycleIn):
     svc = TrainingServices()
@@ -113,7 +114,7 @@ def update_mesocycle(request, id: uuid.UUID, body: UpdateMesocycleIn):
 # Microcycles
 # ---------------------------------------------------------------------------
 
-@router.get("/microcycles", response={200: MicrocycleListOut, 403: ErrorOut})
+@router.get("/microcycles", response={200: MicrocycleListOut, 403: ProblemOut})
 @map_exceptions
 def list_microcycles(
     request,
@@ -131,7 +132,7 @@ def list_microcycles(
 
 
 @router.post(
-    "/microcycles", response={201: MicrocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut}
+    "/microcycles", response={201: MicrocycleOut, 401: ProblemOut, 403: ProblemOut, 422: ProblemOut}
 )
 @map_exceptions
 def create_microcycle(request, body: CreateMicrocycleIn):
@@ -154,7 +155,7 @@ def create_microcycle(request, body: CreateMicrocycleIn):
     return 201, _microcycle_to_out(micro)
 
 
-@router.get("/microcycles/{id}", response={200: MicrocycleOut, 404: ErrorOut})
+@router.get("/microcycles/{id}", response={200: MicrocycleOut, 404: ProblemOut})
 @map_exceptions
 def get_microcycle(request, id: uuid.UUID):
     svc = TrainingServices()
@@ -163,7 +164,7 @@ def get_microcycle(request, id: uuid.UUID):
 
 
 @router.patch(
-    "/microcycles/{id}", response={200: MicrocycleOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut}
+    "/microcycles/{id}", response={200: MicrocycleOut, 403: ProblemOut, 404: ProblemOut, 422: ProblemOut}
 )
 @map_exceptions
 def update_microcycle(request, id: uuid.UUID, body: UpdateMicrocycleIn):

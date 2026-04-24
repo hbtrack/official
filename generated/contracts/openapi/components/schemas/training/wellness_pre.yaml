@@ -43,6 +43,38 @@ properties:
     description: >
       Self-reported hours of sleep. Domain [0, 24].
       SS-TRAIN-006. Enforced by INV-TRAIN-033.
+  readiness:
+    type: [integer, "null"]
+    minimum: 1
+    maximum: 5
+    description: >
+      Perceived readiness scale 1–5: 1=very poor, 5=excellent.
+      Hooper Index component. Optional field.
+  mood:
+    type: [integer, "null"]
+    minimum: 1
+    maximum: 5
+    description: >
+      Mood scale 1–5: 1=very poor, 5=excellent.
+      Hooper Index component. Optional field.
+  fatigue:
+    type: [integer, "null"]
+    minimum: 1
+    maximum: 5
+    description: >
+      Fatigue scale 1–5: 1=very low, 5=extreme.
+      Hooper Index component. Optional field.
+  muscleSoreness:
+    type: [integer, "null"]
+    minimum: 1
+    maximum: 5
+    description: >
+      Muscle soreness scale 1–5: 1=none, 5=extreme.
+      Hooper Index component. Optional field.
+  notes:
+    type: [string, "null"]
+    description: >
+      Free-text observations from the athlete. Optional field.
   createdAt:
     type: string
     format: date-time

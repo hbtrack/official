@@ -55,6 +55,8 @@ _EXCEPTION_STATUS_MAP: dict[str, int] = {
     "InvalidStatusTransition": 422,
     "SessionNotMutable": 422,
     "ElasticSumRuleViolation": 422,
+    "PublishPreconditionViolated": 422,
+    "SchedulePreconditionViolated": 422,
     # 400 — Bad Request
     "WellnessWindowClosed": 400,
 }

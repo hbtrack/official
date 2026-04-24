@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import Schema
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
+
+_CAMEL = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 # ---------------------------------------------------------------------------
@@ -12,6 +16,7 @@ from ninja import Schema
 # ---------------------------------------------------------------------------
 
 class AttendanceRecordOut(Schema):
+    model_config = _CAMEL
     athlete_id: uuid.UUID
     status: str
     recorded_at: datetime
@@ -22,10 +27,12 @@ class AttendanceRecordOut(Schema):
 
 
 class AttendanceListOut(Schema):
+    model_config = _CAMEL
     items: List[AttendanceRecordOut]
 
 
 class RecordSessionAttendanceIn(Schema):
+    model_config = _CAMEL
     athlete_id: uuid.UUID
     status: str
     source: str = "coach_input"

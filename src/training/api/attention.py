@@ -11,6 +11,7 @@ import uuid
 from typing import Optional
 
 from ninja import Router
+from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
 from ..application.use_cases import (
@@ -23,7 +24,7 @@ from ..schemas import (
     AttentionQueueItemOut,
     AttentionQueueListOut,
     DismissAttentionQueueItemIn,
-    ErrorOut,
+    ProblemOut,
     EscalateAttentionQueueItemIn,
     ResolveAttentionQueueItemIn,
 )
@@ -31,12 +32,12 @@ from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _attention_queue_item_to_out
 
-router = Router()
+router = CamelRouter()
 
 
 @router.get(
     "/training-sessions/{id}/attention-queue",
-    response={200: AttentionQueueListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: AttentionQueueListOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_attention_queue_items(
@@ -59,7 +60,7 @@ def list_attention_queue_items(
 
 @router.post(
     "/training-sessions/{id}/attention-queue/{item_id}/resolve",
-    response={200: AttentionQueueItemOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: AttentionQueueItemOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def resolve_attention_queue_item(
@@ -80,7 +81,7 @@ def resolve_attention_queue_item(
 
 @router.post(
     "/training-sessions/{id}/attention-queue/{item_id}/dismiss",
-    response={200: AttentionQueueItemOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: AttentionQueueItemOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def dismiss_attention_queue_item(
@@ -101,7 +102,7 @@ def dismiss_attention_queue_item(
 
 @router.post(
     "/training-sessions/{id}/attention-queue/{item_id}/escalate",
-    response={200: AttentionQueueItemOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={200: AttentionQueueItemOut, 400: ProblemOut, 403: ProblemOut, 404: ProblemOut, 409: ProblemOut},
 )
 @map_exceptions
 def escalate_attention_queue_item(

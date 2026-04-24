@@ -19,8 +19,15 @@ class TestTrainingSessionFSM:
     def test_draft_to_scheduled_valid(self):
         assert_valid_transition(TrainingSessionStatus.DRAFT, TrainingSessionStatus.SCHEDULED)
 
-    def test_draft_to_published_valid(self):
-        assert_valid_transition(TrainingSessionStatus.DRAFT, TrainingSessionStatus.PUBLISHED)
+    def test_draft_to_published_invalid(self):
+        """DRAFT → PUBLISHED é proibido por STATE_MODEL_TRAINING.md linha 96."""
+        with pytest.raises(InvalidStatusTransition, match="INV-TRAIN-006"):
+            assert_valid_transition(TrainingSessionStatus.DRAFT, TrainingSessionStatus.PUBLISHED)
+
+    def test_scheduled_to_in_progress_invalid(self):
+        """SCHEDULED → IN_PROGRESS é proibido por STATE_MODEL_TRAINING.md linha 100."""
+        with pytest.raises(InvalidStatusTransition, match="INV-TRAIN-006"):
+            assert_valid_transition(TrainingSessionStatus.SCHEDULED, TrainingSessionStatus.IN_PROGRESS)
 
     def test_draft_to_completed_invalid(self):
         with pytest.raises(InvalidStatusTransition, match="INV-TRAIN-006"):
