@@ -1,12 +1,7 @@
 {
-  "generated_at": "2026-04-22T10:27:23.148975+00:00",
+  "generated_at": "2026-04-22T18:21:19.943191+00:00",
   "branch_target": "main",
-  "diff_classes": [
-    "governance_changed",
-    "session_contract_changed",
-    "frontend_changed",
-    "schema_changed"
-  ],
+  "diff_classes": [],
   "checks_run": [
     {
       "step": "survival_suite",
@@ -34,54 +29,28 @@
     {
       "context": "ci / Validate Contracts",
       "category": "required",
-      "result": "PASS",
-      "exit_code": 0
+      "result": "FAIL",
+      "exit_code": 2
     },
     {
       "context": "ci / Tests",
       "category": "required",
       "result": "FAIL",
-      "exit_code": 2
+      "exit_code": 1
     },
     {
       "context": "ci / Frontend Build + Tests",
       "category": "required",
       "result": "PASS",
       "exit_code": 0
-    },
-    {
-      "context": "Governance Enforcement (survival-suite)",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
-    },
-    {
-      "context": "Paridade Registry × Executor",
-      "category": "conditional",
-      "result": "FAIL",
-      "exit_code": 1
-    },
-    {
-      "context": "Paridade Schema × Template × Skills",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
-    },
-    {
-      "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
     }
   ],
   "checks_failed": [
     "Validate Contract Gates",
-    "ci / Tests",
-    "Paridade Registry × Executor"
+    "ci / Validate Contracts",
+    "ci / Tests"
   ],
-  "missing_evidence": [
-    "handoff_scope_expansion"
-  ],
+  "missing_evidence": [],
   "semantic_findings": [
     {
       "when": "schema_field_removed",
@@ -109,7 +78,7 @@
     },
     {
       "when": "diff_outside_handoff_scope",
-      "triggered": true,
+      "triggered": false,
       "block_if_missing": true,
       "require": [
         "handoff_scope_expansion"
@@ -125,14 +94,14 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 434,
+    "changed_files": 10,
     "max_changed_files": 150,
-    "commits": 13,
+    "commits": 0,
     "max_commits": 20,
-    "cross_domain_areas": 16,
+    "cross_domain_areas": 0,
     "max_cross_domain_areas": 3,
-    "exceeded": true,
-    "split_required": true
+    "exceeded": false,
+    "split_required": false
   },
   "final_decision": "BLOCK"
 }
