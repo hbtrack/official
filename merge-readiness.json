@@ -35,7 +35,7 @@
       "workflow": "_reusable-ci.yml",
       "job": "validate",
       "category": "required",
-      "local_equivalent": "python3 scripts/hb validate --profile precommit",
+      "local_equivalent": "python3 scripts/hb validate --profile ci",
       "local_equivalent_kind": "exact_job"
     },
     {

@@ -7,10 +7,8 @@ from datetime import datetime, timezone
 
 import pytest
 
-from training.domain.entities import (
-    SessionObjective,
-    SessionObjectiveOrigin,
-)
+from training.domain.entities.sessions import SessionObjective
+from training.domain.common.enums import SessionObjectiveOrigin
 
 
 class TestSessionObjectiveInvariants:

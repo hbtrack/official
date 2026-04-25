@@ -16,21 +16,21 @@ from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.blocks.dto import (
     AddSessionBlockInput,
     DeleteSessionBlockInput,
     ListSessionBlocksInput,
     ReorderSessionBlocksInput,
     UpdateSessionBlockInput,
 )
-from ..schemas import (
+from ..schemas.blocks import (
     AddSessionBlockIn,
-    ProblemOut,
     ReorderSessionBlocksIn,
     SessionBlockListOut,
     SessionBlockOut,
     UpdateSessionBlockIn,
 )
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _block_to_out

@@ -4,7 +4,7 @@ Fonte: STATE_MODEL_TRAINING.md + ADR-017 + INV-TRAIN-006 + INV-TRAIN-017.
 """
 import pytest
 
-from training.domain.entities import TrainingSessionStatus
+from training.domain.common.enums import TrainingSessionStatus
 from training.domain.rules import (
     InvalidStatusTransition,
     SessionNotMutable,

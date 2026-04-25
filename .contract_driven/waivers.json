@@ -1,0 +1,13 @@
+{
+  "waivers": [
+    {
+      "waiver_id": "REM-4D-N/A",
+      "item": "REM-4D",
+      "title": "Import condicional de generated/ — fechado como N/A",
+      "reason": "ADR-032 exige imports incondicionais de generated/. O arquivo generated/infrastructure/repository.py já usa import incondicional. O risco de import condicional é teórico: generated/ está sempre presente em ambientes válidos (dev, CI, staging, prod). Não há base prática para tratamento de ausência.",
+      "approved_by": "arquitetura",
+      "date": "2026-04-24",
+      "status": "N/A"
+    }
+  ]
+}

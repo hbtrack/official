@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.1.0"
-last_reviewed: "2026-04-24"
+version: "1.1.1"
+last_reviewed: "2026-04-25"
 status: active
 state_semantics: current-state
 ---
@@ -114,6 +114,16 @@ Cada módulo possui as camadas: `Interface/API → Application → Domain → In
 | `docker-compose.prod.yml` / staging | **materializado** | `infra/docker-compose.staging.yml` existe |
 | `nginx.conf` | **materializado** | `infra/nginx.conf`, `infra/nginx.production.conf`, `infra/nginx.staging.conf` e variantes |
 | Endpoint `GET /health` | **materializado** | `config/urls.py:144` — `path("health", health_check)` |
+
+### 4.1 Governança executável e enforcement — o que existe
+
+| Item | Estado | Evidência |
+|------|--------|-----------|
+| Executor canônico de contract gates com relatório machine-readable | **materializado** | `scripts/contracts/validate/validate_contracts.py`, `_reports/contract_gates/latest.json` |
+| Gates de factualidade arquitetural, efetividade de hooks, paridade live e veracidade de relatório | **materializados** | `scripts/contracts/validate/validate_contracts.py`, `tests/pipeline_gates/test_architecture_factuality_gate.py`, `tests/pipeline_gates/test_hook_effectiveness.py`, `tests/pipeline_gates/test_live_ruleset_parity.py`, `tests/pipeline_gates/test_report_truthfulness.py` |
+| Snapshot versionado do ruleset e merge policy gerada | **materializado** | `.github/rulesets/contract-gates.snapshot.json`, `.github/merge-policy.md`, `scripts/audit/generate_merge_policy.py`, `merge-readiness.json` |
+| Hooks locais de enforcement e advisory de sessão | **materializados** | `scripts/hooks/check_backend_gate.py`, `scripts/hooks/check_session_commit.py`, `scripts/hooks/advisory_session_commit.py`, `.claude/settings.local.json` |
+| Indicadores operacionais de saúde do pipeline | **materializados** | `_reports/pipeline_health.json`, `_reports/READINESS_DASHBOARD.md` |
 
 ---
 

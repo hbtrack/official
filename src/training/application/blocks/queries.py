@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from ...domain.entities import SessionBlock
+from ...domain.entities.blocks import SessionBlock
 from ...domain.rules import (
     SessionBlockNotFound,
     TrainingSessionNotFound,
     assert_can_read_session,
 )
-from ...infrastructure.repository import SessionBlockRepository, TrainingSessionRepository
+from ...infrastructure.repository.blocks import SessionBlockRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import GetSessionBlockInput, ListSessionBlocksInput
 
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import WellnessPost, WellnessPre
-from ..models import WellnessPostModel, WellnessPreModel
+from ...domain.entities.wellness import WellnessPost, WellnessPre
+from ..models.wellness import WellnessPostModel, WellnessPreModel
 
 
 class WellnessPreRepository:

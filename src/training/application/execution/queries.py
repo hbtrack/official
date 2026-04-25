@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from ...domain.entities import ExecutionRecord, SessionObjective
+from ...domain.entities.execution import ExecutionRecord
+from ...domain.entities.sessions import SessionObjective
 from ...domain.rules import (
     ExecutionRecordNotFound,
     TrainingSessionNotFound,
     assert_can_read_session,
 )
-from ...infrastructure.repository import (
-    ExecutionRecordRepository,
-    SessionObjectiveRepository,
-    TrainingSessionRepository,
-)
+from ...infrastructure.repository.execution import ExecutionRecordRepository
+from ...infrastructure.repository.sessions import SessionObjectiveRepository, TrainingSessionRepository
 from .dto import GetExecutionRecordInput, ListExecutionRecordsInput, ListSessionObjectivesInput
 
 

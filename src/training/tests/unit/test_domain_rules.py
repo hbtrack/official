@@ -8,13 +8,9 @@ from decimal import Decimal
 
 import pytest
 
-from training.domain.entities import (
-    IndividualizationMode,
-    Mesocycle,
-    Microcycle,
-    TrainingSessionStatus,
-    WellnessPost,
-)
+from training.domain.common.enums import IndividualizationMode, TrainingSessionStatus
+from training.domain.entities.planning import Mesocycle, Microcycle
+from training.domain.entities.wellness import WellnessPost
 from training.domain.rules import (
     InsufficientPrivilege,
     RoleLabel,

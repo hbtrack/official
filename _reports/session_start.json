@@ -1,6 +1,6 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-24T13:19:25.529801+00:00",
+  "session_timestamp": "2026-04-25T10:05:47.154255+00:00",
   "branch": "feat/c4-architecture-reality-alignment",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
@@ -22,7 +22,7 @@
     "worker_frontmatter_matches_catalog": true,
     "authority_source_used": "TASK_CATALOG"
   },
-  "stage0_exit_code": 0,
+  "stage0_exit_code": 2,
   "stage2_artifacts": [
     {
       "path": "contracts/schemas/shared/merge-readiness.schema.json",

@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 
 import pytest
 
-from training.domain.entities import Mesocycle, Microcycle
+from training.domain.entities.planning import Mesocycle, Microcycle
 
 
 class TestMesocycleRules:

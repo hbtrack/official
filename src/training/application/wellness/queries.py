@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-from ...domain.entities import WellnessPost, WellnessPre
+from ...domain.entities.wellness import WellnessPost, WellnessPre
 from ...domain.rules import (
     TrainingSessionNotFound,
     WellnessEntryNotFound,
     assert_can_view_athlete_record,
 )
-from ...infrastructure.repository import (
-    TrainingSessionRepository,
-    WellnessPostRepository,
-    WellnessPreRepository,
-)
+from ...infrastructure.repository.sessions import TrainingSessionRepository
+from ...infrastructure.repository.wellness import WellnessPostRepository, WellnessPreRepository
 from .dto import GetWellnessPostInput, GetWellnessPreInput
 
 

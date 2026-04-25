@@ -6,7 +6,8 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from ...domain.entities import TrainingSession, TrainingSessionStatus
+from ...domain.entities.sessions import TrainingSession
+from ...domain.common.enums import TrainingSessionStatus
 from ...domain.rules import RoleLabel
 from ...application.common.paging import CursorCodec  # noqa: F401 — exposto para uso externo
 
@@ -47,6 +48,7 @@ class CreateTrainingSessionInput:
     intensity_target: Optional[int] = None
     session_block: Optional[str] = None
     standalone: Optional[bool] = None
+    individualization_mode: Optional[str] = None
     focus_attack_positional_pct: Optional[Decimal] = None
     focus_defense_positional_pct: Optional[Decimal] = None
     focus_transition_offense_pct: Optional[Decimal] = None
@@ -97,6 +99,7 @@ class UpdateTrainingSessionInput:
     intensity_target: Optional[int] = None
     session_block: Optional[str] = None
     standalone: Optional[bool] = None
+    individualization_mode: Optional[str] = None
     notes: Optional[str] = None
     focus_attack_positional_pct: Optional[Decimal] = None
     focus_defense_positional_pct: Optional[Decimal] = None
@@ -109,3 +112,5 @@ class UpdateTrainingSessionInput:
     phase_focus_attack: Optional[bool] = None
     phase_focus_transition_offense: Optional[bool] = None
     phase_focus_transition_defense: Optional[bool] = None
+    deviation_justification: Optional[str] = None
+    planning_deviation_flag: Optional[bool] = None

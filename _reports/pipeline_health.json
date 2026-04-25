@@ -1,11 +1,48 @@
 {
-  "run_id": "20260424T104307_9992c5",
-  "timestamp_utc": "2026-04-24T10:43:07Z",
-  "health_score": 100,
-  "gates_total": 63,
+  "run_id": "20260425T100422_893891",
+  "timestamp_utc": "2026-04-25T10:04:22Z",
+  "health_score": 90,
+  "gates_total": 68,
   "gates_passed": 63,
-  "gates_failed": 0,
-  "blocking_fails": 0,
-  "overall_status": "PASS",
-  "exit_code": 0
+  "gates_failed": 2,
+  "gates_skipped_optional": 3,
+  "mandatory_ci_skip_count": 0,
+  "blocking_fails": 1,
+  "overall_status": "FAIL",
+  "exit_code": 2,
+  "execution_context": {
+    "profile": "ci",
+    "stage": null,
+    "canonical_scope": "full_pipeline"
+  },
+  "scores": {
+    "structural_health_score": 90,
+    "factual_health_score": 98
+  },
+  "score_inputs": {
+    "structural": {
+      "score": 90,
+      "relevant": 10,
+      "passed": 9,
+      "failed": 1,
+      "mandatory_skips": 0,
+      "optional_skips": 1
+    },
+    "factual": {
+      "score": 98,
+      "relevant": 55,
+      "passed": 54,
+      "failed": 1,
+      "mandatory_skips": 0,
+      "optional_skips": 2
+    },
+    "global": {
+      "score": 97,
+      "relevant": 65,
+      "passed": 63,
+      "failed": 2,
+      "mandatory_skips": 0,
+      "optional_skips": 3
+    }
+  }
 }

@@ -1,53 +1,49 @@
 ---
-data_ultima_sessao: "2026-04-24"
+data_ultima_sessao: "2026-04-25"
 branch_ativo: feat/c4-architecture-reality-alignment
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: architecture
 fase_roadmap: 1
 roadmap_phase: 1
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: ARCHITECTURE_REALITY_ALIGNMENT
-resultado: DONE
-proxima_acao_permitida: "criar branch feat/c4-architecture-reality-alignment e abrir PR com arquivos de backend hardening + alinhamento de docs"
+resultado: PENDENTE
+proxima_acao_permitida: "Sincronizar o estado de sessao com o escopo transversal atual, revalidar o preflight e abrir o PR para main com o diff elegivel."
 bloqueios_ativos: []
 evidence_paths:
-  - "docs/_canon/ARCHITECTURE.md"
-  - "src/notifications/tasks.py"
-  - "src/notifications/middleware.py"
-  - "src/shared/middleware.py"
-  - "src/shared/logging_formatters.py"
-  - "infra/docker-compose.staging.yml"
-  - "Dockerfile"
-  - "tests/security/test_backend_hardening.py"
+  - ".dev/HBCONTROL.md"
+  - "scripts/contracts/validate/validate_contracts.py"
+  - "scripts/audit/check_architecture_docs.py"
+  - "scripts/audit/check_live_ruleset_parity.py"
+  - "docs/_canon/RUNTIME_CURRENT_STATE.md"
+  - "docs/_canon/gates/GATES_REGISTRY.yaml"
+  - ".github/merge-policy.md"
+  - ".github/rulesets/contract-gates.snapshot.json"
+  - "tests/pipeline_gates/test_report_truthfulness.py"
 ---
-# SESSION HANDOFF — HB TRACK (ARCHITECTURE REALITY ALIGNMENT)
+# SESSION HANDOFF — HB TRACK
 
 ## O que foi feito
 
-Investigação forense das falhas de deployment na branch `main`:
-- **Run 24766628453:** falha de permissão em `/opt/hbtrack/production`; o workflow já tinha sido endurecido com guardas de owner/stat.
-- **Run 24785900356:** falha no gate de testes por execução de casos `slow`; o workflow já tinha sido ajustado para `-m "not slow"`.
-- **Run 24792649602:** falha de autenticação ao fazer pull da imagem no VPS de staging (`Error response from daemon: denied`).
-- `.github/workflows/deploy.yml` ajustado para usar `GHCR_PULL_TOKEN` e `GHCR_PULL_USERNAME` como credenciais persistentes de pull no VPS.
-- Secrets `GHCR_PULL_TOKEN` e `GHCR_PULL_USERNAME` criadas no repositório `hbtrack/official` via API do GitHub.
+- O checker arquitetural passou a validar drift bidirecional e topologia/runtime.
+- O executor ganhou gates de parity live, truthful reporting e behavioral readiness.
+- Canon, hooks, workflows, docs operacionais e testes foram alinhados ao estado real do repo.
+- A sessao passou a ter foco principal em arquitetura, com training como maior superficie funcional.
 
 ## Estado Geral
 
-| Item | Status |
-|---|---|
-| Reparo de Permissões VPS | ✅ Aplicado |
-| Reparo de Testes (not slow) | ✅ Aplicado |
-| Reparo de Autenticação GHCR | ✅ Patch aplicado |
-| Bug de Imports Generated Schemas | ✅ Corrigido no merge do PR #84 |
-| Secrets de pull GHCR no repositório | ✅ Criadas |
+- Arquitetura factual: validada
+- Hooks e relatórios: endurecidos
+- Paridade do ruleset live: implementada
+- Behavioral readiness: implementada
+- PR: em preparação
 
 ## Próxima ação permitida
 
-1. Commit e push da alteração de `.github/workflows/deploy.yml` para `main`.
-2. Monitorar o próximo run automático do deploy pipeline em staging.
-3. Se staging ficar verde, seguir para a etapa humana de aprovação de produção.
+1. Revalidar o preflight do diff elegível.
+2. Consolidar commit e abrir o PR para main.
 
 ## Bloqueios ativos
 
@@ -55,9 +51,12 @@ Nenhum.
 
 ## Evidências
 
+- python3 scripts/hb validate --profile ci
+- python3 scripts/hb preflight
+- pytest -q tests/pipeline_gates/test_session_state_phase3.py --tb=short
 
 ## Próxima sessão
 
-1. Confirmar que o commit do workflow entrou na `main`.
-2. Monitorar o pipeline de deploy na `main`.
-3. Prosseguir com a Fase 6 do Roadmap assim que staging e produção estabilizarem.
+1. Abrir e monitorar o PR contra main.
+2. Se algum check falhar no GitHub, reproduzir pelo contexto do merge-readiness.
+3. Atualizar este handoff com o número do PR e o estado final dos checks.

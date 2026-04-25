@@ -51,6 +51,7 @@ _EXCEPTION_STATUS_MAP: dict[str, int] = {
     "FeedbackThreadAlreadyClosed": 409,
     "IneligibilityStateConflict": 409,
     "SuggestionStateConflict": 409,
+    "AttendanceAlreadyRecorded": 409,
     # 422 — Unprocessable Entity
     "InvalidStatusTransition": 422,
     "SessionNotMutable": 422,

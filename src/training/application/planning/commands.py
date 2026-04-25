@@ -3,13 +3,13 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import Mesocycle, Microcycle
+from ...domain.entities.planning import Mesocycle, Microcycle
 from ...domain.rules import (
     MesocycleNotFound,
     MicrocycleNotFound,
     assert_can_modify_session,
 )
-from ...infrastructure.repository import MesocycleRepository, MicrocycleRepository
+from ...infrastructure.repository.planning import MesocycleRepository, MicrocycleRepository
 from .dto import (
     CreateMesocycleInput,
     CreateMicrocycleInput,

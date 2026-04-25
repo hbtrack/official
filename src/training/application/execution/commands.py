@@ -3,18 +3,12 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import (
-    ExecutionRecord,
-    ExecutionType,
-    SessionObjective,
-    SessionObjectiveOrigin,
-)
+from ...domain.entities.execution import ExecutionRecord
+from ...domain.entities.sessions import SessionObjective
+from ...domain.common.enums import ExecutionType, SessionObjectiveOrigin
 from ...domain.policies.session_access import SessionGuard
-from ...infrastructure.repository import (
-    ExecutionRecordRepository,
-    SessionObjectiveRepository,
-    TrainingSessionRepository,
-)
+from ...infrastructure.repository.execution import ExecutionRecordRepository
+from ...infrastructure.repository.sessions import SessionObjectiveRepository, TrainingSessionRepository
 from .dto import CreateExecutionRecordInput, CreateSessionObjectiveInput
 
 

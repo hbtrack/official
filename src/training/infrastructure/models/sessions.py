@@ -90,6 +90,13 @@ class TrainingSessionModel(models.Model):
     cancellation_reason = models.TextField(null=True, blank=True)
     actual_load_recorded = models.SmallIntegerField(null=True, blank=True)
     post_review_completed_at = models.DateTimeField(null=True, blank=True)
+    post_review_completed_by_user_id = models.UUIDField(null=True, blank=True)
+    post_review_deadline_at = models.DateTimeField(null=True, blank=True)
+    post_review_completed = models.BooleanField(null=True, blank=True)
+
+    planned_content_snapshot = models.JSONField(null=True, blank=True)
+    objective_origin = models.CharField(max_length=60, null=True, blank=True)
+    continuity_notes = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = "training_sessions"

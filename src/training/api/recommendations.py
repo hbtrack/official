@@ -13,18 +13,18 @@ from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.communication.dto import (
     AcceptRecommendationInput,
     DismissRecommendationInput,
     ListRecommendationsInput,
 )
-from ..schemas import (
+from ..schemas.communication import (
     AcceptRecommendationIn,
     DismissRecommendationIn,
-    ProblemOut,
     RecommendationListOut,
     RecommendationOut,
 )
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _recommendation_to_out

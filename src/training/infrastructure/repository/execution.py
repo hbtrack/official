@@ -4,8 +4,9 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import ExecutionRecord, ExecutionType
-from ..models import ExecutionRecordModel
+from ...domain.entities.execution import ExecutionRecord
+from ...domain.common.enums import ExecutionType
+from ..models.execution import ExecutionRecordModel
 
 
 class ExecutionRecordRepository:

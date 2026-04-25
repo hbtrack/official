@@ -135,82 +135,55 @@ def test_partial_update_gate_skips_without_sync_manifest(tmp_path):
     )
 
 
-def test_context_bundle_freshness_gate_skips_without_compiled_context(tmp_path):
-    """Gate deve retornar SKIP quando compiled_context/ não existe."""
+def test_context_bundle_freshness_gate_skips_without_compilers(tmp_path):
+    """Gate deve retornar SKIP quando os scripts de compilação não existem no root."""
     sys.path.insert(0, str(ROOT / "scripts" / "contracts" / "validate"))
     import validate_contracts as vc
 
+    # tmp_path não tem scripts/compile/ → SKIP
     result = vc._g_context_bundle_freshness(tmp_path)
     assert result["status"] == "SKIP_NOT_APPLICABLE", (
-        f"Gate deve SKIP sem compiled_context/, obteve: {result['status']}"
+        f"Gate deve SKIP sem compiler scripts, obteve: {result['status']}"
     )
 
 
-def test_context_bundle_freshness_gate_pass_when_bundles_fresh(tmp_path, monkeypatch):
-    """Gate deve PASS quando bundle .json é mais recente que source master."""
-    import time as time_module
+def test_context_bundle_freshness_gate_passes_on_real_repo():
+    """Gate deve PASS no repo real com source graphs e context bundles sincronizados.
 
-    # Remover CI do ambiente para que o gate não faça SKIP automaticamente
-    monkeypatch.delenv("CI", raising=False)
-
+    Prova que a implementação content-based funciona sem depender de mtime.
+    """
     sys.path.insert(0, str(ROOT / "scripts" / "contracts" / "validate"))
     import validate_contracts as vc
 
-    # Criar estrutura mínima: source master older, bundle newer
-    module = "training"
-    source_dir = tmp_path / "docs" / "hbtrack" / "modulos" / module / "graph"
-    source_dir.mkdir(parents=True)
-    source_master = source_dir / "module_manifest.yaml"
-    source_master.write_text("module: training\n", encoding="utf-8")
-
-    # Garantir que bundle é mais novo
-    time_module.sleep(0.01)
-
-    bundle_dir = tmp_path / "compiled_context" / module
-    bundle_dir.mkdir(parents=True)
-    (bundle_dir / "FT-001.json").write_text('{"module": "training"}', encoding="utf-8")
-
-    result = vc._g_context_bundle_freshness(tmp_path)
-    assert result["status"] in ("PASS", "FAIL"), f"Resultado inesperado: {result['status']}"
-    # Para o módulo training, bundle deve ser fresh (mais novo que source master)
-    violations = result.get("violations", [])
-    stale_for_training = [
-        v for v in violations
-        if "training" in v.get("artifact", "")
-    ]
-    assert len(stale_for_training) == 0, (
-        f"training não deve ter violações de staleness: {stale_for_training}"
+    result = vc._g_context_bundle_freshness(ROOT)
+    assert result["status"] == "PASS", (
+        f"Gate deve PASS com artefatos sincronizados no repo real. "
+        f"Violações: {result.get('violations', [])}"
     )
 
 
-def test_context_bundle_freshness_gate_fail_when_bundle_stale(tmp_path, monkeypatch):
-    """Gate deve FAIL quando source master é mais recente que bundle."""
-    import time as time_module
+def test_context_bundle_freshness_gate_fails_on_source_graph_content_drift():
+    """Gate deve FAIL quando source graph tem content drift (não depende de mtime).
 
-    # Remover CI do ambiente para que o gate não faça SKIP automaticamente
-    monkeypatch.delenv("CI", raising=False)
-
+    Prova adversarial: introduz drift real em generated/source_graph/training/,
+    verifica que o gate detecta, restaura o arquivo.
+    """
     sys.path.insert(0, str(ROOT / "scripts" / "contracts" / "validate"))
     import validate_contracts as vc
 
-    module = "training"
-    bundle_dir = tmp_path / "compiled_context" / module
-    bundle_dir.mkdir(parents=True)
-    (bundle_dir / "FT-001.json").write_text('{"module": "training"}', encoding="utf-8")
-
-    # Garantir que source master é mais novo que bundle
-    time_module.sleep(0.01)
-
-    source_dir = tmp_path / "docs" / "hbtrack" / "modulos" / module / "graph"
-    source_dir.mkdir(parents=True)
-    source_master = source_dir / "module_manifest.yaml"
-    source_master.write_text("module: training\n", encoding="utf-8")
-
-    result = vc._g_context_bundle_freshness(tmp_path)
-    assert result["status"] == "FAIL", (
-        f"Gate deve FAIL quando bundle é mais antigo que source master, obteve: {result['status']}"
-    )
-    violations = result.get("violations", [])
-    assert any("training" in v.get("artifact", "") for v in violations), (
-        "Deve haver violação para o módulo training"
-    )
+    drift_target = ROOT / "generated" / "source_graph" / "training" / "training.bundle.yaml"
+    original = drift_target.read_text(encoding="utf-8")
+    try:
+        # Introduzir drift de conteúdo (não é mtime — arquivo é mais novo que fontes)
+        drift_target.write_text(original + "\n# STALE_MARKER_TEST\n", encoding="utf-8")
+        result = vc._g_context_bundle_freshness(ROOT)
+        assert result["status"] == "FAIL", (
+            f"Gate deve FAIL com source graph stale (content drift), obteve: {result['status']}"
+        )
+        violations = result.get("violations", [])
+        assert any(
+            "training" in v.get("artifact", "") or "training" in v.get("message", "")
+            for v in violations
+        ), f"Deve haver violação para training. Violations: {violations}"
+    finally:
+        drift_target.write_text(original, encoding="utf-8")

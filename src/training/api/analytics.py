@@ -11,10 +11,9 @@ from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
-    GetLoadChartInput,
-)
-from ..schemas import ProblemOut, LoadChartEntryOut, LoadChartOut
+from ..application.analytics.queries import GetLoadChartInput
+from ..schemas.execution import LoadChartEntryOut, LoadChartOut
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_role
 from .errors import map_exceptions
 

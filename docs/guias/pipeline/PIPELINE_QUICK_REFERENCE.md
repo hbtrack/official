@@ -72,7 +72,7 @@ cat _reports/pipeline_health.json
 
 ## Não fazer
 
-- Não assumir "21 gates" ou "44 gates" como contagem fixa.
+- Não usar nenhum número fixo de gates — contagem soberana em `GATES_REGISTRY.yaml` / `pipeline_health.json`.
 - Não assumir runtime de subagentes autônomos.
 - Não assumir que commit faz o validator rodar.
 - Não assumir que `PRE_CONTRACT_EVIDENCE_GATE` valida o markdown `SESSION_HANDOFF.md` por schema JSON.

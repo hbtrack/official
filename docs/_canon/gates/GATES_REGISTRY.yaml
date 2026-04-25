@@ -4,8 +4,8 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.2.0"
-last_reviewed: "2026-03-23"
+version: "1.4.0"
+last_reviewed: "2026-04-24"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
@@ -534,8 +534,12 @@ gates:
     description: >
       Schemathesis testa conformidade do runtime HTTP com o contrato, usando
       seed fixa, reset de estado completo entre testes e fixtures conhecidas.
+    proof_class: runtime
+    truth_scope: factual
+    skip_allowed_in_ci: true
     blocking_codes: [ RUNTIME_CONTRACT_VIOLATION ]
     status: active
+    skip_allowed_in_ci: true
 
   - gate_id: ASYNCAPI_VALIDATION_GATE
     order: 12
@@ -755,8 +759,12 @@ gates:
       consumer contract não é satisfeito. Torna-se bloqueante após o primeiro
       consumer contract ser publicado no broker. Spec normativa:
       docs/_canon/decisions/ADR-025-cdct-pact-strategy.md
+    proof_class: runtime
+    truth_scope: factual
+    skip_allowed_in_ci: true
     blocking_codes: [ BLOCKED_PACT_MISSING ]
     status: active
+    skip_allowed_in_ci: true
 
   - gate_id: CODE_ARCHITECTURE_GATE
     order: "15F"
@@ -775,6 +783,9 @@ gates:
       não existe (pré-implementação). Emite BLOCKED_MISSING_ARCH_DECISION se
       ADR-026 ou CODE_ARCHITECTURE.md ausentes. Spec normativa:
       docs/_canon/CODE_ARCHITECTURE.md
+    proof_class: presence
+    promotion_power: none
+    truth_scope: structural
     blocking_codes: [ BLOCKED_MISSING_ARCH_DECISION ]
     status: active
 
@@ -792,6 +803,9 @@ gates:
       nenhum dos artefatos existe (pre-configuracao de deploy). FAIL
       (BLOCKED_MISSING_ARCH_DECISION) se apenas parte dos artefatos existe. Spec
       normativa: docs/_canon/DEPLOY_PIPELINE.md
+    proof_class: presence
+    promotion_power: none
+    truth_scope: structural
     blocking_codes: [ BLOCKED_MISSING_ARCH_DECISION ]
     status: active
 
@@ -826,8 +840,94 @@ gates:
       (decisao). SKIP_NOT_APPLICABLE quando nenhum dos arquivos existe
       (pre-implementacao). DEGRADED se apenas um dos dois existe. Spec
       normativa: docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md
+    proof_class: presence
+    promotion_power: none
+    truth_scope: structural
     blocking_codes: [ BLOCKED_MISSING_ARCH_DECISION ]
     status: active
+
+  - gate_id: ARCHITECTURE_FACTUALITY_GATE
+    order: "15I1"
+    name: "Architecture Factuality Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [ CODE_ARCHITECTURE_GATE, DEPLOY_READINESS_GATE, MONITORING_POLICY_GATE ]
+    description: >
+      Executa o checker de factualidade arquitetural e bloqueia drift entre
+      claims canônicas e evidências reais do workspace. Falha tanto para claim
+      positiva falsa quanto para claim negativa falsa em docs arquiteturais,
+      current-state e C4.
+    proof_class: semantic
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ BLOCKED_ARCHITECTURE_FACTUALITY, ERROR_INFRA ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: HOOK_EFFECTIVENESS_GATE
+    order: "15I2"
+    name: "Hook Effectiveness Gate"
+    blocking: true
+    active_stage: pre_check
+    severity: HIGH
+    parallelizable: false
+    applies_when: hooks_configured
+    depends_on: [ ARCHITECTURE_FACTUALITY_GATE ]
+    description: >
+      Valida que hooks ativos realmente exercem enforcement compatível com o que
+      o repositório promete. Bloqueia hook allow-all incondicional e hook
+      advisory descrito como guard/gate bloqueante.
+    proof_class: semantic
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ BLOCKED_HOOK_EFFECTIVENESS ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: LIVE_ENFORCEMENT_PARITY_GATE
+    order: "15I3"
+    name: "Live Enforcement Parity Gate"
+    blocking: true
+    active_stage: pre_check
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: "profile=ci canonical"
+    depends_on: [ HOOK_EFFECTIVENESS_GATE ]
+    description: >
+      Compara o ruleset live do GitHub com o manifesto local
+      `merge-readiness.json`, com o snapshot versionado em
+      `.github/rulesets/contract-gates.snapshot.json` e com o artefato gerado
+      `.github/merge-policy.md`. Bloqueia drift entre enforcement remoto e o
+      que o repositório declara como obrigatório.
+    proof_class: remote_live
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ BLOCKED_LIVE_ENFORCEMENT_PARITY, ERROR_INFRA ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: REPORT_TRUTHFULNESS_GATE
+    order: "15I4"
+    name: "Report Truthfulness Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: all_preceding_gates
+    description: >
+      Valida a semântica do próprio relatório antes do sumário final. Bloqueia
+      escopo parcial resolvendo como `PASS`/`DEGRADED` e bloqueia execução
+      canônica que ainda carregue gate mandatória em `SKIP_NOT_APPLICABLE`.
+    proof_class: semantic
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ BLOCKED_REPORT_TRUTHFULNESS ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
 
   - gate_id: FRONTEND_CONTRACT_GATE
     order: 15J
@@ -929,6 +1029,26 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: MODULE_BEHAVIORAL_READINESS_GATE
+    order: "20B2"
+    name: "Module Behavioral Readiness Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: true
+    applies_when: "MODULE_REGISTRY contains implemented+ modules"
+    depends_on: [ MODULE_STATUS_COHERENCE_GATE, SURFACE_PROMOTION_COHERENCE_GATE ]
+    description: >
+      Requer evidência comportamental mínima para módulos em `implemented+`.
+      Bloqueia módulo promovido sem superfície API real, sem mount no runtime,
+      sem teste executável não-placeholder ou apoiado apenas em stub gerado.
+    proof_class: behavioral
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ BLOCKED_MODULE_BEHAVIORAL_READINESS ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
   - gate_id: CROSS_MODULE_BOUNDARY_GATE
     order: "20C"
     name: "Cross Module Boundary Gate"
@@ -1021,8 +1141,10 @@ gates:
         READINESS_CONFIRMATION_INVALID,
         READINESS_CONFIRMATION_INCOHERENT,
       ]
+    skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+    skip_allowed_in_ci: true
 
   - gate_id: FEATURE_COVERAGE_GATE
     order: "20H"
@@ -1119,8 +1241,10 @@ gates:
       ou ausente. Garante que context bundles estão sincronizados com os source
       masters após mudanças no pipeline de compilação.
     blocking_codes: [ BLOCKED_BUNDLE_STALE, BLOCKED_BUNDLE_MISSING ]
+    skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+    skip_allowed_in_ci: true
 
   - gate_id: IMPACT_ANALYSIS_GATE
     order: "20M"
@@ -1138,8 +1262,10 @@ gates:
       SYNC_MANIFEST. Impede atualizações parciais onde source master evolui sem
       propagar para seus consumers obrigatórios.
     blocking_codes: [ BLOCKED_PARTIAL_CONSUMER_UPDATE ]
+    skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+    skip_allowed_in_ci: true
 
   - gate_id: PARTIAL_UPDATE_GATE
     order: "20N"
@@ -1156,8 +1282,10 @@ gates:
       mudanças isoladas em source masters sem nenhuma propagação para consumers.
       SKIP_NOT_APPLICABLE quando fora de contexto git ou sem SYNC_MANIFEST.
     blocking_codes: [ BLOCKED_ORPHAN_SOURCE_UPDATE ]
+    skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+    skip_allowed_in_ci: true
 
   - gate_id: DOC_USAGE_GATE
     order: "20O"

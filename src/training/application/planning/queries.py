@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ...domain.entities import Mesocycle, Microcycle
+from ...domain.entities.planning import Mesocycle, Microcycle
 from ...domain.rules import MesocycleNotFound, MicrocycleNotFound
-from ...infrastructure.repository import MesocycleRepository, MicrocycleRepository
+from ...infrastructure.repository.planning import MesocycleRepository, MicrocycleRepository
 from .dto import GetMesocycleInput, GetMicrocycleInput, ListMesocyclesInput, ListMicrocyclesInput
 
 

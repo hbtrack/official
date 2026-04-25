@@ -6,13 +6,9 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
 
-from training.domain.entities import (
-    SessionBlock,
-    SessionBlockIntensity,
-    SessionBlockPhase,
-    TrainingSession,
-    TrainingSessionStatus,
-)
+from training.domain.entities.blocks import SessionBlock
+from training.domain.entities.sessions import TrainingSession
+from training.domain.common.enums import SessionBlockIntensity, SessionBlockPhase, TrainingSessionStatus
 
 
 def make_session(**kwargs) -> TrainingSession:

@@ -25,6 +25,7 @@ gates é descrita em `docs/_canon/CI_CONTRACT_GATES.md`.
 
 from __future__ import annotations
 
+import ast
 import dataclasses
 import datetime
 import hashlib
@@ -111,6 +112,11 @@ BLOCKED_LEGACY_IN_CRITICAL_PATH = "BLOCKED_LEGACY_IN_CRITICAL_PATH"  # FASE 7
 BLOCKED_WORKER_PROMPT_AUTHORITY = "BLOCKED_WORKER_PROMPT_AUTHORITY"
 BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING = "BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING"
 BLOCKED_SCOPE_OVERFLOW = "BLOCKED_SCOPE_OVERFLOW"
+BLOCKED_ARCHITECTURE_FACTUALITY = "BLOCKED_ARCHITECTURE_FACTUALITY"
+BLOCKED_HOOK_EFFECTIVENESS = "BLOCKED_HOOK_EFFECTIVENESS"
+BLOCKED_REPORT_TRUTHFULNESS = "BLOCKED_REPORT_TRUTHFULNESS"
+BLOCKED_LIVE_ENFORCEMENT_PARITY = "BLOCKED_LIVE_ENFORCEMENT_PARITY"
+BLOCKED_MODULE_BEHAVIORAL_READINESS = "BLOCKED_MODULE_BEHAVIORAL_READINESS"
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -121,6 +127,24 @@ MODULE_STATUS_ORDER = (
     "staging_validated",
     "released",
 )
+
+SKIP_STATUSES = {"SKIP", "SKIP_NOT_APPLICABLE"}
+GATE_METADATA_FIELDS = (
+    "proof_class",
+    "promotion_power",
+    "truth_scope",
+    "ci_required",
+    "stage_only",
+    "skip_allowed_in_ci",
+)
+REPORT_GATE_METADATA_FIELDS = (
+    *GATE_METADATA_FIELDS,
+    "skip_allowed",
+    "applicability",
+    "applicability_reason",
+)
+PASS_EQUIVALENT_GATE_STATUSES = {"PASS", "DEGRADED"}
+PARTIAL_SUCCESS_STATUSES = {"PARTIAL_PASS", "PARTIAL_PASS_WITH_WARNINGS", "PARTIAL_DEGRADED"}
 IMPLEMENTATION_AUTHORIZED_STATUSES = {
     "implementation_ready",
     "implemented",
@@ -192,6 +216,9 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_FEATURE_COVERAGE_MISSING,
     BLOCKED_LEGACY_IN_CRITICAL_PATH,  # FASE 7
     BLOCKED_GOVERNANCE_WITHOUT_RUNTIME_BINDING,
+    BLOCKED_REPORT_TRUTHFULNESS,
+    BLOCKED_LIVE_ENFORCEMENT_PARITY,
+    BLOCKED_MODULE_BEHAVIORAL_READINESS,
 }
 
 
@@ -2527,6 +2554,221 @@ def _pg(
 
 def _skip(gate_id: str, reason: str, dur: int = 0) -> dict:
     return _pg(gate_id, "SKIP_NOT_APPLICABLE", False, None, reason, [], [], [], [], dur)
+
+
+def _infer_proof_class(gate_id: str, metadata: dict[str, Any]) -> str:
+    proof_class = str(metadata.get("proof_class") or "").strip()
+    if proof_class:
+        return proof_class
+
+    gate_name = gate_id.upper()
+    if any(token in gate_name for token in ("LIVE_", "RULESET", "GITHUB", "ENFORCEMENT_PARITY")):
+        return "remote_live"
+    if any(token in gate_name for token in ("RUNTIME", "PACT", "HEALTH", "WEBSOCKET")):
+        return "runtime"
+    if any(token in gate_name for token in ("BEHAVIORAL", "READINESS_GENERATION", "ADVERSARIAL")):
+        return "behavioral"
+    if any(
+        token in gate_name
+        for token in (
+            "PRESENCE",
+            "READINESS",
+            "REGISTRY",
+            "LAYOUT",
+            "ARCHITECTURE",
+            "DEPLOY",
+            "MONITORING",
+            "FRONTEND_CONTRACT",
+            "FEATURE_COVERAGE",
+            "CANON_PARITY",
+        )
+    ):
+        return "presence"
+    return "semantic"
+
+
+def _default_truth_scope(proof_class: str) -> str:
+    return "structural" if proof_class == "presence" else "factual"
+
+
+def _resolve_gate_metadata(gate_result: dict[str, Any], metadata: dict[str, Any] | None) -> dict[str, Any]:
+    gate_metadata = metadata or {}
+    proof_class = _infer_proof_class(str(gate_result.get("gate_id") or ""), gate_metadata)
+    ci_required = bool(gate_metadata.get("ci_required", gate_result.get("blocking", False)))
+    stage_only = bool(gate_metadata.get("stage_only", False))
+    skip_allowed = bool(gate_metadata.get("skip_allowed_in_ci", gate_metadata.get("skip_allowed", False)))
+    status = str(gate_result.get("status") or "")
+    applicability = "not_applicable" if status in SKIP_STATUSES else "applicable"
+    applicability_reason = (
+        str(gate_result.get("summary") or "").strip()
+        if applicability == "not_applicable"
+        else str(gate_metadata.get("applies_when") or "always")
+    )
+    promotion_power = str(gate_metadata.get("promotion_power") or ("blocking" if gate_result.get("blocking") else "advisory"))
+    truth_scope = str(gate_metadata.get("truth_scope") or _default_truth_scope(proof_class))
+
+    return {
+        "proof_class": proof_class,
+        "promotion_power": promotion_power,
+        "truth_scope": truth_scope,
+        "ci_required": ci_required,
+        "stage_only": stage_only,
+        "skip_allowed_in_ci": skip_allowed,
+        "skip_allowed": skip_allowed,
+        "applicability": applicability,
+        "applicability_reason": applicability_reason,
+    }
+
+
+def _annotate_gate_result(gate_result: dict[str, Any], metadata: dict[str, Any] | None) -> dict[str, Any]:
+    gate_result.update(_resolve_gate_metadata(gate_result, metadata))
+    return gate_result
+
+
+def _mandatory_ci_skip_violations(gates: list[dict[str, Any]]) -> list[dict[str, str]]:
+    violations: list[dict[str, str]] = []
+    for gate in gates:
+        if gate.get("status") != "SKIP_NOT_APPLICABLE":
+            continue
+        if not gate.get("ci_required"):
+            continue
+        if gate.get("skip_allowed") or gate.get("skip_allowed_in_ci"):
+            continue
+        violations.append(
+            {
+                "gate_id": str(gate.get("gate_id") or ""),
+                "summary": str(gate.get("summary") or ""),
+            }
+        )
+    return violations
+
+
+def _build_status_detail(all_gates: list[dict[str, Any]]) -> dict[str, Any]:
+    active_gates = [g for g in all_gates if g.get("status") not in SKIP_STATUSES]
+    active_pass = [g for g in active_gates if g.get("status") == "PASS"]
+    skips = [g for g in all_gates if g.get("status") in SKIP_STATUSES]
+    mandatory_ci_skips = _mandatory_ci_skip_violations(all_gates)
+    critical = [
+        {"gate_id": g["gate_id"], "status": g["status"]}
+        for g in all_gates
+        if g.get("blocking") is True
+    ]
+    return {
+        "proof_scope": "factual" if not mandatory_ci_skips else "mixed",
+        "active_gates_total": len(active_gates),
+        "active_gates_passed": len(active_pass),
+        "skip_count": len(skips),
+        "critical_gates": critical,
+        "mandatory_ci_skip_count": len(mandatory_ci_skips),
+        "mandatory_ci_skips": mandatory_ci_skips,
+    }
+
+
+def _resolve_pipeline_overall_status(
+    *,
+    canonical_full_run: bool,
+    has_blocking_fails: bool,
+    has_degraded: bool,
+    has_non_blocking_fails: bool,
+    mandatory_ci_skip_count: int,
+) -> str:
+    if has_blocking_fails or (canonical_full_run and mandatory_ci_skip_count > 0):
+        return "FAIL"
+    if canonical_full_run:
+        if has_degraded:
+            return "DEGRADED"
+        if has_non_blocking_fails:
+            return "PASS_WITH_WARNINGS"
+        return "PASS"
+    if has_degraded:
+        return "PARTIAL_DEGRADED"
+    if has_non_blocking_fails:
+        return "PARTIAL_PASS_WITH_WARNINGS"
+    return "PARTIAL_PASS"
+
+
+def _compute_health_bucket(gates: list[dict[str, Any]], proof_class: str | None) -> dict[str, int]:
+    relevant = 0
+    passed = 0
+    failed = 0
+    mandatory_skips = 0
+    optional_skips = 0
+
+    for gate in gates:
+        gate_proof_class = gate.get("proof_class")
+        if proof_class is None:
+            in_bucket = True
+        elif proof_class == "presence":
+            in_bucket = gate_proof_class == "presence"
+        else:
+            in_bucket = gate_proof_class != "presence"
+        if not in_bucket:
+            continue
+
+        status = gate.get("status")
+        if status in SKIP_STATUSES:
+            if gate.get("ci_required") and not (gate.get("skip_allowed") or gate.get("skip_allowed_in_ci")):
+                relevant += 1
+                failed += 1
+                mandatory_skips += 1
+            else:
+                optional_skips += 1
+            continue
+
+        relevant += 1
+        if status in PASS_EQUIVALENT_GATE_STATUSES:
+            passed += 1
+        else:
+            failed += 1
+
+    score = round((passed / relevant) * 100) if relevant > 0 else 100
+    return {
+        "score": score,
+        "relevant": relevant,
+        "passed": passed,
+        "failed": failed,
+        "mandatory_skips": mandatory_skips,
+        "optional_skips": optional_skips,
+    }
+
+
+def _compute_pipeline_health_metrics(
+    *,
+    gates: list[dict[str, Any]],
+    overall: str,
+    exit_code: int,
+    run_id: str,
+    ts: str,
+    execution_context: dict[str, Any],
+) -> dict[str, Any]:
+    structural = _compute_health_bucket(gates, "presence")
+    factual = _compute_health_bucket(gates, "factual")
+    global_bucket = _compute_health_bucket(gates, None)
+    health_score = min(structural["score"], factual["score"]) if gates else 0
+
+    return {
+        "run_id": run_id,
+        "timestamp_utc": ts,
+        "health_score": health_score,
+        "gates_total": len(gates),
+        "gates_passed": global_bucket["passed"],
+        "gates_failed": global_bucket["failed"],
+        "gates_skipped_optional": global_bucket["optional_skips"],
+        "mandatory_ci_skip_count": global_bucket["mandatory_skips"],
+        "blocking_fails": len([gate for gate in gates if gate.get("blocking") and gate.get("status") == "FAIL"]),
+        "overall_status": overall,
+        "exit_code": exit_code,
+        "execution_context": execution_context,
+        "scores": {
+            "structural_health_score": structural["score"],
+            "factual_health_score": factual["score"],
+        },
+        "score_inputs": {
+            "structural": structural,
+            "factual": factual,
+            "global": global_bucket,
+        },
+    }
 
 
 def _wsl_to_windows_path(path_str: str) -> str:
@@ -9270,6 +9512,296 @@ def _g_monitoring_policy(root: pathlib.Path) -> dict:
                "Monitoramento configurado: RUNTIME_CONTRACT_MONITORING_POLICY.md e ADR-029 presentes.",
                [], checked, [], [], _ms(t0))
 
+
+def _g_architecture_factuality(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "ARCHITECTURE_FACTUALITY_GATE"
+    checker = root / "scripts" / "audit" / "check_architecture_docs.py"
+    checked = [str(checker.relative_to(root))]
+    if not checker.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_ARCHITECTURE_FACTUALITY,
+            "Checker de factualidade arquitetural ausente.",
+            [],
+            checked,
+            [],
+            [
+                {
+                    "blocking_code": BLOCKED_ARCHITECTURE_FACTUALITY,
+                    "artifact": str(checker.relative_to(root)),
+                    "message": "scripts/audit/check_architecture_docs.py não encontrado.",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    rc, stdout, stderr = _try_tool(
+        sys.executable,
+        str(checker),
+        "--json",
+        "--root",
+        str(root),
+        cwd=root,
+    )
+    if rc == -1:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Não foi possível executar o checker de factualidade arquitetural.",
+            [],
+            checked,
+            [],
+            [
+                {
+                    "blocking_code": "ERROR_INFRA",
+                    "artifact": str(checker.relative_to(root)),
+                    "message": "python3 indisponível para executar scripts/audit/check_architecture_docs.py.",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    try:
+        payload = json.loads(stdout) if stdout.strip() else {}
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Checker arquitetural não retornou JSON legível.",
+            [],
+            checked,
+            [],
+            [
+                {
+                    "blocking_code": "ERROR_INFRA",
+                    "artifact": str(checker.relative_to(root)),
+                    "message": f"Saída JSON inválida: {exc}",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    failed_checks = [
+        item
+        for item in (payload.get("checks") or [])
+        if item.get("status") in {"FAIL", "ERROR"}
+    ]
+    if rc != 0 or failed_checks:
+        violations: list[dict[str, Any]] = []
+        for item in failed_checks:
+            check_name = item.get("name", "unknown_check")
+            details = item.get("details") or [item.get("message", "sem detalhe")]
+            for detail in details:
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_ARCHITECTURE_FACTUALITY,
+                        "artifact": "docs/_canon/",
+                        "message": f"[{check_name}] {detail}",
+                        "severity": "error",
+                    }
+                )
+        if not violations and stderr.strip():
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_ARCHITECTURE_FACTUALITY,
+                    "artifact": str(checker.relative_to(root)),
+                    "message": stderr.strip(),
+                    "severity": "error",
+                }
+            )
+        summary = (
+            f"Factualidade arquitetural divergente: {len(failed_checks)} check(s) do checker falharam."
+            if failed_checks
+            else "Factualidade arquitetural divergente."
+        )
+        return _pg(gate_id, "FAIL", True, BLOCKED_ARCHITECTURE_FACTUALITY, summary, [], checked, [], violations, _ms(t0))
+
+    total_pass = payload.get("total_pass")
+    total_skip = payload.get("total_skip")
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Factualidade arquitetural validada: {total_pass} PASS, {total_skip} SKIP no checker.",
+        [],
+        checked,
+        [str(checker.relative_to(root))],
+        [],
+        _ms(t0),
+    )
+
+
+def _iter_hook_commands(config_payload: dict[str, Any]) -> list[tuple[str, str]]:
+    commands: list[tuple[str, str]] = []
+    hooks = config_payload.get("hooks") or {}
+    for event_name, entries in hooks.items():
+        for entry in entries or []:
+            if isinstance(entry, dict) and isinstance(entry.get("hooks"), list):
+                for nested in entry.get("hooks") or []:
+                    if isinstance(nested, dict) and nested.get("command"):
+                        commands.append((event_name, str(nested["command"])))
+            elif isinstance(entry, dict) and entry.get("command"):
+                commands.append((event_name, str(entry["command"])))
+    return commands
+
+
+def _hook_script_is_unconditional_allow_all(script_text: str) -> bool:
+    zero_exits = len(re.findall(r"sys\.exit\(0\)", script_text))
+    non_zero_exits = len(re.findall(r"sys\.exit\(([1-9][0-9]*)\)", script_text))
+    return zero_exits > 0 and non_zero_exits == 0
+
+
+def _g_hook_effectiveness(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "HOOK_EFFECTIVENESS_GATE"
+    config_paths = [
+        root / ".claude" / "settings.local.json",
+        root / ".github" / "hooks" / "hb-contract-guards.json",
+    ]
+    checked: list[str] = []
+    violations: list[dict[str, Any]] = []
+    commands: list[tuple[str, str, pathlib.Path]] = []
+
+    for config_path in config_paths:
+        if not config_path.exists():
+            continue
+        checked.append(str(config_path.relative_to(root)))
+        try:
+            payload = json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_HOOK_EFFECTIVENESS,
+                    "artifact": str(config_path.relative_to(root)),
+                    "message": f"Arquivo de hooks inválido: {exc}",
+                    "severity": "error",
+                }
+            )
+            continue
+        for event_name, command in _iter_hook_commands(payload):
+            commands.append((event_name, command, config_path))
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HOOK_EFFECTIVENESS,
+            f"Configuração de hooks inválida em {len(violations)} arquivo(s).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    if not commands:
+        return _skip(gate_id, "Nenhum hook ativo configurado.", _ms(t0))
+
+    for event_name, command, config_path in commands:
+        match = re.search(r"(scripts/hooks/[^\s]+\.py)", command)
+        if not match:
+            continue
+        rel_script = pathlib.Path(match.group(1))
+        script_path = root / rel_script
+        checked.append(str(rel_script))
+        if not script_path.exists():
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_HOOK_EFFECTIVENESS,
+                    "artifact": str(config_path.relative_to(root)),
+                    "message": f"Hook ativo aponta para script inexistente: {rel_script}",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        script_text = script_path.read_text(encoding="utf-8")
+        if event_name != "Stop" and _hook_script_is_unconditional_allow_all(script_text):
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_HOOK_EFFECTIVENESS,
+                    "artifact": str(script_path.relative_to(root)),
+                    "message": f"Hook ativo em {event_name} é allow-all incondicional.",
+                    "severity": "error",
+                }
+            )
+        if event_name == "Stop" and _hook_script_is_unconditional_allow_all(script_text):
+            if _stop_hook_is_mislabeled_as_blocking(script_text):
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_HOOK_EFFECTIVENESS,
+                        "artifact": str(script_path.relative_to(root)),
+                        "message": "Hook Stop é advisory, mas continua descrito como guard/gate bloqueante.",
+                        "severity": "error",
+                    }
+                )
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HOOK_EFFECTIVENESS,
+            f"Hooks ativos com enforcement ilusório: {len(violations)} problema(s).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Hooks ativos auditados: {len(commands)} comando(s) sem no-op disfarçado de enforcement.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _stop_hook_is_mislabeled_as_blocking(script_text: str) -> bool:
+    for raw_line in script_text.splitlines():
+        line = raw_line.strip().lower()
+        if "guard" not in line and "gate" not in line:
+            continue
+        if any(
+            token in line
+            for token in (
+                "não é um guard",
+                "nao e um guard",
+                "não é guard",
+                "nao e guard",
+                "not a guard",
+                "não é um gate",
+                "nao e um gate",
+                "not a gate",
+                "não bloqueia",
+                "nao bloqueia",
+                "non-blocking",
+            )
+        ):
+            continue
+        return True
+    return False
+
+
 def _g_feature_coverage(root: pathlib.Path) -> dict:
     """FEATURE_COVERAGE_GATE — todo módulo `implemented` no MODULE_REGISTRY deve ter
     ao menos uma feature com status `implemented` no FEATURE_REGISTRY.
@@ -9938,98 +10470,101 @@ _CANONICAL_MODULES: tuple[str, ...] = (
 
 
 def _g_context_bundle_freshness(root: pathlib.Path) -> dict:
-    """CONTEXT_BUNDLE_FRESHNESS_GATE — Verifica que compiled_context/<module>/ tem
-    pelo menos um .json mais recente que o source master do módulo
-    (docs/hbtrack/modulos/<module>/graph/module_manifest.yaml).
+    """CONTEXT_BUNDLE_FRESHNESS_GATE — Verifica drift de conteúdo entre source
+    masters e artefatos derivados (source graphs + context bundles) usando os
+    compiladores em modo --check (comparação de hash, não mtime).
 
-    FAIL se algum bundle estiver stale (mtime bundle < mtime source master).
-    SKIP_NOT_APPLICABLE se compiled_context/ não existir OU em ambiente CI
-    (variável CI=true): mtime-based comparison é inválida em git checkout fresco
-    pois a ordem de escrita dos arquivos determina o mtime, não a relação de
-    dependência entre source masters e bundles.
+    Cobre:
+    - generated/source_graph/<module>/ via compile_source_graph.py --all --check
+    - compiled_context/<module>/ via compile_context_bundle.py --all --check
+
+    FAIL se qualquer módulo reportar drifts em qualquer um dos compiladores.
+    SKIP_NOT_APPLICABLE somente se nenhum dos compilers existir no repo.
+    Funciona em CI — não depende de mtime.
     """
-    import os as _os
     t0 = time.monotonic()
     gate_id = "CONTEXT_BUNDLE_FRESHNESS_GATE"
 
-    # Em CI, mtime de arquivos checkout'd é função da ordem alphabética de escrita,
-    # não de dependência real — gate não aplicável neste contexto.
-    if _os.environ.get("CI", "").lower() in ("1", "true"):
-        return _skip(gate_id, "Ambiente CI detectado — mtime-based freshness check não aplicável em checkout fresco.", _ms(t0))
+    sg_script = root / "scripts" / "compile" / "compile_source_graph.py"
+    cb_script = root / "scripts" / "compile" / "compile_context_bundle.py"
 
-    context_root = root / "compiled_context"
-    if not context_root.exists():
-        return _skip(gate_id, "compiled_context/ não encontrado — gate não aplicável.", _ms(t0))
+    if not sg_script.exists() and not cb_script.exists():
+        return _skip(gate_id, "compile_source_graph.py e compile_context_bundle.py ausentes — gate não aplicável.", _ms(t0))
 
-    checked: list[str] = []
     violations: list[dict] = []
+    checked: list[str] = []
 
-    for module in _CANONICAL_MODULES:
-        # Source master real dos bundles: module_manifest.yaml
-        source_master = root / "docs" / "hbtrack" / "modulos" / module / "graph" / "module_manifest.yaml"
-        bundle_dir = context_root / module
-
-        if not source_master.exists():
-            continue  # módulo sem source master — fora de escopo
-
-        checked.append(str(source_master.relative_to(root)))
-
-        if not bundle_dir.exists():
-            violations.append({
-                "blocking_code": "BLOCKED_BUNDLE_MISSING",
-                "artifact": f"compiled_context/{module}/",
-                "message": (
-                    f"Módulo '{module}': diretório compiled_context/{module}/ ausente. "
-                    "Bundle não gerado."
-                ),
-                "severity": "error",
-            })
-            continue
-
-        json_files = list(bundle_dir.glob("*.json"))
-        if not json_files:
-            violations.append({
-                "blocking_code": "BLOCKED_BUNDLE_MISSING",
-                "artifact": f"compiled_context/{module}/",
-                "message": (
-                    f"Módulo '{module}': nenhum arquivo .json em compiled_context/{module}/."
-                ),
-                "severity": "error",
-            })
-            continue
-
-        source_mtime = source_master.stat().st_mtime
-        newest_bundle_mtime = max(f.stat().st_mtime for f in json_files)
-
-        for jf in sorted(json_files):
-            checked.append(str(jf.relative_to(root)))
-
-        if newest_bundle_mtime < source_mtime:
-            import datetime
-            source_dt = datetime.datetime.fromtimestamp(source_mtime).isoformat(timespec="seconds")
-            bundle_dt = datetime.datetime.fromtimestamp(newest_bundle_mtime).isoformat(timespec="seconds")
+    # --- source graph check ---
+    if sg_script.exists():
+        sg_result = subprocess.run(
+            [sys.executable, str(sg_script), "--all", "--check", "--format", "json"],
+            capture_output=True, text=True, cwd=str(root), timeout=120,
+        )
+        try:
+            sg_payload = json.loads(sg_result.stdout)
+        except Exception:
             violations.append({
                 "blocking_code": "BLOCKED_BUNDLE_STALE",
-                "artifact": f"compiled_context/{module}/",
-                "message": (
-                    f"Módulo '{module}': bundle stale. "
-                    f"Source master modificado em {source_dt}, bundle mais recente em {bundle_dt}. "
-                    "Executar: python3 scripts/compile/compile_context_bundle.py --module " + module
-                ),
+                "artifact": "generated/source_graph/",
+                "message": f"compile_source_graph.py retornou saída inválida. stderr: {sg_result.stderr[:300]}",
                 "severity": "error",
             })
+            sg_payload = {}
+
+        for module_result in sg_payload.get("results", []):
+            mod = module_result.get("module", "?")
+            checked.append(f"generated/source_graph/{mod}/")
+            for drift in module_result.get("drifts", []):
+                violations.append({
+                    "blocking_code": "BLOCKED_BUNDLE_STALE",
+                    "artifact": drift.get("relpath", f"generated/source_graph/{mod}/"),
+                    "message": (
+                        f"Source graph stale — módulo '{mod}': {drift.get('relpath', '')} "
+                        f"({drift.get('reason', 'content_mismatch')}). "
+                        "Executar: python3 scripts/compile/compile_source_graph.py --module " + mod
+                    ),
+                    "severity": "error",
+                })
+
+    # --- context bundle check ---
+    if cb_script.exists():
+        cb_result = subprocess.run(
+            [sys.executable, str(cb_script), "--all", "--check", "--format", "json"],
+            capture_output=True, text=True, cwd=str(root), timeout=120,
+        )
+        try:
+            cb_payload = json.loads(cb_result.stdout)
+        except Exception:
+            violations.append({
+                "blocking_code": "BLOCKED_BUNDLE_STALE",
+                "artifact": "compiled_context/",
+                "message": f"compile_context_bundle.py retornou saída inválida. stderr: {cb_result.stderr[:300]}",
+                "severity": "error",
+            })
+            cb_payload = {}
+
+        for module_result in cb_payload.get("results", []):
+            mod = module_result.get("module", "?")
+            checked.append(f"compiled_context/{mod}/")
+            for drift in module_result.get("drifts", []):
+                violations.append({
+                    "blocking_code": "BLOCKED_BUNDLE_STALE",
+                    "artifact": drift.get("relpath", f"compiled_context/{mod}/"),
+                    "message": (
+                        f"Context bundle stale — módulo '{mod}': {drift.get('relpath', '')} "
+                        f"({drift.get('reason', 'content_mismatch')}). "
+                        "Executar: python3 scripts/compile/compile_context_bundle.py --module " + mod
+                    ),
+                    "severity": "error",
+                })
 
     if violations:
-        stale = [v for v in violations if "BLOCKED_BUNDLE_STALE" in v.get("blocking_code", "")]
-        missing = [v for v in violations if "BLOCKED_BUNDLE_MISSING" in v.get("blocking_code", "")]
-        summary = (
-            f"Bundles desatualizados: {len(stale)} stale, {len(missing)} ausentes."
-        )
+        summary = f"Artefatos derivados desatualizados: {len(violations)} drift(s) detectados."
         return _pg(gate_id, "FAIL", True, "BLOCKED_BUNDLE_STALE",
                    summary, [], checked, [], violations, _ms(t0))
 
     return _pg(gate_id, "PASS", True, None,
-               f"Todos os bundles de compiled_context/ estão atualizados ({len(_CANONICAL_MODULES)} módulos verificados).",
+               f"Source graphs e context bundles sincronizados ({len(checked)} diretórios verificados via content hash).",
                [], checked, [], [], _ms(t0))
 
 
@@ -10453,7 +10988,7 @@ def _g_hbtrack_canon_parity(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
-def _g16_readiness_summary(gates: list[dict]) -> dict:
+def _g16_readiness_summary(gates: list[dict], *, canonical_full_run: bool) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
     blocking_fails = [g for g in gates if g.get("blocking") and g.get("status") == "FAIL"]
@@ -10461,17 +10996,25 @@ def _g16_readiness_summary(gates: list[dict]) -> dict:
     degraded = [g for g in gates if g.get("status") == "DEGRADED"]
     passes = [g for g in gates if g.get("status") == "PASS"]
     skips = [g for g in gates if g.get("status") == "SKIP_NOT_APPLICABLE"]
+    mandatory_ci_skips = _mandatory_ci_skip_violations(gates) if canonical_full_run else []
     if blocking_fails:
-        summary = f"Pipeline FAIL: {len(blocking_fails)} gate(s) bloqueante(s) falharam."
+        summary = f"Resumo de gates: {len(blocking_fails)} gate(s) bloqueante(s) falharam."
+        status = "FAIL"
+    elif mandatory_ci_skips:
+        summary = (
+            "Resumo de gates: "
+            f"{len(mandatory_ci_skips)} gate(s) bloqueante(s) ficaram em SKIP_NOT_APPLICABLE "
+            "sem autorização explícita no escopo canônico."
+        )
         status = "FAIL"
     elif degraded:
-        summary = f"Pipeline DEGRADED: {len(degraded)} gate(s) locais operaram em fallback explícito."
+        summary = f"Resumo de gates: {len(degraded)} gate(s) locais operaram em fallback explícito."
         status = "DEGRADED"
     elif non_blocking_fails:
-        summary = f"Pipeline PASS com avisos: {len(non_blocking_fails)} gate(s) não-bloqueante(s) falharam."
+        summary = f"Resumo de gates: {len(non_blocking_fails)} gate(s) não-bloqueante(s) falharam."
         status = "PASS"
     else:
-        summary = f"Pipeline PASS: {len(passes)} PASS, {len(skips)} SKIP."
+        summary = f"Resumo de gates: {len(passes)} PASS, {len(skips)} SKIP."
         status = "PASS"
     return _pg(gate_id, status, False, None, summary, [], [], [], [], _ms(t0))
 
@@ -10534,6 +11077,369 @@ def _module_workflow_count(root: pathlib.Path, module: str) -> int:
     if not workflow_dir.exists():
         return 0
     return len(list(workflow_dir.rglob("*.arazzo.yaml")))
+
+
+def _module_real_api_surface(root: pathlib.Path, module: str) -> str | None:
+    module_dir = root / "src" / module
+    candidates = [
+        module_dir / "api.py",
+        module_dir / "api" / "__init__.py",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate.relative_to(root))
+    return None
+
+
+def _module_runtime_mount_present(root: pathlib.Path, module: str) -> bool:
+    urls_path = root / "config" / "urls.py"
+    if not urls_path.exists():
+        return False
+    text = urls_path.read_text(encoding="utf-8", errors="replace")
+    return bool(re.search(rf"from\s+{re.escape(module)}\.api\s+import", text))
+
+
+def _strip_leading_docstring(body: list[ast.stmt]) -> list[ast.stmt]:
+    if not body:
+        return []
+    first = body[0]
+    if (
+        isinstance(first, ast.Expr)
+        and isinstance(first.value, ast.Constant)
+        and isinstance(first.value.value, str)
+    ):
+        return body[1:]
+    return body
+
+
+def _is_placeholder_test_body(body: list[ast.stmt]) -> bool:
+    normalized = _strip_leading_docstring(body)
+    if not normalized:
+        return True
+    if (
+        len(normalized) == 1
+        and isinstance(normalized[0], ast.Assert)
+        and isinstance(normalized[0].test, ast.Constant)
+        and normalized[0].test.value is True
+    ):
+        return True
+    for stmt in normalized:
+        if isinstance(stmt, ast.Pass):
+            continue
+        if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant) and stmt.value.value is Ellipsis:
+            continue
+        if isinstance(stmt, ast.Raise):
+            exc = stmt.exc
+            if isinstance(exc, ast.Name) and exc.id == "NotImplementedError":
+                continue
+            if isinstance(exc, ast.Call) and isinstance(exc.func, ast.Name) and exc.func.id == "NotImplementedError":
+                continue
+        return False
+    return True
+
+
+def _module_test_inventory(root: pathlib.Path, module: str) -> dict[str, Any]:
+    test_dir = root / "src" / module / "tests"
+    if not test_dir.exists():
+        return {
+            "total_test_count": 0,
+            "real_test_count": 0,
+            "placeholder_test_count": 0,
+            "files_analyzed": 0,
+            "evidence_paths": [],
+        }
+
+    total_test_count = 0
+    placeholder_test_count = 0
+    files_analyzed = 0
+    evidence_paths: list[str] = []
+    for path in sorted(test_dir.rglob("test*.py")):
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
+        except SyntaxError:
+            continue
+        files_analyzed += 1
+        callables = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_")
+        ]
+        if not callables:
+            continue
+        evidence_paths.append(str(path.relative_to(root)))
+        total_test_count += len(callables)
+        placeholder_test_count += sum(1 for node in callables if _is_placeholder_test_body(node.body))
+
+    real_test_count = total_test_count - placeholder_test_count
+    return {
+        "total_test_count": total_test_count,
+        "real_test_count": real_test_count,
+        "placeholder_test_count": placeholder_test_count,
+        "files_analyzed": files_analyzed,
+        "evidence_paths": evidence_paths,
+    }
+
+
+def _module_behavioral_evidence(root: pathlib.Path, module: str) -> dict[str, Any]:
+    api_surface = _module_real_api_surface(root, module)
+    test_inventory = _module_test_inventory(root, module)
+    generated_api = root / "src" / module / "generated" / "api.py"
+    generated_stub_only = generated_api.exists() and api_surface is None
+    checks = {
+        "real_api_surface": bool(api_surface),
+        "runtime_mount_present": _module_runtime_mount_present(root, module),
+        "non_placeholder_tests": test_inventory["real_test_count"] > 0,
+        "generated_stub_excluded": not generated_stub_only,
+    }
+    behavioral_readiness_pct = int(
+        round((sum(1 for ok in checks.values() if ok) / len(checks)) * 100)
+    )
+    return {
+        "api_surface": api_surface,
+        "runtime_mount_present": checks["runtime_mount_present"],
+        "real_test_count": test_inventory["real_test_count"],
+        "placeholder_test_count": test_inventory["placeholder_test_count"],
+        "total_test_count": test_inventory["total_test_count"],
+        "test_evidence_paths": test_inventory["evidence_paths"],
+        "generated_stub_only": generated_stub_only,
+        "generated_stub_path": str(generated_api.relative_to(root)) if generated_api.exists() else None,
+        "behavioral_checks": checks,
+        "behavioral_readiness_pct": behavioral_readiness_pct,
+    }
+
+
+def _g_module_behavioral_readiness(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "MODULE_BEHAVIORAL_READINESS_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if not registry_entries:
+        return _skip(gate_id, "MODULE_REGISTRY.yaml ausente ou inválido.", _ms(t0))
+
+    checked = list(dict.fromkeys([*checked, "config/urls.py"]))
+    violations: list[dict[str, Any]] = []
+    placeholder_total = 0
+    modules_checked = 0
+
+    for module, entry in sorted(registry_entries.items()):
+        status = entry.get("status")
+        if status not in IMPLEMENTATION_AUTHORIZED_STATUSES:
+            continue
+        modules_checked += 1
+        evidence = _module_behavioral_evidence(root, module)
+        checked.extend(
+            path for path in ([evidence.get("api_surface")] + evidence.get("test_evidence_paths", [])) if path
+        )
+        placeholder_total += int(evidence["placeholder_test_count"])
+
+        if not evidence["api_surface"]:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_BEHAVIORAL_READINESS,
+                "artifact": f"src/{module}/",
+                "message": f"Módulo `{module}` em status `{status}` não possui superfície API real materializada.",
+                "severity": "error",
+            })
+        if not evidence["runtime_mount_present"]:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_BEHAVIORAL_READINESS,
+                "artifact": "config/urls.py",
+                "message": f"Módulo `{module}` em status `{status}` não está montado no runtime HTTP.",
+                "severity": "error",
+            })
+        if evidence["real_test_count"] == 0:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_BEHAVIORAL_READINESS,
+                "artifact": f"src/{module}/tests",
+                "message": (
+                    f"Módulo `{module}` em status `{status}` não possui teste executável não-placeholder "
+                    "como evidência comportamental."
+                ),
+                "severity": "error",
+                "details": {
+                    "placeholder_test_count": evidence["placeholder_test_count"],
+                    "total_test_count": evidence["total_test_count"],
+                },
+            })
+        if evidence["generated_stub_only"]:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_BEHAVIORAL_READINESS,
+                "artifact": evidence["generated_stub_path"],
+                "message": f"Módulo `{module}` depende apenas de stub gerado para API pública.",
+                "severity": "error",
+            })
+
+    checked = list(dict.fromkeys(checked))
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_BEHAVIORAL_READINESS,
+            f"{len(violations)} violação(ões) de readiness comportamental em {modules_checked} módulo(s) implementados.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"{modules_checked} módulo(s) implementados possuem superfície real, runtime mount e teste executável. placeholder_tests={placeholder_total}.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g_report_truthfulness(gates: list[dict], *, canonical_full_run: bool, profile: str) -> dict:
+    t0 = time.monotonic()
+    gate_id = "REPORT_TRUTHFULNESS_GATE"
+    mandatory_ci_skips = _mandatory_ci_skip_violations(gates) if canonical_full_run else []
+    blocking_fails = [g for g in gates if g.get("blocking") and g.get("status") == "FAIL"]
+    non_blocking_fails = [g for g in gates if not g.get("blocking") and g.get("status") == "FAIL"]
+    degraded = [g for g in gates if g.get("status") == "DEGRADED"]
+    resolved = _resolve_pipeline_overall_status(
+        canonical_full_run=canonical_full_run,
+        has_blocking_fails=bool(blocking_fails),
+        has_degraded=bool(degraded),
+        has_non_blocking_fails=bool(non_blocking_fails),
+        mandatory_ci_skip_count=len(mandatory_ci_skips),
+    )
+    violations: list[dict[str, Any]] = []
+    if not canonical_full_run and resolved in {"PASS", "DEGRADED"}:
+        violations.append({
+            "blocking_code": BLOCKED_REPORT_TRUTHFULNESS,
+            "artifact": "_reports/contract_gates/*.json",
+            "message": f"Escopo parcial `{profile}` não pode resolver para `{resolved}`.",
+            "severity": "error",
+        })
+    if canonical_full_run and mandatory_ci_skips:
+        violations.append({
+            "blocking_code": BLOCKED_REPORT_TRUTHFULNESS,
+            "artifact": "_reports/contract_gates/latest.json",
+            "message": (
+                f"Execução canônica contém {len(mandatory_ci_skips)} gate(s) mandatória(s) em "
+                "SKIP_NOT_APPLICABLE sem autorização."
+            ),
+            "severity": "error",
+            "details": {"gates": [item["gate_id"] for item in mandatory_ci_skips]},
+        })
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_REPORT_TRUTHFULNESS,
+            "Semântica de status/relatório inconsistente com o escopo executado.",
+            [],
+            ["_reports/contract_gates/latest.json"],
+            [],
+            violations,
+            _ms(t0),
+        )
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Semântica de relatório consistente com profile=`{profile}` e canonical_full_run={canonical_full_run}.",
+        [],
+        ["_reports/contract_gates/latest.json"],
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g_live_enforcement_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "LIVE_ENFORCEMENT_PARITY_GATE"
+    checker_path = root / "scripts" / "audit" / "check_live_ruleset_parity.py"
+    checked = [str(checker_path.relative_to(root))]
+    if not checker_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Checker de paridade live do ruleset ausente.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(checker_path.relative_to(root)),
+                "message": "Arquivo obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    completed = subprocess.run(
+        [sys.executable, str(checker_path), "--json", "--root", str(root)],
+        capture_output=True,
+        text=True,
+        cwd=root,
+    )
+    payload_text = completed.stdout.strip() or completed.stderr.strip()
+    try:
+        payload = json.loads(payload_text)
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            f"Saída inválida do checker live parity: {exc}",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(checker_path.relative_to(root)),
+                "message": payload_text[:500] or "sem saída legível",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    checked.extend(payload.get("checked_files") or [])
+    evidence_files = payload.get("evidence_files") or []
+    violations = payload.get("violations") or []
+    status = payload.get("status")
+
+    if completed.returncode == 0 and status == "PASS":
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            payload.get("message") or "Ruleset live em paridade com manifesto e snapshot local.",
+            [],
+            list(dict.fromkeys(checked)),
+            evidence_files,
+            [],
+            _ms(t0),
+        )
+
+    blocking_code = "ERROR_INFRA" if status == "ERROR" or completed.returncode == 2 else BLOCKED_LIVE_ENFORCEMENT_PARITY
+    return _pg(
+        gate_id,
+        "FAIL",
+        True,
+        blocking_code,
+        payload.get("message") or "Paridade do enforcement live falhou.",
+        [],
+        list(dict.fromkeys(checked)),
+        evidence_files,
+        violations,
+        _ms(t0),
+    )
 
 
 def _module_has_pre_contract_evidence(root: pathlib.Path, module: str) -> bool:
@@ -10647,8 +11553,8 @@ def _write_module_readiness_scorecard(
         f"- Generated at: `{generated_at_utc}`",
         f"- Pipeline status: `{overall_status}`",
         "",
-        "| Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |",
-        "|---|---|---|---:|---:|---:|---|",
+        "| Module | Registry | Owner | Structural % | Behavioral % | Promotion | OpenAPI | Schemas | Missing / Drift |",
+        "|---|---|---|---:|---:|---|---:|---:|---|",
     ]
 
     for module, entry in modules.items():
@@ -10676,6 +11582,9 @@ def _write_module_readiness_scorecard(
         ready_surfaces = [s for s, status in surface_status.items() if status == "ready"]
         missing_surfaces = [s for s, status in surface_status.items() if status != "ready"]
         readiness_pct = int(round((len(ready_surfaces) / len(expected_surfaces)) * 100)) if expected_surfaces else 100
+        behavioral = _module_behavioral_evidence(root, module)
+        behavioral_readiness_pct = behavioral["behavioral_readiness_pct"]
+        promotion_eligible = readiness_pct == 100 and behavioral_readiness_pct == 100
 
         module_payload = {
             "module": module,
@@ -10683,6 +11592,9 @@ def _write_module_readiness_scorecard(
             "registry_status": entry.get("status"),
             "expected_surfaces": expected_surfaces,
             "readiness_pct": readiness_pct,
+            "structural_readiness_pct": readiness_pct,
+            "behavioral_readiness_pct": behavioral_readiness_pct,
+            "promotion_eligible": promotion_eligible,
             "surface_status": surface_status,
             "evidence": {
                 "minimum_docs_present": _module_minimum_docs_present(root, module),
@@ -10693,6 +11605,14 @@ def _write_module_readiness_scorecard(
                 "workflow_count": workflow_count,
                 "pre_contract_evidence": _module_has_pre_contract_evidence(root, module),
                 "decision_ir_gate_status": decision_ir_gate_status,
+                "runtime_mount_present": behavioral["runtime_mount_present"],
+                "real_api_surface": behavioral["api_surface"],
+                "total_test_count": behavioral["total_test_count"],
+                "real_test_count": behavioral["real_test_count"],
+                "placeholder_test_count": behavioral["placeholder_test_count"],
+                "generated_stub_excluded": not behavioral["generated_stub_only"],
+                "generated_stub_path": behavioral["generated_stub_path"],
+                "behavioral_checks": behavioral["behavioral_checks"],
             },
         }
         payload_modules.append(module_payload)
@@ -10701,7 +11621,7 @@ def _write_module_readiness_scorecard(
         if len(missing_surfaces) > 4:
             missing_label += f" +{len(missing_surfaces) - 4}"
         markdown_lines.append(
-            f"| `{module}` | `{entry.get('status')}` | `{entry.get('owner')}` | {readiness_pct} | {root_ref_count}/{path_count} | {schema_count} | {missing_label or '—'} |"
+            f"| `{module}` | `{entry.get('status')}` | `{entry.get('owner')}` | {readiness_pct} | {behavioral_readiness_pct} | {'yes' if promotion_eligible else 'no'} | {root_ref_count}/{path_count} | {schema_count} | {missing_label or '—'} |"
         )
 
     payload = {
@@ -10780,20 +11700,14 @@ def _persist_pipeline_artifacts(
     if scorecard.exists():
         _shutil.copy2(scorecard, run_dir / "module_readiness_scorecard.json")
 
-    total = len(gates)
-    passed = len([gate for gate in gates if gate.get("status") in ("PASS", "SKIP_NOT_APPLICABLE")])
-    health = round((passed / total) * 100) if total > 0 else 0
-    health_data = {
-        "run_id": run_id,
-        "timestamp_utc": ts,
-        "health_score": health,
-        "gates_total": total,
-        "gates_passed": passed,
-        "gates_failed": len([gate for gate in gates if gate.get("status") == "FAIL"]),
-        "blocking_fails": len([gate for gate in gates if gate.get("blocking") and gate.get("status") == "FAIL"]),
-        "overall_status": overall,
-        "exit_code": exit_code,
-    }
+    health_data = _compute_pipeline_health_metrics(
+        gates=gates,
+        overall=overall,
+        exit_code=exit_code,
+        run_id=run_id,
+        ts=ts,
+        execution_context=report.get("execution_context") or {},
+    )
     (run_dir / "health.json").write_text(
         json.dumps(health_data, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -10809,7 +11723,7 @@ def _persist_pipeline_artifacts(
         "timestamp_utc": ts,
         "overall_status": overall,
         "exit_code": exit_code,
-        "health_score": health,
+        "health_score": health_data["health_score"],
         "git_commit": report.get("environment", {}).get("git_commit"),
     }
     with open(history_path, "a", encoding="utf-8") as history_file:
@@ -10819,7 +11733,7 @@ def _persist_pipeline_artifacts(
             root,
             gates,
             overall,
-            health,
+            health_data["health_score"],
             run_id,
             ts,
             root / "_reports" / "READINESS_DASHBOARD.md",
@@ -10903,20 +11817,7 @@ def run_pipeline(
         gates_metadata = {}  # Fallback (will use defaults)
 
     def _build_report(all_gates: list[dict], overall: str, exit_code: int) -> dict:
-        # R-006: status_detail composto — expõe realidade sem depender de SKIP na matemática
-        _active = [g for g in all_gates if g.get("status") not in ("SKIP_NOT_APPLICABLE", "SKIP")]
-        _active_pass = [g for g in _active if g.get("status") == "PASS"]
-        _skip = [g for g in all_gates if g.get("status") in ("SKIP_NOT_APPLICABLE", "SKIP")]
-        _critical = [
-            {"gate_id": g["gate_id"], "status": g["status"]}
-            for g in all_gates
-            if g.get("blocking") is True
-        ]
-        status_detail = {
-            "active_gates_passed": len(_active_pass),
-            "skip_count": len(_skip),
-            "critical_gates": _critical,
-        }
+        status_detail = _build_status_detail(all_gates)
         return {
             "pipeline_id": "HB_TRACK_CONTRACT_GATES",
             "timestamp_utc": ts,
@@ -11001,11 +11902,11 @@ def run_pipeline(
             "duration_ms": int((axiom_gate.get("metrics") or {}).get("duration_ms") or 0),
         },
     }
-    gates: list[dict] = [axiom_result]
+    gates: list[dict] = [_annotate_gate_result(axiom_result, gates_metadata.get("AXIOM_INTEGRITY_GATE"))]
 
     if axiom_gate["status"] != "PASS":
-        g16 = _g16_readiness_summary(gates)
-        gates.append(g16)
+        g16 = _g16_readiness_summary(gates, canonical_full_run=canonical_full_run)
+        gates.append(_annotate_gate_result(g16, gates_metadata.get("READINESS_SUMMARY_GATE")))
         report = _build_report(gates, "FAIL", 4)
         _write_report_artifacts(report, "FAIL", 4, gates)
         return report, 4
@@ -11014,11 +11915,24 @@ def run_pipeline(
         axioms = load_domain_axioms(str(axioms_path))
     except Exception as e:
         gates.append(
-            _pg("AXIOM_INTEGRITY_GATE", "FAIL", True, "BLOCKED_AXIOM_FILE_NOT_FOUND",
-                f"Não foi possível carregar axiomas: {e}", [], [], [], [], 0)
+            _annotate_gate_result(
+                _pg(
+                    "AXIOM_INTEGRITY_GATE",
+                    "FAIL",
+                    True,
+                    "BLOCKED_AXIOM_FILE_NOT_FOUND",
+                    f"Não foi possível carregar axiomas: {e}",
+                    [],
+                    [],
+                    [],
+                    [],
+                    0,
+                ),
+                gates_metadata.get("AXIOM_INTEGRITY_GATE"),
+            )
         )
-        g16 = _g16_readiness_summary(gates)
-        gates.append(g16)
+        g16 = _g16_readiness_summary(gates, canonical_full_run=canonical_full_run)
+        gates.append(_annotate_gate_result(g16, gates_metadata.get("READINESS_SUMMARY_GATE")))
         report = _build_report(gates, "FAIL", 4)
         _write_report_artifacts(report, "FAIL", 4, gates)
         return report, 4
@@ -11049,6 +11963,10 @@ def run_pipeline(
         "ARAZZO_VALIDATION_GATE",              # Arazzo YAML parsing
         "ARAZZO_COMPLETENESS_GATE",            # Arazzo completeness
         "TOOLING_CONFIG_GATE",                 # redocly.yaml / .spectral.yaml presentes
+        "ARCHITECTURE_FACTUALITY_GATE",
+        "HOOK_EFFECTIVENESS_GATE",
+        "MODULE_BEHAVIORAL_READINESS_GATE",
+        "REPORT_TRUTHFULNESS_GATE",
         "GOVERNANCE_REGRESSION_GATE",
     }
     _local_ids = _precommit_ids | {
@@ -11066,6 +11984,10 @@ def run_pipeline(
         "SPECTRAL_LINTING_GATE",               # FIX BACKLOG_ITEM_1 (Passo D): Spectral linting (estilos OpenAPI)
         # FIX BACKLOG_ITEM_2 (2A): CROSS_SPEC_ALIGNMENT_GATE para validação de links Arazzo
         "CROSS_SPEC_ALIGNMENT_GATE",           # Validação de operationIds em Arazzo vs OpenAPI
+        "ARCHITECTURE_FACTUALITY_GATE",
+        "HOOK_EFFECTIVENESS_GATE",
+        "MODULE_BEHAVIORAL_READINESS_GATE",
+        "REPORT_TRUTHFULNESS_GATE",
     }
 
     # Stage-specific gate sets (Fase 0 / 1 / 2)
@@ -11174,9 +12096,13 @@ def run_pipeline(
         ("DEPLOY_READINESS_GATE", lambda: _g_deploy_readiness(root)),
         ("DATA_MIGRATION_GATE", lambda: _g_data_migration(root)),
         ("MONITORING_POLICY_GATE", lambda: _g_monitoring_policy(root)),
+        ("ARCHITECTURE_FACTUALITY_GATE", lambda: _g_architecture_factuality(root)),
+        ("HOOK_EFFECTIVENESS_GATE", lambda: _g_hook_effectiveness(root)),
+        ("LIVE_ENFORCEMENT_PARITY_GATE", lambda: _g_live_enforcement_parity(root)),
         ("HANDOFF_COHERENCE_GATE", lambda: _g_handoff_coherence(root)),
         ("MODULE_STATUS_COHERENCE_GATE", lambda: _g_module_status_coherence(root)),
         ("SURFACE_PROMOTION_COHERENCE_GATE", lambda: _g_surface_promotion_coherence(root)),
+        ("MODULE_BEHAVIORAL_READINESS_GATE", lambda: _g_module_behavioral_readiness(root)),
         ("CROSS_MODULE_BOUNDARY_GATE", lambda: _g_cross_module_boundary(root)),
         ("MODULE_DEPENDENCY_RESOLUTION_GATE", lambda: _g_module_dependency_resolution(root)),
         ("WAIVER_VALIDITY_GATE", lambda: _g_waiver_validity(root)),  # FIX Ordem 5: implementado
@@ -11202,37 +12128,42 @@ def run_pipeline(
             metadata = gates_metadata[gate_id_hint]
             gate_result["blocking"] = metadata.get("blocking", gate_result.get("blocking", False))
         
-        gates.append(gate_result)
+        gates.append(_annotate_gate_result(gate_result, gates_metadata.get(gate_id_hint)))
+
+    g_truth = _g_report_truthfulness(gates, canonical_full_run=canonical_full_run, profile=profile)
+    gates.append(_annotate_gate_result(g_truth, gates_metadata.get("REPORT_TRUTHFULNESS_GATE")))
 
     # G16: readiness summary
-    g16 = _g16_readiness_summary(gates)
-    gates.append(g16)
+    g16 = _g16_readiness_summary(gates, canonical_full_run=canonical_full_run)
+    gates.append(_annotate_gate_result(g16, gates_metadata.get("READINESS_SUMMARY_GATE")))
 
     blocking_fails = [g for g in gates if g.get("blocking") and g.get("status") == "FAIL"]
+    mandatory_ci_skip_violations = _mandatory_ci_skip_violations(gates) if canonical_full_run else []
     error_infra = any(
         v.get("blocking_code") == "ERROR_INFRA"
         for g in gates
         for v in (g.get("violations") or [])
     )
     degraded = any(g.get("status") == "DEGRADED" for g in gates)
+    non_blocking_fails = any(not g.get("blocking") and g.get("status") == "FAIL" for g in gates)
     
     # PR3: Phase-specific semantics — phase 0/1/2 must ALWAYS exit != 0 if blocking fail
     is_phase = stage in ("session-start", "pre-authoring", "artifact")
     
-    if blocking_fails:
-        overall = "FAIL"
+    overall = _resolve_pipeline_overall_status(
+        canonical_full_run=canonical_full_run,
+        has_blocking_fails=bool(blocking_fails),
+        has_degraded=degraded,
+        has_non_blocking_fails=non_blocking_fails,
+        mandatory_ci_skip_count=len(mandatory_ci_skip_violations),
+    )
+
+    if overall == "FAIL":
         if is_phase:
             exit_code = 2  # Fase 0/1/2 — strict: ANY blocking fail = exit 2
         else:
             exit_code = 3 if error_infra else 2  # Full CI — infrastructure errors = 3
-    elif degraded:
-        overall = "DEGRADED"
-        exit_code = 0
-    elif any(g.get("status") == "FAIL" for g in gates):
-        overall = "PASS_WITH_WARNINGS"
-        exit_code = 0
     else:
-        overall = "PASS"
         exit_code = 0
 
     report = _build_report(gates, overall, exit_code)

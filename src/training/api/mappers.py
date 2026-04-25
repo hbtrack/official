@@ -13,21 +13,14 @@ from ..domain.policies.feedback_context import (
     feedback_context_ref_id as _feedback_context_ref_id,
     feedback_context_type as _feedback_context_type,
 )
-from ..schemas import (
-    AthleteIneligibilityDeclarationOut,
-    AttendanceRecordOut,
-    AttentionQueueItemOut,
-    ExecutionRecordOut,
-    FeedbackThreadOut,
-    MesocycleOut,
-    MicrocycleOut,
-    RecommendationOut,
-    SessionBlockOut,
-    SessionObjectiveOut,
-    TrainingSessionOut,
-    WellnessPostOut,
-    WellnessPreOut,
-)
+from ..schemas.attendance import AttendanceRecordOut
+from ..schemas.blocks import SessionBlockOut
+from ..schemas.communication import AttentionQueueItemOut, FeedbackThreadOut, RecommendationOut
+from ..schemas.eligibility import AthleteIneligibilityDeclarationOut
+from ..schemas.execution import ExecutionRecordOut, SessionObjectiveOut
+from ..schemas.planning import MesocycleOut, MicrocycleOut
+from ..schemas.sessions import TrainingSessionOut
+from ..schemas.wellness import WellnessPostOut, WellnessPreOut
 
 
 def _session_to_out(s) -> TrainingSessionOut:
@@ -65,6 +58,8 @@ def _session_to_out(s) -> TrainingSessionOut:
         phase_focus_attack=s.phase_focus_attack,
         phase_focus_transition_offense=s.phase_focus_transition_offense,
         phase_focus_transition_defense=s.phase_focus_transition_defense,
+        deviation_justification=s.deviation_justification,
+        planning_deviation_flag=s.planning_deviation_flag,
     )
 
 

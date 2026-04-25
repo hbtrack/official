@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-23"
+version: "1.1.0"
+last_reviewed: "2026-04-24"
 status: active
 state_semantics: current-state
 ---
@@ -63,7 +63,7 @@ flowchart TB
 
   subgraph infra_db["Infraestrutura de dados"]
     pg["PostgreSQL\n(via Django ORM)"]
-    redis_local["Redis\n(provisionado local;\nainda não Celery runtime)"]
+    redis_local["Redis\n(provisionado local;\nbroker Celery + Channel Layer)"]
   end
 
   entrypoint --> transversal
@@ -147,9 +147,10 @@ este campo é preenchido pontualmente pelos chamadores quando disponível.
 - `GET /api/notifications/deliveries` → lista entregas
 - `GET /api/notifications/preferences` / `PATCH` → preferências do usuário
 
-**Nota de runtime:** o backend de notificações registra intenções e estado de entrega, mas o
-despacho real para canais externos (push, e-mail, WhatsApp) é target-state dependente de worker
-Celery (ainda não materializado).
+**Nota de runtime:** o módulo já possui runtime assíncrono materializado em código
+(`config/celery.py`, `src/notifications/tasks.py`, `CHANNEL_LAYERS`, `NotificationConsumer`).
+O que continua target-state é a operação completa em produção dos canais externos
+(push, e-mail, WhatsApp) e o provisionamento dedicado de worker/container.
 
 **Estado atual:** backend + router + migrations + testes materializado.
 
@@ -208,15 +209,14 @@ sequenceDiagram
 
 ---
 
-## 6. Componentes ausentes do runtime atual
+## 6. Deltas ainda não comprovados como operação completa
 
-| Componente | Fonte de aprovação | Evidência de ausência |
-|------------|--------------------|-----------------------|
-| Middleware X-Flow-ID | ADR-013 | nenhum middleware em `config/` |
-| Worker Celery | ADR-031 | nenhum `config/celery.py` nem `tasks.py` em nenhum módulo |
-| WebSocket / Channels | ADR-031 | nenhuma configuração `CHANNEL_LAYERS` |
-| Frontend SPA | ADR-030 | `frontend/` inexiste no workspace |
-| Endpoint `/health` | DEPLOY_PIPELINE.md | ausente em `config/urls.py` |
+| Componente | Fonte de aprovação | Delta ainda pendente |
+|------------|--------------------|---------------------|
+| Worker Celery dedicado em produção | ADR-031 | `config/celery.py` e `src/*/tasks.py` existem; falta prova de operação dedicada fora do processo principal |
+| WebSocket / Channels em produção | ADR-031 | `config/asgi.py`, `CHANNEL_LAYERS` e `src/notifications/consumers.py` existem; falta prova de operação contínua em ambiente produtivo |
+| Frontend SPA com deploy validado em CI/CD | ADR-030 | `frontend/` e `Dockerfile.frontend` existem; falta bind obrigatório entre build/deploy e prova operacional final |
+| Canais externos de notificação | ADR-031 | intenção e tracking existem; entrega externa ainda depende de adapters e operação validada |
 
 ---
 
@@ -226,4 +226,5 @@ sequenceDiagram
 - [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md)
 - [MODULE_MAP.md](./MODULE_MAP.md)
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [RUNTIME_CURRENT_STATE.md](./RUNTIME_CURRENT_STATE.md)
 - [decisions/ADR-031-backend-framework.md](./decisions/ADR-031-backend-framework.md)

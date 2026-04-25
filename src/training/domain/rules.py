@@ -29,7 +29,7 @@ from .common.exceptions import (
     TrainingDomainError,  # noqa: F401 — re-exportado para consumidores externos
     ValidationError,
 )
-from .entities import AttendanceSource, AttendanceStatus, TrainingSessionStatus
+from .common.enums import AttendanceSource, AttendanceStatus, TrainingSessionStatus
 
 
 # ---------------------------------------------------------------------------
@@ -70,6 +70,10 @@ class WellnessEntryNotFound(NotFoundError):
 
 class AttendanceRecordNotFound(NotFoundError):
     """Registro de presença não encontrado."""
+
+
+class AttendanceAlreadyRecorded(ConflictError):
+    """INV-TRAIN-030: registro de presença duplicado para (session_id, athlete_id)."""
 
 
 class MesocycleNotFound(NotFoundError):

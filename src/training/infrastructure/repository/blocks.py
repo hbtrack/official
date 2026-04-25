@@ -4,8 +4,9 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import SessionBlock, SessionBlockIntensity, SessionBlockPhase
-from ..models import SessionBlockModel
+from ...domain.entities.blocks import SessionBlock
+from ...domain.common.enums import SessionBlockIntensity, SessionBlockPhase
+from ..models.blocks import SessionBlockModel
 
 
 class SessionBlockRepository:

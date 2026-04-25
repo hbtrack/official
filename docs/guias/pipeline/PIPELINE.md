@@ -30,7 +30,7 @@ O pipeline resolve isso com **bloqueios determinísticos**: o agente para e emit
 **Entrada:** Pedido do usuário com `task_type` + `module` (+ parâmetros específicos da tarefa).
 
 **Saída:** Um dos três resultados possíveis:
-1. Artefato canônico criado/revisado, todos os 44 gates PASS, módulo elegível para implementação.
+1. Artefato canônico criado/revisado, todos os gates PASS (contagem atual em `pipeline_health.json`), módulo elegível para implementação.
 2. Bloqueio explícito com código canônico (um dos 20 códigos) + instrução de resolução.
 3. Relatório de auditoria (para task-types de auditoria, sem artefato produzido).
 
@@ -52,7 +52,7 @@ O pipeline resolve isso com **bloqueios determinísticos**: o agente para e emit
 O sistema é uma **orquestração hierárquica de agente único** (não multi-agente em execução paralela). Um único agente IA (Claude) é instruído a seguir um protocolo rígido de boot → roteamento → execução → validação. Os "workers" são prompts operacionais especializados que o agente carrega condicionalmente, não processos independentes.
 
 ```
-Usuário → Orchestrator (pré-contrato) → Worker (task-type) → Validator (44 gates) → Saída
+Usuário → Orchestrator (pré-contrato) → Worker (task-type) → Validator (N gates — ver GATES_REGISTRY.yaml) → Saída
 ```
 
 ---
@@ -67,7 +67,7 @@ Usuário → Orchestrator (pré-contrato) → Worker (task-type) → Validator (
 | **Decision Discovery** | Resolver lacunas arquiteturais | Contexto do módulo + backlog | Verificar decisões obrigatórias abertas; executar benchmark competitivo; propor ADR | Decisão obrigatória aberta → bloquear; decisão importante → aviso + aprovação humana | ADR criada em `docs/_canon/decisions/ADR-NNN-slug.md` | `decision_discovery.prompt.md`, `DECISION_POLICY.md`, `ARCHITECTURE_DECISION_BACKLOG.md` | Fato confirmado |
 | **Fase 2 — Authoring** | Criar/atualizar artefato canônico | Contexto montado + task_type | Carregar worker do task_type; ler templates SSOT; criar artefato no path canônico | Path errado → BLOCKED_NONCANONICAL_NORMATIVE_PATH; convenção ausente → BLOCKED_MISSING_API_CONVENTION | Artefato soberano em path canônico | Worker específico (ex: `create_openapi_contract.prompt.md`), templates em `.contract_driven/templates/` | Fato confirmado |
 | **Compilação de Policy** | Regenerar derivados determinísticos | Contrato soberano modificado | `compile_api_policy.py --module X --surface Y`; atualizar `generated/resolved_policy/` e `generated/manifests/` | Drift detectado → FAIL | `generated/resolved_policy/*.resolved.yaml`, `generated/manifests/*.traceability.yaml` | Fato confirmado |
-| **Fase 3 — Validation** | Executar 44 gates bloqueantes | Todos os artefatos do repo | `validate_contracts.py` executa gates em ordem (0→16); each gate bloqueante: FAIL → READINESS_SUMMARY_GATE FAIL | Qualquer gate bloqueante FAIL → pipeline FAIL; SKIP_NOT_APPLICABLE para gates sem artefato alvo | `_reports/contract_gates/latest.json`, `_reports/pipeline_health.json` | Fato confirmado |
+| **Fase 3 — Validation** | Executar gates bloqueantes (ver `GATES_REGISTRY.yaml`) | Todos os artefatos do repo | `validate_contracts.py` executa gates em ordem (0→16); each gate bloqueante: FAIL → READINESS_SUMMARY_GATE FAIL | Qualquer gate bloqueante FAIL → pipeline FAIL; SKIP_NOT_APPLICABLE para gates sem artefato alvo | `_reports/contract_gates/latest.json`, `_reports/pipeline_health.json` | Fato confirmado |
 | **Fase 4 — Readiness** | Classificar módulo como pronto | Resultado dos gates | Verificar MODULE_REGISTRY.expected_surfaces; DECISION_IR_CONFORMANCE_GATE; MODULE_STATUS_COHERENCE_GATE | Todos gates PASS → status elegível para subir em MODULE_REGISTRY.yaml | `_reports/evidence/module_readiness_scorecard.json` atualizado | `MODULE_REGISTRY.yaml`, `GATES_REGISTRY.yaml` | Fato confirmado |
 | **Fase 5 — Handoff** | Autorizar implementação | Readiness confirmada | Verificar que artefato é materializável sem inferência; SESSION_HANDOFF.md coerente | Inferência necessária → DC5 FAIL; coerente → handoff disponível | `SESSION_HANDOFF.md` atualizado; módulo elegível para `generate_code` (quando descongelado) | `SESSION_HANDOFF.md`, `HANDOFF_COHERENCE_GATE` | Fato confirmado |
 | **CI/CD** | Validação contínua em push/PR | Push para main/develop | `contract-gates.yml`: gates completos; `context-efficiency-audit.yml`: mensal; `domain-completeness-audit.yml`: semanal | Exit ≠ 0 → PR bloqueado | Artefatos de CI em `_reports/` | `.github/workflows/` (4 arquivos) | Fato confirmado |
@@ -222,13 +222,13 @@ Executa:
 - Faz upsert em `_reports/session_start.json.stage2_artifacts[]`.
 - Executa `validate_contracts.py --stage artifact --artifact <path>`.
 
-### 3.10 Fase 3 — Validation (44 Gates)
+### 3.10 Fase 3 — Validation
 
 ```bash
 python3 scripts/contracts/validate/validate_contracts.py
 ```
 
-Os 44 gates executam em ordem determinística (0, 1, 1.5, 2, 2A, 2B ... 16, 20A, 20B, 20C). Cada gate:
+Os gates executam em ordem determinística (0, 1, 1.5, 2, 2A, 2B ... 16, 20A, 20B, 20C). Cada gate:
 - Retorna `PASS`, `FAIL` ou `SKIP_NOT_APPLICABLE`.
 - Gates com `depends_on` só executam se o(s) predecessor(es) passaram.
 - Gate bloqueante FAIL → `READINESS_SUMMARY_GATE` FAIL → pipeline FAIL.
@@ -327,8 +327,8 @@ Com módulo em `implementation_ready`:
 | `contracts/schemas/**/*.schema.json` | Shapes soberanas de domínio (37 arquivos) | Fase 2–3 | outro (contrato) | Alta | Fato confirmado |
 | `contracts/asyncapi/**/*.yaml` | Contratos de eventos (103 arquivos) | Fase 2–3 | outro (contrato) | Alta | Fato confirmado |
 | `contracts/workflows/**/*.arazzo.yaml` | Workflows multi-passo (12 arquivos) | Fase 2–3 | outro (contrato) | Média | Fato confirmado |
-| `scripts/contracts/validate/validate_contracts.py` | Executor dos 44 gates (8013 linhas) | Fase 3 | validação/guardrail | Crítica | Fato confirmado |
-| `docs/_canon/gates/GATES_REGISTRY.yaml` | Definição normativa de 44 gates (id, blocking, order, depends_on) | Fase 3 | configuração | Crítica | Fato confirmado |
+| `scripts/contracts/validate/validate_contracts.py` | Executor dos gates ativos (contagem em `GATES_REGISTRY.yaml` / `pipeline_health.json`) | Fase 3 | validação/guardrail | Crítica | Fato confirmado |
+| `docs/_canon/gates/GATES_REGISTRY.yaml` | Definição normativa de gates — SSOT (id, blocking, order, depends_on) | Fase 3 | configuração | Crítica | Fato confirmado |
 | `scripts/contracts/validate/api/compile_api_policy.py` | Compilador determinístico de policy; gera manifests + derivados | Fase 2–3 | ferramenta | Alta | Fato confirmado |
 | `scripts/contracts/validate/api/policy_compiler.py` | Core do compiler (violações, ExpectedFile, exit codes) | Fase 2–3 | ferramenta | Alta | Fato confirmado |
 | `scripts/contracts/validate/api/intent_compiler.py` | Parser YAML com posição (linha/coluna) para relatórios precisos | Fase 3 | ferramenta | Média | Fato confirmado |
@@ -509,7 +509,7 @@ O agente não lança subprocessos independentes. "Subagente" aqui significa **ca
 - `§23 RULES`: Implementation-first proibido — código só após contrato validado.
 
 **Camada 2 — Gates técnicos (validação):**
-- 44 gates em `validate_contracts.py` (8013 linhas), autoridade em `GATES_REGISTRY.yaml`.
+- Gates em `validate_contracts.py`, autoridade em `GATES_REGISTRY.yaml` (contagem atual em `pipeline_health.json` — não usar número fixo).
 - 30 bloqueantes: falha → pipeline FAIL → `READINESS_SUMMARY_GATE` FAIL.
 - 14 não-bloqueantes: avisos, não bloqueiam progresso.
 - Dependências entre gates: `depends_on` garante ordem e evita falsos negativos.
@@ -570,7 +570,7 @@ SESSION_HANDOFF (se existe) → Fase 0 → Fase 1 → [Decision Discovery] → F
                                                                          ↓
                                                               Compilação Determinística
                                                                          ↓
-                                                               Fase 3 (44 gates)
+                                                               Fase 3 (N gates — ver GATES_REGISTRY.yaml)
                                                                          ↓
                                                                Fase 4 (Readiness)
                                                                          ↓
@@ -642,7 +642,7 @@ Não existem retries automáticos. O sistema é **fail-closed**: falha → bloqu
 |---|---|---|---|
 | O pipeline usa Claude como único agente de IA | Fato confirmado | `CLAUDE.md`, `docs/_canon/AGENT_INSTRUCTIONS.md` | Alta |
 | O ponto de entrada obrigatório é `pre_contract_orchestrator.prompt.md` | Fato confirmado | `AGENT_INSTRUCTIONS.md §4`, `TASK_CATALOG.yaml` | Alta |
-| Existem exatamente 44 gates de validação | Fato confirmado | `GATES_REGISTRY.yaml`, `_reports/pipeline_health.json` (gates_total: 44) | Alta |
+| Número de gates de validação (não é fixo — usa GATES_REGISTRY.yaml) | DERIVADO — ver SSOT | `GATES_REGISTRY.yaml` (SSOT), `_reports/pipeline_health.json` (gates_total atual) | Alta |
 | `validate_contracts.py` tem 8013 linhas e implementa todos os gates | Fato confirmado | `wc -l validate_contracts.py` | Alta |
 | O boot mínimo tem orçamento de 2.100 palavras somadas | Fato confirmado | `audit_context_efficiency.prompt.md §2` | Alta |
 | `SESSION_HANDOFF.md` é lido antes de qualquer outra ação | Fato confirmado | `AGENT_INSTRUCTIONS.md §0`, `pre_contract_orchestrator.prompt.md §Pré-Fase` | Alta |
@@ -742,7 +742,7 @@ Entrada do usuário (task_type + module + params)
   │     └─ scripts/hb artifact <path>
   │           (upsert em session_start.json + validate --stage artifact)
   │
-  ├─ [FASE 3 — VALIDATION] validate_contracts.py (44 gates)
+  ├─ [FASE 3 — VALIDATION] validate_contracts.py (N gates — ver GATES_REGISTRY.yaml)
   │     │
   │     ├─ Gate 0: AXIOM_INTEGRITY_GATE          → FAIL → CRITICAL
   │     ├─ Gate 1: PATH_CANONICALITY_GATE         → FAIL → CRITICAL
@@ -852,7 +852,7 @@ Entrada do usuário (task_type + module + params)
 | Componente | Problema percebido |
 |---|---|
 | `CONTRACT_SYSTEM_RULES.md` (24 seções, 909 linhas) | Documento de regras operacionais excessivamente longo para um artefato de boot `gate_only`; referenciado em múltiplos workers |
-| 44 gates com dependências complexas | `READINESS_SUMMARY_GATE` depende de `all_preceding`; mudança em qualquer gate tem impacto sistêmico |
+| Gates com dependências complexas (contagem em `GATES_REGISTRY.yaml`) | `READINESS_SUMMARY_GATE` depende de `all_preceding`; mudança em qualquer gate tem impacto sistêmico |
 | 17 workers + orchestrator | Volume alto de prompts; manutenção síncrona entre prompts e RULES é difícil de garantir |
 | Distinção `docs/guias/` vs `docs/_canon/` | Fronteira de autoridade tênue; `SHADOW_AUTHORITY_GATE` detecta violações mas linguagem pode ser ambígua |
 
@@ -1006,7 +1006,7 @@ def _g13a_spectral_linting(root: pathlib.Path) -> dict:
 
 - Adicionar Spectral rules customizadas (`.spectralrc` ou CI-side)
 - Adicionar outros 28 gates faltantes (gradualmente, conforme necessidade)
-- Profile "ci" já cobre todos 44 gates (CI workflow está completo)
+- Profile "ci" já cobre todos os gates ativos (contagem em `pipeline_health.json` — CI workflow está completo)
 
 ---
 

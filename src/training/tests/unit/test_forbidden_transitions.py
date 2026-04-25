@@ -5,7 +5,7 @@ Todas as combinações (from_status, to_status) que NÃO estão em VALID_TRANSIT
 """
 import pytest
 
-from training.domain.entities import TrainingSessionStatus
+from training.domain.common.enums import TrainingSessionStatus
 from training.domain.rules import (
     VALID_TRANSITIONS,
     InvalidStatusTransition,

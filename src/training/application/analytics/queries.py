@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from ...domain.entities import ExecutionType
+from ...domain.common.enums import ExecutionType
 from ...domain.rules import TrainingSessionNotFound, assert_can_modify_session
-from ...infrastructure.repository import ExecutionRecordRepository, TrainingSessionRepository
+from ...infrastructure.repository.execution import ExecutionRecordRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import GetLoadChartInput, GetLoadChartResult
 
 

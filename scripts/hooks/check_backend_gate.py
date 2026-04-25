@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""
-Hook: check_backend_gate.py
-Validates backend operations before tool execution.
-"""
-import sys
-
-# Allow all operations
-sys.exit(0)
+# STUB — arquivo existe só para não quebrar hooks que ainda referenciam este path.
+# O script real foi convertido para DISABLED.
+# Ver: HBCONTROL.md Onda 0 — A1
+raise RuntimeError(
+    "check_backend_gate.py está DESABILITADO. "
+    "Este arquivo não deveria ser chamado por nenhum hook ativo. "
+    "Verifique a configuração do agente."
+)

@@ -4,8 +4,8 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import Mesocycle, Microcycle
-from ..models import MesocycleModel, MicrocycleModel
+from ...domain.entities.planning import Mesocycle, Microcycle
+from ..models.planning import MesocycleModel, MicrocycleModel
 
 
 class MesocycleRepository:

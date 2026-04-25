@@ -3,17 +3,16 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import AthleteIneligibilityDeclaration, TrainingSessionStatus
+from ...domain.entities.eligibility import AthleteIneligibilityDeclaration
+from ...domain.common.enums import TrainingSessionStatus
 from ...domain.rules import (
     IneligibilityStateConflict,
     InsufficientPrivilege,
     RoleLabel,
     TrainingSessionNotFound,
 )
-from ...infrastructure.repository import (
-    AthleteIneligibilityDeclarationRepository,
-    TrainingSessionRepository,
-)
+from ...infrastructure.repository.eligibility import AthleteIneligibilityDeclarationRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import SubmitIneligibilityDeclarationInput
 
 

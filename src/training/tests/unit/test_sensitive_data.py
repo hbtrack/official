@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from training.domain.entities import WellnessPre
+from training.domain.entities.wellness import WellnessPre
 
 
 class TestWellnessPreFieldConstraints:

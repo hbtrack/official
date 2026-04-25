@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.1.0"
-last_reviewed: "2026-03-23"
+version: "1.2.0"
+last_reviewed: "2026-04-24"
 status: active
 state_semantics: governance
 ---
@@ -10,31 +10,34 @@ state_semantics: governance
 
 ## 0. Objetivo e limite de autoridade
 
-Este C4 descreve containers relevantes para implementacao e deploy **sem vender target-state como runtime atual**.
+Este C4 descreve containers e superfícies de runtime relevantes **sem confundir
+materialização local com prontidão operacional total de produção**.
 
-Ele nao substitui:
+Ele não substitui:
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) para leitura macro;
-- [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md) para estrutura do backend;
-- [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md) para frontend aprovado;
+- [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md) para estrutura do código;
+- [RUNTIME_CURRENT_STATE.md](./RUNTIME_CURRENT_STATE.md) para inventário factual detalhado;
 - [DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md) para deploy alvo.
 
-## 1. Containers atuais comprovados
+## 1. Containers e superfícies atuais comprovados
 
-| Container | Evidencia | Papel atual |
-|-----------|-----------|-------------|
-| Backend monolitico | `config/urls.py`, `config/settings.py`, `src/<module>/` | API HTTP Django + Django Ninja com 17 apps montados em um unico processo logico |
+| Container / superfície | Evidência | Papel atual |
+|---|---|---|
+| Backend monolítico ASGI | `config/urls.py`, `config/asgi.py`, `config/settings.py`, `src/<module>/` | API HTTP Django + Django Ninja, com runtime ASGI apto a HTTP e WebSocket |
 | PostgreSQL local | `infra/docker-compose.yml` | banco de desenvolvimento materializado no repo |
-| Redis local | `infra/docker-compose.yml` | servico de apoio provisionado; ainda nao prova worker Celery em execucao |
+| Redis local | `infra/docker-compose.yml` | suporte ao broker Celery e ao Channel Layer |
+| Frontend web SPA | `frontend/`, `frontend/package.json`, `frontend/src/`, `vite.config.ts` | workspace frontend React + Vite materializado |
+| Runtime assíncrono no backend | `config/celery.py`, `src/notifications/tasks.py`, `src/*/tasks.py` | fila assíncrona e execução de tasks materializadas no código |
+| Endpoint WebSocket / Channels | `config/asgi.py`, `config/settings.py`, `src/notifications/consumers.py` | comunicação realtime via Django Channels |
 
-## 2. Containers aprovados, mas nao materializados
+## 2. Elementos aprovados, mas ainda não fechados como operação de produção
 
-| Container | Fonte de aprovacao | Motivo de ainda nao ser runtime atual |
-|-----------|--------------------|---------------------------------------|
-| Frontend web SPA | `ADR-030`, `FRONTEND_CONTRACT.md` | `frontend/` nao existe e `package.json` nao declara toolchain de frontend real |
-| Worker assíncrono | `ADR-031` | nao existe `config/celery.py` nem `src/<module>/tasks.py` |
-| Endpoint WebSocket | `ADR-031` | nao existe configuracao Channels no backend atual |
-| Object storage adapter | `SYSTEM_SCOPE.md`, `DEPLOY_PIPELINE.md` | boundary aprovada, mas sem implementacao comprovada no repo |
+| Item | Fonte de aprovação | O que ainda falta |
+|---|---|---|
+| Worker Celery dedicado em container separado | `ADR-031`, `DEPLOY_PIPELINE.md` | provisionamento infra e operação dedicada fora do processo principal |
+| Deploy de SPA frontend em staging/produção | `ADR-030`, `DEPLOY_PIPELINE.md` | pipeline e hosting operacionalizados ponta a ponta |
+| Object storage adapter | `SYSTEM_SCOPE.md`, `DEPLOY_PIPELINE.md` | boundary aprovada, sem integração materializada no runtime atual |
 
 ## 3. Diagrama de containers
 
@@ -42,42 +45,49 @@ Ele nao substitui:
 flowchart TB
   user["Usuarios de negocio"]
 
-  subgraph current["Current-state comprovado"]
-    api["Backend Django + Django Ninja"]
+  subgraph current["Current-state comprovado no repo"]
+    web["Frontend React + Vite"]
+    api["Backend Django + Django Ninja (ASGI)"]
+    ws["Channels / WebSocket"]
     db["PostgreSQL local"]
-    redis["Redis local provisionado"]
+    redis["Redis local"]
+    tasks["Runtime assíncrono em código (Celery/tasks.py)"]
   end
 
-  subgraph target["Target-state aprovado"]
-    web["Frontend web"]
-    worker["Worker Celery"]
-    ws["Endpoint WebSocket / Channels"]
+  subgraph target["Capacidades aprovadas, ainda não operacionais ponta a ponta"]
+    worker_prod["Worker Celery dedicado"]
     storage["Storage externo"]
+    web_prod["Deploy SPA staging/prod"]
   end
 
+  user --> web
   user --> api
+  web --> api
   api --> db
-  api -. infra provisionada .-> redis
+  api --> redis
+  api --> ws
+  api --> tasks
+  tasks --> redis
 
-  user -. aprovado .-> web
-  web -. aprovado .-> api
-  api -. aprovado .-> worker
-  api -. aprovado .-> ws
+  api -. aprovado .-> worker_prod
   api -. boundary aprovada .-> storage
+  web -. deploy alvo .-> web_prod
 ```
 
-Legenda: setas solidas representam runtime comprovado no repo; setas tracejadas representam target-state ou boundary aprovada sem materializacao local suficiente.
+Legenda: setas sólidas representam materialização comprovada no workspace. Setas tracejadas representam
+capacidade aprovada, mas ainda não fechada como operação de produção.
 
 ## 4. Regras de leitura
 
-- ausencia de container materializado bloqueia qualquer afirmacao de operacao end-to-end;
-- frontend e worker nao podem ser tratados como ativos em handoff, readiness ou DONE sem arquivos e validacoes correspondentes;
-- Redis provisionado sem Celery configurado nao equivale a fila assíncrona em producao;
-- deploy so pode tratar `staging` ou `production` como operacionais quando `GET /health` existir e o pipeline de deploy tiver assets reais.
+- `frontend/` existente prova materialização de workspace frontend; **não** prova deploy de SPA em produção.
+- `config/celery.py`, `tasks.py` e `CHANNEL_LAYERS` provam runtime assíncrono materializado no código; **não** provam operação dedicada de worker separado.
+- Channels/WebSocket configurado no backend prova superfície realtime no código; **não** substitui validação de operação de produção.
+- Nenhum documento deste C4 pode negar a existência de `frontend/`, `config/celery.py`, `tasks.py`, `config/asgi.py` ou `CHANNEL_LAYERS` enquanto esses artefatos existirem no repo.
 
-## 5. Referencias
+## 5. Referências
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
 - [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md)
+- [RUNTIME_CURRENT_STATE.md](./RUNTIME_CURRENT_STATE.md)
 - [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md)
 - [DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md)

@@ -67,6 +67,10 @@ CURRENT_STATE_DOCS = {
     "C4_COMPONENTS_BACKEND.md",
     "RUNTIME_CURRENT_STATE.md",
 }
+FACTUALITY_DOCS = CURRENT_STATE_DOCS | {
+    "ARCHITECTURE.md",
+    "C4_CONTAINERS.md",
+}
 
 # Versão de PostgreSQL esperada no docker-compose de dev vs target-state
 POSTGRES_TARGET_VERSION = "16"
@@ -124,6 +128,56 @@ def _read_text_safe(path: Path) -> str:
         return path.read_text(encoding="utf-8")
     except Exception:
         return ""
+
+
+def _iter_doc_lines(root: Path, *, doc_names: set[str]) -> List[tuple[str, int, str, str]]:
+    rows: List[tuple[str, int, str, str]] = []
+    for doc_name in sorted(doc_names):
+        doc_path = root / "docs" / "_canon" / doc_name
+        if not doc_path.exists():
+            continue
+        text = _read_text_safe(doc_path)
+        for line_no, line in enumerate(text.splitlines(), start=1):
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            rows.append((doc_name, line_no, stripped, stripped.lower()))
+    return rows
+
+
+def _fmt_doc_line(doc_name: str, line_no: int, stripped: str) -> str:
+    return f"{doc_name}:{line_no}: '{stripped}'"
+
+
+NEGATION_TERMS = (
+    "ausente",
+    "não existe",
+    "nao existe",
+    "inexiste",
+    "target-state",
+    "target state",
+    "target",
+    "aprovado",
+    "ainda não",
+    "ainda nao",
+    "não materializado",
+    "nao materializado",
+    "não operacional",
+    "nao operacional",
+    "não implementado",
+    "nao implementado",
+    "sem ",
+    "nenhum",
+    "nenhuma",
+)
+
+
+def _contains_any(text: str, values: tuple[str, ...]) -> bool:
+    return any(value in text for value in values)
+
+
+def _doc_evidence_line(doc_name: str, line_no: int, stripped: str, repo_evidence: str) -> str:
+    return f"{_fmt_doc_line(doc_name, line_no, stripped)} | repo: {repo_evidence}"
 
 
 # ── Checks ────────────────────────────────────────────────────────────────────
@@ -273,68 +327,66 @@ def check_postgres_version_consistency(root: Path) -> CheckResult:
 
 def check_no_frontend_claim_in_current_state(root: Path) -> CheckResult:
     """
-    CHECK 3: Nenhum artefato current-state reivindica frontend ativo se frontend/ não existe.
+    CHECK 3: Claims de frontend não podem divergir do workspace.
+    - Se `frontend/` não existe, docs factuais não podem afirmar presença.
+    - Se `frontend/` existe, docs factuais não podem afirmar ausência.
     """
     frontend_dir = root / "frontend"
+    positive_claims: List[str] = []
+    negative_claims: List[str] = []
+    explicit_absence_in_current_state = False
+    repo_evidence = "frontend/ existe" if frontend_dir.exists() else "frontend/ ausente"
+
+    for doc_name, line_no, stripped, lower in _iter_doc_lines(root, doc_names=FACTUALITY_DOCS):
+        if "frontend" not in lower:
+            continue
+        has_positive_claim = bool(
+            ("✓" in stripped and "frontend" in lower)
+            or re.search(r"frontend[/`\s]+(?:materializado|existe|implementado|present)", lower)
+            or re.search(r"toolchain\s+react/vite", lower)
+        )
+        has_negative_claim = bool(
+            re.search(r"frontend[/`\s]+.*(?:ausente|nao existe|não existe|inexiste|nao materializado|não materializado)", lower)
+            or re.search(r"(?:ausente|nao existe|não existe|inexiste|nao materializado|não materializado).*(frontend|spa)", lower)
+        )
+        if has_positive_claim and not _contains_any(lower, NEGATION_TERMS):
+            positive_claims.append(_doc_evidence_line(doc_name, line_no, stripped, repo_evidence))
+        if has_negative_claim:
+            negative_claims.append(_doc_evidence_line(doc_name, line_no, stripped, repo_evidence))
+            if doc_name in CURRENT_STATE_DOCS:
+                explicit_absence_in_current_state = True
+
     if frontend_dir.exists():
+        if negative_claims:
+            return CheckResult(
+                name="no_frontend_claim_in_current_state",
+                status="FAIL",
+                message=(
+                    f"frontend/ existe no workspace, mas {len(negative_claims)} claim(s) "
+                    "documental(is) ainda afirmam ausência."
+                ),
+                details=negative_claims,
+            )
         return CheckResult(
             name="no_frontend_claim_in_current_state",
-            status="SKIP",
-            message="frontend/ existe no workspace — check não aplicável.",
+            status="PASS",
+            message="frontend/ materializado e nenhum artefato factual afirma sua ausência.",
         )
 
-    # frontend/ não existe: verificar que RUNTIME_CURRENT_STATE.md declara ausência
-    runtime_doc_path = root / "docs" / "_canon" / "RUNTIME_CURRENT_STATE.md"
-    violations: List[str] = []
-
-    if runtime_doc_path.exists():
-        runtime_text = _read_text_safe(runtime_doc_path)
-        # Deve declarar ausência do frontend de forma explícita
-        # Verificação: "frontend/" aparece na tabela de itens ausentes
-        if "ausente" not in runtime_text.lower() and "frontend/" in runtime_text:
-            # Verificação mais específica: a linha com frontend/ deve conter "ausente"
-            for line in runtime_text.splitlines():
-                if "frontend/" in line.lower() and "ausente" not in line.lower():
-                    violations.append(f"RUNTIME_CURRENT_STATE.md: linha suspeita — '{line.strip()}'")
-
-    # Verificar outros arquivos current-state que NÃO devem afirmar frontend como presente
-    # Exclusões: linhas de cabeçalho (#), linhas de seção, linhas que descrevem ausência
-    _NEGATIVE_WORDS = (
-        "ausente", "não existe", "inexiste", "target", "aprovado",
-        "não possui", "sem ", "nenhum", "nenhuma", "ainda não",
-        "não materializado", "absent", "inexistent",
-    )
-
-    for doc_name in CURRENT_STATE_DOCS:
-        doc_path = root / "docs" / "_canon" / doc_name
-        if not doc_path.exists():
-            continue
-        text = _read_text_safe(doc_path)
-        fm = _extract_frontmatter(text)
-        if not fm or fm.get("state_semantics") != "current-state":
-            continue
-        for line in text.splitlines():
-            stripped = line.strip()
-            # Ignorar cabeçalhos de seção e linhas vazias
-            if stripped.startswith("#") or not stripped:
-                continue
-            lower = stripped.lower()
-            # Procurar apenas afirmações positivas de que frontend existe
-            # Padrão: célula de tabela com ✓, ou "frontend materializado", ou "frontend/ existe"
-            has_positive_claim = (
-                ("frontend" in lower and "✓" in stripped) or
-                re.search(r"frontend[/\s]+(?:materializado|existe|implementado|present)", lower)
-            )
-            if has_positive_claim:
-                if not any(w in lower for w in _NEGATIVE_WORDS):
-                    violations.append(f"{doc_name}: '{stripped}'")
-
-    if violations:
+    if positive_claims:
         return CheckResult(
             name="no_frontend_claim_in_current_state",
             status="FAIL",
-            message=f"frontend/ não existe, mas {len(violations)} claim(s) suspeita(s) encontrada(s).",
-            details=violations,
+            message=f"frontend/ não existe, mas {len(positive_claims)} claim(s) suspeita(s) encontrada(s).",
+            details=positive_claims,
+        )
+
+    if not explicit_absence_in_current_state:
+        return CheckResult(
+            name="no_frontend_claim_in_current_state",
+            status="FAIL",
+            message="frontend/ não existe e nenhum artefato current-state declara sua ausência explicitamente.",
+            details=["Adicionar uma linha factual em RUNTIME_CURRENT_STATE.md ou doc current-state equivalente."],
         )
 
     return CheckResult(
@@ -346,8 +398,7 @@ def check_no_frontend_claim_in_current_state(root: Path) -> CheckResult:
 
 def check_no_async_runtime_claims(root: Path) -> CheckResult:
     """
-    CHECK 4: Nenhum artefato current-state reivindica Celery/Channels/WebSocket como runtime
-    se não há código correspondente (config/celery.py ou src/*/tasks.py).
+    CHECK 4: Claims sobre Celery/Channels/WebSocket devem refletir o código real.
     """
     # Verificar evidências de Celery no código
     celery_config = root / "config" / "celery.py"
@@ -362,12 +413,57 @@ def check_no_async_runtime_claims(root: Path) -> CheckResult:
     has_channels = "CHANNEL_LAYERS" in settings_text
 
     async_runtime_exists = has_celery_config or has_tasks or has_channels
+    positive_claims: List[str] = []
+    negative_claims: List[str] = []
+    repo_evidence_parts = []
+    if has_celery_config:
+        repo_evidence_parts.append("config/celery.py existe")
+    if has_tasks:
+        repo_evidence_parts.append(f"{len(tasks_files)} arquivo(s) src/*/tasks.py")
+    if has_channels:
+        repo_evidence_parts.append("CHANNEL_LAYERS configurado")
+    repo_evidence = ", ".join(repo_evidence_parts) if repo_evidence_parts else "runtime assíncrono ausente"
+
+    for doc_name, line_no, stripped, lower in _iter_doc_lines(root, doc_names=FACTUALITY_DOCS):
+        if not any(token in lower for token in ("celery", "channel_layers", "channels", "websocket", "tasks.py")):
+            continue
+
+        has_positive_claim = bool(
+            ("celery" in lower and "✓" in stripped)
+            or re.search(r"celery\s+(?:configurado|executando|rodando|ativo|running|installed|enabled)", lower)
+            or re.search(r"channel_layers", lower)
+            or re.search(r"websocket", lower)
+        )
+        has_negative_claim = bool(
+            re.search(r"(?:nao existe|não existe|ausente).*(config/celery\.py|tasks\.py|channels|channel_layers|websocket)", lower)
+            or re.search(r"(config/celery\.py|tasks\.py|channels|channel_layers|websocket).*(?:nao existe|não existe|ausente)", lower)
+            or re.search(r"(celery|channels|websocket).*(?:ainda nao materializado|ainda não materializado|nao materializado|não materializado)", lower)
+            or re.search(r"(config/celery\.py|tasks\.py|channel_layers).*(?:ainda nao|ainda não|nao materializado|não materializado)", lower)
+            or re.search(r"(celery|channels|websocket).*(?:target-state aprovado|nao arquitetura de codigo atual|não arquitetura de código atual)", lower)
+        )
+        if has_negative_claim and _contains_any(lower, ("não podem", "nao podem", "não devem", "nao devem")):
+            has_negative_claim = False
+
+        if has_positive_claim and not _contains_any(lower, NEGATION_TERMS):
+            positive_claims.append(_doc_evidence_line(doc_name, line_no, stripped, repo_evidence))
+        if has_negative_claim:
+            negative_claims.append(_doc_evidence_line(doc_name, line_no, stripped, repo_evidence))
 
     if async_runtime_exists:
+        if negative_claims:
+            return CheckResult(
+                name="no_async_runtime_claims",
+                status="FAIL",
+                message=(
+                    "Runtime assíncrono existe no código, mas artefatos factuais ainda "
+                    f"carregam {len(negative_claims)} claim(s) de ausência/target-state."
+                ),
+                details=negative_claims,
+            )
         return CheckResult(
             name="no_async_runtime_claims",
-            status="SKIP",
-            message="Runtime assíncrono detectado no código — check não aplicável.",
+            status="PASS",
+            message="Runtime assíncrono detectado no código e nenhum artefato factual afirma sua ausência.",
             details=[
                 f"config/celery.py exists: {has_celery_config}",
                 f"src/*/tasks.py count: {len(tasks_files)}",
@@ -375,58 +471,15 @@ def check_no_async_runtime_claims(root: Path) -> CheckResult:
             ],
         )
 
-    # Async runtime não existe: verificar docs current-state
-    violations: List[str] = []
-
-    # Palavras que indicam ausência / negação em Português
-    _NEG = (
-        "ausente", "não existe", "inexiste", "target", "[target",
-        "aprovado", "absent", "sem ", "nenhum", "nenhuma",
-        "ainda não", "não materializado", "não está", "nao define",
-        "nao substitui", "não substitui", "não define",
-    )
-
-    for doc_name in CURRENT_STATE_DOCS:
-        doc_path = root / "docs" / "_canon" / doc_name
-        if not doc_path.exists():
-            continue
-        text = _read_text_safe(doc_path)
-        fm = _extract_frontmatter(text)
-        if not fm or fm.get("state_semantics") != "current-state":
-            continue
-
-        for line in text.splitlines():
-            stripped = line.strip()
-            # Ignorar cabeçalhos de seção e linhas vazias
-            if stripped.startswith("#") or not stripped:
-                continue
-            lower = stripped.lower()
-
-            # Procurar apenas afirmações POSITIVAS de que Celery/Channels está em execução:
-            # Ex: ✓ em tabela com celery, ou "celery configurado", "channel_layers ativo"
-            has_celery_claim = bool(
-                ("celery" in lower and "✓" in stripped) or
-                re.search(r"celery\s+(?:configurado|executando|rodando|ativo|running|installed|enabled)", lower) or
-                re.search(r"CELERY_BROKER_URL\s*=", stripped)
-            )
-            has_channels_claim = bool(
-                "CHANNEL_LAYERS" in stripped and "=" in stripped and
-                not any(w in lower for w in _NEG)
-            )
-
-            if has_celery_claim or has_channels_claim:
-                if not any(w in lower for w in _NEG):
-                    violations.append(f"{doc_name}: '{stripped}'")
-
-    if violations:
+    if positive_claims:
         return CheckResult(
             name="no_async_runtime_claims",
             status="FAIL",
             message=(
-                f"Celery/Channels não estão no runtime, mas {len(violations)} "
-                "claim(s) suspeita(s) encontrada(s) em artefatos current-state."
+                f"Celery/Channels não estão no runtime, mas {len(positive_claims)} "
+                "claim(s) suspeita(s) encontrada(s) em artefatos factuais."
             ),
-            details=violations,
+            details=positive_claims,
         )
 
     return CheckResult(
@@ -436,6 +489,111 @@ def check_no_async_runtime_claims(root: Path) -> CheckResult:
             "Celery/Channels/WebSocket ausentes do código e nenhum artefato "
             "current-state afirma sua existência como runtime ativo."
         ),
+    )
+
+
+def check_runtime_topology_claims(root: Path) -> CheckResult:
+    """
+    CHECK 5: Claims de topologia/runtime deployável devem refletir artefatos reais.
+    Cobertura mínima:
+      - config/asgi.py
+      - src/notifications/middleware.py
+      - Dockerfile.frontend
+      - infra/docker-compose*.yml
+    """
+    signals = {
+        "asgi_runtime": {
+            "present": (root / "config" / "asgi.py").exists(),
+            "terms": ("config/asgi.py", "protocoltyperouter", "asgi", "websocket"),
+            "positive": (
+                r"config/asgi\.py",
+                r"protocoltyperouter",
+                r"asgi runtime",
+            ),
+            "negative": (
+                r"config/asgi\.py.*(?:ausente|nao existe|não existe|nao materializado|não materializado)",
+                r"(?:ausente|nao existe|não existe|nao materializado|não materializado).*(?:config/asgi\.py|asgi)",
+                r"(?:asgi|websocket).*(?:target-state aprovado|nao operacional|não operacional)",
+            ),
+            "repo_evidence": "config/asgi.py existe",
+        },
+        "websocket_auth_middleware": {
+            "present": (root / "src" / "notifications" / "middleware.py").exists(),
+            "terms": ("tokenauthmiddleware", "notifications/middleware.py", "middleware websocket"),
+            "positive": (
+                r"tokenauthmiddleware",
+                r"notifications/middleware\.py",
+                r"middleware websocket",
+            ),
+            "negative": (
+                r"notifications/middleware\.py.*(?:ausente|nao existe|não existe|nao materializado|não materializado)",
+                r"tokenauthmiddleware.*(?:ausente|nao existe|não existe|nao materializado|não materializado)",
+                r"(?:middleware websocket|auth middleware).*(?:target-state aprovado|nao operacional|não operacional)",
+            ),
+            "repo_evidence": "src/notifications/middleware.py existe",
+        },
+        "frontend_deploy": {
+            "present": (root / "Dockerfile.frontend").exists() and any((root / "infra").glob("docker-compose*.yml")),
+            "terms": ("dockerfile.frontend", "nginx-spa", "frontend deploy", "frontend spa"),
+            "positive": (
+                r"dockerfile\.frontend",
+                r"nginx-spa",
+                r"frontend deploy",
+                r"frontend spa",
+            ),
+            "negative": (
+                r"dockerfile\.frontend.*(?:ausente|nao existe|não existe|nao materializado|não materializado)",
+                r"(?:ausente|nao existe|não existe|nao materializado|não materializado).*(?:dockerfile\.frontend|frontend deploy|frontend spa)",
+                r"(?:frontend deploy|dockerfile\.frontend).*(?:target-state aprovado|nao operacional|não operacional)",
+            ),
+            "repo_evidence": "Dockerfile.frontend + infra/docker-compose*.yml existem",
+        },
+    }
+
+    positive_claims: List[str] = []
+    negative_claims: List[str] = []
+    doc_rows = _iter_doc_lines(root, doc_names=FACTUALITY_DOCS)
+
+    for signal in signals.values():
+        for doc_name, line_no, stripped, lower in doc_rows:
+            if not any(term in lower for term in signal["terms"]):
+                continue
+            if any(re.search(pattern, lower) for pattern in signal["negative"]):
+                negative_claims.append(
+                    _doc_evidence_line(doc_name, line_no, stripped, signal["repo_evidence"])
+                )
+            elif any(re.search(pattern, lower) for pattern in signal["positive"]) and not _contains_any(lower, NEGATION_TERMS):
+                positive_claims.append(
+                    _doc_evidence_line(doc_name, line_no, stripped, signal["repo_evidence"])
+                )
+
+    if any(signal["present"] for signal in signals.values()) and negative_claims:
+        return CheckResult(
+            name="runtime_topology_claims",
+            status="FAIL",
+            message=(
+                "Artefatos de topologia/runtime já existem no repo, mas a documentação factual "
+                f"ainda contém {len(negative_claims)} claim(s) negativa(s)."
+            ),
+            details=negative_claims,
+        )
+
+    absent_signals = [signal for signal in signals.values() if not signal["present"]]
+    if absent_signals and positive_claims:
+        return CheckResult(
+            name="runtime_topology_claims",
+            status="FAIL",
+            message=(
+                "A documentação factual afirma topologia/runtime deployável sem evidência suficiente "
+                "no repositório."
+            ),
+            details=positive_claims,
+        )
+
+    return CheckResult(
+        name="runtime_topology_claims",
+        status="PASS",
+        message="Claims de topologia/runtime estão coerentes com os artefatos reais do repositório.",
     )
 
 
@@ -623,6 +781,7 @@ def run_all_checks(root: Path) -> ArchDriftReport:
         check_postgres_version_consistency,
         check_no_frontend_claim_in_current_state,
         check_no_async_runtime_claims,
+        check_runtime_topology_claims,
         check_module_registry_coherence,
         check_health_endpoint_claim,
     ]

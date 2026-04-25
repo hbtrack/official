@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-14"
+version: "1.0.1"
+last_reviewed: "2026-04-25"
 status: active
 cross_refs:
   system_scope: "docs/_canon/SYSTEM_SCOPE.md"
@@ -19,6 +19,10 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 **Registry machine-readable**: [`docs/_canon/gates/GATES_REGISTRY.yaml`](./GATES_REGISTRY.yaml) — lista estruturada de todos os gates, verificada pelo pipeline no `REQUIRED_ARTIFACT_PRESENCE_GATE`.
 
 **Implementação**: [`scripts/contracts/validate/validate_contracts.py`](../../../scripts/contracts/validate/validate_contracts.py) — engine Python que executa os gates na ordem canônica.
+
+Para sub-ordens alfanuméricas e guardas adicionadas depois da baseline inicial
+deste índice rápido, a ordem executável soberana é sempre a do registry
+machine-readable.
 
 ---
 
@@ -58,6 +62,21 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 14 | `UI_DOC_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Storybook build quando houver UI documentada | §9.14 |
 | 15 | `DERIVED_DRIFT_GATE` | Sim | Não | Derivados em `generated/` == fonte soberana recompilada; qualquer drift bloqueia | §9.15 |
 | 16 | `READINESS_SUMMARY_GATE` | Sim | Não | Sumário final binário — todos os gates bloqueantes aplicáveis PASS = sistema pronto | §9.16 |
+
+---
+
+## Guardas adicionais materializadas no runtime atual
+
+| Ordem | Gate ID | Bloqueante | Descrição resumida | Evidência principal |
+|------:|---------|:----------:|--------------------|---------------------|
+| 15I1 | `ARCHITECTURE_FACTUALITY_GATE` | Sim | Detecta claim factual falsa ou negativa falsa em docs arquiteturais, current-state e C4 | `scripts/audit/check_architecture_docs.py`, `tests/pipeline_gates/test_architecture_factuality_gate.py` |
+| 15I2 | `HOOK_EFFECTIVENESS_GATE` | Sim | Rejeita hook allow-all e hook advisory descrito como enforcement bloqueante | `scripts/hooks/check_backend_gate.py`, `scripts/hooks/check_session_commit.py`, `tests/pipeline_gates/test_hook_effectiveness.py` |
+| 15I3 | `LIVE_ENFORCEMENT_PARITY_GATE` | Sim | Compara ruleset live do GitHub com `merge-readiness.json`, snapshot e merge policy versionados | `.github/rulesets/contract-gates.snapshot.json`, `.github/merge-policy.md`, `tests/pipeline_gates/test_live_ruleset_parity.py` |
+| 15I4 | `REPORT_TRUTHFULNESS_GATE` | Sim | Garante que o relatório canônico não mascara execução parcial nem gate mandatória em skip | `_reports/contract_gates/latest.json`, `tests/pipeline_gates/test_report_truthfulness.py` |
+| 20B2 | `MODULE_BEHAVIORAL_READINESS_GATE` | Sim | Exige superfície API real, mount no runtime e teste executável para módulos `implemented+` | `tests/pipeline_gates/test_module_behavioral_readiness.py` |
+| 20L | `CONTEXT_BUNDLE_FRESHNESS_GATE` | Sim | Verifica sincronismo entre source masters reais e bundles em `compiled_context/` | `compiled_context/`, `generated/source_graph/`, `tests/pipeline_gates/test_impact_analysis_gate.py` |
+| 20M | `IMPACT_ANALYSIS_GATE` | Sim | Exige `blocking_consumers` no mesmo commit para cada `source_master` modificado | `docs/_canon/SYNC_MANIFEST.yaml`, `tests/pipeline_gates/test_impact_analysis_gate.py` |
+| 20N | `PARTIAL_UPDATE_GATE` | Sim | Exige ao menos um `required_consumer` quando um `source_master` muda | `docs/_canon/SYNC_MANIFEST.yaml`, `tests/pipeline_gates/test_impact_analysis_gate.py` |
 
 ---
 

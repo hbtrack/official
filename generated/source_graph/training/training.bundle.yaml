@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/training/training_session.yaml
   sha256: 46fda3e793fd53bd7d1e86c7cc2eac8b38f7e7696e8518824955532231ab8ab2
 - relpath: contracts/openapi/paths/training.yaml
-  sha256: 995111183ea91ae3f6fa1c583a58b612b68f8a6c70341448d15f314587dab80f
+  sha256: 6718907d2fb53a3a02125d6b4f19ca1bdec70845a77bd3b2b950a2550344e501
 - relpath: contracts/schemas/training/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/training/ajv_compile.log
@@ -79,7 +79,7 @@ inputs:
 - relpath: src/training/domain/entities/__init__.py
   sha256: ecc9f0c0777358635c830a1781fbea3845ab5418326d17c4cb839ec73f6388de
 - relpath: src/training/domain/rules.py
-  sha256: 8ac285ca2ff761c339a5e02869eddfe063168a2d1976e37472a8fadda16ea438
+  sha256: 472f1963a0b599d4c2593467b7d027e4acd4fb59d854deebd48ad45c3700a04f
 module_manifest:
   version: 1.0.0
   status: active

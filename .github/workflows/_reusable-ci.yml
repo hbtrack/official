@@ -64,8 +64,8 @@ jobs:
           sudo mv /tmp/oasdiff /usr/local/bin/oasdiff
           oasdiff --version
 
-      - name: Run contract validation (todos os gates de tooling habilitados)
-        run: python3 scripts/contracts/validate/validate_contracts.py --profile precommit
+      - name: Run contract validation (escopo canônico)
+        run: python3 scripts/hb validate --profile ci
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 2 — Testes unitários e de integração

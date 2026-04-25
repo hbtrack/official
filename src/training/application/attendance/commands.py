@@ -3,14 +3,17 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import AttendanceRecord, AttendanceSource, AttendanceStatus
+from ...domain.entities.attendance import AttendanceRecord
+from ...domain.common.enums import AttendanceSource, AttendanceStatus
 from ...domain.rules import (
+    AttendanceAlreadyRecorded,
     InsufficientPrivilege,
     RoleLabel,
     TrainingSessionNotFound,
     assert_can_record_attendance,
 )
-from ...infrastructure.repository import AttendanceRepository, TrainingSessionRepository
+from ...infrastructure.repository.attendance import AttendanceRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import RecordSessionAttendanceInput
 
 
@@ -26,6 +29,10 @@ class RecordSessionAttendanceUseCase:
         status = AttendanceStatus(inp.status)
         source = AttendanceSource(inp.source)
         assert_can_record_attendance(inp.actor_role, inp.actor_id, inp.athlete_id, status, source)
+        if self._attendance_repo.exists_for_session_athlete(inp.session_id, inp.athlete_id):
+            raise AttendanceAlreadyRecorded(
+                f"INV-TRAIN-030: presença já registrada para athlete {inp.athlete_id} na sessão {inp.session_id}"
+            )
         if inp.actor_role == RoleLabel.ATHLETE and datetime.now(tz=timezone.utc) >= session.session_at:
             raise InsufficientPrivilege(
                 "INV-TRAIN-063: athlete só pode PRECONFIRM antes do início da sessão"

@@ -12,20 +12,11 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from training.domain.entities import (
-    AttentionQueueItem,
-    Recommendation,
-    RecommendationActionType,
-    RecommendationPriority,
-    RecommendationStatus,
-    TrainingSession,
-    TrainingSessionStatus,
-)
-from training.infrastructure.repository import (
-    AttentionQueueRepository,
-    RecommendationRepository,
-    TrainingSessionRepository,
-)
+from training.domain.entities.sessions import TrainingSession, TrainingSessionStatus
+from training.domain.entities.communication import AttentionQueueItem, Recommendation
+from training.domain.common.enums import RecommendationActionType, RecommendationPriority, RecommendationStatus
+from training.infrastructure.repository.sessions import TrainingSessionRepository
+from training.infrastructure.repository.communication import AttentionQueueRepository, RecommendationRepository
 
 
 pytestmark = pytest.mark.django_db

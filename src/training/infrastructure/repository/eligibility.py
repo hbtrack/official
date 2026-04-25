@@ -4,8 +4,8 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import AthleteIneligibilityDeclaration
-from ..models import AthleteIneligibilityDeclarationModel
+from ...domain.entities.eligibility import AthleteIneligibilityDeclaration
+from ..models.eligibility import AthleteIneligibilityDeclarationModel
 
 
 class AthleteIneligibilityDeclarationRepository:
