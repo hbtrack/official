@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-24T05:06:12Z",
+  "timestamp_utc": "2026-04-25T10:26:02Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "428d48eb",
+    "git_commit": "3ca3ed0c",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "PASS",
+  "overall_status": "FAIL",
   "execution_context": {
     "profile": "local",
     "stage": null,
@@ -31,11 +31,13 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260424T050612_59b7c8"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T102602_1a5bba"
   },
   "status_detail": {
-    "active_gates_passed": 29,
-    "skip_count": 34,
+    "proof_scope": "mixed",
+    "active_gates_total": 33,
+    "active_gates_passed": 31,
+    "skip_count": 35,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -174,8 +176,20 @@
         "status": "PASS"
       },
       {
-        "gate_id": "HANDOFF_COHERENCE_GATE",
+        "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
         "status": "PASS"
+      },
+      {
+        "gate_id": "HOOK_EFFECTIVENESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "LIVE_ENFORCEMENT_PARITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "HANDOFF_COHERENCE_GATE",
+        "status": "FAIL"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -183,6 +197,10 @@
       },
       {
         "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
         "status": "PASS"
       },
       {
@@ -240,10 +258,101 @@
       {
         "gate_id": "HBTRACK_CANON_PARITY_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "REPORT_TRUTHFULNESS_GATE",
+        "status": "PASS"
+      }
+    ],
+    "mandatory_ci_skip_count": 21,
+    "mandatory_ci_skips": [
+      {
+        "gate_id": "REQUIRED_ARTIFACT_PRESENCE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "MODULE_DOC_CROSSREF_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "OWASP_API_CONTROL_MATRIX_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "MODULE_SOURCE_AUTHORITY_MATRIX_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "WELLNESS_MEDICAL_BOUNDARY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "SCOUT_TAXONOMY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "ASYNC_REQUIRED_MODULE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "EXTERNAL_SOURCE_AUTHORITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "PRE_CONTRACT_EVIDENCE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "SHADOW_AUTHORITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "CONTRACT_BREAKING_CHANGE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "TRANSFORMATION_FEASIBILITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "LIVE_ENFORCEMENT_PARITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "MODULE_DEPENDENCY_RESOLUTION_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "FEATURE_COVERAGE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "LEGACY_CRITICAL_PATH_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "DOC_USAGE_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+        "summary": "Pulado no perfil 'local'."
+      },
+      {
+        "gate_id": "HBTRACK_CANON_PARITY_GATE",
+        "summary": "Pulado no perfil 'local'."
       }
     ]
   },
-  "exit_code": 0,
+  "exit_code": 2,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -265,8 +374,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
-      }
+        "duration_ms": 46
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PATH_CANONICALITY_GATE",
@@ -290,8 +408,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8356
-      }
+        "duration_ms": 1821
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "REQUIRED_ARTIFACT_PRESENCE_GATE",
@@ -309,7 +436,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "MODULE_DOC_CROSSREF_GATE",
@@ -327,7 +463,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
@@ -345,7 +490,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "OWASP_API_CONTROL_MATRIX_GATE",
@@ -363,7 +517,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "MODULE_SOURCE_AUTHORITY_MATRIX_GATE",
@@ -381,7 +544,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "MODULE_REGISTRY_GATE",
@@ -401,8 +573,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
-      }
+        "duration_ms": 15
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
@@ -420,7 +601,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "WELLNESS_MEDICAL_BOUNDARY_GATE",
@@ -438,7 +628,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "SCOUT_TAXONOMY_GATE",
@@ -456,7 +655,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "ASYNC_REQUIRED_MODULE_GATE",
@@ -474,7 +682,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "EXTERNAL_SOURCE_AUTHORITY_GATE",
@@ -492,7 +709,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "PRE_CONTRACT_EVIDENCE_GATE",
@@ -510,7 +736,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "SHADOW_AUTHORITY_GATE",
@@ -528,7 +763,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "DECISION_IR_CONFORMANCE_GATE",
@@ -554,8 +798,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 147
-      }
+        "duration_ms": 120
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_registry_has_implementation_ready_decision_ir"
     },
     {
       "gate_id": "CANON_ALLOWLIST_GATE",
@@ -660,8 +913,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
-      }
+        "duration_ms": 3
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PLACEHOLDER_RESIDUE_GATE",
@@ -1033,8 +1295,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 132
-      }
+        "duration_ms": 42
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "REF_HERMETICITY_GATE",
@@ -1119,8 +1390,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 764
-      }
+        "duration_ms": 729
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "TOOLING_CONFIG_GATE",
@@ -1142,8 +1422,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6233
-      }
+        "duration_ms": 1095
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
@@ -1164,8 +1453,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2315
-      }
+        "duration_ms": 1310
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
@@ -1203,8 +1501,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 620
-      }
+        "duration_ms": 563
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "modules_have_openapi_sync_surface"
     },
     {
       "gate_id": "OPENAPI_POLICY_RULESET_GATE",
@@ -3657,11 +3964,11 @@
           ],
           "range": {
             "start": {
-              "line": 2479,
+              "line": 2533,
               "character": 8
             },
             "end": {
-              "line": 2479,
+              "line": 2533,
               "character": 25
             }
           }
@@ -3679,11 +3986,11 @@
           ],
           "range": {
             "start": {
-              "line": 2558,
+              "line": 2618,
               "character": 8
             },
             "end": {
-              "line": 2558,
+              "line": 2618,
               "character": 25
             }
           }
@@ -3701,11 +4008,11 @@
           ],
           "range": {
             "start": {
-              "line": 2667,
+              "line": 2733,
               "character": 8
             },
             "end": {
-              "line": 2667,
+              "line": 2733,
               "character": 25
             }
           }
@@ -3723,11 +4030,11 @@
           ],
           "range": {
             "start": {
-              "line": 2744,
+              "line": 2810,
               "character": 8
             },
             "end": {
-              "line": 2744,
+              "line": 2810,
               "character": 25
             }
           }
@@ -3745,11 +4052,11 @@
           ],
           "range": {
             "start": {
-              "line": 2827,
+              "line": 2893,
               "character": 8
             },
             "end": {
-              "line": 2827,
+              "line": 2893,
               "character": 25
             }
           }
@@ -3767,11 +4074,11 @@
           ],
           "range": {
             "start": {
-              "line": 2873,
+              "line": 2939,
               "character": 8
             },
             "end": {
-              "line": 2873,
+              "line": 2939,
               "character": 24
             }
           }
@@ -3789,11 +4096,11 @@
           ],
           "range": {
             "start": {
-              "line": 2937,
+              "line": 3003,
               "character": 8
             },
             "end": {
-              "line": 2937,
+              "line": 3003,
               "character": 24
             }
           }
@@ -3811,11 +4118,11 @@
           ],
           "range": {
             "start": {
-              "line": 3004,
+              "line": 3076,
               "character": 8
             },
             "end": {
-              "line": 3004,
+              "line": 3076,
               "character": 26
             }
           }
@@ -3833,11 +4140,11 @@
           ],
           "range": {
             "start": {
-              "line": 3051,
+              "line": 3123,
               "character": 8
             },
             "end": {
-              "line": 3051,
+              "line": 3123,
               "character": 26
             }
           }
@@ -3855,11 +4162,11 @@
           ],
           "range": {
             "start": {
-              "line": 3118,
+              "line": 3196,
               "character": 8
             },
             "end": {
-              "line": 3118,
+              "line": 3196,
               "character": 23
             }
           }
@@ -3877,11 +4184,11 @@
           ],
           "range": {
             "start": {
-              "line": 3183,
+              "line": 3261,
               "character": 8
             },
             "end": {
-              "line": 3183,
+              "line": 3261,
               "character": 25
             }
           }
@@ -3899,11 +4206,11 @@
           ],
           "range": {
             "start": {
-              "line": 3264,
+              "line": 3348,
               "character": 8
             },
             "end": {
-              "line": 3264,
+              "line": 3348,
               "character": 25
             }
           }
@@ -3921,11 +4228,11 @@
           ],
           "range": {
             "start": {
-              "line": 3339,
+              "line": 3429,
               "character": 8
             },
             "end": {
-              "line": 3339,
+              "line": 3429,
               "character": 25
             }
           }
@@ -3943,11 +4250,11 @@
           ],
           "range": {
             "start": {
-              "line": 3417,
+              "line": 3513,
               "character": 8
             },
             "end": {
-              "line": 3417,
+              "line": 3513,
               "character": 25
             }
           }
@@ -3965,11 +4272,11 @@
           ],
           "range": {
             "start": {
-              "line": 3497,
+              "line": 3599,
               "character": 8
             },
             "end": {
-              "line": 3497,
+              "line": 3599,
               "character": 23
             }
           }
@@ -3987,11 +4294,11 @@
           ],
           "range": {
             "start": {
-              "line": 3563,
+              "line": 3665,
               "character": 8
             },
             "end": {
-              "line": 3563,
+              "line": 3665,
               "character": 23
             }
           }
@@ -4009,11 +4316,11 @@
           ],
           "range": {
             "start": {
-              "line": 3644,
+              "line": 3752,
               "character": 8
             },
             "end": {
-              "line": 3644,
+              "line": 3752,
               "character": 23
             }
           }
@@ -4031,11 +4338,11 @@
           ],
           "range": {
             "start": {
-              "line": 3734,
+              "line": 3848,
               "character": 8
             },
             "end": {
-              "line": 3734,
+              "line": 3848,
               "character": 24
             }
           }
@@ -4053,11 +4360,11 @@
           ],
           "range": {
             "start": {
-              "line": 3803,
+              "line": 3923,
               "character": 8
             },
             "end": {
-              "line": 3803,
+              "line": 3923,
               "character": 24
             }
           }
@@ -4075,11 +4382,11 @@
           ],
           "range": {
             "start": {
-              "line": 3863,
+              "line": 3983,
               "character": 8
             },
             "end": {
-              "line": 3863,
+              "line": 3983,
               "character": 23
             }
           }
@@ -4097,11 +4404,11 @@
           ],
           "range": {
             "start": {
-              "line": 3946,
+              "line": 4072,
               "character": 8
             },
             "end": {
-              "line": 3946,
+              "line": 4072,
               "character": 23
             }
           }
@@ -4119,11 +4426,11 @@
           ],
           "range": {
             "start": {
-              "line": 4029,
+              "line": 4161,
               "character": 8
             },
             "end": {
-              "line": 4029,
+              "line": 4161,
               "character": 23
             }
           }
@@ -4141,11 +4448,11 @@
           ],
           "range": {
             "start": {
-              "line": 4126,
+              "line": 4264,
               "character": 8
             },
             "end": {
-              "line": 4126,
+              "line": 4264,
               "character": 24
             }
           }
@@ -4155,8 +4462,17 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 4139
-      }
+        "duration_ms": 1836
+      },
+      "proof_class": "remote_live",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
@@ -4223,8 +4539,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
-      }
+        "duration_ms": 2
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
@@ -4840,8 +5165,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2489
-      }
+        "duration_ms": 1747
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CONTRACT_BREAKING_CHANGE_GATE",
@@ -4859,7 +5193,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "TRANSFORMATION_FEASIBILITY_GATE",
@@ -4877,7 +5220,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "HTTP_RUNTIME_CONTRACT_GATE",
@@ -4895,7 +5247,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "ASYNCAPI_VALIDATION_GATE",
@@ -4916,8 +5277,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5559
-      }
+        "duration_ms": 1836
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "asyncapi_document_present"
     },
     {
       "gate_id": "ARAZZO_VALIDATION_GATE",
@@ -4959,8 +5329,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 149
-      }
+        "duration_ms": 63
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "arazzo_document_present"
     },
     {
       "gate_id": "SPECTRAL_LINTING_GATE",
@@ -4981,8 +5360,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6422
-      }
+        "duration_ms": 1346
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "openapi_document_present"
     },
     {
       "gate_id": "ARAZZO_COMPLETENESS_GATE",
@@ -5037,8 +5425,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 107
-      }
+        "duration_ms": 59
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "arazzo_declared_in_expected_surfaces"
     },
     {
       "gate_id": "UI_DOC_VALIDATION_GATE",
@@ -5057,8 +5454,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
-      }
+        "duration_ms": 3
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "ui_documentation_present"
     },
     {
       "gate_id": "FRONTEND_CONTRACT_GATE",
@@ -5138,8 +5544,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3264
-      }
+        "duration_ms": 280
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "frontend/ directory exists"
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
@@ -5158,8 +5573,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57342
-      }
+        "duration_ms": 41624
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
@@ -5194,8 +5618,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
-      }
+        "duration_ms": 10
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "FEATURE_READINESS_GATE",
@@ -5214,8 +5647,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
-      }
+        "duration_ms": 20
+      },
+      "proof_class": "presence",
+      "promotion_power": "advisory",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "VERSIONING_POLICY_GATE",
@@ -5233,7 +5675,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "PACT_PROVIDER_GATE",
@@ -5251,7 +5702,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "CODE_ARCHITECTURE_GATE",
@@ -5269,7 +5729,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "DEPLOY_READINESS_GATE",
@@ -5287,7 +5756,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "DATA_MIGRATION_GATE",
@@ -5305,7 +5783,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "MONITORING_POLICY_GATE",
@@ -5323,34 +5810,61 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
-      "gate_id": "HANDOFF_COHERENCE_GATE",
+      "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
       "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
-      "inputs": [
-        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
-        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
-        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
-        "/home/davis/HB-TRACK/src/training/migrations/0010_add_unique_constraint_wellness_pre.py",
-        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/generated/manifests"
-      ],
+      "summary": "Factualidade arquitetural validada: 6 PASS, 1 SKIP no checker.",
+      "inputs": [],
       "artifacts_checked": [
-        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/ai_audit/07-remediation/IMPACT.md",
-        "/home/davis/HB-TRACK/src/training/tests/integration/test_training_api.py",
-        "/home/davis/HB-TRACK/src/training/infrastructure/models/wellness.py",
-        "/home/davis/HB-TRACK/src/training/migrations/0010_add_unique_constraint_wellness_pre.py",
-        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/generated/manifests"
+        "scripts/audit/check_architecture_docs.py"
+      ],
+      "evidence_files": [
+        "scripts/audit/check_architecture_docs.py"
+      ],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 87
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
+    },
+    {
+      "gate_id": "HOOK_EFFECTIVENESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Hooks ativos auditados: 2 comando(s) sem no-op disfarçado de enforcement.",
+      "inputs": [],
+      "artifacts_checked": [
+        ".claude/settings.local.json",
+        ".github/hooks/hb-contract-guards.json",
+        "scripts/hooks/advisory_session_commit.py",
+        "scripts/hooks/advisory_session_commit.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5358,8 +5872,102 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
-      }
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "hooks_configured"
+    },
+    {
+      "gate_id": "LIVE_ENFORCEMENT_PARITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "remote_live",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
+    },
+    {
+      "gate_id": "HANDOFF_COHERENCE_GATE",
+      "status": "FAIL",
+      "blocking": true,
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
+      "inputs": [
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/.dev/HBCONTROL.md",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/scripts/audit/check_architecture_docs.py",
+        "/home/davis/HB-TRACK/scripts/audit/check_live_ruleset_parity.py",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/.github/merge-policy.md",
+        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/.dev/HBCONTROL.md",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/scripts/audit/check_architecture_docs.py",
+        "/home/davis/HB-TRACK/scripts/audit/check_live_ruleset_parity.py",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/.github/merge-policy.md",
+        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+      ],
+      "evidence_files": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de modo de operação: session_start.operation_mode='CDD' != SESSION_HANDOFF.modo_operacao='ROADMAP'.",
+          "severity": "error"
+        }
+      ],
+      "metrics": {
+        "errors": 1,
+        "warnings": 0,
+        "violations": 1,
+        "duration_ms": 3
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "SESSION_HANDOFF.md exists"
     },
     {
       "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -5380,8 +5988,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 255
-      }
+        "duration_ms": 165
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "MODULE_REGISTRY contains elevated module statuses"
     },
     {
       "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
@@ -5402,8 +6019,119 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
-      }
+        "duration_ms": 6
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module with expected_surfaces in MODULE_REGISTRY"
+    },
+    {
+      "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "17 módulo(s) implementados possuem superfície real, runtime mount e teste executável. placeholder_tests=45.",
+      "inputs": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "config/urls.py",
+        "src/ai_ingestion/api.py",
+        "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+        "src/analytics/api.py",
+        "src/analytics/tests/unit/test_analytics.py",
+        "src/audit/api.py",
+        "src/audit/tests/unit/test_audit.py",
+        "src/competitions/api.py",
+        "src/competitions/tests/unit/test_competitions_domain.py",
+        "src/exercises/api.py",
+        "src/exercises/tests/unit/test_exercises.py",
+        "src/identity_access/api.py",
+        "src/identity_access/tests/integration/test_identity_access_api.py",
+        "src/identity_access/tests/unit/test_identity_access_domain.py",
+        "src/matches/api.py",
+        "src/matches/tests/unit/test_matches_domain.py",
+        "src/medical/api.py",
+        "src/medical/tests/unit/test_medical_domain.py",
+        "src/notifications/api.py",
+        "src/notifications/tests/unit/test_notifications.py",
+        "src/reports/api.py",
+        "src/reports/tests/unit/test_reports.py",
+        "src/scout/api.py",
+        "src/scout/tests/unit/test_scout.py",
+        "src/seasons/api.py",
+        "src/seasons/tests/integration/test_seasons_api.py",
+        "src/seasons/tests/unit/test_seasons_domain.py",
+        "src/teams/api.py",
+        "src/teams/tests/integration/test_teams_api.py",
+        "src/teams/tests/unit/test_teams_domain.py",
+        "src/training/api/__init__.py",
+        "src/training/tests/integration/test_error_format_rfc7807.py",
+        "src/training/tests/integration/test_training_api.py",
+        "src/training/tests/unit/test_acl.py",
+        "src/training/tests/unit/test_adversarial_inputs.py",
+        "src/training/tests/unit/test_application_layout.py",
+        "src/training/tests/unit/test_attention_queue.py",
+        "src/training/tests/unit/test_boundaries.py",
+        "src/training/tests/unit/test_domain_rules.py",
+        "src/training/tests/unit/test_edit_windows.py",
+        "src/training/tests/unit/test_elastic_sum.py",
+        "src/training/tests/unit/test_exception_taxonomy.py",
+        "src/training/tests/unit/test_execution_records.py",
+        "src/training/tests/unit/test_feedback_threads.py",
+        "src/training/tests/unit/test_forbidden_transitions.py",
+        "src/training/tests/unit/test_handball_rules.py",
+        "src/training/tests/unit/test_ingestion.py",
+        "src/training/tests/unit/test_invariants.py",
+        "src/training/tests/unit/test_layer_separation.py",
+        "src/training/tests/unit/test_live_adjustments.py",
+        "src/training/tests/unit/test_objectives.py",
+        "src/training/tests/unit/test_persistence.py",
+        "src/training/tests/unit/test_phase2_cursor_and_access.py",
+        "src/training/tests/unit/test_phase4_policy_guard_services.py",
+        "src/training/tests/unit/test_public_surface.py",
+        "src/training/tests/unit/test_readonly_sessions.py",
+        "src/training/tests/unit/test_restrictions.py",
+        "src/training/tests/unit/test_reviews.py",
+        "src/training/tests/unit/test_route_inventory.py",
+        "src/training/tests/unit/test_sensitive_data.py",
+        "src/training/tests/unit/test_session_blocks.py",
+        "src/training/tests/unit/test_session_execution_fields_round_trip.py",
+        "src/training/tests/unit/test_state_machine.py",
+        "src/training/tests/unit/test_wellness_temporal.py",
+        "src/users/api.py",
+        "src/users/tests/integration/test_users_api.py",
+        "src/users/tests/unit/test_users_domain.py",
+        "src/video/api.py",
+        "src/video/tests/integration/test_video_api.py",
+        "src/video/tests/unit/test_video_domain.py",
+        "src/wellness/api.py",
+        "src/wellness/tests/unit/test_wellness_domain.py"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 84
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "MODULE_REGISTRY contains implemented+ modules"
     },
     {
       "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
@@ -5421,7 +6149,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "MODULE_DEPENDENCY_RESOLUTION_GATE",
@@ -5439,7 +6176,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "WAIVER_VALIDITY_GATE",
@@ -5463,8 +6209,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
-      }
+        "duration_ms": 12
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "waivers present in contracts/_waivers/"
     },
     {
       "gate_id": "READINESS_GENERATION_COMPATIBILITY_GATE",
@@ -5485,8 +6240,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
-      }
+        "duration_ms": 17
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_in_implementation_ready_status"
     },
     {
       "gate_id": "READINESS_HUMAN_CONFIRMATION_GATE",
@@ -5503,8 +6267,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
-      }
+        "duration_ms": 11
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Nenhum módulo em validated_contract aguardando promoção."
     },
     {
       "gate_id": "FEATURE_COVERAGE_GATE",
@@ -5522,7 +6295,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "LEGACY_CRITICAL_PATH_GATE",
@@ -5540,7 +6322,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
@@ -5558,7 +6349,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "GOVERNANCE_REGRESSION_GATE",
@@ -5627,8 +6427,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
-      }
+        "duration_ms": 26
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
@@ -5646,7 +6455,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
@@ -5664,7 +6482,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "IMPACT_ANALYSIS_GATE",
@@ -5682,7 +6509,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "PARTIAL_UPDATE_GATE",
@@ -5700,7 +6536,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "DOC_USAGE_GATE",
@@ -5718,7 +6563,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
@@ -5736,7 +6590,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
     },
     {
       "gate_id": "HBTRACK_CANON_PARITY_GATE",
@@ -5754,15 +6617,53 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
+    },
+    {
+      "gate_id": "REPORT_TRUTHFULNESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Semântica de relatório consistente com profile=`local` e canonical_full_run=False.",
+      "inputs": [],
+      "artifacts_checked": [
+        "_reports/contract_gates/latest.json"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": false,
-      "exit_code": 0,
+      "exit_code": 2,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 28 PASS, 34 SKIP.",
+      "summary": "Resumo de gates: 1 gate(s) bloqueante(s) falharam.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -5772,7 +6673,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "advisory",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     }
   ]
 }

@@ -1,16 +1,16 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-25T10:05:47.154255+00:00",
+  "session_timestamp": "2026-04-25T10:28:32.650303+00:00",
   "branch": "feat/c4-architecture-reality-alignment",
   "pipeline_version": "1.0.0",
-  "boot_profile_id": "roadmap_execution",
-  "task_type": "execute_roadmap_phase",
+  "boot_profile_id": "contract_execution",
+  "task_type": "contract_revision",
   "stage": 0,
-  "write_scope": "roadmap",
-  "worker_id": "execute_roadmap_phase",
+  "write_scope": "contracts",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
-  "operation_mode": "ROADMAP",
+  "operation_mode": "CDD",
   "stage0_validation_results": {
     "task_type_valid": true,
     "module_valid": true,
@@ -18,11 +18,11 @@
     "boot_profile_exists": true,
     "boot_paths_valid": true,
     "required_sections_resolvable": true,
-    "worker_frontmatter_validated": true,
+    "worker_frontmatter_validated": false,
     "worker_frontmatter_matches_catalog": true,
     "authority_source_used": "TASK_CATALOG"
   },
-  "stage0_exit_code": 2,
+  "stage0_exit_code": 0,
   "stage2_artifacts": [
     {
       "path": "contracts/schemas/shared/merge-readiness.schema.json",
@@ -432,7 +432,7 @@
   "hook_exit_code": 0,
   "hook_validated_at": "2026-04-24T13:20:22.149021+00:00",
   "module_focus": "training",
-  "worker_prompt_sha256": "fbea2faed6111e58671c12e48a0894c0c1c6ead7aab2729df2742b103033dd03",
+  "worker_prompt_sha256": "342c68ffa7907059b64d3fc20510eb1170fc665400a6ba2897a36288b3821bd3",
   "module": "training",
-  "roadmap_phase": 1
+  "stage1_exit_code": 0
 }
