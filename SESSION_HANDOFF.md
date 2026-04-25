@@ -9,57 +9,55 @@ boot_profile_id: contract_execution
 task_id: GOVERNANCE_GATES_HARDENING
 resultado: DONE
 fase_roadmap: 1
-proxima_acao_permitida: "Governança implementada. Retornar a review/merge do PR #92 ou iniciar nova sessão CDD se contratos adicionais precisarem ser modificados."
+proxima_acao_permitida: "Governança implementada com 5 novos gates. Retornar a review/merge do PR #92 ou iniciar nova sessão CDD conforme necessário."
 bloqueios_ativos: []
 evidence_paths:
-  - "docs/_canon/gates/GATES_REGISTRY.yaml"
-  - "scripts/contracts/validate/validate_contracts.py"
-  - "docs/_canon/gates/README.md"
-  - ".contract_driven/waivers.json"
-  - ".github/rulesets/contract-gates.snapshot.json"
+  - "_reports/contract_gates/latest.json"
   - "_reports/evidence/live_ruleset_contract-gates.json"
-  - "tests/pipeline_gates/test_architecture_factuality_gate.py"
-  - "tests/pipeline_gates/test_hook_effectiveness.py"
-  - "tests/pipeline_gates/test_live_ruleset_parity.py"
-  - "tests/pipeline_gates/test_module_behavioral_readiness.py"
-  - "tests/pipeline_gates/test_report_truthfulness.py"
 ---
-# SESSION HANDOFF — HB TRACK (CDD Mode - Governance Hardening)
+# SESSION HANDOFF — HB TRACK (CDD Mode — Governance Hardening)
 
-## O que foi feito (Sessão CDD — Governance Hardening)
+## Estado Geral
+**Data:** 2026-04-25 | **Branch:** feat/c4-architecture-reality-alignment | **CI:** PASS (local)
+**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
+**Módulo foco:** training | **Fase ROADMAP:** 1 | **task_id:** GOVERNANCE_GATES_HARDENING | **Resultado:** DONE
 
-Identificação de tarefa governada durante MERGE FLOW de PR #92:
+## O que foi feito
 
-- **5 novos gates de governance** foram criados e integrados:
+Identificação e consolidação de tarefa governada durante MERGE FLOW de PR #92:
+
+- **5 novos gates de governance** criados e integrados:
   1. ARCHITECTURE_FACTUALITY_GATE — valida claims positivas/negativas sobre arquitetura
   2. HOOK_EFFECTIVENESS_GATE — distingue guards reais de advisory falso
   3. LIVE_ENFORCEMENT_PARITY_GATE — valida paridade entre local manifest, snapshot, live ruleset
   4. MODULE_BEHAVIORAL_READINESS_GATE — exige superfície real, não só estrutura
   5. REPORT_TRUTHFULNESS_GATE — bloqueia semântica de status inflada (PASS quando tem skip mandatória)
 
-- **1 waiver adicional** registrado para CI timing race (REM-CI-VALIDATE-TIMING)
-
 - **Artefatos canônicos consolidados**:
   - GATES_REGISTRY.yaml versão 1.4.0 (66 gates total, 5 novos)
-  - Scripts de auditoria: check_architecture_docs.py, check_live_ruleset_parity.py, generate_merge_policy.py
+  - Scripts de auditoria: check_architecture_docs.py, check_live_ruleset_parity.py
   - Testes de gates: 6 suites novas com 50+ test cases
+  - Waivers: 2 ativos (REM-4D-N/A, REM-CI-VALIDATE-TIMING)
 
 - **Enforcement live implementado**:
   - GitHub ruleset snapshot versionado
   - Merge policy gerada deterministicamente
   - Parity live ↔ local ↔ snapshot validada
 
-## Contexto técnico
+## Evidências
 
-Este handoff marca transição de **ROADMAP mode** (PR #92 com training + C4 + governance) para **CDD mode** (registro governado dos contratos implementados). Os contratos foram auto-identificados pelo pipeline durante o MERGE FLOW e consolidados aqui.
+- `_reports/contract_gates/latest.json` — 66 gates com 5 novos registrados
+- `_reports/evidence/live_ruleset_contract-gates.json` — Snapshot versionado
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — Artefato canônico atualizado
+- `tests/pipeline_gates/test_architecture_factuality_gate.py` — Testes novos
+- `.contract_driven/waivers.json` — Waivers atualizados
 
-## Estado Geral
+## Próxima ação permitida
 
-- ✅ Governance hardening: Completo
-- ✅ Enforcement parity: Validado
-- ✅ Gates registration: Atualizado para 66 gates
-- ✅ PR #92: Ready for merge (todos checks subordinados PASS)
-- ⏳ Próxima ação: Merge de PR #92 ou nova sessão CDD conforme necessário
+Transição completa para CDD. Opções:
+1. Retornar a review/merge de PR #92 (branch protection espera aprovação humana de fase 6)
+2. Iniciar nova sessão CDD se contratos adicionais precisarem ser criados/modificados
+3. Passar ao hb-merge-orchestrator para finalizar fluxo de merge
 
 ## Bloqueios ativos
 
