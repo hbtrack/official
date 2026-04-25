@@ -1,13 +1,13 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-25T10:40:28.268304+00:00",
+  "session_timestamp": "2026-04-25T12:36:14.507508+00:00",
   "branch": "feat/c4-architecture-reality-alignment",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "new_state_model",
-  "stage": 2,
+  "task_type": "contract_revision",
+  "stage": 1,
   "write_scope": "contracts",
-  "worker_id": "create_state_model",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "operation_mode": "CDD",
@@ -111,10 +111,10 @@
     },
     {
       "path": "docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-      "sha256": "ef295adfede88f03639ce866edef40d32e58e6e9562d630b4b50c8a4260c5308",
+      "sha256": "4f8cd93e8ac7997c837d93aa2a0b9ac247ba4960a08fcc658b958994122b665d",
       "created_at": "2026-04-08T23:37:58.560455+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-04-11T16:55:22.771405+00:00"
+      "validated_at": "2026-04-25T12:01:29.783761+00:00"
     },
     {
       "path": "docs/hbtrack/modulos/users/graph/openapi_paths.yaml",
@@ -437,9 +437,9 @@
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-24T13:20:22.149021+00:00",
-  "module_focus": "training",
-  "worker_prompt_sha256": "e4dcdaad9120e4f0efbcbd2c15d81ad05e06d5538b2b8657a949b5781db8c7aa",
-  "module": "training",
+  "hook_validated_at": "2026-04-25T13:12:21.490094+00:00",
+  "module_focus": "notifications",
+  "worker_prompt_sha256": "342c68ffa7907059b64d3fc20510eb1170fc665400a6ba2897a36288b3821bd3",
+  "module": "notifications",
   "stage1_exit_code": 0
 }

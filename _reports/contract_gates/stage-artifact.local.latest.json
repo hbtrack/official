@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-25T10:43:09Z",
+  "timestamp_utc": "2026-04-25T12:01:29Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "d250b1d6",
+    "git_commit": "7e6993eb",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T104309_a64072"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T120129_8a047a"
   },
   "status_detail": {
     "proof_scope": "mixed",
@@ -466,7 +466,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 43
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -500,7 +500,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 480
+        "duration_ms": 5548
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1287,7 +1287,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 50
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1372,7 +1372,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1207
+        "duration_ms": 1864
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1503,7 +1503,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1748,7 +1748,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 4
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -2238,7 +2238,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 24
       },
       "proof_class": "semantic",
       "promotion_power": "advisory",

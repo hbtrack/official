@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-25T10:29:25Z",
+  "timestamp_utc": "2026-04-25T12:04:34Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "31cac0f4",
+    "git_commit": "4e941f08",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PARTIAL_PASS",
   "execution_context": {
     "profile": "local",
     "stage": null,
@@ -31,12 +31,12 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T102925_d1d41d"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T120434_0ae882"
   },
   "status_detail": {
     "proof_scope": "mixed",
     "active_gates_total": 33,
-    "active_gates_passed": 31,
+    "active_gates_passed": 33,
     "skip_count": 35,
     "critical_gates": [
       {
@@ -189,7 +189,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -352,7 +352,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -374,7 +374,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 57
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -408,7 +408,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 673
+        "duration_ms": 990
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -573,7 +573,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 16
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -798,7 +798,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 121
+        "duration_ms": 124
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1295,7 +1295,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 32
+        "duration_ms": 42
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1390,7 +1390,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 731
+        "duration_ms": 732
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1422,7 +1422,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1043
+        "duration_ms": 1321
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1453,7 +1453,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1250
+        "duration_ms": 1233
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1501,7 +1501,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 590
+        "duration_ms": 605
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4462,7 +4462,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 2004
+        "duration_ms": 2034
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -5165,7 +5165,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1724
+        "duration_ms": 1719
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5277,7 +5277,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1564
+        "duration_ms": 1557
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5329,7 +5329,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 57
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5360,7 +5360,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1281
+        "duration_ms": 1406
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5425,7 +5425,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 59
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5544,7 +5544,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 225
+        "duration_ms": 229
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5573,7 +5573,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41648
+        "duration_ms": 41712
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5618,7 +5618,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 8
       },
       "proof_class": "behavioral",
       "promotion_power": "advisory",
@@ -5840,7 +5840,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 125
+        "duration_ms": 72
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5872,7 +5872,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5913,61 +5913,34 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
-        "/home/davis/HB-TRACK/.contract_driven/waivers.json",
-        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
-        "/home/davis/HB-TRACK/_reports/evidence/live_ruleset_contract-gates.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_architecture_factuality_gate.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_hook_effectiveness.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_live_ruleset_parity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_module_behavioral_readiness.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/generated/resolved_policy/training.sync.resolved.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
-        "/home/davis/HB-TRACK/.contract_driven/waivers.json",
-        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
-        "/home/davis/HB-TRACK/_reports/evidence/live_ruleset_contract-gates.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_architecture_factuality_gate.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_hook_effectiveness.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_live_ruleset_parity.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_module_behavioral_readiness.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+        "/home/davis/HB-TRACK/generated/resolved_policy/training.sync.resolved.yaml"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Seção obrigatória '## Evidências' ausente do handoff.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Seção obrigatória '## Próxima ação permitida' ausente do handoff.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 2,
+        "errors": 0,
         "warnings": 0,
-        "violations": 2,
-        "duration_ms": 5
+        "violations": 0,
+        "duration_ms": 6
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5998,7 +5971,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 179
+        "duration_ms": 160
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6029,7 +6002,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6131,7 +6104,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 110
+        "duration_ms": 79
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -6219,7 +6192,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 11
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6250,7 +6223,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 21
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -6277,7 +6250,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 6
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6437,7 +6410,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 27
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6669,11 +6642,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Resumo de gates: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Resumo de gates: 32 PASS, 35 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
