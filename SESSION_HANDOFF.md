@@ -3,7 +3,7 @@ data_ultima_sessao: "2026-04-25"
 branch_ativo: feat/c4-architecture-reality-alignment
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: architecture
+modulo_foco: training
 fase_roadmap: 1
 roadmap_phase: 1
 task_type: execute_roadmap_phase
