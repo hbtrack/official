@@ -56,6 +56,8 @@ services:
     networks:
       - hbtrack-staging-net
     restart: "no"
+    volumes:
+      - staging_static_files:/app/staticfiles
     entrypoint:
       - sh
       - -c
@@ -81,6 +83,8 @@ services:
       hbtrack-staging-net:
         aliases:
           - staging-api
+    volumes:
+      - staging_static_files:/app/staticfiles
     expose:
       - "8000"
     deploy:
@@ -198,6 +202,7 @@ volumes:
   # Volumes completamente separados de produção
   staging_postgres_data:
   staging_redis_data:
+  staging_static_files:
 
 networks:
   hbtrack-staging-net:
