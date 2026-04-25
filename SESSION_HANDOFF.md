@@ -4,18 +4,18 @@ branch_ativo: feat/c4-architecture-reality-alignment
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: training
-task_type: new_state_model
+task_type: contract_revision
 boot_profile_id: contract_execution
-task_id: TRAINING_SESSION_STATE_MODEL
+task_id: TRAINING_OPENAPI_DIVERGENCE_FIX
 resultado: DONE
 fase_roadmap: 1
-proxima_acao_permitida: "Novo state model criado e registrado. Próximas opções: (1) Mergear PR #92, (2) Iniciar nova sessão CDD, (3) Executar phase 6 de deploy."
+proxima_acao_permitida: "Divergência OpenAPI sincronizada via pipeline CDD. Próximas opções: (1) Validar gates completos, (2) Mergear PR #92, (3) Iniciar nova sessão."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md"
-  - ".contract_driven/DOMAIN_AXIOMS.json"
-  - "docs/_canon/decisions/ADR-017-training-session-state-machine.md"
+  - "docs/hbtrack/modulos/training/graph/openapi_paths.yaml"
+  - "contracts/openapi/paths/training.yaml"
+  - "generated/resolved_policy/training.sync.resolved.yaml"
 ---
 # SESSION HANDOFF — HB TRACK (CDD Mode — Training State Model)
 
