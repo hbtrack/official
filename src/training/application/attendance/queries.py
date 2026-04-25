@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from ...domain.entities import AttendanceRecord
+from ...domain.entities.attendance import AttendanceRecord
 from ...domain.rules import (
     InsufficientPrivilege,
     RoleLabel,
     TrainingSessionNotFound,
 )
-from ...infrastructure.repository import AttendanceRepository, TrainingSessionRepository
+from ...infrastructure.repository.attendance import AttendanceRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import ListSessionAttendanceInput
 
 

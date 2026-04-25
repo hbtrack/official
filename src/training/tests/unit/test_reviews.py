@@ -8,10 +8,8 @@ from datetime import datetime, timezone, timedelta
 
 import pytest
 
-from training.domain.entities import (
-    ConversationOutcome,
-    FeedbackThread,
-)
+from training.domain.entities.communication import FeedbackThread
+from training.domain.common.enums import ConversationOutcome
 
 
 class TestReviewFeedbackFlow:

@@ -245,6 +245,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -945,6 +951,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -1235,6 +1247,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -1353,6 +1371,12 @@
               $ref: ../components/schemas/training/wellness_pre.yaml
       "400":
         description: Validation error or submission outside allowed window (DR-TRAIN-004 / SS-TRAIN-003)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -1524,6 +1548,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -1628,6 +1658,12 @@
               $ref: ../components/schemas/training/wellness_post.yaml
       "400":
         description: Validation error (e.g., sessionRpe out of range — INV-TRAIN-032)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -1774,6 +1810,12 @@
               $ref: ../components/schemas/training/wellness_post.yaml
       "400":
         description: Validation error or update outside 24h window (INV-TRAIN-003 / SS-TRAIN-004)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -1966,6 +2008,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -2100,6 +2148,12 @@
               $ref: ../components/schemas/training/mesocycle.yaml
       "400":
         description: Validation error (e.g., startDate >= endDate — INV-TRAIN-037)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -2528,6 +2582,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -2626,6 +2686,12 @@
               $ref: ../components/schemas/training/training_session.yaml
       "400":
         description: Validation error (e.g., deviationJustification required when flag=true)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -2975,6 +3041,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3085,6 +3157,12 @@
               $ref: ../components/schemas/training/session_objective.yaml
       "400":
         description: Validation error (missing origin or originNotes for MANUAL)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -3234,6 +3312,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3305,6 +3389,12 @@
               $ref: ../components/schemas/training/training_session.yaml
       "400":
         description: Validation error (missing required fields for publication — INV-TRAIN-086)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -3387,6 +3477,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3457,6 +3553,12 @@
               $ref: ../components/schemas/training/training_session.yaml
       "400":
         description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -3614,6 +3716,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3698,6 +3806,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3770,6 +3884,12 @@
               $ref: ../components/schemas/training/athlete_ineligibility_declaration.yaml
       "400":
         description: Validation error (e.g., missing reasonFlags)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -3916,6 +4036,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -3995,6 +4121,12 @@
               $ref: ../components/schemas/training/attention_queue_item.yaml
       "400":
         description: Validation error (e.g., missing dismissalReason)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -4091,6 +4223,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
       "401":
         description: Unauthenticated
         content:
@@ -4176,6 +4314,12 @@
               $ref: ../components/schemas/training/feedback_thread.yaml
       "400":
         description: Validation error (e.g., missing resolutionSummary)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:
@@ -4437,6 +4581,12 @@
               $ref: ../components/schemas/training/feedback_thread.yaml
       "400":
         description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity (schema or domain validation error)
         content:
           application/problem+json:
             schema:

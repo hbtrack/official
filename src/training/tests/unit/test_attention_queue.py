@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from training.domain.entities import AttentionQueueItem
+from training.domain.entities.communication import AttentionQueueItem
 
 
 def _make_attention_item(**kwargs):

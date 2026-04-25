@@ -14,14 +14,17 @@ Endpoints:
   POST   /training-sessions/{id}/archive
 """
 
+import json
 import uuid
 from typing import Optional
 
+from django.http import HttpResponse
 from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..infrastructure.repository.attendance import AttendanceRepository
+from ..application.sessions.dto import (
     CreateTrainingSessionInput,
     DeleteTrainingSessionInput,
     GetTrainingSessionInput,
@@ -29,8 +32,8 @@ from ..application.use_cases import (
     TransitionTrainingSessionInput,
     UpdateTrainingSessionInput,
 )
-from ..domain.entities import TrainingSessionStatus
-from ..schemas import (
+from ..domain.common.enums import TrainingSessionStatus
+from ..schemas.sessions import (
     CreateTrainingSessionIn,
     ProblemOut,
     TransitionOut,
@@ -115,6 +118,7 @@ def create_training_session(request, body: CreateTrainingSessionIn):
             intensity_target=body.intensity_target,
             session_block=body.session_block,
             standalone=body.standalone,
+            individualization_mode=body.individualization_mode,
             focus_attack_positional_pct=body.focus_attack_positional_pct,
             focus_defense_positional_pct=body.focus_defense_positional_pct,
             focus_transition_offense_pct=body.focus_transition_offense_pct,
@@ -128,7 +132,10 @@ def create_training_session(request, body: CreateTrainingSessionIn):
             phase_focus_transition_defense=body.phase_focus_transition_defense,
         )
     )
-    return 201, _session_to_out(session)
+    out = _session_to_out(session)
+    resp = HttpResponse(out.model_dump_json(by_alias=True), status=201, content_type="application/json")
+    resp["Location"] = f"/api/training/training-sessions/{session.id}"
+    return resp
 
 
 @router.get(
@@ -138,11 +145,13 @@ def create_training_session(request, body: CreateTrainingSessionIn):
 @map_exceptions
 def get_training_session(request, id: uuid.UUID):
     svc = TrainingServices()
+    athlete_ids = [r.athlete_id for r in AttendanceRepository().list_by_session(id)]
     session = svc.get_training_session_uc().execute(
         GetTrainingSessionInput(
             id=id,
             actor_role=_get_actor_role(request),
             actor_id=_get_actor_id(request),
+            session_athlete_ids=athlete_ids,
         )
     )
     return 200, _session_to_out(session)
@@ -176,6 +185,7 @@ def update_training_session(request, id: uuid.UUID, body: UpdateTrainingSessionI
             session_block=body.session_block,
             standalone=body.standalone,
             notes=body.notes,
+            individualization_mode=body.individualization_mode,
             focus_attack_positional_pct=body.focus_attack_positional_pct,
             focus_defense_positional_pct=body.focus_defense_positional_pct,
             focus_transition_offense_pct=body.focus_transition_offense_pct,
@@ -187,6 +197,8 @@ def update_training_session(request, id: uuid.UUID, body: UpdateTrainingSessionI
             phase_focus_attack=body.phase_focus_attack,
             phase_focus_transition_offense=body.phase_focus_transition_offense,
             phase_focus_transition_defense=body.phase_focus_transition_defense,
+            deviation_justification=body.deviation_justification,
+            planning_deviation_flag=body.planning_deviation_flag,
         )
     )
     return 200, _session_to_out(session)

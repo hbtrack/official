@@ -1,7 +1,7 @@
 ---
 doc_type: canon
 version: "1.2.0"
-last_reviewed: "2026-03-23"
+last_reviewed: "2026-04-24"
 status: active
 state_semantics: governance
 ---
@@ -38,13 +38,14 @@ Regra fundamental: se um modulo nao estiver nesta lista, ele nao existe sem deci
 | Contrato HTTP por modulo | 17/17 modulos possuem `contracts/openapi/paths/<module>.yaml` |
 | JSON Schema por modulo | 17/17 modulos possuem `contracts/schemas/<module>/` |
 | Docs minimas por modulo | 17/17 modulos possuem `README`, `MODULE_SCOPE`, `DOMAIN_RULES`, `INVARIANTS`, `TEST_MATRIX` |
-| Worker runtime atual | 0/17 modulos possuem `src/<module>/tasks.py` |
-| Frontend runtime atual | `frontend/` inexiste no workspace |
+| Worker runtime atual | 8 modulos possuem `src/<module>/tasks.py` (`ai_ingestion`, `analytics`, `audit`, `matches`, `notifications`, `reports`, `scout`, `video`) |
+| Frontend runtime atual | `frontend/` existe com React/Vite, hooks API e testes |
 
 Leitura correta:
 
 - contratos e codigo backend estao amplamente materializados;
-- UI web e workers assíncronos ainda nao sao runtime atual, mesmo quando houver target-state aprovado ou docs de UI por modulo.
+- UI web, ASGI/WebSocket e parte do runtime assíncrono ja estao materializados no repo;
+- isso nao prova, por si só, operacao completa de producao nem cobertura funcional total por modulo.
 
 ## 3. Modulos funcionais (14)
 
@@ -75,11 +76,11 @@ Leitura correta:
 
 ## 5. Deltas target-state ainda nao materializados
 
-Os seguintes itens aparecem em ADRs, contratos ou docs aprovadas, mas ainda nao podem ser lidos como runtime atual a partir do repo:
+Os seguintes itens aparecem em ADRs, contratos ou docs aprovadas, mas ainda nao podem ser lidos como operacao completa de runtime:
 
-- worker runtime por modulo;
-- frontend web por modulo;
-- WebSocket/Channels como superficie ativa;
+- worker dedicado por modulo em producao;
+- deploy validado do frontend para todos os fluxos previstos;
+- WebSocket/Channels com operacao comprovada em ambiente produtivo;
 - adapters externos operacionais de notificacao, storage e BI.
 
 ## 6. Fronteiras criticas

@@ -4,16 +4,14 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from ...domain.entities import (
-    AttentionQueueItem,
+from ...domain.entities.communication import AttentionQueueItem, FeedbackThread, Recommendation
+from ...domain.common.enums import (
     ConversationOutcome,
-    FeedbackThread,
-    Recommendation,
     RecommendationActionType,
     RecommendationPriority,
     RecommendationStatus,
 )
-from ..models import (
+from ..models.communication import (
     AttentionQueueItemModel,
     FeedbackThreadModel,
     RecommendationModel,

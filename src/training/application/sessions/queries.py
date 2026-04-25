@@ -4,13 +4,13 @@ import uuid
 from typing import Optional
 
 from ...application.common.paging import CursorCodec
-from ...domain.entities import TrainingSession
+from ...domain.entities.sessions import TrainingSession
 from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     InsufficientPrivilege,
     RoleLabel,
 )
-from ...infrastructure.repository import TrainingSessionRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import (
     GetTrainingSessionInput,
     ListTrainingSessionsInput,

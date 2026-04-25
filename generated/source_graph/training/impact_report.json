@@ -29,7 +29,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/training.yaml",
-      "sha256": "995111183ea91ae3f6fa1c583a58b612b68f8a6c70341448d15f314587dab80f"
+      "sha256": "6718907d2fb53a3a02125d6b4f19ca1bdec70845a77bd3b2b950a2550344e501"
     },
     {
       "relpath": "contracts/schemas/training/.gitkeep",
@@ -173,7 +173,7 @@
     },
     {
       "relpath": "src/training/domain/rules.py",
-      "sha256": "8ac285ca2ff761c339a5e02869eddfe063168a2d1976e37472a8fadda16ea438"
+      "sha256": "472f1963a0b599d4c2593467b7d027e4acd4fb59d854deebd48ad45c3700a04f"
     }
   ],
   "known_gaps": [
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "a12745c83748808df596616f1f1376d2e7a272fa6aadf43a2afb0f00610581ff"
+  "source_fingerprint": "cfcd9d5ea659e85f2a7f7d5cf779923f60203b223bab6ef81b2c06a27d8f05e6"
 }

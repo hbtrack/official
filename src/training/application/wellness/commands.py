@@ -3,11 +3,8 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import (
-    TrainingSessionStatus,
-    WellnessPost,
-    WellnessPre,
-)
+from ...domain.entities.wellness import WellnessPost, WellnessPre
+from ...domain.common.enums import TrainingSessionStatus
 from ...domain.rules import (
     DuplicateWellnessEntry,
     InsufficientPrivilege,
@@ -18,11 +15,8 @@ from ...domain.rules import (
     assert_wellness_post_window,
     assert_wellness_pre_window,
 )
-from ...infrastructure.repository import (
-    TrainingSessionRepository,
-    WellnessPostRepository,
-    WellnessPreRepository,
-)
+from ...infrastructure.repository.sessions import TrainingSessionRepository
+from ...infrastructure.repository.wellness import WellnessPostRepository, WellnessPreRepository
 from .dto import (
     SubmitWellnessPostInput,
     SubmitWellnessPreInput,

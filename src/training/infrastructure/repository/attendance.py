@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import uuid
 
-from ...domain.entities import AttendanceRecord, AttendanceSource, AttendanceStatus
-from ..models import AttendanceRecordModel
+from ...domain.entities.attendance import AttendanceRecord
+from ...domain.common.enums import AttendanceSource, AttendanceStatus
+from ..models.attendance import AttendanceRecordModel
 
 
 class AttendanceRepository:
@@ -13,6 +14,12 @@ class AttendanceRepository:
             self._to_domain(m)
             for m in AttendanceRecordModel.objects.filter(session_id=session_id).order_by("recorded_at", "created_at")
         ]
+
+    def exists_for_session_athlete(self, session_id: uuid.UUID, athlete_id: uuid.UUID) -> bool:
+        """Retorna True se já existe registro de presença para este athlete nesta sessão."""
+        return AttendanceRecordModel.objects.filter(
+            session_id=session_id, athlete_id=athlete_id
+        ).exists()
 
     def save(self, attendance: AttendanceRecord) -> AttendanceRecord:
         m = AttendanceRecordModel.objects.create(

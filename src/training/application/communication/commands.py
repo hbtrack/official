@@ -4,14 +4,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from ...domain.entities import (
-    AttentionQueueItem,
-    ConversationOutcome,
-    FeedbackThread,
-    Recommendation,
-    RecommendationStatus,
-    TrainingSessionStatus,
-)
+from ...domain.entities.communication import AttentionQueueItem, FeedbackThread, Recommendation
+from ...domain.common.enums import ConversationOutcome, RecommendationStatus, TrainingSessionStatus
 from ...domain.rules import (
     AttentionQueueConflict,
     AttentionQueueItemNotFound,
@@ -25,12 +19,12 @@ from ...domain.rules import (
     TrainingSessionNotFound,
     assert_can_modify_session,
 )
-from ...infrastructure.repository import (
+from ...infrastructure.repository.communication import (
     AttentionQueueRepository,
     FeedbackThreadRepository,
     RecommendationRepository,
-    TrainingSessionRepository,
 )
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import (
     AcceptRecommendationInput,
     CloseFeedbackThreadInput,

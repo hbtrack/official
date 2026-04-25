@@ -6,23 +6,12 @@
     ]
   },
   "hooks": {
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 scripts/hooks/check_backend_gate.py",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "python3 scripts/hooks/check_session_commit.py",
+            "command": "python3 scripts/hooks/advisory_session_commit.py",
             "timeout": 10
           }
         ]

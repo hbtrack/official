@@ -7,7 +7,8 @@ from datetime import datetime, timezone
 
 import pytest
 
-from training.domain.entities import ExecutionRecord, ExecutionType
+from training.domain.entities.execution import ExecutionRecord
+from training.domain.common.enums import ExecutionType
 
 
 def _make_record(**kwargs):

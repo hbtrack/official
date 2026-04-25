@@ -19,8 +19,9 @@ from datetime import datetime, timezone
 
 import pytest
 
-from training.domain.entities import TrainingSession, TrainingSessionStatus
-from training.infrastructure.repository import TrainingSessionRepository
+from training.domain.entities.sessions import TrainingSession
+from training.domain.common.enums import TrainingSessionStatus
+from training.infrastructure.repository.sessions import TrainingSessionRepository
 
 
 pytestmark = pytest.mark.django_db

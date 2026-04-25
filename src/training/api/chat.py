@@ -11,16 +11,12 @@ from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.communication.dto import (
     ListChatMessagesInput,
     SubmitTrainingSuggestionInput,
 )
-from ..schemas import (
-    ProblemOut,
-    FeedbackThreadListOut,
-    FeedbackThreadOut,
-    SubmitTrainingSuggestionIn,
-)
+from ..schemas.communication import FeedbackThreadListOut, FeedbackThreadOut, SubmitTrainingSuggestionIn
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _feedback_thread_to_out

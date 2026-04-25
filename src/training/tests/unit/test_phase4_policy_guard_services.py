@@ -17,7 +17,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from training.domain.entities import TrainingSession, TrainingSessionStatus
+from training.domain.entities.sessions import TrainingSession
+from training.domain.common.enums import TrainingSessionStatus
 from training.domain.policies.session_access import SessionAccessPolicy, SessionGuard
 from training.domain.rules import (
     CAN_ARCHIVE_SESSION,

@@ -20,7 +20,7 @@ from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.planning.dto import (
     CreateMesocycleInput,
     CreateMicrocycleInput,
     GetMesocycleInput,
@@ -30,10 +30,9 @@ from ..application.use_cases import (
     UpdateMesocycleInput,
     UpdateMicrocycleInput,
 )
-from ..schemas import (
+from ..schemas.planning import (
     CreateMesocycleIn,
     CreateMicrocycleIn,
-    ProblemOut,
     MesocycleListOut,
     MesocycleOut,
     MicrocycleListOut,
@@ -41,6 +40,7 @@ from ..schemas import (
     UpdateMesocycleIn,
     UpdateMicrocycleIn,
 )
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_role
 from .errors import map_exceptions
 from .mappers import _mesocycle_to_out, _microcycle_to_out

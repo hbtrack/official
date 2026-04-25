@@ -3,13 +3,15 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import SessionBlock, SessionBlockIntensity, SessionBlockPhase
+from ...domain.entities.blocks import SessionBlock
+from ...domain.common.enums import SessionBlockIntensity, SessionBlockPhase
 from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     SessionBlockNotFound,
     assert_elastic_sum_rule,
 )
-from ...infrastructure.repository import SessionBlockRepository, TrainingSessionRepository
+from ...infrastructure.repository.blocks import SessionBlockRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import (
     AddSessionBlockInput,
     DeleteSessionBlockInput,

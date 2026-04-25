@@ -51,6 +51,8 @@ class TrainingSessionOut(Schema):
     phase_focus_attack: Optional[bool] = None
     phase_focus_transition_offense: Optional[bool] = None
     phase_focus_transition_defense: Optional[bool] = None
+    deviation_justification: Optional[str] = None
+    planning_deviation_flag: Optional[bool] = None
 
 
 class TrainingSessionListOut(Schema):
@@ -75,6 +77,7 @@ class CreateTrainingSessionIn(Schema):
     intensity_target: Optional[int] = None
     session_block: Optional[str] = None
     standalone: Optional[bool] = None
+    individualization_mode: Optional[str] = None
     focus_attack_positional_pct: Optional[Decimal] = None
     focus_defense_positional_pct: Optional[Decimal] = None
     focus_transition_offense_pct: Optional[Decimal] = None
@@ -101,6 +104,7 @@ class UpdateTrainingSessionIn(Schema):
     session_block: Optional[str] = None
     standalone: Optional[bool] = None
     notes: Optional[str] = None
+    individualization_mode: Optional[str] = None
     focus_attack_positional_pct: Optional[Decimal] = None
     focus_defense_positional_pct: Optional[Decimal] = None
     focus_transition_offense_pct: Optional[Decimal] = None
@@ -112,6 +116,8 @@ class UpdateTrainingSessionIn(Schema):
     phase_focus_attack: Optional[bool] = None
     phase_focus_transition_offense: Optional[bool] = None
     phase_focus_transition_defense: Optional[bool] = None
+    deviation_justification: Optional[str] = None
+    planning_deviation_flag: Optional[bool] = None
 
 
 class TransitionOut(Schema):

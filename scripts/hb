@@ -1518,7 +1518,14 @@ class HBCLIv2:
             module_match = re.search(r'modulo_foco:\s*(\S+)', text)
             if not module_match:
                 return False
-            declared_module = module_match.group(1).strip('"\'')
+            declared_scope = module_match.group(1).strip('"\'')
+            canonical_modules = set(self._get_canonical_modules())
+            # SESSION_HANDOFF.modulo_foco pode representar uma trilha/area,
+            # nao apenas um modulo canonico. O bloqueio de escopo em src/
+            # so faz sentido quando o foco declarado e um modulo real.
+            if declared_scope not in canonical_modules:
+                return False
+            declared_module = declared_scope
             # Verificar se há mudanças em paths de outros módulos
             for f in changed_files:
                 if f.startswith("src/") and declared_module not in f:

@@ -41,8 +41,8 @@ Papel de cada camada:
 
 ## 3. Gates: como ler o estado atual
 
-- O executor completo atualmente reporta `health_score=100` e `gates_total=51` em `pipeline_health.json`.
-- `latest.json` não é sinônimo de "todos os 51 gates executaram"; ele reflete o **último profile/stage** rodado.
+- O executor completo reporta `health_score` e `gates_total` atuais em `pipeline_health.json` (não usar número fixo — contagem muda com o registry).
+- `latest.json` não é sinônimo de "todos os gates executaram"; ele reflete o **último profile/stage** rodado.
 - Em local, isso implica:
   - `hb verify` -> subset `session-start`
   - `hb check` -> subset `pre-authoring`

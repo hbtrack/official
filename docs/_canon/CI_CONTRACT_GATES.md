@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.1"
-last_reviewed: "2026-04-22"
+version: "1.0.2"
+last_reviewed: "2026-04-25"
 status: active
 ---
 
@@ -144,6 +144,13 @@ O agregador deve:
 O pipeline deve gerar:
 `_reports/contract_gates/latest.json`
 
+No perfil canônico `ci`, esse arquivo é a evidência soberana consumida por
+`scripts/hb preflight`, por `_reports/pipeline_health.json` e pelas rotinas de
+handoff operacional. Mudança de shape, semântica de sumário ou critérios de
+veracidade do relatório exige atualização coordenada do executor, do
+`GATES_REGISTRY.yaml`, deste documento e dos consumers declarados no
+`SYNC_MANIFEST.yaml`.
+
 4.2 Schema lógico da saída do pipeline
 
 Formato obrigatório:
@@ -260,6 +267,22 @@ A ordem canônica é:
 	14.	UI_DOC_VALIDATION_GATE
 	15.	DERIVED_DRIFT_GATE
 	16.	READINESS_SUMMARY_GATE
+
+5.0.1 Sub-ordens ativas e guardas adicionais materializadas
+
+O detalhamento executável das sub-ordens alfanuméricas continua soberano em
+`docs/_canon/gates/GATES_REGISTRY.yaml`. No estado atual do repositório, os
+seguintes gates adicionais já estão ativos no executor e devem ser tratados
+como parte da ordem canônica efetiva:
+
+- `15I1` `ARCHITECTURE_FACTUALITY_GATE` — bloqueia drift factual entre claims arquiteturais e evidências reais do workspace.
+- `15I2` `HOOK_EFFECTIVENESS_GATE` — valida que hooks ativos realmente exercem o enforcement prometido pelo repositório.
+- `15I3` `LIVE_ENFORCEMENT_PARITY_GATE` — compara ruleset live do GitHub com `merge-readiness.json`, snapshot versionado e merge policy gerada.
+- `15I4` `REPORT_TRUTHFULNESS_GATE` — valida a semântica do próprio relatório antes do sumário final.
+- `20B2` `MODULE_BEHAVIORAL_READINESS_GATE` — exige API real, mount no runtime e teste executável não-placeholder para módulos `implemented+`.
+- `20L` `CONTEXT_BUNDLE_FRESHNESS_GATE` — garante que `compiled_context/<module>/` está sincronizado com o source master real do módulo.
+- `20M` `IMPACT_ANALYSIS_GATE` — exige presença dos `blocking_consumers` declarados no `SYNC_MANIFEST.yaml` no mesmo commit.
+- `20N` `PARTIAL_UPDATE_GATE` — exige ao menos um `required_consumer` quando um `source_master` muda.
 
 5.1 Gates paralelizáveis
 

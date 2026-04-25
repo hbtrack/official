@@ -30,7 +30,7 @@ FROM python:3.12-slim AS runtime
 
 ARG HB_BUILD_SHA=unknown
 
-LABEL org.opencontainers.image.source="https://github.com/hbtrack/hb-track"
+LABEL org.opencontainers.image.source="https://github.com/hbtrack/official"
 LABEL org.opencontainers.image.description="HB Track — Backend API"
 LABEL org.opencontainers.image.revision="${HB_BUILD_SHA}"
 
@@ -81,4 +81,4 @@ ENTRYPOINT ["gunicorn", "config.asgi:application", \
     "--graceful-timeout", "30", \
     "--access-logfile", "-", \
     "--error-logfile", "-" \
-]
+    ]

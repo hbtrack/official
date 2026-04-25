@@ -1,6 +1,15 @@
-# Configuração de Branch Protection
+> **⚠️ LEGACY — NÃO USAR COMO REFERÊNCIA ATIVA**
+> Este documento descreve a configuração anterior de branch protection rules (legada, 2026-03-14).
+> O enforcement live atual usa **ruleset GitHub ID 13901517** (`contract-gates`, enforcement: active).
+> Fonte de verdade corrente: ruleset live + `merge-readiness.json` + `.github/rulesets/contract-gates.snapshot.json`.
+> `.github/merge-policy.md` é artefato derivado gerado dessas fontes.
+> Arquivado conforme HBCONTROL.md Onda 0 em 2026-04-24.
 
-**Tipo:** Runbook de configuração  
+---
+
+# Configuração de Branch Protection _(LEGACY — ARQUIVADO)_
+
+**Tipo:** Runbook de configuração — ARCHIVADO / LEGADO  
 **Última atualização:** 2026-03-14  
 **Requisito:** hbtrack-governanca.md § 8.1
 

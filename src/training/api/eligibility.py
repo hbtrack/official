@@ -13,15 +13,12 @@ from .deps import CamelRouter
 from ninja.errors import HttpError
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.eligibility.dto import (
     GetIneligibilityStatusInput,
     SubmitIneligibilityDeclarationInput,
 )
-from ..schemas import (
-    AthleteIneligibilityDeclarationOut,
-    ProblemOut,
-    SubmitIneligibilityDeclarationIn,
-)
+from ..schemas.eligibility import AthleteIneligibilityDeclarationOut, SubmitIneligibilityDeclarationIn
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _ineligibility_to_out

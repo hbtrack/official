@@ -5,13 +5,9 @@ import uuid
 from decimal import Decimal
 from typing import Optional
 
-from ...domain.entities import (
-    SessionObjective,
-    SessionObjectiveOrigin,
-    TrainingSession,
-    TrainingSessionStatus,
-)
-from ..models import SessionObjectiveModel, TrainingSessionModel
+from ...domain.entities.sessions import SessionObjective, TrainingSession
+from ...domain.common.enums import SessionObjectiveOrigin, TrainingSessionStatus
+from ..models.sessions import SessionObjectiveModel, TrainingSessionModel
 
 
 def _to_decimal(val) -> Optional[Decimal]:
@@ -73,6 +69,12 @@ class TrainingSessionRepository:
             "cancellation_reason": session.cancellation_reason,
             "actual_load_recorded": session.actual_load_recorded,
             "post_review_completed_at": session.post_review_completed_at,
+            "post_review_completed_by_user_id": session.post_review_completed_by_user_id,
+            "post_review_deadline_at": session.post_review_deadline_at,
+            "post_review_completed": session.post_review_completed,
+            "planned_content_snapshot": session.planned_content_snapshot,
+            "objective_origin": session.objective_origin,
+            "continuity_notes": session.continuity_notes,
         }
         m, _ = TrainingSessionModel.objects.update_or_create(pk=session.id, defaults=defaults)
         return self._to_domain(m)
@@ -162,6 +164,12 @@ class TrainingSessionRepository:
             cancellation_reason=m.cancellation_reason,
             actual_load_recorded=m.actual_load_recorded,
             post_review_completed_at=m.post_review_completed_at,
+            post_review_completed_by_user_id=m.post_review_completed_by_user_id,
+            post_review_deadline_at=m.post_review_deadline_at,
+            post_review_completed=m.post_review_completed,
+            planned_content_snapshot=m.planned_content_snapshot,
+            objective_origin=m.objective_origin,
+            continuity_notes=m.continuity_notes,
         )
 
 

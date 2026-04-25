@@ -14,20 +14,20 @@ from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.communication.dto import (
     DismissAttentionQueueItemInput,
     EscalateAttentionQueueItemInput,
     ListAttentionQueueItemsInput,
     ResolveAttentionQueueItemInput,
 )
-from ..schemas import (
+from ..schemas.communication import (
     AttentionQueueItemOut,
     AttentionQueueListOut,
     DismissAttentionQueueItemIn,
-    ProblemOut,
     EscalateAttentionQueueItemIn,
     ResolveAttentionQueueItemIn,
 )
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _attention_queue_item_to_out

@@ -42,10 +42,9 @@ services:
       retries: 3
       start_period: 10s
 
-  # ── API: Django Ninja + Gunicorn ───────────────────────────────────────────
-  api:
+  # ── DB Bootstrap: migrate + collectstatic (init container) ────────────────
+  bootstrap:
     image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-backend:${IMAGE_TAG:-latest}
-    restart: unless-stopped
     env_file: ../.env
     environment:
       - DEBUG=false
@@ -55,9 +54,37 @@ services:
       redis:
         condition: service_healthy
     networks:
+      - hbtrack-staging-net
+    restart: "no"
+    volumes:
+      - staging_static_files:/app/staticfiles
+    entrypoint:
+      - sh
+      - -c
+      - >-
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput
+
+  # ── API: Django Ninja + Gunicorn ───────────────────────────────────────────
+  api:
+    image: ${REGISTRY:-ghcr.io/hbtrack}/hbtrack-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - DEBUG=false
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
       hbtrack-staging-net:
         aliases:
           - staging-api
+    volumes:
+      - staging_static_files:/app/staticfiles
     expose:
       - "8000"
     deploy:
@@ -75,8 +102,6 @@ services:
       - sh
       - -c
       - >-
-        python manage.py migrate --noinput &&
-        python manage.py collectstatic --noinput &&
         exec gunicorn config.asgi:application
         --bind 0.0.0.0:8000
         --worker-class uvicorn.workers.UvicornWorker
@@ -177,6 +202,7 @@ volumes:
   # Volumes completamente separados de produção
   staging_postgres_data:
   staging_redis_data:
+  staging_static_files:
 
 networks:
   hbtrack-staging-net:

@@ -10,7 +10,7 @@ from training.domain.rules import (
     assert_session_mutable,
     assert_session_not_historical,
 )
-from training.domain.entities import TrainingSessionStatus
+from training.domain.common.enums import TrainingSessionStatus
 
 
 class TestEditWindows:

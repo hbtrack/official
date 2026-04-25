@@ -32,6 +32,7 @@ from check_architecture_docs import (
     check_no_async_runtime_claims,
     check_no_frontend_claim_in_current_state,
     check_postgres_version_consistency,
+    check_runtime_topology_claims,
     run_all_checks,
 )
 
@@ -253,11 +254,33 @@ class TestNoFrontendClaimInCurrentState:
         result = check_no_frontend_claim_in_current_state(root)
         assert result.status == "PASS"
 
-    def test_skips_when_frontend_exists(self, tmp_path):
+    def test_passes_when_frontend_exists_and_no_doc_claims_absence(self, tmp_path):
         root = _build_minimal_repo(tmp_path)
         (root / "frontend").mkdir()
+        canon = root / "docs" / "_canon"
+        (canon / "RUNTIME_CURRENT_STATE.md").write_text(
+            "---\ndoc_type: canon\nstate_semantics: current-state\n---\n"
+            "# Runtime Atual\n"
+            "| PostgreSQL local | materializado | infra/docker-compose.yml — serviço `postgres:12` |\n"
+            "| `frontend/` | **materializado** | existe no workspace |\n"
+            "| Endpoint `GET /health` | **ausente** | `config/urls.py` não declara rota `/health` |\n",
+            encoding="utf-8",
+        )
         result = check_no_frontend_claim_in_current_state(root)
-        assert result.status == "SKIP"
+        assert result.status == "PASS"
+
+    def test_fails_when_frontend_exists_but_doc_claims_absence(self, tmp_path):
+        root = _build_minimal_repo(tmp_path)
+        (root / "frontend").mkdir()
+        canon = root / "docs" / "_canon"
+        (canon / "C4_CONTAINERS.md").write_text(
+            "---\ndoc_type: canon\nstate_semantics: governance\n---\n"
+            "| Frontend web SPA | ADR-030 | `frontend/` nao existe no workspace |\n",
+            encoding="utf-8",
+        )
+        result = check_no_frontend_claim_in_current_state(root)
+        assert result.status == "FAIL"
+        assert "C4_CONTAINERS.md" in str(result.details)
 
     def test_fails_when_current_state_doc_claims_frontend_present(self, tmp_path):
         root = _build_minimal_repo(tmp_path)
@@ -281,11 +304,28 @@ class TestNoAsyncRuntimeClaims:
         result = check_no_async_runtime_claims(root)
         assert result.status == "PASS"
 
-    def test_skips_when_celery_config_exists(self, tmp_path):
+    def test_passes_when_celery_config_exists_and_docs_do_not_claim_absence(self, tmp_path):
         root = _build_minimal_repo(tmp_path)
         (root / "config" / "celery.py").write_text("app = Celery()\n", encoding="utf-8")
         result = check_no_async_runtime_claims(root)
-        assert result.status == "SKIP"
+        assert result.status == "PASS"
+
+    def test_fails_when_async_runtime_exists_but_doc_claims_target_state_only(self, tmp_path):
+        root = _build_minimal_repo(tmp_path)
+        (root / "config" / "celery.py").write_text("app = Celery()\n", encoding="utf-8")
+        (root / "config" / "settings.py").write_text(
+            "CHANNEL_LAYERS = {'default': {}}\n",
+            encoding="utf-8",
+        )
+        canon = root / "docs" / "_canon"
+        (canon / "CODE_ARCHITECTURE.md").write_text(
+            "---\ndoc_type: canon\nstate_semantics: current-state\n---\n"
+            "Celery e WebSocket continuam sendo target-state aprovado, nao arquitetura de codigo atual.\n",
+            encoding="utf-8",
+        )
+        result = check_no_async_runtime_claims(root)
+        assert result.status == "FAIL"
+        assert "CODE_ARCHITECTURE.md" in str(result.details)
 
     def test_fails_when_current_state_doc_claims_celery_running(self, tmp_path):
         root = _build_minimal_repo(tmp_path)
@@ -315,6 +355,51 @@ class TestNoAsyncRuntimeClaims:
         )
         result = check_no_async_runtime_claims(root)
         assert result.status == "PASS"
+
+
+class TestRuntimeTopologyClaims:
+    def test_passes_when_topology_docs_match_repo(self, tmp_path):
+        root = _build_minimal_repo(tmp_path)
+        config = root / "config"
+        (config / "asgi.py").write_text("application = object()\n", encoding="utf-8")
+        notifications = root / "src" / "notifications"
+        notifications.mkdir(parents=True)
+        (notifications / "middleware.py").write_text("class TokenAuthMiddleware: ...\n", encoding="utf-8")
+        (root / "Dockerfile.frontend").write_text("FROM nginx:alpine\n", encoding="utf-8")
+        infra = root / "infra"
+        (infra / "docker-compose.staging.yml").write_text("services: {}\n", encoding="utf-8")
+        canon = root / "docs" / "_canon"
+        (canon / "C4_CONTAINERS.md").write_text(
+            "---\ndoc_type: canon\nstate_semantics: governance\n---\n"
+            "| Backend ASGI | config/asgi.py | runtime ASGI materializado |\n"
+            "| Auth middleware websocket | src/notifications/middleware.py | TokenAuthMiddleware presente |\n"
+            "| Frontend deploy | Dockerfile.frontend | imagem SPA materializada |\n",
+            encoding="utf-8",
+        )
+        result = check_runtime_topology_claims(root)
+        assert result.status == "PASS"
+
+    def test_fails_when_topology_doc_denies_materialized_runtime(self, tmp_path):
+        root = _build_minimal_repo(tmp_path)
+        config = root / "config"
+        (config / "asgi.py").write_text("application = object()\n", encoding="utf-8")
+        notifications = root / "src" / "notifications"
+        notifications.mkdir(parents=True)
+        (notifications / "middleware.py").write_text("class TokenAuthMiddleware: ...\n", encoding="utf-8")
+        (root / "Dockerfile.frontend").write_text("FROM nginx:alpine\n", encoding="utf-8")
+        infra = root / "infra"
+        (infra / "docker-compose.staging.yml").write_text("services: {}\n", encoding="utf-8")
+        canon = root / "docs" / "_canon"
+        (canon / "C4_CONTAINERS.md").write_text(
+            "---\ndoc_type: canon\nstate_semantics: governance\n---\n"
+            "config/asgi.py continua target-state aprovado.\n"
+            "src/notifications/middleware.py ainda nao materializado.\n"
+            "Dockerfile.frontend ausente no workspace.\n",
+            encoding="utf-8",
+        )
+        result = check_runtime_topology_claims(root)
+        assert result.status == "FAIL"
+        assert "repo:" in result.details[0]
 
 
 class TestModuleRegistryCoherence:

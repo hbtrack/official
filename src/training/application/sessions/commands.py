@@ -3,7 +3,8 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from ...domain.entities import TrainingSession, TrainingSessionStatus
+from ...domain.entities.sessions import TrainingSession
+from ...domain.common.enums import TrainingSessionStatus
 from ...domain.policies.session_access import SessionGuard
 from ...domain.rules import (
     assert_can_create_session,
@@ -11,7 +12,7 @@ from ...domain.rules import (
     assert_publish_preconditions,
     assert_schedule_preconditions,
 )
-from ...infrastructure.repository import TrainingSessionRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import (
     CreateTrainingSessionInput,
     DeleteTrainingSessionInput,
@@ -47,6 +48,7 @@ class CreateTrainingSessionUseCase:
             intensity_target=inp.intensity_target,
             session_block=inp.session_block,
             standalone=inp.standalone,
+            individualization_mode=inp.individualization_mode,
             focus_attack_positional_pct=inp.focus_attack_positional_pct,
             focus_defense_positional_pct=inp.focus_defense_positional_pct,
             focus_transition_offense_pct=inp.focus_transition_offense_pct,
@@ -123,6 +125,8 @@ class UpdateTrainingSessionUseCase:
             session.session_block = inp.session_block
         if inp.standalone is not None:
             session.standalone = inp.standalone
+        if inp.individualization_mode is not None:
+            session.individualization_mode = inp.individualization_mode
         if inp.notes is not None:
             session.notes = inp.notes
         if inp.focus_attack_positional_pct is not None:
@@ -147,6 +151,10 @@ class UpdateTrainingSessionUseCase:
             session.phase_focus_transition_offense = inp.phase_focus_transition_offense
         if inp.phase_focus_transition_defense is not None:
             session.phase_focus_transition_defense = inp.phase_focus_transition_defense
+        if inp.deviation_justification is not None:
+            session.deviation_justification = inp.deviation_justification
+        if inp.planning_deviation_flag is not None:
+            session.planning_deviation_flag = inp.planning_deviation_flag
         session.updated_at = datetime.now(tz=timezone.utc)
         session.validate_invariants()
         return self._repo.save(session)

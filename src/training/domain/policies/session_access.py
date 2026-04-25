@@ -16,7 +16,8 @@ from __future__ import annotations
 
 import uuid
 
-from ..entities import TrainingSession, TrainingSessionStatus
+from ..entities.sessions import TrainingSession
+from ..common.enums import TrainingSessionStatus
 from ..rules import (
     CAN_ARCHIVE_SESSION,
     CAN_DELETE_SESSION,

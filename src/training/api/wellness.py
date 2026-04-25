@@ -11,11 +11,12 @@ Endpoints:
 
 import uuid
 
+from django.http import HttpResponse
 from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.wellness.dto import (
     GetWellnessPostInput,
     GetWellnessPreInput,
     SubmitWellnessPostInput,
@@ -23,8 +24,8 @@ from ..application.use_cases import (
     UpdateWellnessPostInput,
     UpdateWellnessPreInput,
 )
-from ..schemas import (
-    ProblemOut,
+from ..schemas.sessions import ProblemOut
+from ..schemas.wellness import (
     SubmitWellnessPostIn,
     SubmitWellnessPreIn,
     UpdateWellnessPostIn,
@@ -72,7 +73,10 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
             notes=body.notes,
         )
     )
-    return 201, _wellness_pre_to_out(wellness)
+    out = _wellness_pre_to_out(wellness)
+    resp = HttpResponse(out.model_dump_json(by_alias=True), status=201, content_type="application/json")
+    resp["Location"] = f"/api/training/training-sessions/{id}/wellness-pre/{wellness.athlete_id}"
+    return resp
 
 
 @router.get(
@@ -149,7 +153,10 @@ def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
             notes=body.notes,
         )
     )
-    return 201, _wellness_post_to_out(wellness)
+    out = _wellness_post_to_out(wellness)
+    resp = HttpResponse(out.model_dump_json(by_alias=True), status=201, content_type="application/json")
+    resp["Location"] = f"/api/training/training-sessions/{id}/wellness-post/{wellness.athlete_id}"
+    return resp
 
 
 @router.get(

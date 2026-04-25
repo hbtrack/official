@@ -150,20 +150,26 @@ Ao executar push para `main` ou criar PR:
 
 ---
 
-## Validação de Branch Protection (Pendente)
+## Validação de Branch Protection _(LEGACY — ARQUIVADO)_
 
-**Status:** ⚠️ Aguardando configuração manual no GitHub Settings
+> **⚠️ LEGACY:** Esta seção descreve a configuração anterior de branch protection rules.
+> O enforcement live atual usa **ruleset GitHub ID 13901517** (contract-gates).
+> BRANCH_PROTECTION_SETUP.md foi arquivado como LEGACY em 2026-04-24.
+> Fonte de verdade corrente: ruleset live + `merge-readiness.json` + `.github/rulesets/contract-gates.snapshot.json`.
+> `.github/merge-policy.md` é artefato derivado gerado dessas fontes.
 
-Conforme [BRANCH_PROTECTION_SETUP.md](.github/BRANCH_PROTECTION_SETUP.md):
+**Status:** ~~Aguardando configuração manual~~ — substituído por ruleset live.
 
-1. Acessar Settings → Branches → Add branch protection rule
-2. Configurar pattern `main`:
-   - ✅ Require pull request before merging (1 approval)
-   - ✅ Require review from Code Owners
-   - ✅ Require status checks: `validate-contracts`
-   - ✅ Block force pushes
-   - ✅ Block deletions
-   - ✅ Do not allow bypassing
+Conforme ~~[BRANCH_PROTECTION_SETUP.md](.github/BRANCH_PROTECTION_SETUP.md)~~ (LEGACY — arquivo arquivado):
+
+1. ~~Acessar Settings → Branches → Add branch protection rule~~
+2. ~~Configurar pattern `main`:~~
+   - ~~✅ Require pull request before merging (1 approval)~~
+   - ~~✅ Require review from Code Owners~~
+   - ~~✅ Require status checks: `validate-contracts`~~
+   - ~~✅ Block force pushes~~
+   - ~~✅ Block deletions~~
+   - ~~✅ Do not allow bypassing~~
 
 **Próximos testes recomendados:**
 

@@ -98,7 +98,7 @@ def _default_merge_readiness() -> dict:
         "checks": [
             {
                 "context": "ci / Validate Contracts",
-                "local_equivalent": "python3 scripts/hb validate --profile precommit",
+                "local_equivalent": "python3 scripts/hb validate --profile ci",
             }
         ]
     }

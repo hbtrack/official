@@ -12,7 +12,7 @@ from shared.middleware import get_current_flow_id
 
 
 class FlowIDFormatter(logging.Formatter):
-    """Formatter JSON estruturado com flow_id propagado via thread-local."""
+    """Formatter JSON estruturado com flow_id propagado via ContextVar (seguro para ASGI/async)."""
 
     def format(self, record: logging.LogRecord) -> str:
         return json.dumps(

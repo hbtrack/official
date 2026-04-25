@@ -6,7 +6,7 @@ target-state: regras de persistência são enforced na camada de infraestrutura.
 import pytest
 
 from .conftest import make_session
-from training.domain.entities import TrainingSessionStatus
+from training.domain.common.enums import TrainingSessionStatus
 
 
 class TestPersistenceSoftDelete:

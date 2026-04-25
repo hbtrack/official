@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from ...domain.entities import AttentionQueueItem, FeedbackThread, Recommendation
+from ...domain.entities.communication import AttentionQueueItem, FeedbackThread, Recommendation
 from ...domain.policies.feedback_context import feedback_context_type
 from ...domain.rules import (
     TrainingSessionNotFound,
     assert_can_modify_session,
 )
-from ...infrastructure.repository import (
+from ...infrastructure.repository.communication import (
     AttentionQueueRepository,
     FeedbackThreadRepository,
     RecommendationRepository,
-    TrainingSessionRepository,
 )
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import (
     ListAttentionQueueItemsInput,
     ListChatMessagesInput,

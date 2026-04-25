@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import uuid
 
-from ..entities import FeedbackThread
+from ..entities.communication import FeedbackThread
 
 
 def feedback_context_type(thread: FeedbackThread) -> str:

@@ -185,7 +185,8 @@
       "400",
       "401",
       "403",
-      "404"
+      "404",
+      "409"
     ]
   },
   {
@@ -347,6 +348,7 @@
     "path": "/training-sessions/{id}/execution-records",
     "response_codes": [
       "200",
+      "401",
       "403",
       "404"
     ]
@@ -466,6 +468,7 @@
     "path": "/training-sessions/{id}/objectives",
     "response_codes": [
       "200",
+      "401",
       "403",
       "404"
     ]

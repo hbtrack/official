@@ -998,3 +998,61 @@ Quando precisar adicionar uma referência cross-module não permitida:
 - **Validator script**: `scripts/gates/check_scope_boundary.py`
 - **ADR de criação**: `docs/_canon/decisions/ADR-034-scope-boundary-validation.md`
 - **Related rules**: §2C (Taxonomia de módulos), §9 (Códigos de bloqueio)
+
+---
+
+## 25. Política de Waivers
+
+Um **waiver** é um mecanismo de governança temporário que permite ao pipeline prosseguir apesar de uma
+falha de gate específica, quando existe justificativa técnica documentada e aprovação formal registrada.
+
+### 25.1 Quando usar
+
+Um waiver pode ser criado **apenas** quando todas estas condições forem satisfeitas:
+1. O gate em questão está falhando por causa externa ao código do PR (ex: timing de CI, infraestrutura)
+2. A falha não representa risco funcional ou de segurança ao produto
+3. Existe evidência local confirmando que o gate passa fora do contexto problemático
+4. O problema tem plano de resolução (não é workaround permanente)
+
+### 25.2 Formato obrigatório
+
+Todo waiver deve estar em `.contract_driven/waivers.json` com os campos:
+
+| Campo | Obrigatório | Descrição |
+|---|---|---|
+| `waiver_id` | ✅ | Identificador único (ex: `CI-VALIDATE-TIMING`) |
+| `item` | ✅ | Gate ou check alvo |
+| `title` | ✅ | Título descritivo |
+| `reason` | ✅ | Justificativa técnica completa |
+| `approved_by` | ✅ | Papel/entidade que aprovou (`pipeline-engineering`, `arquitetura`, etc.) |
+| `date` | ✅ | Data de criação (ISO 8601) |
+| `status` | ✅ | `temporary` ou `N/A` |
+| `until` | Condicional | Obrigatório se `status == temporary`. Data de expiração (ISO 8601). |
+| `tracked_in` | Recomendado | PR ou issue de rastreamento (ex: `PR#92`) |
+
+### 25.3 Ciclo de vida
+
+- **`temporary`**: Waiver expira na data `until`. Após a expiração, o gate retorna ao estado normal.
+  A equipe de pipeline deve remover o waiver e confirmar que a causa raiz foi resolvida.
+- **`N/A`**: Waiver permanente para situações onde a regra foi determinada inaplicável ao contexto.
+  Deve ser revisado a cada ciclo de release major.
+
+### 25.4 Proibições
+
+- **Nunca** criar waiver para mascarar falha funcional de produto
+- **Nunca** criar waiver sem `approved_by` preenchido
+- **Nunca** deixar waiver `temporary` ativo após a data `until` sem renovação explícita
+- **Nunca** criar waiver para substituir a correção de um bug no pipeline de validação
+
+### 25.5 Validação
+
+O `WAIVER_VALIDITY_GATE` em `validate_contracts.py` verifica:
+1. Schema de formato (campos obrigatórios presentes)
+2. Expiração de waivers `temporary` (falha se `until < today`)
+3. Coerência entre `status` e campos opcionais
+
+### 25.6 Referências
+
+- **Arquivo operacional**: `.contract_driven/waivers.json`
+- **Gate de validação**: `WAIVER_VALIDITY_GATE` em `docs/_canon/gates/GATES_REGISTRY.yaml`
+- **Related rules**: §2A (Invariantes operacionais), §16 (DoD binário de contrato)

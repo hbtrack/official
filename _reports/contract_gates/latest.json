@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-24T10:43:07Z",
+  "timestamp_utc": "2026-04-25T13:29:26Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "25363a70",
+    "git_commit": "b27df660",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,10 +31,12 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260424T104307_9992c5"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T132926_6c4218"
   },
   "status_detail": {
-    "active_gates_passed": 58,
+    "proof_scope": "factual",
+    "active_gates_total": 63,
+    "active_gates_passed": 63,
     "skip_count": 5,
     "critical_gates": [
       {
@@ -174,6 +176,18 @@
         "status": "PASS"
       },
       {
+        "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "HOOK_EFFECTIVENESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "LIVE_ENFORCEMENT_PARITY_GATE",
+        "status": "PASS"
+      },
+      {
         "gate_id": "HANDOFF_COHERENCE_GATE",
         "status": "PASS"
       },
@@ -183,6 +197,10 @@
       },
       {
         "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
         "status": "PASS"
       },
       {
@@ -240,8 +258,14 @@
       {
         "gate_id": "HBTRACK_CANON_PARITY_GATE",
         "status": "PASS"
+      },
+      {
+        "gate_id": "REPORT_TRUTHFULNESS_GATE",
+        "status": "PASS"
       }
-    ]
+    ],
+    "mandatory_ci_skip_count": 0,
+    "mandatory_ci_skips": []
   },
   "exit_code": 0,
   "gates": [
@@ -265,8 +289,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 165
-      }
+        "duration_ms": 85
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PATH_CANONICALITY_GATE",
@@ -290,8 +323,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5326
-      }
+        "duration_ms": 2165
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "REQUIRED_ARTIFACT_PRESENCE_GATE",
@@ -495,8 +537,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
-      }
+        "duration_ms": 10
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "MODULE_DOC_CROSSREF_GATE",
@@ -625,8 +676,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 147
-      }
+        "duration_ms": 139
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
@@ -682,8 +742,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
-      }
+        "duration_ms": 8
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "OWASP_API_CONTROL_MATRIX_GATE",
@@ -703,8 +772,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
-      }
+        "duration_ms": 47
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "MODULE_SOURCE_AUTHORITY_MATRIX_GATE",
@@ -725,7 +803,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 36
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "MODULE_REGISTRY_GATE",
@@ -746,7 +833,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 15
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
@@ -766,8 +862,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 94
-      }
+        "duration_ms": 95
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "WELLNESS_MEDICAL_BOUNDARY_GATE",
@@ -787,8 +892,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 55
-      }
+        "duration_ms": 57
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "SCOUT_TAXONOMY_GATE",
@@ -808,8 +922,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49
-      }
+        "duration_ms": 54
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_scout_present"
     },
     {
       "gate_id": "ASYNC_REQUIRED_MODULE_GATE",
@@ -829,8 +952,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 322
-      }
+        "duration_ms": 369
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_has_real_paths_and_events"
     },
     {
       "gate_id": "EXTERNAL_SOURCE_AUTHORITY_GATE",
@@ -850,8 +982,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
-      }
+        "duration_ms": 37
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PRE_CONTRACT_EVIDENCE_GATE",
@@ -907,8 +1048,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
-      }
+        "duration_ms": 8
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_registry_has_validated_contract_or_ready_modules"
     },
     {
       "gate_id": "SHADOW_AUTHORITY_GATE",
@@ -927,6 +1077,8 @@
         "/home/davis/HB-TRACK/CLAUDE.md",
         "/home/davis/HB-TRACK/IMPLEMENTATION_SUMMARY_CODEGEN_ARCHITECTURE_20260422.md",
         "/home/davis/HB-TRACK/MANUAL_DEV.md",
+        "/home/davis/HB-TRACK/MERGE_FLOW_FINAL_STATUS_PR92.md",
+        "/home/davis/HB-TRACK/MERGE_READY_PR92.md",
         "/home/davis/HB-TRACK/PHASE4_COMPLETION_GUIDE.md",
         "/home/davis/HB-TRACK/docs/guias/AUDIT_INTEGRATION_SUMMARY.md",
         "/home/davis/HB-TRACK/docs/guias/CI_CD_AUDIT_PIPELINE.md",
@@ -968,8 +1120,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 78
-      }
+        "duration_ms": 59
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DECISION_IR_CONFORMANCE_GATE",
@@ -995,8 +1156,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 130
-      }
+        "duration_ms": 127
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_registry_has_implementation_ready_decision_ir"
     },
     {
       "gate_id": "CANON_ALLOWLIST_GATE",
@@ -1102,7 +1272,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 3
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PLACEHOLDER_RESIDUE_GATE",
@@ -1474,8 +1653,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 76
-      }
+        "duration_ms": 37
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "REF_HERMETICITY_GATE",
@@ -1560,8 +1748,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 764
-      }
+        "duration_ms": 810
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "TOOLING_CONFIG_GATE",
@@ -1583,8 +1780,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2581
-      }
+        "duration_ms": 1417
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
@@ -1605,8 +1811,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2278
-      }
+        "duration_ms": 1490
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
@@ -1644,8 +1859,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 598
-      }
+        "duration_ms": 633
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "modules_have_openapi_sync_surface"
     },
     {
       "gate_id": "OPENAPI_POLICY_RULESET_GATE",
@@ -4098,11 +4322,11 @@
           ],
           "range": {
             "start": {
-              "line": 2479,
+              "line": 2533,
               "character": 8
             },
             "end": {
-              "line": 2479,
+              "line": 2533,
               "character": 25
             }
           }
@@ -4120,11 +4344,11 @@
           ],
           "range": {
             "start": {
-              "line": 2558,
+              "line": 2618,
               "character": 8
             },
             "end": {
-              "line": 2558,
+              "line": 2618,
               "character": 25
             }
           }
@@ -4142,11 +4366,11 @@
           ],
           "range": {
             "start": {
-              "line": 2667,
+              "line": 2733,
               "character": 8
             },
             "end": {
-              "line": 2667,
+              "line": 2733,
               "character": 25
             }
           }
@@ -4164,11 +4388,11 @@
           ],
           "range": {
             "start": {
-              "line": 2744,
+              "line": 2810,
               "character": 8
             },
             "end": {
-              "line": 2744,
+              "line": 2810,
               "character": 25
             }
           }
@@ -4186,11 +4410,11 @@
           ],
           "range": {
             "start": {
-              "line": 2827,
+              "line": 2893,
               "character": 8
             },
             "end": {
-              "line": 2827,
+              "line": 2893,
               "character": 25
             }
           }
@@ -4208,11 +4432,11 @@
           ],
           "range": {
             "start": {
-              "line": 2873,
+              "line": 2939,
               "character": 8
             },
             "end": {
-              "line": 2873,
+              "line": 2939,
               "character": 24
             }
           }
@@ -4230,11 +4454,11 @@
           ],
           "range": {
             "start": {
-              "line": 2937,
+              "line": 3003,
               "character": 8
             },
             "end": {
-              "line": 2937,
+              "line": 3003,
               "character": 24
             }
           }
@@ -4252,11 +4476,11 @@
           ],
           "range": {
             "start": {
-              "line": 3004,
+              "line": 3076,
               "character": 8
             },
             "end": {
-              "line": 3004,
+              "line": 3076,
               "character": 26
             }
           }
@@ -4274,11 +4498,11 @@
           ],
           "range": {
             "start": {
-              "line": 3051,
+              "line": 3123,
               "character": 8
             },
             "end": {
-              "line": 3051,
+              "line": 3123,
               "character": 26
             }
           }
@@ -4296,11 +4520,11 @@
           ],
           "range": {
             "start": {
-              "line": 3118,
+              "line": 3196,
               "character": 8
             },
             "end": {
-              "line": 3118,
+              "line": 3196,
               "character": 23
             }
           }
@@ -4318,11 +4542,11 @@
           ],
           "range": {
             "start": {
-              "line": 3183,
+              "line": 3261,
               "character": 8
             },
             "end": {
-              "line": 3183,
+              "line": 3261,
               "character": 25
             }
           }
@@ -4340,11 +4564,11 @@
           ],
           "range": {
             "start": {
-              "line": 3264,
+              "line": 3348,
               "character": 8
             },
             "end": {
-              "line": 3264,
+              "line": 3348,
               "character": 25
             }
           }
@@ -4362,11 +4586,11 @@
           ],
           "range": {
             "start": {
-              "line": 3339,
+              "line": 3429,
               "character": 8
             },
             "end": {
-              "line": 3339,
+              "line": 3429,
               "character": 25
             }
           }
@@ -4384,11 +4608,11 @@
           ],
           "range": {
             "start": {
-              "line": 3417,
+              "line": 3513,
               "character": 8
             },
             "end": {
-              "line": 3417,
+              "line": 3513,
               "character": 25
             }
           }
@@ -4406,11 +4630,11 @@
           ],
           "range": {
             "start": {
-              "line": 3497,
+              "line": 3599,
               "character": 8
             },
             "end": {
-              "line": 3497,
+              "line": 3599,
               "character": 23
             }
           }
@@ -4428,11 +4652,11 @@
           ],
           "range": {
             "start": {
-              "line": 3563,
+              "line": 3665,
               "character": 8
             },
             "end": {
-              "line": 3563,
+              "line": 3665,
               "character": 23
             }
           }
@@ -4450,11 +4674,11 @@
           ],
           "range": {
             "start": {
-              "line": 3644,
+              "line": 3752,
               "character": 8
             },
             "end": {
-              "line": 3644,
+              "line": 3752,
               "character": 23
             }
           }
@@ -4472,11 +4696,11 @@
           ],
           "range": {
             "start": {
-              "line": 3734,
+              "line": 3848,
               "character": 8
             },
             "end": {
-              "line": 3734,
+              "line": 3848,
               "character": 24
             }
           }
@@ -4494,11 +4718,11 @@
           ],
           "range": {
             "start": {
-              "line": 3803,
+              "line": 3923,
               "character": 8
             },
             "end": {
-              "line": 3803,
+              "line": 3923,
               "character": 24
             }
           }
@@ -4516,11 +4740,11 @@
           ],
           "range": {
             "start": {
-              "line": 3863,
+              "line": 3983,
               "character": 8
             },
             "end": {
-              "line": 3863,
+              "line": 3983,
               "character": 23
             }
           }
@@ -4538,11 +4762,11 @@
           ],
           "range": {
             "start": {
-              "line": 3946,
+              "line": 4072,
               "character": 8
             },
             "end": {
-              "line": 3946,
+              "line": 4072,
               "character": 23
             }
           }
@@ -4560,11 +4784,11 @@
           ],
           "range": {
             "start": {
-              "line": 4029,
+              "line": 4161,
               "character": 8
             },
             "end": {
-              "line": 4029,
+              "line": 4161,
               "character": 23
             }
           }
@@ -4582,11 +4806,11 @@
           ],
           "range": {
             "start": {
-              "line": 4126,
+              "line": 4264,
               "character": 8
             },
             "end": {
-              "line": 4126,
+              "line": 4264,
               "character": 24
             }
           }
@@ -4596,8 +4820,17 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 2692
-      }
+        "duration_ms": 2117
+      },
+      "proof_class": "remote_live",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
@@ -4665,7 +4898,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 2
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
@@ -5281,8 +5523,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1841
-      }
+        "duration_ms": 1868
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CONTRACT_BREAKING_CHANGE_GATE",
@@ -5305,8 +5556,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3152
-      }
+        "duration_ms": 1933
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "baseline_present"
     },
     {
       "gate_id": "TRANSFORMATION_FEASIBILITY_GATE",
@@ -5325,8 +5585,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
-      }
+        "duration_ms": 3
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "HTTP_RUNTIME_CONTRACT_GATE",
@@ -5344,7 +5613,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "HB_STAGING_URL não definida — gate não aplicável em ambiente local."
     },
     {
       "gate_id": "ASYNCAPI_VALIDATION_GATE",
@@ -5365,8 +5643,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2273
-      }
+        "duration_ms": 1855
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "asyncapi_document_present"
     },
     {
       "gate_id": "ARAZZO_VALIDATION_GATE",
@@ -5409,7 +5696,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 63
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "arazzo_document_present"
     },
     {
       "gate_id": "SPECTRAL_LINTING_GATE",
@@ -5430,8 +5726,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1448
-      }
+        "duration_ms": 1545
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "openapi_document_present"
     },
     {
       "gate_id": "ARAZZO_COMPLETENESS_GATE",
@@ -5486,8 +5791,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
-      }
+        "duration_ms": 64
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "arazzo_declared_in_expected_surfaces"
     },
     {
       "gate_id": "UI_DOC_VALIDATION_GATE",
@@ -5506,8 +5820,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
-      }
+        "duration_ms": 3
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "ui_documentation_present"
     },
     {
       "gate_id": "FRONTEND_CONTRACT_GATE",
@@ -5587,8 +5910,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 353
-      }
+        "duration_ms": 259
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "frontend/ directory exists"
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
@@ -5607,8 +5939,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43531
-      }
+        "duration_ms": 45843
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
@@ -5643,8 +5984,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
-      }
+        "duration_ms": 8
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "FEATURE_READINESS_GATE",
@@ -5663,8 +6013,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
-      }
+        "duration_ms": 22
+      },
+      "proof_class": "presence",
+      "promotion_power": "advisory",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "VERSIONING_POLICY_GATE",
@@ -5686,7 +6045,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PACT_PROVIDER_GATE",
@@ -5704,7 +6072,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "PACT_BROKER_BASE_URL não configurado — Pact Broker não ativo. Configurar quando o primeiro consumer contract for publicado."
     },
     {
       "gate_id": "CODE_ARCHITECTURE_GATE",
@@ -5741,8 +6118,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
-      }
+        "duration_ms": 8
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DEPLOY_READINESS_GATE",
@@ -5764,7 +6150,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DATA_MIGRATION_GATE",
@@ -5786,7 +6181,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "MONITORING_POLICY_GATE",
@@ -5807,7 +6211,114 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "none",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
+    },
+    {
+      "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Factualidade arquitetural validada: 6 PASS, 1 SKIP no checker.",
+      "inputs": [],
+      "artifacts_checked": [
+        "scripts/audit/check_architecture_docs.py"
+      ],
+      "evidence_files": [
+        "scripts/audit/check_architecture_docs.py"
+      ],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 89
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
+    },
+    {
+      "gate_id": "HOOK_EFFECTIVENESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Hooks ativos auditados: 2 comando(s) sem no-op disfarçado de enforcement.",
+      "inputs": [],
+      "artifacts_checked": [
+        ".claude/settings.local.json",
+        ".github/hooks/hb-contract-guards.json",
+        "scripts/hooks/advisory_session_commit.py",
+        "scripts/hooks/advisory_session_commit.py"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 1
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "hooks_configured"
+    },
+    {
+      "gate_id": "LIVE_ENFORCEMENT_PARITY_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Ruleset live, snapshot local e artefatos operacionais estão em paridade.",
+      "inputs": [],
+      "artifacts_checked": [
+        "scripts/audit/check_live_ruleset_parity.py",
+        "merge-readiness.json",
+        ".github/merge-policy.md",
+        ".github/rulesets/contract-gates.snapshot.json",
+        "scripts/audit/generate_merge_policy.py"
+      ],
+      "evidence_files": [
+        "_reports/evidence/live_ruleset_contract-gates.json"
+      ],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 559
+      },
+      "proof_class": "remote_live",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "profile=ci canonical"
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
@@ -5819,20 +6330,14 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/src/identity_access/schemas.py",
-        "/home/davis/HB-TRACK/src/users/schemas.py",
-        "/home/davis/HB-TRACK/src/video/schemas.py",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/generated/manifests"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/src/identity_access/schemas.py",
-        "/home/davis/HB-TRACK/src/users/schemas.py",
-        "/home/davis/HB-TRACK/src/video/schemas.py",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/generated/manifests"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5840,8 +6345,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
-      }
+        "duration_ms": 6
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "SESSION_HANDOFF.md exists"
     },
     {
       "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -5862,8 +6376,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 187
-      }
+        "duration_ms": 175
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "MODULE_REGISTRY contains elevated module statuses"
     },
     {
       "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
@@ -5885,7 +6408,118 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 7
-      }
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module with expected_surfaces in MODULE_REGISTRY"
+    },
+    {
+      "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "17 módulo(s) implementados possuem superfície real, runtime mount e teste executável. placeholder_tests=45.",
+      "inputs": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "config/urls.py",
+        "src/ai_ingestion/api.py",
+        "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+        "src/analytics/api.py",
+        "src/analytics/tests/unit/test_analytics.py",
+        "src/audit/api.py",
+        "src/audit/tests/unit/test_audit.py",
+        "src/competitions/api.py",
+        "src/competitions/tests/unit/test_competitions_domain.py",
+        "src/exercises/api.py",
+        "src/exercises/tests/unit/test_exercises.py",
+        "src/identity_access/api.py",
+        "src/identity_access/tests/integration/test_identity_access_api.py",
+        "src/identity_access/tests/unit/test_identity_access_domain.py",
+        "src/matches/api.py",
+        "src/matches/tests/unit/test_matches_domain.py",
+        "src/medical/api.py",
+        "src/medical/tests/unit/test_medical_domain.py",
+        "src/notifications/api.py",
+        "src/notifications/tests/unit/test_notifications.py",
+        "src/reports/api.py",
+        "src/reports/tests/unit/test_reports.py",
+        "src/scout/api.py",
+        "src/scout/tests/unit/test_scout.py",
+        "src/seasons/api.py",
+        "src/seasons/tests/integration/test_seasons_api.py",
+        "src/seasons/tests/unit/test_seasons_domain.py",
+        "src/teams/api.py",
+        "src/teams/tests/integration/test_teams_api.py",
+        "src/teams/tests/unit/test_teams_domain.py",
+        "src/training/api/__init__.py",
+        "src/training/tests/integration/test_error_format_rfc7807.py",
+        "src/training/tests/integration/test_training_api.py",
+        "src/training/tests/unit/test_acl.py",
+        "src/training/tests/unit/test_adversarial_inputs.py",
+        "src/training/tests/unit/test_application_layout.py",
+        "src/training/tests/unit/test_attention_queue.py",
+        "src/training/tests/unit/test_boundaries.py",
+        "src/training/tests/unit/test_domain_rules.py",
+        "src/training/tests/unit/test_edit_windows.py",
+        "src/training/tests/unit/test_elastic_sum.py",
+        "src/training/tests/unit/test_exception_taxonomy.py",
+        "src/training/tests/unit/test_execution_records.py",
+        "src/training/tests/unit/test_feedback_threads.py",
+        "src/training/tests/unit/test_forbidden_transitions.py",
+        "src/training/tests/unit/test_handball_rules.py",
+        "src/training/tests/unit/test_ingestion.py",
+        "src/training/tests/unit/test_invariants.py",
+        "src/training/tests/unit/test_layer_separation.py",
+        "src/training/tests/unit/test_live_adjustments.py",
+        "src/training/tests/unit/test_objectives.py",
+        "src/training/tests/unit/test_persistence.py",
+        "src/training/tests/unit/test_phase2_cursor_and_access.py",
+        "src/training/tests/unit/test_phase4_policy_guard_services.py",
+        "src/training/tests/unit/test_public_surface.py",
+        "src/training/tests/unit/test_readonly_sessions.py",
+        "src/training/tests/unit/test_restrictions.py",
+        "src/training/tests/unit/test_reviews.py",
+        "src/training/tests/unit/test_route_inventory.py",
+        "src/training/tests/unit/test_sensitive_data.py",
+        "src/training/tests/unit/test_session_blocks.py",
+        "src/training/tests/unit/test_session_execution_fields_round_trip.py",
+        "src/training/tests/unit/test_state_machine.py",
+        "src/training/tests/unit/test_wellness_temporal.py",
+        "src/users/api.py",
+        "src/users/tests/integration/test_users_api.py",
+        "src/users/tests/unit/test_users_domain.py",
+        "src/video/api.py",
+        "src/video/tests/integration/test_video_api.py",
+        "src/video/tests/unit/test_video_domain.py",
+        "src/wellness/api.py",
+        "src/wellness/tests/unit/test_wellness_domain.py"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 92
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "MODULE_REGISTRY contains implemented+ modules"
     },
     {
       "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
@@ -5906,8 +6540,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
-      }
+        "duration_ms": 24
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "boundary rules defined in MODULE_SOURCE_AUTHORITY_MATRIX"
     },
     {
       "gate_id": "MODULE_DEPENDENCY_RESOLUTION_GATE",
@@ -6271,8 +6914,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1002
-      }
+        "duration_ms": 1046
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "WAIVER_VALIDITY_GATE",
@@ -6296,8 +6948,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
-      }
+        "duration_ms": 12
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "waivers present in contracts/_waivers/"
     },
     {
       "gate_id": "READINESS_GENERATION_COMPATIBILITY_GATE",
@@ -6319,7 +6980,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 18
-      }
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_in_implementation_ready_status"
     },
     {
       "gate_id": "READINESS_HUMAN_CONFIRMATION_GATE",
@@ -6337,7 +7007,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 7
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Nenhum módulo em validated_contract aguardando promoção."
     },
     {
       "gate_id": "FEATURE_COVERAGE_GATE",
@@ -6357,8 +7036,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
-      }
+        "duration_ms": 28
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "LEGACY_CRITICAL_PATH_GATE",
@@ -6380,8 +7068,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
-      }
+        "duration_ms": 5
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "WORKER_PROMPT_AUTHORITY_GATE",
@@ -6401,8 +7098,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
-      }
+        "duration_ms": 34
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "GOVERNANCE_REGRESSION_GATE",
@@ -6471,8 +7177,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
-      }
+        "duration_ms": 26
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
@@ -6491,8 +7206,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
-      }
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "advisory",
+      "truth_scope": "factual",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
@@ -6500,70 +7224,43 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os bundles de compiled_context/ estão atualizados (17 módulos verificados).",
+      "summary": "Source graphs e context bundles sincronizados (34 diretórios verificados via content hash).",
       "inputs": [],
       "artifacts_checked": [
-        "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
-        "compiled_context/ai_ingestion/FT-040.json",
-        "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
-        "compiled_context/analytics/FT-038.json",
-        "docs/hbtrack/modulos/audit/graph/module_manifest.yaml",
-        "compiled_context/audit/FT-041.json",
-        "docs/hbtrack/modulos/competitions/graph/module_manifest.yaml",
-        "compiled_context/competitions/FT-034.json",
-        "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml",
-        "compiled_context/exercises/FT-037.json",
-        "docs/hbtrack/modulos/identity_access/graph/module_manifest.yaml",
-        "compiled_context/identity_access/FT-011.json",
-        "compiled_context/identity_access/FT-012.json",
-        "compiled_context/identity_access/FT-013.json",
-        "compiled_context/identity_access/FT-044.json",
-        "docs/hbtrack/modulos/matches/graph/module_manifest.yaml",
-        "compiled_context/matches/FT-035.json",
-        "docs/hbtrack/modulos/medical/graph/module_manifest.yaml",
-        "compiled_context/medical/FT-033.json",
-        "docs/hbtrack/modulos/notifications/graph/module_manifest.yaml",
-        "compiled_context/notifications/FT-042.json",
-        "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
-        "compiled_context/reports/FT-039.json",
-        "docs/hbtrack/modulos/scout/graph/module_manifest.yaml",
-        "compiled_context/scout/FT-036.json",
-        "docs/hbtrack/modulos/seasons/graph/module_manifest.yaml",
-        "compiled_context/seasons/FT-018.json",
-        "compiled_context/seasons/FT-019.json",
-        "compiled_context/seasons/FT-020.json",
-        "compiled_context/seasons/FT-021.json",
-        "compiled_context/seasons/FT-022.json",
-        "compiled_context/seasons/FT-023.json",
-        "docs/hbtrack/modulos/teams/graph/module_manifest.yaml",
-        "compiled_context/teams/FT-024.json",
-        "compiled_context/teams/FT-025.json",
-        "compiled_context/teams/FT-026.json",
-        "compiled_context/teams/FT-027.json",
-        "compiled_context/teams/FT-028.json",
-        "compiled_context/teams/FT-029.json",
-        "compiled_context/teams/FT-030.json",
-        "compiled_context/teams/FT-031.json",
-        "docs/hbtrack/modulos/training/graph/module_manifest.yaml",
-        "compiled_context/training/FT-001.json",
-        "compiled_context/training/FT-002.json",
-        "compiled_context/training/FT-003.json",
-        "compiled_context/training/FT-004.json",
-        "compiled_context/training/FT-005.json",
-        "compiled_context/training/FT-006.json",
-        "compiled_context/training/FT-007.json",
-        "compiled_context/training/FT-008.json",
-        "compiled_context/training/FT-009.json",
-        "compiled_context/training/FT-010.json",
-        "docs/hbtrack/modulos/users/graph/module_manifest.yaml",
-        "compiled_context/users/FT-014.json",
-        "compiled_context/users/FT-015.json",
-        "compiled_context/users/FT-016.json",
-        "compiled_context/users/FT-017.json",
-        "docs/hbtrack/modulos/video/graph/module_manifest.yaml",
-        "compiled_context/video/FT-043.json",
-        "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
-        "compiled_context/wellness/FT-032.json"
+        "generated/source_graph/ai_ingestion/",
+        "generated/source_graph/analytics/",
+        "generated/source_graph/audit/",
+        "generated/source_graph/competitions/",
+        "generated/source_graph/exercises/",
+        "generated/source_graph/identity_access/",
+        "generated/source_graph/matches/",
+        "generated/source_graph/medical/",
+        "generated/source_graph/notifications/",
+        "generated/source_graph/reports/",
+        "generated/source_graph/scout/",
+        "generated/source_graph/seasons/",
+        "generated/source_graph/teams/",
+        "generated/source_graph/training/",
+        "generated/source_graph/users/",
+        "generated/source_graph/video/",
+        "generated/source_graph/wellness/",
+        "compiled_context/ai_ingestion/",
+        "compiled_context/analytics/",
+        "compiled_context/audit/",
+        "compiled_context/competitions/",
+        "compiled_context/exercises/",
+        "compiled_context/identity_access/",
+        "compiled_context/matches/",
+        "compiled_context/medical/",
+        "compiled_context/notifications/",
+        "compiled_context/reports/",
+        "compiled_context/scout/",
+        "compiled_context/seasons/",
+        "compiled_context/teams/",
+        "compiled_context/training/",
+        "compiled_context/users/",
+        "compiled_context/video/",
+        "compiled_context/wellness/"
       ],
       "evidence_files": [],
       "violations": [],
@@ -6571,8 +7268,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
-      }
+        "duration_ms": 6078
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "IMPACT_ANALYSIS_GATE",
@@ -6590,7 +7296,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 4
-      }
+      },
+      "proof_class": "runtime",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Staging area vazia — nenhuma mudança staged para analisar."
     },
     {
       "gate_id": "PARTIAL_UPDATE_GATE",
@@ -6607,8 +7322,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
-      }
+        "duration_ms": 2
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Staging area vazia — nenhuma mudança staged para analisar."
     },
     {
       "gate_id": "DOC_USAGE_GATE",
@@ -6633,8 +7357,17 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 40
-      }
+        "duration_ms": 39
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "CANON_CONTRACT_DRIVEN_PARITY_GATE",
@@ -6655,8 +7388,17 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
-      }
+        "duration_ms": 51
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "HBTRACK_CANON_PARITY_GATE",
@@ -6677,8 +7419,46 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
-      }
+        "duration_ms": 8
+      },
+      "proof_class": "presence",
+      "promotion_power": "blocking",
+      "truth_scope": "structural",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
+    },
+    {
+      "gate_id": "REPORT_TRUTHFULNESS_GATE",
+      "status": "PASS",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Semântica de relatório consistente com profile=`ci` e canonical_full_run=True.",
+      "inputs": [],
+      "artifacts_checked": [
+        "_reports/contract_gates/latest.json"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
@@ -6686,7 +7466,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 57 PASS, 5 SKIP.",
+      "summary": "Resumo de gates: 62 PASS, 5 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -6696,7 +7476,16 @@
         "warnings": 0,
         "violations": 0,
         "duration_ms": 0
-      }
+      },
+      "proof_class": "presence",
+      "promotion_power": "advisory",
+      "truth_scope": "structural",
+      "ci_required": false,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "always"
     }
   ]
 }

@@ -14,22 +14,22 @@ from ninja import Router
 from .deps import CamelRouter
 
 from ..application.common.services import TrainingServices
-from ..application.use_cases import (
+from ..application.execution.dto import (
     CreateExecutionRecordInput,
     CreateSessionObjectiveInput,
     GetExecutionRecordInput,
     ListExecutionRecordsInput,
     ListSessionObjectivesInput,
 )
-from ..schemas import (
+from ..schemas.execution import (
     CreateExecutionRecordIn,
     CreateSessionObjectiveIn,
-    ProblemOut,
     ExecutionRecordListOut,
     ExecutionRecordOut,
     SessionObjectiveListOut,
     SessionObjectiveOut,
 )
+from ..schemas.sessions import ProblemOut
 from .deps import _get_actor_id, _get_actor_role
 from .errors import map_exceptions
 from .mappers import _execution_record_to_out, _session_objective_to_out
@@ -43,7 +43,7 @@ router = CamelRouter()
 
 @router.get(
     "/training-sessions/{id}/execution-records",
-    response={200: ExecutionRecordListOut, 403: ProblemOut, 404: ProblemOut},
+    response={200: ExecutionRecordListOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_execution_records(request, id: uuid.UUID):
@@ -105,7 +105,7 @@ def get_execution_record(request, id: uuid.UUID, recordId: uuid.UUID):
 
 @router.get(
     "/training-sessions/{id}/objectives",
-    response={200: SessionObjectiveListOut, 403: ProblemOut, 404: ProblemOut},
+    response={200: SessionObjectiveListOut, 401: ProblemOut, 403: ProblemOut, 404: ProblemOut},
 )
 @map_exceptions
 def list_session_objectives(request, id: uuid.UUID):

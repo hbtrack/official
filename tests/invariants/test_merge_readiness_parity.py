@@ -152,8 +152,8 @@ def test_local_equivalent_test_files_exist():
 def test_ci_validate_contracts_uses_hb_wrapper():
     """ci / Validate Contracts deve usar scripts/hb validate, não o script direto.
 
-    O local_equivalent canônico é 'python3 scripts/hb validate --profile precommit'.
-    Usar o script diretamente (validate_contracts.py --profile precommit) diverge do
+    O local_equivalent canônico é 'python3 scripts/hb validate --profile ci'.
+    Usar o script diretamente (validate_contracts.py --profile ci) diverge do
     wrapper, que pode ter lógica adicional de ambiente e relatório.
     """
     checks = {c["context"]: c for c in _manifest()["checks"]}
@@ -162,6 +162,17 @@ def test_ci_validate_contracts_uses_hb_wrapper():
     le = ci_validate.get("local_equivalent", "")
     assert "scripts/hb validate" in le, (
         f"'ci / Validate Contracts' local_equivalent deve usar 'scripts/hb validate', "
+        f"atual: {le!r}"
+    )
+
+
+def test_ci_validate_contracts_uses_full_ci_profile():
+    checks = {c["context"]: c for c in _manifest()["checks"]}
+    ci_validate = checks.get("ci / Validate Contracts")
+    assert ci_validate is not None, "'ci / Validate Contracts' não encontrado em merge-readiness.json"
+    le = ci_validate.get("local_equivalent", "")
+    assert "--profile ci" in le, (
+        "'ci / Validate Contracts' deve reproduzir o escopo canônico completo, "
         f"atual: {le!r}"
     )
 

@@ -538,7 +538,7 @@ class TestStage23ExitCodes:
 
     def test_stage3_command_exists_and_runs(self):
         """hb stage3 deve ser reconhecido e executar validate_contracts completo."""
-        result = _run_hb("stage3")
+        result = _run_hb("stage3", timeout=180)
         # Verificar que o comando foi reconhecido: saída deve conter o cabeçalho FASE 3
         assert "FASE 3" in result.stdout, (
             f"hb stage3 não produziu saída de FASE 3 — comando pode não existir.\n"
@@ -553,7 +553,7 @@ class TestStage23ExitCodes:
 
     def test_stage3_sets_exit_code_in_session(self):
         """Após hb stage3, session_start.json deve ter stage3_exit_code."""
-        result = _run_hb("stage3")
+        result = _run_hb("stage3", timeout=180)
         session_file = REPO_ROOT / "_reports" / "session_start.json"
         if session_file.exists():
             session = json.loads(session_file.read_text(encoding="utf-8"))

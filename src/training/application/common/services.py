@@ -90,21 +90,18 @@ from ..wellness.commands import (
 )
 from ..wellness.queries import GetWellnessPostUseCase, GetWellnessPreUseCase
 from ...domain.policies.session_access import SessionGuard
-from ...infrastructure.repository import (
+from ...infrastructure.repository.attendance import AttendanceRepository
+from ...infrastructure.repository.blocks import SessionBlockRepository
+from ...infrastructure.repository.communication import (
     AttentionQueueRepository,
-    AthleteIneligibilityDeclarationRepository,
-    AttendanceRepository,
-    ExecutionRecordRepository,
     FeedbackThreadRepository,
-    MesocycleRepository,
-    MicrocycleRepository,
     RecommendationRepository,
-    SessionBlockRepository,
-    SessionObjectiveRepository,
-    TrainingSessionRepository,
-    WellnessPostRepository,
-    WellnessPreRepository,
 )
+from ...infrastructure.repository.eligibility import AthleteIneligibilityDeclarationRepository
+from ...infrastructure.repository.execution import ExecutionRecordRepository
+from ...infrastructure.repository.planning import MesocycleRepository, MicrocycleRepository
+from ...infrastructure.repository.sessions import SessionObjectiveRepository, TrainingSessionRepository
+from ...infrastructure.repository.wellness import WellnessPostRepository, WellnessPreRepository
 
 
 class TrainingServices:

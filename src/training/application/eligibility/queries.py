@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from ...domain.entities import AthleteIneligibilityDeclaration
+from ...domain.entities.eligibility import AthleteIneligibilityDeclaration
 from ...domain.rules import (
     IneligibilityDeclarationNotFound,
     TrainingSessionNotFound,
     assert_can_view_athlete_record,
 )
-from ...infrastructure.repository import (
-    AthleteIneligibilityDeclarationRepository,
-    TrainingSessionRepository,
-)
+from ...infrastructure.repository.eligibility import AthleteIneligibilityDeclarationRepository
+from ...infrastructure.repository.sessions import TrainingSessionRepository
 from .dto import GetIneligibilityStatusInput
 
 

@@ -7,7 +7,7 @@
 |------|-------|
 | Status do sistema | Ativo — em desenvolvimento iterativo |
 | Maturidade CDD | Nível 3 — contratos de módulo + invariantes + test matrix |
-| Última revisão | 2026-03-11 |
+| Última revisão | 2026-04-24 |
 | **Ambiente de desenvolvimento** | **Linux/WSL (primário)** |
 
 > **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento standard é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
@@ -198,6 +198,28 @@ Para Agentes de IA, o ponto de entrada correto é:
 
 ---
 
+## Estado Operacional Atual (current-state)
+
+Os componentes abaixo são **runtime comprovado** — existem no repo e estão configurados:
+
+| Componente | Evidência |
+|------------|-----------|
+| Django 5.0.4 + Django Ninja + 17 módulos | `config/settings.py`, `src/*/api.py` |
+| PostgreSQL 16 | `infra/docker-compose.yml` (`image: postgres:16`) |
+| Redis 7 | `infra/docker-compose.yml`, `config/settings.py` (`CHANNEL_LAYERS`, `CELERY_BROKER_URL`) |
+| Celery 5.x | `config/celery.py`, `src/notifications/tasks.py` |
+| Django Channels / WebSocket | `config/asgi.py` (`ProtocolTypeRouter`), `config/settings.py` (`CHANNEL_LAYERS`) |
+| `GET /health` | `config/urls.py` — verifica PostgreSQL e Redis |
+| Logging estruturado JSON + FlowID | `src/shared/logging_formatters.py`, `config/settings.py` (`LOGGING`) |
+| ASGI runtime | `Dockerfile` (Gunicorn + UvicornWorker) |
+| Frontend React + Vite | `frontend/src/` inicializado — desenvolvimento em andamento (Fase 5) |
+
+O que **ainda não é** current-state: deploy de produção VPS, mobile, APM externo.
+
+Fonte de verdade detalhada: [`docs/_canon/ARCHITECTURE.md`](docs/_canon/ARCHITECTURE.md).
+
+---
+
 ## 4 Regras Cardinais
 
 1. **Contrato antes de implementação** — nenhum código sem contrato vigente. Endpoints, payloads, eventos e workflows nascem primeiro como contratos.
@@ -222,7 +244,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 
 ---
 
-*Última revisão: 2026-03-11*
+*Última revisão: 2026-04-24*
 
 # .github
 
