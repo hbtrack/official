@@ -2,63 +2,69 @@
 data_ultima_sessao: "2026-04-25"
 branch_ativo: feat/c4-architecture-reality-alignment
 modo_operacao: CDD
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: training
-task_type: contract_revision
+task_type: new_state_model
 boot_profile_id: contract_execution
-task_id: GOVERNANCE_GATES_HARDENING
+task_id: TRAINING_SESSION_STATE_MODEL
 resultado: DONE
 fase_roadmap: 1
-proxima_acao_permitida: "Governança implementada com 5 novos gates. Retornar a review/merge do PR #92 ou iniciar nova sessão CDD conforme necessário."
+proxima_acao_permitida: "Novo state model criado e registrado. Próximas opções: (1) Mergear PR #92, (2) Iniciar nova sessão CDD, (3) Executar phase 6 de deploy."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "_reports/evidence/live_ruleset_contract-gates.json"
+  - "docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md"
+  - ".contract_driven/DOMAIN_AXIOMS.json"
+  - "docs/_canon/decisions/ADR-017-training-session-state-machine.md"
 ---
-# SESSION HANDOFF — HB TRACK (CDD Mode — Governance Hardening)
+# SESSION HANDOFF — HB TRACK (CDD Mode — Training State Model)
 
 ## Estado Geral
-**Data:** 2026-04-25 | **Branch:** feat/c4-architecture-reality-alignment | **CI:** PASS (local)
-**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
-**Módulo foco:** training | **Fase ROADMAP:** 1 | **task_id:** GOVERNANCE_GATES_HARDENING | **Resultado:** DONE
+**Data:** 2026-04-25 | **Branch:** feat/c4-architecture-reality-alignment | **CI:** PASS
+**Modo:** CDD | **task_type:** new_state_model | **boot_profile:** contract_execution
+**Módulo foco:** training | **Fase ROADMAP:** 1 | **task_id:** TRAINING_SESSION_STATE_MODEL | **Resultado:** DONE
 
 ## O que foi feito
 
-Identificação e consolidação de tarefa governada durante MERGE FLOW de PR #92:
+Criação de artefato governado `STATE_MODEL_TRAINING.md` conforme pipeline CDD:
 
-- **5 novos gates de governance** criados e integrados:
-  1. ARCHITECTURE_FACTUALITY_GATE — valida claims positivas/negativas sobre arquitetura
-  2. HOOK_EFFECTIVENESS_GATE — distingue guards reais de advisory falso
-  3. LIVE_ENFORCEMENT_PARITY_GATE — valida paridade entre local manifest, snapshot, live ruleset
-  4. MODULE_BEHAVIORAL_READINESS_GATE — exige superfície real, não só estrutura
-  5. REPORT_TRUTHFULNESS_GATE — bloqueia semântica de status inflada (PASS quando tem skip mandatória)
+- **Identificação da tarefa:** ADR-017 (State Machine Canônica de `training_session`) estava em status `Accepted` mas sem contrato correspondente registrado.
 
-- **Artefatos canônicos consolidados**:
-  - GATES_REGISTRY.yaml versão 1.4.0 (66 gates total, 5 novos)
-  - Scripts de auditoria: check_architecture_docs.py, check_live_ruleset_parity.py
-  - Testes de gates: 6 suites novas com 50+ test cases
-  - Waivers: 2 ativos (REM-4D-N/A, REM-CI-VALIDATE-TIMING)
+- **Decisão validada:** Máquina de estados canônica com 7 estados (DRAFT → SCHEDULED → PUBLISHED → IN_PROGRESS → COMPLETED → ARCHIVED/CANCELLED) definida em ADR-017 e axiomas globais em `.contract_driven/DOMAIN_AXIOMS.json`.
 
-- **Enforcement live implementado**:
-  - GitHub ruleset snapshot versionado
-  - Merge policy gerada deterministicamente
-  - Parity live ↔ local ↔ snapshot validada
+- **Artefato criado:** `docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md`
+  - Diagrama Mermaid com transições permitidas e proibidas
+  - Tabela de estados: 7 canônicos com semântica, editabilidade e visibilidade
+  - Tabela de transições: 11 transições permitidas + 17 proibidas com gatilhos/regras
+  - Conformidade com axiomas globais: validada
+  - Migração v0.x → v1.0: mapeamento documentado
+  - Referências cruzadas: ADR-017, INVARIANTS_TRAINING (INV-TRAIN-006), TEST_MATRIX_TRAINING
+
+- **Pipeline CDD executado:**
+  - ✅ FASE 0 (Boot): `task_type=new_state_model`, `module=training` validados
+  - ✅ FASE 1 (Discovery): Módulo training confirmado com artefatos obrigatórios
+  - ✅ FASE 2 (Authoring): STATE_MODEL criado segundo worker prompt e template
+  - ✅ FASE 2.5 (Compilação): N/A (state model não requer compilação OpenAPI)
+  - ✅ FASE 3 (Validação): **66 gates PASS** (status final: PASS)
+  - ✅ FASE 4 (Readiness): MODULE_REGISTRY já reflete training como `implemented`
+  - ✅ FASE 5 (Handoff): SESSION_HANDOFF atualizado (este documento)
 
 ## Evidências
 
-- `_reports/contract_gates/latest.json` — 66 gates com 5 novos registrados
-- `_reports/evidence/live_ruleset_contract-gates.json` — Snapshot versionado
-- `docs/_canon/gates/GATES_REGISTRY.yaml` — Artefato canônico atualizado
-- `tests/pipeline_gates/test_architecture_factuality_gate.py` — Testes novos
-- `.contract_driven/waivers.json` — Waivers atualizados
+- `_reports/contract_gates/latest.json` — 66 gates PASS, profile=ci, canonical_scope=full_pipeline
+- `docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md` — Artefato criado e registrado
+- `docs/_canon/decisions/ADR-017-training-session-state-machine.md` — Decisão aceita
+- `.contract_driven/DOMAIN_AXIOMS.json` — Axiomas globais (training_state_machine)
+- Commit: `7bd4aed2` — "feat(training): create state model for training_session (ADR-017)"
 
 ## Próxima ação permitida
 
-Transição completa para CDD. Opções:
-1. Retornar a review/merge de PR #92 (branch protection espera aprovação humana de fase 6)
-2. Iniciar nova sessão CDD se contratos adicionais precisarem ser criados/modificados
-3. Passar ao hb-merge-orchestrator para finalizar fluxo de merge
+Opções sequenciais:
+1. **Mergear PR #92** — Consolidar todas as mudanças (governance hardening + state model) em main
+2. **Iniciar nova sessão CDD** — Se outros contratos precisarem ser criados/modificados
+3. **Avançar para fase 6** — Deploy de produção (requer aprovação humana)
 
 ## Bloqueios ativos
 
-Nenhum.
+Nenhum. Pipeline CDD completo e validado.
+
