@@ -2,42 +2,44 @@
 data_ultima_sessao: "2026-04-26"
 branch_ativo: feat/preflight-artifact-integrity-gate
 modo_operacao: CDD
-ci_status: PASS
+ci_status: FAIL
 modulo_foco: notifications
 fase_roadmap: 1
-task_type: contract_revision
-boot_profile_id: contract_execution
-task_id: NOTIFICATIONS_WEBSOCKET_AUTH_REVISION
+task_type: architecture_review
+boot_profile_id: architecture_decision
+task_id: GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE
 resultado: DONE
-proxima_acao_permitida: "Definir escopo de RULE_CHANGE_QUARANTINE e abrir PR com PREFLIGHT_ARTIFACT_INTEGRITY_GATE (scripts/hb +203 linhas, tests/pipeline/test_preflight_artifact_integrity.py)."
+proxima_acao_permitida: "Push do commit fix(canon) para remoto + aguardar CI do PR #93. Após CI PASS: merge PR #93 e definir escopo de RULE_CHANGE_QUARANTINE."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
+  - "docs/_canon/gates/GATES_REGISTRY.yaml"
   - "scripts/hb"
   - "tests/pipeline/test_preflight_artifact_integrity.py"
 ---
-# SESSION HANDOFF — CDD Contract Revision
+# SESSION HANDOFF — CDD Architecture Review
 
 ## Estado Geral
-**Data:** 2026-04-26 | **Branch:** main | **CI:** PASS
-**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** NOTIFICATIONS_WEBSOCKET_AUTH_REVISION | **Resultado:** DONE
+**Data:** 2026-04-26 | **Branch:** feat/preflight-artifact-integrity-gate | **CI:** FAIL (HANDOFF_COHERENCE transitório)
+**Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
+**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE | **Resultado:** DONE
 
 ## O que foi feito
-- ✅ FASE 0 (Boot): Validado task_type=contract_revision, module=notifications
-- ✅ FASE 1 (Discovery): Verificado que módulo notifications tem todos artefatos obrigatórios
-- ✅ FASE 2 (Analysis): Identificada mudança de TokenAuthMiddleware — refatoração de segurança (OWASP A02)
-- ✅ Conclusão: Mudança é implementação interna de middleware, NÃO requer contract_revision de OpenAPI
+- ✅ Commit e758d2e2: PREFLIGHT_ARTIFACT_INTEGRITY_GATE implementado em scripts/hb (+203 linhas)
+- ✅ PR #93 criado: feat/preflight-artifact-integrity-gate → main
+- ✅ Achado do Gemini Review (CRITICAL): gate ausente do docs/_canon/gates/GATES_REGISTRY.yaml
+- ✅ Gate registrado em GATES_REGISTRY.yaml: entry 15I5, proof_class=semantic, promotion_power=blocking, integrated_in_validate_contracts=false
+- ✅ Teste de paridade (test_gate_registry_parity.py): 8 passed — campo integrated_in_validate_contracts=false resolve divergência registry×executor
+- ✅ hb verify --task-type architecture_review --module notifications: exitcode 0
 
 ## Evidências
-- `src/notifications/middleware.py` — TokenAuthMiddleware refatorado (query string → Sec-WebSocket-Protocol)
-- `contracts/openapi/paths/notifications.yaml` — contrato HTTP existente (sem mudança necessária)
-- `docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md` — autorização documentada
-- `_reports/contract_gates/latest.json` — relatório canônico atual em `FAIL` por `LIVE_ENFORCEMENT_PARITY_GATE` após erro de conexão com `api.github.com` durante a verificação live
-- `_reports/preflight/latest.json` — artefato regenerado com `artifact_integrity`; `PREFLIGHT_ARTIFACT_INTEGRITY_GATE=PASS` no fluxo completo
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — entry 15I5 adicionado
+- `scripts/hb` — implementação do gate (cmd_preflight + _verify_preflight_artifact_integrity)
+- `tests/pipeline/test_preflight_artifact_integrity.py` — 31 testes adversariais passando
+- `tests/pipeline_gates/test_gate_registry_parity.py` — 8 passed
 
 ## Próxima ação permitida
-Reexecutar `python3 scripts/hb validate --profile ci` quando a conectividade com a API do GitHub estiver estável e, com o canônico verde novamente, seguir para `RULE_CHANGE_QUARANTINE`.
+Push do commit `fix(canon)` para o remote (`git push origin feat/preflight-artifact-integrity-gate`). Aguardar CI do PR #93. Após todos os checks PASS: merge PR #93. Próxima grande tarefa: definir e implementar `RULE_CHANGE_QUARANTINE` (Contenção 2 do HBCONTROL.md).
 
 ## Bloqueios ativos
 Nenhum.
