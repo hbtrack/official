@@ -202,6 +202,48 @@ def test_verify_preflight_artifact_integrity_marks_source_drift_as_stale(tmp_pat
     assert "manifest_sha256" in result["reasons"]
 
 
+def test_verify_preflight_artifact_integrity_target_branch_change_is_stale(tmp_path):
+    """Mudança legítima em target_branch deve retornar STALE, não FAIL (Codex P2)."""
+    _write_minimal_workspace(tmp_path)
+    cli = _build_cli(tmp_path)
+    report = _valid_report(cli, tmp_path)
+    report_path = tmp_path / "_reports" / "preflight" / "latest.json"
+    _write_json(report_path, report)
+
+    # Artefato gravado com target_branch=main; agora invoca com target_branch=develop
+    result = cli._verify_preflight_artifact_integrity(
+        report_path,
+        manifest_path=tmp_path / "merge-readiness.json",
+        output_report="_reports/preflight/latest.json",
+        target_branch="develop",
+    )
+
+    assert result["status"] == "STALE", result
+    assert "report_target_mismatch" in result["reasons"]
+    assert result["exit_code"] == 0
+
+
+def test_verify_preflight_artifact_integrity_output_report_change_is_stale(tmp_path):
+    """Mudança legítima em output_report (execution_plan) deve retornar STALE, não FAIL (Codex P2)."""
+    _write_minimal_workspace(tmp_path)
+    cli = _build_cli(tmp_path)
+    report = _valid_report(cli, tmp_path)
+    report_path = tmp_path / "_reports" / "preflight" / "latest.json"
+    _write_json(report_path, report)
+
+    # Artefato gravado com output_report padrão; agora invoca com caminho diferente
+    result = cli._verify_preflight_artifact_integrity(
+        report_path,
+        manifest_path=tmp_path / "merge-readiness.json",
+        output_report="_reports/preflight/custom.json",
+        target_branch="main",
+    )
+
+    assert result["status"] == "STALE", result
+    assert "report_target_mismatch" in result["reasons"]
+    assert result["exit_code"] == 0
+
+
 def test_cmd_preflight_blocks_when_existing_artifact_was_manually_tampered(tmp_path, monkeypatch):
     _write_minimal_workspace(tmp_path)
     cli = _build_cli(tmp_path)

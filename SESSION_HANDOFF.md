@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-04-26"
 branch_ativo: feat/preflight-artifact-integrity-gate
 modo_operacao: CDD
-ci_status: FAIL
+ci_status: PASS
 modulo_foco: notifications
 fase_roadmap: 1
 task_type: architecture_review

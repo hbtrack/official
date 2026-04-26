@@ -775,9 +775,9 @@ class HBCLIv2:
 
         if inputs.get("output_report") != output_report or inputs.get("target_branch") != target_branch:
             return {
-                "status": "FAIL",
-                "exit_code": 2,
-                "message": "Artefato de preflight com metadados de destino inconsistentes.",
+                "status": "STALE",
+                "exit_code": 0,
+                "message": "Artefato de preflight desatualizado: metadados de destino mudaram (mudança legítima de governança).",
                 "reasons": ["report_target_mismatch"],
             }
 
