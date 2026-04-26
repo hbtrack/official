@@ -9,7 +9,7 @@ task_type: architecture_review
 boot_profile_id: architecture_decision
 task_id: GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE
 resultado: DONE
-proxima_acao_permitida: "Push do commit fix(canon) para remoto + aguardar CI do PR #93. Após CI PASS: merge PR #93 e definir escopo de RULE_CHANGE_QUARANTINE."
+proxima_acao_permitida: "Aguardar CI do PR #93 (commit 0567ae01 no remote). Após CI PASS: merge PR #93 e definir escopo de RULE_CHANGE_QUARANTINE."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
@@ -31,6 +31,7 @@ evidence_paths:
 - ✅ Gate registrado em GATES_REGISTRY.yaml: entry 15I5, proof_class=semantic, promotion_power=blocking, integrated_in_validate_contracts=false
 - ✅ Teste de paridade (test_gate_registry_parity.py): 8 passed — campo integrated_in_validate_contracts=false resolve divergência registry×executor
 - ✅ hb verify --task-type architecture_review --module notifications: exitcode 0
+- ✅ Commit 0567ae01: fix(canon) GATES_REGISTRY — precommit PASS, push enviado ao remote
 
 ## Evidências
 - `docs/_canon/gates/GATES_REGISTRY.yaml` — entry 15I5 adicionado
@@ -39,7 +40,7 @@ evidence_paths:
 - `tests/pipeline_gates/test_gate_registry_parity.py` — 8 passed
 
 ## Próxima ação permitida
-Push do commit `fix(canon)` para o remote (`git push origin feat/preflight-artifact-integrity-gate`). Aguardar CI do PR #93. Após todos os checks PASS: merge PR #93. Próxima grande tarefa: definir e implementar `RULE_CHANGE_QUARANTINE` (Contenção 2 do HBCONTROL.md).
+Aguardar CI do PR #93 (commit 0567ae01 no remote). Após todos os checks PASS: merge PR #93. Próxima grande tarefa: definir e implementar `RULE_CHANGE_QUARANTINE` (Contenção 2 do HBCONTROL.md).
 
 ## Bloqueios ativos
 Nenhum.
