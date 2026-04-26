@@ -1,6 +1,6 @@
 ---
-data_ultima_sessao: "2026-04-25"
-branch_ativo: feat/c4-architecture-reality-alignment
+data_ultima_sessao: "2026-04-26"
+branch_ativo: feat/preflight-artifact-integrity-gate
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: notifications
@@ -9,18 +9,19 @@ task_type: contract_revision
 boot_profile_id: contract_execution
 task_id: NOTIFICATIONS_WEBSOCKET_AUTH_REVISION
 resultado: DONE
-proxima_acao_permitida: "Executar FASE 1 (hb check) para verificar artefatos do módulo notifications."
+proxima_acao_permitida: "Definir escopo de RULE_CHANGE_QUARANTINE e abrir PR com PREFLIGHT_ARTIFACT_INTEGRITY_GATE (scripts/hb +203 linhas, tests/pipeline/test_preflight_artifact_integrity.py)."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "contracts/openapi/paths/notifications.yaml"
+  - "scripts/hb"
+  - "tests/pipeline/test_preflight_artifact_integrity.py"
 ---
 # SESSION HANDOFF — CDD Contract Revision
 
 ## Estado Geral
-**Data:** 2026-04-25 | **Branch:** feat/c4-architecture-reality-alignment | **CI:** PASS
+**Data:** 2026-04-26 | **Branch:** main | **CI:** PASS
 **Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** NOTIFICATIONS_WEBSOCKET_AUTH_REVISION | **Resultado:** IN_PROGRESS
+**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** NOTIFICATIONS_WEBSOCKET_AUTH_REVISION | **Resultado:** DONE
 
 ## O que foi feito
 - ✅ FASE 0 (Boot): Validado task_type=contract_revision, module=notifications
@@ -32,11 +33,11 @@ evidence_paths:
 - `src/notifications/middleware.py` — TokenAuthMiddleware refatorado (query string → Sec-WebSocket-Protocol)
 - `contracts/openapi/paths/notifications.yaml` — contrato HTTP existente (sem mudança necessária)
 - `docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md` — autorização documentada
-- `_reports/contract_gates/latest.json` — gates all PASS
+- `_reports/contract_gates/latest.json` — relatório canônico atual em `FAIL` por `LIVE_ENFORCEMENT_PARITY_GATE` após erro de conexão com `api.github.com` durante a verificação live
+- `_reports/preflight/latest.json` — artefato regenerado com `artifact_integrity`; `PREFLIGHT_ARTIFACT_INTEGRITY_GATE=PASS` no fluxo completo
 
 ## Próxima ação permitida
-Opção A: Criar ADR-XXX "WebSocket Auth Refactor — Sec-WebSocket-Protocol" OR Opção B: Documentar em SECURITY_GUIDELINES_NOTIFICATIONS.md OR Opção C: Apêndice técnico em PERMISSIONS_NOTIFICATIONS.md (implementação interna resolvida, sem contrato formal necessário)
+Reexecutar `python3 scripts/hb validate --profile ci` quando a conectividade com a API do GitHub estiver estável e, com o canônico verde novamente, seguir para `RULE_CHANGE_QUARANTINE`.
 
 ## Bloqueios ativos
 Nenhum.
-

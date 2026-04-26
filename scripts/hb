@@ -637,6 +637,174 @@ class HBCLIv2:
             return ref if ref and ref != "HEAD" else "detached"
         except Exception:
             return "unknown"
+
+    def _get_git_head_commit(self) -> str:
+        """Obter commit HEAD curto para metadados observacionais."""
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--short=12", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            head = result.stdout.strip()
+            return head or "unknown"
+        except Exception:
+            return "unknown"
+
+    @staticmethod
+    def _stable_json_dumps(payload: Any) -> str:
+        """Serialização JSON determinística para fingerprints de integridade."""
+        return json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+    def _build_preflight_integrity_inputs(
+        self,
+        *,
+        manifest_path: pathlib.Path,
+        output_report: str,
+        target_branch: str,
+    ) -> Dict[str, Any]:
+        hb_path = self.root / "scripts" / "hb"
+        return {
+            "entrypoint": "scripts/hb",
+            "command": "python3 scripts/hb preflight",
+            "target_branch": target_branch,
+            "output_report": output_report,
+            "manifest_sha256": self._calculate_file_hash(manifest_path),
+            "hb_script_sha256": self._calculate_file_hash(hb_path),
+            "git_head_commit": self._get_git_head_commit(),
+        }
+
+    def _attach_preflight_artifact_integrity(
+        self,
+        report_core: Dict[str, Any],
+        *,
+        manifest_path: pathlib.Path,
+        output_report: str,
+        target_branch: str,
+    ) -> Dict[str, Any]:
+        """Anexar prova de origem e fingerprint ao artefato de preflight."""
+        payload_sha256 = hashlib.sha256(
+            self._stable_json_dumps(report_core).encode("utf-8")
+        ).hexdigest()
+        integrity = {
+            "gate_id": "PREFLIGHT_ARTIFACT_INTEGRITY_GATE",
+            "schema_version": 1,
+            "inputs": self._build_preflight_integrity_inputs(
+                manifest_path=manifest_path,
+                output_report=output_report,
+                target_branch=target_branch,
+            ),
+            "payload_sha256": payload_sha256,
+        }
+        return {**report_core, "artifact_integrity": integrity}
+
+    def _verify_preflight_artifact_integrity(
+        self,
+        report_path: pathlib.Path,
+        *,
+        manifest_path: pathlib.Path,
+        output_report: str,
+        target_branch: str,
+    ) -> Dict[str, Any]:
+        """Validar integridade/proveniência do artefato de preflight existente.
+
+        Status possíveis:
+          PASS   -> artefato íntegro e consistente com as entradas atuais
+          STALE  -> artefato íntegro, mas entradas atuais mudaram (pode regenerar)
+          LEGACY -> artefato legível sem prova de origem (pode regenerar)
+          SKIP   -> artefato ausente
+          FAIL   -> artefato adulterado/inconsistente
+        """
+        if not report_path.exists():
+            return {
+                "status": "SKIP",
+                "exit_code": 0,
+                "message": "Artefato de preflight ausente — primeira geração permitida.",
+                "reasons": [],
+            }
+
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            return {
+                "status": "FAIL",
+                "exit_code": 2,
+                "message": f"Artefato de preflight ilegível: {exc}",
+                "reasons": ["invalid_json"],
+            }
+
+        integrity = report.get("artifact_integrity")
+        if not isinstance(integrity, dict):
+            return {
+                "status": "LEGACY",
+                "exit_code": 0,
+                "message": "Artefato de preflight legado: sem prova de origem; será regenerado.",
+                "reasons": ["missing_artifact_integrity"],
+            }
+
+        inputs = integrity.get("inputs")
+        stored_payload_sha256 = integrity.get("payload_sha256")
+        if not isinstance(inputs, dict) or not isinstance(stored_payload_sha256, str):
+            return {
+                "status": "FAIL",
+                "exit_code": 2,
+                "message": "Artefato de preflight com bloco de integridade incompleto.",
+                "reasons": ["incomplete_integrity_block"],
+            }
+
+        expected_core = {k: v for k, v in report.items() if k != "artifact_integrity"}
+        computed_payload_sha256 = hashlib.sha256(
+            self._stable_json_dumps(expected_core).encode("utf-8")
+        ).hexdigest()
+        if computed_payload_sha256 != stored_payload_sha256:
+            return {
+                "status": "FAIL",
+                "exit_code": 2,
+                "message": "Artefato de preflight adulterado: payload_sha256 diverge do conteúdo atual.",
+                "reasons": ["payload_sha256_mismatch"],
+            }
+
+        if inputs.get("entrypoint") != "scripts/hb" or inputs.get("command") != "python3 scripts/hb preflight":
+            return {
+                "status": "FAIL",
+                "exit_code": 2,
+                "message": "Artefato de preflight com origem não canônica declarada.",
+                "reasons": ["non_canonical_generator"],
+            }
+
+        if inputs.get("output_report") != output_report or inputs.get("target_branch") != target_branch:
+            return {
+                "status": "FAIL",
+                "exit_code": 2,
+                "message": "Artefato de preflight com metadados de destino inconsistentes.",
+                "reasons": ["report_target_mismatch"],
+            }
+
+        current_inputs = self._build_preflight_integrity_inputs(
+            manifest_path=manifest_path,
+            output_report=output_report,
+            target_branch=target_branch,
+        )
+        drift_reasons = []
+        for key in ("manifest_sha256", "hb_script_sha256", "git_head_commit"):
+            if inputs.get(key) != current_inputs.get(key):
+                drift_reasons.append(key)
+
+        if drift_reasons:
+            return {
+                "status": "STALE",
+                "exit_code": 0,
+                "message": "Artefato de preflight íntegro, mas desatualizado em relação às entradas atuais.",
+                "reasons": drift_reasons,
+            }
+
+        return {
+            "status": "PASS",
+            "exit_code": 0,
+            "message": "Artefato de preflight íntegro e coerente com as entradas atuais.",
+            "reasons": [],
+        }
     
     def cmd_verify(
         self,
@@ -1600,9 +1768,28 @@ class HBCLIv2:
         output_report = manifest.get("execution_plan", {}).get(
             "output_report", "_reports/preflight/latest.json"
         )
+        report_path = self.root / output_report
 
         print(f"  target_branch : {target_branch}")
         print(f"  decision_policy: {decision_policy}")
+
+        integrity_check = self._verify_preflight_artifact_integrity(
+            report_path,
+            manifest_path=manifest_path,
+            output_report=output_report,
+            target_branch=target_branch,
+        )
+        integrity_status = integrity_check["status"]
+        if integrity_status == "FAIL":
+            print(
+                f"❌ [BLOCKED] PREFLIGHT_ARTIFACT_INTEGRITY_GATE: {integrity_check['message']}",
+                file=sys.stderr,
+            )
+            return 2
+        if integrity_status in {"LEGACY", "STALE"}:
+            print(f"  ⚠️  {integrity_check['message']}")
+        elif integrity_status == "PASS":
+            print(f"  ✅ {integrity_check['message']}")
 
         # 2. Calcular diff
         changed_files = self._get_diff_files(target_branch)
@@ -1620,6 +1807,15 @@ class HBCLIv2:
         # 4. Baseline: survival suite
         checks_run = []
         checks_failed = []
+        checks_run.append(
+            {
+                "step": "PREFLIGHT_ARTIFACT_INTEGRITY_GATE",
+                "result": "PASS" if integrity_status in {"PASS", "SKIP"} else "WARN",
+                "exit_code": 0,
+                "message": integrity_check["message"],
+                "reasons": integrity_check["reasons"],
+            }
+        )
 
         print("\n── Baseline: survival suite ──")
         ss_result = self.cmd_survival_suite()
@@ -1777,7 +1973,7 @@ class HBCLIv2:
                 final_decision = "PASS"
 
         # Gerar report
-        report = {
+        report_core = {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "branch_target": target_branch,
             "diff_classes": diff_classes,
@@ -1788,8 +1984,12 @@ class HBCLIv2:
             "reviewability_check": reviewability_check,
             "final_decision": final_decision,
         }
-
-        report_path = self.root / output_report
+        report = self._attach_preflight_artifact_integrity(
+            report_core,
+            manifest_path=manifest_path,
+            output_report=output_report,
+            target_branch=target_branch,
+        )
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
 
