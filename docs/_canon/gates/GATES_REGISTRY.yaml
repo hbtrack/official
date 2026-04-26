@@ -929,6 +929,37 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: PREFLIGHT_ARTIFACT_INTEGRITY_GATE
+    order: "15I5"
+    name: "Preflight Artifact Integrity Gate"
+    blocking: true
+    active_stage: pre_check
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: "preflight execution"
+    depends_on: []
+    description: >
+      Verifica integridade e prova de origem do artefato
+      `_reports/preflight/latest.json` antes de qualquer sobrescrita.
+      Anexa `artifact_integrity.inputs` (entrypoint, command, target_branch,
+      hashes do manifesto e do script, git_head_commit) e grava
+      `payload_sha256` do payload completo. Bloqueia quando o fingerprint
+      diverge da origem registrada, impedindo adulteração manual do artefato.
+      Artefatos sem prova de origem (LEGACY) recebem WARN na primeira execução
+      e passam a PASS quando regenerados coerentemente.
+    proof_class: semantic
+    promotion_power: blocking
+    truth_scope: factual
+    blocking_codes: [ PREFLIGHT_ARTIFACT_INTEGRITY_GATE ]
+    status: active
+    integrated_in_validate_contracts: false
+    implemented_in: scripts/hb
+    implementation_notes: >
+      Gate implementado no entrypoint de preflight (scripts/hb cmd_preflight),
+      não no executor de validação de contratos. Roda antes de qualquer outra
+      verificação do preflight flow para garantir que o artefato de relatório
+      não foi adulterado entre execuções.
+
   - gate_id: FRONTEND_CONTRACT_GATE
     order: 15J
     name: "Frontend Contract Gate"
