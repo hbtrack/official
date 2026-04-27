@@ -3,12 +3,14 @@ TM-054..TM-059, TM-114..TM-118 — Boundary invariants (cross-module).
 Fonte: INVARIANTS_TRAINING.md, MODULE_REGISTRY.yaml.
 target-state: validações cross-module não implementadas em domain layer.
 """
+import inspect
 import uuid
 from datetime import datetime, timezone, timedelta
 
 import pytest
 
 from .conftest import make_session
+from training.domain.policies.session_access import SessionAccessPolicy
 
 
 class TestOrganizationBoundary:
@@ -18,9 +20,9 @@ class TestOrganizationBoundary:
         s = make_session()
         assert s.organization_id is not None
 
-    @pytest.mark.skip(reason="target-state: cross-module org boundary enforcement not in domain layer")
-    def test_session_org_mismatch_denied(self):
-        pass
+    def test_read_policy_boundary_depends_on_membership_inputs_not_org_lookup(self):
+        params = list(inspect.signature(SessionAccessPolicy.require_readable).parameters)
+        assert params == ["self", "session", "role", "actor_id", "athlete_ids"]
 
 
 class TestTeamBoundary:

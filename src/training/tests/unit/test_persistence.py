@@ -3,10 +3,11 @@ TM-042, TM-043, TM-060 — Persistence rules.
 Fonte: DOMAIN_RULES_TRAINING.md (DR-TRAIN-029, DR-TRAIN-030, DR-TRAIN-031).
 target-state: regras de persistência são enforced na camada de infraestrutura.
 """
-import pytest
+import inspect
 
 from .conftest import make_session
 from training.domain.common.enums import TrainingSessionStatus
+from training.infrastructure.repository.execution import ExecutionRecordRepository
 
 
 class TestPersistenceSoftDelete:
@@ -38,10 +39,15 @@ class TestIndividualizationModeField:
 class TestAppendOnlyExecutionRecords:
     """DR-TRAIN-031: ExecutionRecords são append-only — sem update/delete."""
 
-    @pytest.mark.skip(reason="target-state: append-only enforcement is at repository/DB layer")
-    def test_execution_record_cannot_be_updated(self):
-        pass
+    def test_repository_public_surface_has_no_update_or_delete_methods(self):
+        public_methods = {
+            name
+            for name, value in vars(ExecutionRecordRepository).items()
+            if callable(value) and not name.startswith("_")
+        }
+        assert public_methods == {"list_by_session", "get_by_id", "save"}
 
-    @pytest.mark.skip(reason="target-state: append-only enforcement is at repository/DB layer")
-    def test_execution_record_cannot_be_deleted(self):
-        pass
+    def test_repository_save_is_keyed_by_record_id(self):
+        source = inspect.getsource(ExecutionRecordRepository.save)
+        assert "update_or_create" in source
+        assert "pk=record.id" in source

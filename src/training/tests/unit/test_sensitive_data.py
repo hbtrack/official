@@ -5,10 +5,17 @@ target-state: regras de dados sensíveis não implementadas em domain layer.
 """
 import uuid
 from datetime import datetime, timezone
+from unittest.mock import MagicMock
 
 import pytest
 
+from training.api.mappers import _wellness_pre_to_out
+from training.application.wellness.dto import GetWellnessPreInput
+from training.application.wellness.queries import GetWellnessPreUseCase
 from training.domain.entities.wellness import WellnessPre
+from training.domain.rules import InsufficientPrivilege, RoleLabel
+
+from .conftest import make_session
 
 
 class TestWellnessPreFieldConstraints:
@@ -64,10 +71,37 @@ class TestWellnessPreFieldConstraints:
 class TestSensitiveDataFiltering:
     """DR-TRAIN-039/040: dados sensíveis não devem ser expostos em responses."""
 
-    @pytest.mark.skip(reason="target-state: sensitive data filtering rules not yet in domain layer")
-    def test_wellness_data_filtered_for_non_staff(self):
-        pass
+    def test_wellness_response_excludes_soft_delete_fields(self):
+        entity = WellnessPre(
+            id=uuid.uuid4(),
+            session_id=uuid.uuid4(),
+            athlete_id=uuid.uuid4(),
+            readiness=4,
+            notes="sensível",
+            created_at=datetime.now(tz=timezone.utc),
+            updated_at=datetime.now(tz=timezone.utc),
+            deleted_at=datetime.now(tz=timezone.utc),
+            deleted_reason="soft delete interno",
+        )
+        payload = _wellness_pre_to_out(entity).model_dump(by_alias=True)
+        assert "trainingSessionId" in payload
+        assert "deletedAt" not in payload
+        assert "deletedReason" not in payload
 
-    @pytest.mark.skip(reason="target-state: sensitive data filtering rules not yet in domain layer")
-    def test_personal_notes_excluded_from_aggregations(self):
-        pass
+    def test_athlete_cannot_read_other_athlete_wellness_record(self):
+        actor_id = uuid.uuid4()
+        session_repo = MagicMock()
+        session_repo.get_by_id.return_value = make_session()
+        wellness_repo = MagicMock()
+        use_case = GetWellnessPreUseCase(session_repo, wellness_repo)
+
+        with pytest.raises(InsufficientPrivilege, match="próprio registro"):
+            use_case.execute(
+                GetWellnessPreInput(
+                    session_id=uuid.uuid4(),
+                    actor_role=RoleLabel.ATHLETE,
+                    actor_id=actor_id,
+                    athlete_id=uuid.uuid4(),
+                )
+            )
+        wellness_repo.get_active.assert_not_called()
