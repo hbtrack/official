@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-04-25T10:43:12Z | run_id: `20260425T104312_9a1adb` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-04-27T05:45:40Z | run_id: `20260427T054540_a57dda` | health: **100/100** | overall: **PASS**
 
 ## Modulos
 
@@ -93,5 +93,6 @@
 | DOC_USAGE_GATE | PASS | sim |
 | CANON_CONTRACT_DRIVEN_PARITY_GATE | PASS | sim |
 | HBTRACK_CANON_PARITY_GATE | PASS | sim |
+| RULE_CHANGE_QUARANTINE_GATE | PASS | sim |
 | REPORT_TRUTHFULNESS_GATE | PASS | sim |
 | READINESS_SUMMARY_GATE | PASS | nao |
