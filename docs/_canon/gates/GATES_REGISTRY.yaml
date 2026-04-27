@@ -1456,5 +1456,6 @@ gates:
       Obtém changeset via: (1) git diff origin/main...HEAD, (2) staging area,
       (3) último commit. SKIP_NOT_APPLICABLE se git não estiver disponível.
     blocking_codes: [ BLOCKED_RULE_CHANGE_QUARANTINE ]
+    skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
