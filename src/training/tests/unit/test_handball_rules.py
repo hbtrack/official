@@ -114,16 +114,19 @@ class TestMicrocycleRules:
 
     def test_handball_phase_structure_is_supported_by_session_and_block_contracts(self):
         session_schema = _load_schema("training_session.schema.json")
+        block_schema = _load_schema("session_block.schema.json")
         assert "phaseFocusAttack" in session_schema["properties"]
         assert "phaseFocusDefense" in session_schema["properties"]
         assert "phaseFocusTransitionOffense" in session_schema["properties"]
         assert "phaseFocusTransitionDefense" in session_schema["properties"]
+        phase_enum = block_schema["properties"]["phase"]["enum"]
         assert {
             SessionBlockPhase.TECHNICAL.value,
             SessionBlockPhase.TACTICAL.value,
             SessionBlockPhase.DECISION_MAKING.value,
             SessionBlockPhase.REDUCED_GAME.value,
-        } <= {phase.value for phase in SessionBlockPhase}
+        } <= set(phase_enum)
+        assert set(phase_enum) == {phase.value for phase in SessionBlockPhase}
 
     def test_age_group_support_is_present_in_training_contracts(self):
         schema = _load_schema("athlete_chat_conversation.schema.json")

@@ -3,7 +3,7 @@ TM-042, TM-043, TM-060 — Persistence rules.
 Fonte: DOMAIN_RULES_TRAINING.md (DR-TRAIN-029, DR-TRAIN-030, DR-TRAIN-031).
 target-state: regras de persistência são enforced na camada de infraestrutura.
 """
-import inspect
+from inspect import signature
 
 from .conftest import make_session
 from training.domain.common.enums import TrainingSessionStatus
@@ -47,7 +47,8 @@ class TestAppendOnlyExecutionRecords:
         }
         assert public_methods == {"list_by_session", "get_by_id", "save"}
 
-    def test_repository_save_is_keyed_by_record_id(self):
-        source = inspect.getsource(ExecutionRecordRepository.save)
-        assert "update_or_create" in source
-        assert "pk=record.id" in source
+    def test_repository_write_api_exposes_only_generic_save_entrypoint(self):
+        params = list(signature(ExecutionRecordRepository.save).parameters)
+        assert params == ["self", "record"]
+        assert not hasattr(ExecutionRecordRepository, "update")
+        assert not hasattr(ExecutionRecordRepository, "delete")
