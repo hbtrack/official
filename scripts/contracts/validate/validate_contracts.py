@@ -117,6 +117,7 @@ BLOCKED_HOOK_EFFECTIVENESS = "BLOCKED_HOOK_EFFECTIVENESS"
 BLOCKED_REPORT_TRUTHFULNESS = "BLOCKED_REPORT_TRUTHFULNESS"
 BLOCKED_LIVE_ENFORCEMENT_PARITY = "BLOCKED_LIVE_ENFORCEMENT_PARITY"
 BLOCKED_MODULE_BEHAVIORAL_READINESS = "BLOCKED_MODULE_BEHAVIORAL_READINESS"
+BLOCKED_RULE_CHANGE_QUARANTINE = "BLOCKED_RULE_CHANGE_QUARANTINE"
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -219,6 +220,7 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_REPORT_TRUTHFULNESS,
     BLOCKED_LIVE_ENFORCEMENT_PARITY,
     BLOCKED_MODULE_BEHAVIORAL_READINESS,
+    BLOCKED_RULE_CHANGE_QUARANTINE,
 }
 
 
@@ -10988,6 +10990,179 @@ def _g_hbtrack_canon_parity(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+# ── Enforcement quarantine paths ─────────────────────────────────────────────
+# Arquivos cujas alterações definem o que é bloqueado/permitido no pipeline.
+# Modificações nestes caminhos devem ocorrer em PRs dedicados, isolados de
+# mudanças de produto.
+_ENFORCEMENT_QUARANTINE_PREFIXES: tuple[str, ...] = (
+    "scripts/hb",
+    "scripts/contracts/validate/",
+    "scripts/audit/",
+    "docs/_canon/gates/",
+    "merge-readiness.json",
+    ".contract_driven/DOMAIN_AXIOMS.json",
+    ".contract_driven/TASK_CATALOG.yaml",
+)
+
+# Caminhos de produto: código de aplicação, contratos API, frontend, migrations.
+# Modificações aqui representam entrega de produto — não devem ser misturadas
+# com alterações de enforcement no mesmo changeset.
+_PRODUCT_ZONE_PREFIXES: tuple[str, ...] = (
+    "src/",
+    "frontend/",
+    "migrations/",
+    "contracts/openapi/",
+    "contracts/asyncapi/",
+    "contracts/schemas/",
+)
+
+
+def _classify_changed_file(rel_path: str) -> str:
+    """Classifica um arquivo alterado em 'enforcement', 'product' ou 'other'."""
+    for prefix in _ENFORCEMENT_QUARANTINE_PREFIXES:
+        # Para prefixos sem separador de diretório (ex: 'scripts/hb'), comparar
+        # estritamente como arquivo exato OU como prefixo de subdiretório
+        # (ex: 'scripts/hb/' com barra), evitando falsos positivos em
+        # caminhos como 'scripts/hbtrack_lint/' que começam com 'scripts/hb'.
+        if prefix.endswith("/"):
+            if rel_path == prefix.rstrip("/") or rel_path.startswith(prefix):
+                return "enforcement"
+        else:
+            if rel_path == prefix or rel_path.startswith(prefix + "/"):
+                return "enforcement"
+    for prefix in _PRODUCT_ZONE_PREFIXES:
+        if rel_path.startswith(prefix):
+            return "product"
+    return "other"
+
+
+def _get_pr_changeset(root: pathlib.Path) -> tuple[list[str] | None, str]:
+    """
+    Obtém a lista de arquivos alterados no changeset atual.
+
+    Estratégias (em ordem de prioridade):
+    1. git diff --name-only <base>...HEAD  (PR CI — base resolvida dinamicamente
+       via GITHUB_BASE_REF env, com fallback para 'main')
+    2. git diff --name-only --cached            (pre-commit)
+    3. git diff --name-only HEAD~1..HEAD        (último commit)
+
+    Retorna (lista de paths relativos, fonte_usada) ou (None, motivo_do_skip).
+    """
+    # Resolver a branch base dinamicamente: GITHUB_BASE_REF é definido pelo
+    # runner de CI (ex: 'main', 'develop'); fallback para 'main' localmente.
+    import os as _os
+    base_branch = _os.environ.get("GITHUB_BASE_REF", "main").strip() or "main"
+    pr_diff_ref = f"origin/{base_branch}...HEAD"
+    strategies: list[tuple[list[str], str]] = [
+        (["git", "diff", "--name-only", pr_diff_ref], "pr_diff"),
+        (["git", "diff", "--name-only", "--cached"], "staged"),
+        (["git", "diff", "--name-only", "HEAD~1..HEAD"], "last_commit"),
+    ]
+    for cmd, label in strategies:
+        try:
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, cwd=str(root), timeout=15,
+            )
+            if result.returncode != 0 or not result.stdout.strip():
+                continue
+            files = [f.strip() for f in result.stdout.strip().splitlines() if f.strip()]
+            if files:
+                return files, label
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            continue
+    return None, "git_unavailable_or_no_changeset"
+
+
+def _g_rule_change_quarantine(root: pathlib.Path) -> dict:
+    """RULE_CHANGE_QUARANTINE_GATE — Impede que modificações em arquivos de
+    enforcement sejam misturadas com mudanças de produto no mesmo commit/PR.
+
+    Contenção 2 do HBCONTROL.md: cada PR deve ser homogêneo — puramente de
+    enforcement OU puramente de produto. Mistura invalida o isolamento do
+    pipeline de governança.
+
+    Enforcement zone (quarantine):
+      scripts/hb, scripts/contracts/validate/, scripts/audit/,
+      docs/_canon/gates/, merge-readiness.json,
+      .contract_driven/DOMAIN_AXIOMS.json, .contract_driven/TASK_CATALOG.yaml
+
+    Product zone:
+      src/, frontend/, migrations/, contracts/openapi/,
+      contracts/asyncapi/, contracts/schemas/
+
+    FAIL se changeset contiver arquivos de ambas as zonas simultaneamente.
+    SKIP_NOT_APPLICABLE se changeset não puder ser determinado (git ausente).
+    """
+    t0 = time.monotonic()
+    gate_id = "RULE_CHANGE_QUARANTINE_GATE"
+
+    changed_files, source = _get_pr_changeset(root)
+    if changed_files is None:
+        return _skip(gate_id, f"Changeset indisponível ({source}) — gate não aplicável.", _ms(t0))
+
+    enforcement_files: list[str] = []
+    product_files: list[str] = []
+    for f in changed_files:
+        zone = _classify_changed_file(f)
+        if zone == "enforcement":
+            enforcement_files.append(f)
+        elif zone == "product":
+            product_files.append(f)
+
+    checked = ["(git changeset via " + source + ")"]
+
+    if enforcement_files and product_files:
+        violations = [
+            {
+                "blocking_code": BLOCKED_RULE_CHANGE_QUARANTINE,
+                "artifact": "git changeset",
+                "message": (
+                    "Changeset misto detectado: arquivos de enforcement e de produto "
+                    "no mesmo commit/PR. Separar em PRs distintos."
+                ),
+                "severity": "error",
+                "details": {
+                    "enforcement_files": sorted(enforcement_files),
+                    "product_files": sorted(product_files),
+                    "changeset_source": source,
+                },
+            }
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_RULE_CHANGE_QUARANTINE,
+            (
+                f"Changeset misto: {len(enforcement_files)} arquivo(s) de enforcement + "
+                f"{len(product_files)} arquivo(s) de produto no mesmo PR."
+            ),
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    zone_label = (
+        "enforcement-only"
+        if enforcement_files
+        else ("product-only" if product_files else "neutral")
+    )
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Changeset homogêneo ({zone_label}): sem mistura de enforcement + produto.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g16_readiness_summary(gates: list[dict], *, canonical_full_run: bool) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -12119,6 +12294,7 @@ def run_pipeline(
         ("DOC_USAGE_GATE", lambda: _g_doc_usage(root)),
         ("CANON_CONTRACT_DRIVEN_PARITY_GATE", lambda: _g_canon_contract_driven_parity(root)),
         ("HBTRACK_CANON_PARITY_GATE", lambda: _g_hbtrack_canon_parity(root)),
+        ("RULE_CHANGE_QUARANTINE_GATE", lambda: _g_rule_change_quarantine(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

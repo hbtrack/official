@@ -1431,3 +1431,31 @@ gates:
     status: active
     integrated_in_validate_contracts: false
     enhancement_notes: "Implementar lock.json em cada gerador (todos v0.1+). Gate será integrado no executor quando .lock.json for emitido pelos geradores (v0.2+)."
+
+  - gate_id: RULE_CHANGE_QUARANTINE_GATE
+    order: "20S"
+    name: "Rule Change Quarantine Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [ GOVERNANCE_REGRESSION_GATE ]
+    description: >
+      Contenção 2 do HBCONTROL.md — impede que modificações em arquivos de
+      enforcement sejam misturadas com mudanças de produto no mesmo commit/PR.
+
+      Enforcement zone (quarantine): scripts/hb, scripts/contracts/validate/,
+      scripts/audit/, docs/_canon/gates/, merge-readiness.json,
+      .contract_driven/DOMAIN_AXIOMS.json, .contract_driven/TASK_CATALOG.yaml.
+
+      Product zone: src/, frontend/, migrations/, contracts/openapi/,
+      contracts/asyncapi/, contracts/schemas/.
+
+      FAIL se o changeset contiver arquivos de ambas as zonas simultaneamente.
+      Obtém changeset via: (1) git diff origin/main...HEAD, (2) staging area,
+      (3) último commit. SKIP_NOT_APPLICABLE se git não estiver disponível.
+    blocking_codes: [ BLOCKED_RULE_CHANGE_QUARANTINE ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
