@@ -1,9 +1,9 @@
 {
-  "run_id": "20260425T104312_9a1adb",
-  "timestamp_utc": "2026-04-25T10:43:12Z",
+  "run_id": "20260427T054540_a57dda",
+  "timestamp_utc": "2026-04-27T05:45:40Z",
   "health_score": 100,
-  "gates_total": 68,
-  "gates_passed": 63,
+  "gates_total": 69,
+  "gates_passed": 64,
   "gates_failed": 0,
   "gates_skipped_optional": 5,
   "mandatory_ci_skip_count": 0,
@@ -30,16 +30,16 @@
     },
     "factual": {
       "score": 100,
-      "relevant": 53,
-      "passed": 53,
+      "relevant": 54,
+      "passed": 54,
       "failed": 0,
       "mandatory_skips": 0,
       "optional_skips": 4
     },
     "global": {
       "score": 100,
-      "relevant": 63,
-      "passed": 63,
+      "relevant": 64,
+      "passed": 64,
       "failed": 0,
       "mandatory_skips": 0,
       "optional_skips": 5
