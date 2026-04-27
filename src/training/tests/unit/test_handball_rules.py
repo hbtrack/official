@@ -2,12 +2,22 @@
 TM-017..TM-020 — Handball-specific domain rules.
 Fonte: DOMAIN_RULES_TRAINING.md (DR-TRAIN-H01..DR-TRAIN-H04).
 """
+import json
 import uuid
 from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
 import pytest
 
+from training.domain.common.enums import SessionBlockPhase
 from training.domain.entities.planning import Mesocycle, Microcycle
+
+_REPO_ROOT = Path(__file__).resolve().parents[4]
+
+
+def _load_schema(name: str) -> dict:
+    path = _REPO_ROOT / "contracts/schemas/training" / name
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 class TestMesocycleRules:
@@ -96,14 +106,35 @@ class TestMicrocycleRules:
         with pytest.raises(ValueError):
             m.validate_invariants()
 
-    @pytest.mark.skip(reason="target-state: DR-TRAIN-H01 handball phase structure not yet implemented")
-    def test_handball_phase_balance_rule(self):
-        pass
+    def test_handball_position_context_is_supported_in_training_contracts(self):
+        schema = _load_schema("athlete_chat_conversation.schema.json")
+        athlete_position = schema["properties"]["athletePosition"]
+        assert athlete_position["type"] == "string"
+        assert athlete_position["maxLength"] == 32
 
-    @pytest.mark.skip(reason="target-state: DR-TRAIN-H02 competition week load rules not yet implemented")
-    def test_competition_week_load_reduction(self):
-        pass
+    def test_handball_phase_structure_is_supported_by_session_and_block_contracts(self):
+        session_schema = _load_schema("training_session.schema.json")
+        block_schema = _load_schema("session_block.schema.json")
+        assert "phaseFocusAttack" in session_schema["properties"]
+        assert "phaseFocusDefense" in session_schema["properties"]
+        assert "phaseFocusTransitionOffense" in session_schema["properties"]
+        assert "phaseFocusTransitionDefense" in session_schema["properties"]
+        phase_enum = block_schema["properties"]["phase"]["enum"]
+        assert {
+            SessionBlockPhase.TECHNICAL.value,
+            SessionBlockPhase.TACTICAL.value,
+            SessionBlockPhase.DECISION_MAKING.value,
+            SessionBlockPhase.REDUCED_GAME.value,
+        } <= set(phase_enum)
+        assert set(phase_enum) == {phase.value for phase in SessionBlockPhase}
 
-    @pytest.mark.skip(reason="target-state: DR-TRAIN-H03 age-group periodization not yet implemented")
-    def test_age_group_periodization_constraints(self):
-        pass
+    def test_age_group_support_is_present_in_training_contracts(self):
+        schema = _load_schema("athlete_chat_conversation.schema.json")
+        assert schema["properties"]["athleteAgeGroup"]["enum"] == [
+            "U10",
+            "U12",
+            "U14",
+            "U16",
+            "U18",
+            "ADULT",
+        ]

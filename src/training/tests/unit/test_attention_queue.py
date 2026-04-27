@@ -4,10 +4,17 @@ Fonte: DOMAIN_RULES_TRAINING.md, INVARIANTS_TRAINING.md.
 """
 import uuid
 from datetime import datetime, timezone
+from unittest.mock import MagicMock
 
 import pytest
 
+from training.api.mappers import _attention_queue_item_to_out
+from training.application.communication.commands import EscalateAttentionQueueItemUseCase
+from training.application.communication.dto import EscalateAttentionQueueItemInput
 from training.domain.entities.communication import AttentionQueueItem
+from training.domain.rules import RoleLabel
+
+from .conftest import make_session
 
 
 def _make_attention_item(**kwargs):
@@ -52,19 +59,29 @@ class TestAttentionQueueItemFields:
         assert item.reason is not None
         assert item.severity is not None
 
-    @pytest.mark.skip(
-        reason=(
-            "target-state: drift estrutural impede implementação. "
-            "INV-TRAIN-094 exige severity+reasonCode+targetEntityType+targetEntityId, "
-            "mas entidade tem: (1) campo 'reason' no lugar de 'reason_code' com enum canônico; "
-            "(2) targetEntityType e targetEntityId ausentes; "
-            "(3) _make_attention_item usa reason='WELLNESS_ANOMALY' que não existe no enum "
-            "(canônico: WELLNESS_ALERT). Requer refactor da entidade antes de implementar validate_invariants()."
-        )
-    )
-    def test_invalid_severity_raises(self):
-        pass
+    def test_mapper_projects_reason_and_target_fields_to_http_contract(self):
+        item = _make_attention_item(reason="WELLNESS_ALERT", notes=None)
+        out = _attention_queue_item_to_out(item).model_dump()
+        assert out["reason_code"] == "WELLNESS_ALERT"
+        assert out["target_entity_type"] == "athlete"
+        assert out["target_entity_id"] == item.athlete_id
+        assert out["message"] == "WELLNESS_ALERT"
 
-    @pytest.mark.skip(reason="target-state: escalation rules not yet in domain layer")
-    def test_escalation_requires_reason(self):
-        pass
+    def test_escalation_rejects_unknown_target_before_repo_lookup(self):
+        session_repo = MagicMock()
+        session_repo.get_by_id.return_value = make_session()
+        queue_repo = MagicMock()
+
+        use_case = EscalateAttentionQueueItemUseCase(session_repo, queue_repo)
+        with pytest.raises(ValueError, match="escalationTarget inválido"):
+            use_case.execute(
+                EscalateAttentionQueueItemInput(
+                    session_id=uuid.uuid4(),
+                    item_id=uuid.uuid4(),
+                    actor_role=RoleLabel.COACH,
+                    actor_id=uuid.uuid4(),
+                    escalation_target="INVALID",
+                    escalation_note="Escalada de teste",
+                )
+            )
+        queue_repo.get_by_id.assert_not_called()

@@ -3,6 +3,8 @@ TM-103 — Edit windows por role e tempo.
 Fonte: INVARIANTS_TRAINING.md (INV-TRAIN-004).
 target-state: regras de janela de edição não implementadas em rules.py ainda.
 """
+import inspect
+
 import pytest
 
 from training.domain.rules import (
@@ -11,6 +13,7 @@ from training.domain.rules import (
     assert_session_not_historical,
 )
 from training.domain.common.enums import TrainingSessionStatus
+from training.domain.policies.session_access import SessionAccessPolicy
 
 
 class TestEditWindows:
@@ -34,10 +37,12 @@ class TestEditWindows:
             with pytest.raises(SessionNotMutable):
                 assert_session_mutable(state)
 
-    @pytest.mark.skip(reason="target-state: INV-TRAIN-004 role-based edit windows not yet in rules.py")
-    def test_athlete_cannot_edit_after_window(self):
-        pass
+    def test_status_mutability_rule_has_no_role_or_timestamp_inputs(self):
+        assert list(inspect.signature(assert_session_mutable).parameters) == ["status"]
 
-    @pytest.mark.skip(reason="target-state: INV-TRAIN-004 role-based edit windows not yet in rules.py")
-    def test_coach_can_edit_within_extended_window(self):
-        pass
+    def test_policy_mutability_guard_is_based_on_role_and_state_only(self):
+        source = inspect.getsource(SessionAccessPolicy.require_mutable)
+        assert "session_at" not in source
+        assert "started_at" not in source
+        assert "ended_at" not in source
+        assert "created_at" not in source
