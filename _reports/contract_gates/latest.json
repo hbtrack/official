@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-26T04:54:20Z",
+  "timestamp_utc": "2026-04-27T00:34:19Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "e644baff",
+    "git_commit": "bd5b20ae",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,12 +31,12 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260426T045420_d5e392"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260427T003419_40c59c"
   },
   "status_detail": {
     "proof_scope": "factual",
     "active_gates_total": 63,
-    "active_gates_passed": 61,
+    "active_gates_passed": 63,
     "skip_count": 5,
     "critical_gates": [
       {
@@ -189,7 +189,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -267,7 +267,7 @@
     "mandatory_ci_skip_count": 0,
     "mandatory_ci_skips": []
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -289,7 +289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 55
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -323,7 +323,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14191
+        "duration_ms": 547
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -537,7 +537,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 10
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -676,7 +676,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 182
+        "duration_ms": 126
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -742,7 +742,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "advisory",
@@ -772,7 +772,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 41
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -802,7 +802,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 36
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -832,7 +832,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 16
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -862,7 +862,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 107
+        "duration_ms": 95
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -892,7 +892,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 50
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -922,7 +922,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51
+        "duration_ms": 45
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -952,7 +952,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 613
+        "duration_ms": 313
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -982,7 +982,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 30
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1048,7 +1048,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 7
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1121,7 +1121,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 207
+        "duration_ms": 30
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1157,7 +1157,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 140
+        "duration_ms": 113
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1272,7 +1272,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1654,7 +1654,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 110
+        "duration_ms": 28
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1749,7 +1749,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 835
+        "duration_ms": 886
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1781,7 +1781,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11232
+        "duration_ms": 977
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1812,7 +1812,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2296
+        "duration_ms": 1146
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1860,7 +1860,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 891
+        "duration_ms": 537
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4821,7 +4821,7 @@
         "errors": 0,
         "warnings": 144,
         "violations": 144,
-        "duration_ms": 3284
+        "duration_ms": 1777
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -4898,7 +4898,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 175
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5524,7 +5524,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3529
+        "duration_ms": 1685
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5557,7 +5557,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2085
+        "duration_ms": 1627
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5586,7 +5586,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5644,7 +5644,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4399
+        "duration_ms": 1366
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5696,7 +5696,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 80
+        "duration_ms": 56
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5727,7 +5727,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1795
+        "duration_ms": 1240
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5792,7 +5792,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 58
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5821,7 +5821,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5911,7 +5911,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1019
+        "duration_ms": 180
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5940,7 +5940,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51581
+        "duration_ms": 40247
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5985,7 +5985,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 8
       },
       "proof_class": "behavioral",
       "promotion_power": "advisory",
@@ -6014,7 +6014,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 20
       },
       "proof_class": "presence",
       "promotion_power": "advisory",
@@ -6045,7 +6045,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "advisory",
@@ -6119,7 +6119,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 7
       },
       "proof_class": "presence",
       "promotion_power": "none",
@@ -6150,7 +6150,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 0
       },
       "proof_class": "presence",
       "promotion_power": "none",
@@ -6181,7 +6181,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "advisory",
@@ -6211,7 +6211,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       },
       "proof_class": "presence",
       "promotion_power": "none",
@@ -6242,7 +6242,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 673
+        "duration_ms": 70
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6274,7 +6274,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6309,7 +6309,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1686
+        "duration_ms": 418
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -6323,11 +6323,11 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -6345,19 +6345,12 @@
         "/home/davis/HB-TRACK/tests/pipeline/test_preflight_artifact_integrity.py"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 31
+        "violations": 0,
+        "duration_ms": 5
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6388,7 +6381,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 232
+        "duration_ms": 159
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6419,7 +6412,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6521,7 +6514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 174
+        "duration_ms": 77
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -6926,7 +6919,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1048
+        "duration_ms": 930
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6960,7 +6953,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 11
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6991,7 +6984,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 16
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -7018,7 +7011,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -7080,7 +7073,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7110,7 +7103,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 30
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7189,7 +7182,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 23
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7280,7 +7273,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6713
+        "duration_ms": 5393
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7307,7 +7300,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 2
       },
       "proof_class": "runtime",
       "promotion_power": "blocking",
@@ -7334,7 +7327,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7369,7 +7362,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 47
+        "duration_ms": 34
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7400,7 +7393,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 47
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7431,7 +7424,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 7
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -7474,11 +7467,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Resumo de gates: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Resumo de gates: 62 PASS, 5 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
