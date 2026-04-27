@@ -1,46 +1,50 @@
 ---
 data_ultima_sessao: "2026-04-26"
-branch_ativo: fix/handoff-post-pr93-coherence
+branch_ativo: feat/rule-change-quarantine
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: notifications
 fase_roadmap: 1
 task_type: architecture_review
 boot_profile_id: architecture_decision
-task_id: GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE
+task_id: RULE_CHANGE_QUARANTINE_GATE
 resultado: DONE
-proxima_acao_permitida: "PR #93 mergeado (577cdc5c). Próxima tarefa: RULE_CHANGE_QUARANTINE (Contenção 2 do HBCONTROL.md) — impede modificações ad-hoc em scripts de enforcement durante merge flow ativo."
+proxima_acao_permitida: "RULE_CHANGE_QUARANTINE_GATE implementado (Contenção 2 do HBCONTROL.md). Próxima ação: abrir PR feat/rule-change-quarantine → main."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
   - "docs/_canon/gates/GATES_REGISTRY.yaml"
-  - "scripts/hb"
-  - "tests/pipeline/test_preflight_artifact_integrity.py"
+  - "scripts/contracts/validate/validate_contracts.py"
+  - "tests/pipeline/test_rule_change_quarantine.py"
 ---
-# SESSION HANDOFF — CDD Architecture Review
+# SESSION HANDOFF — RULE_CHANGE_QUARANTINE_GATE
 
 ## Estado Geral
-**Data:** 2026-04-26 | **Branch:** fix/handoff-post-pr93-coherence | **CI:** PASS
+**Data:** 2026-04-26 | **Branch:** feat/rule-change-quarantine | **CI:** PASS
 **Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE | **Resultado:** DONE
+**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** RULE_CHANGE_QUARANTINE_GATE | **Resultado:** DONE
 
 ## O que foi feito
-- ✅ Commit e758d2e2: PREFLIGHT_ARTIFACT_INTEGRITY_GATE implementado em scripts/hb (+203 linhas)
-- ✅ PR #93 criado: feat/preflight-artifact-integrity-gate → main
-- ✅ Achado do Gemini Review (CRITICAL): gate ausente do docs/_canon/gates/GATES_REGISTRY.yaml
-- ✅ Gate registrado em GATES_REGISTRY.yaml: entry 15I5, proof_class=semantic, promotion_power=blocking, integrated_in_validate_contracts=false
-- ✅ Codex P2 resolvido: report_target_mismatch retorna STALE (exit 0) em vez de FAIL
-- ✅ Todos os 14 checks do PR #93: success
-- ✅ Conversa inline Codex P2 resolvida via GraphQL
-- ✅ **PR #93 mergeado em main** — commit squash 577cdc5c
+- ✅ PR #93 mergeado (577cdc5c) — PREFLIGHT_ARTIFACT_INTEGRITY_GATE (Contenção 1)
+- ✅ PR #94 mergeado (d07fc801) — fix handoff coherence (SESSION_HANDOFF.md)
+- ✅ Branch feat/rule-change-quarantine criado a partir de main (d07fc801)
+- ✅ BLOCKED_RULE_CHANGE_QUARANTINE adicionado como constante de bloqueio
+- ✅ BLOCKED_RULE_CHANGE_QUARANTINE adicionado a _KNOWN_BLOCKING_CODES
+- ✅ _ENFORCEMENT_QUARANTINE_PREFIXES e _PRODUCT_ZONE_PREFIXES definidos
+- ✅ _classify_changed_file() helper implementado
+- ✅ _get_pr_changeset() helper implementado (3 estratégias: pr_diff, staged, last_commit)
+- ✅ _g_rule_change_quarantine() gate function implementada
+- ✅ Gate adicionado ao gate_plan em _run_pipeline()
+- ✅ RULE_CHANGE_QUARANTINE_GATE registrado em docs/_canon/gates/GATES_REGISTRY.yaml (order 20S)
+- ✅ 31 testes adversariais criados em tests/pipeline/test_rule_change_quarantine.py — todos passando
 
 ## Evidências
-- `docs/_canon/gates/GATES_REGISTRY.yaml` — entry 15I5 adicionado
-- `scripts/hb` — gate implementado + fix Codex P2
-- `tests/pipeline/test_preflight_artifact_integrity.py` — 9 testes adversariais
+- `scripts/contracts/validate/validate_contracts.py` — gate implementado
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — entry RULE_CHANGE_QUARANTINE_GATE (20S)
+- `tests/pipeline/test_rule_change_quarantine.py` — 31 testes adversariais
 
 ## Próxima ação permitida
-PR #93 mergeado. Próxima tarefa: `RULE_CHANGE_QUARANTINE` (Contenção 2 do HBCONTROL.md) — impede modificações ad-hoc em scripts de enforcement durante merge flow ativo.
+Abrir PR feat/rule-change-quarantine → main.
 
 ## Bloqueios ativos
 Nenhum.
