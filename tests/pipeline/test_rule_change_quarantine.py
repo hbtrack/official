@@ -58,6 +58,14 @@ class TestClassifyChangedFile:
     def test_task_catalog_is_enforcement(self):
         assert _classify(".contract_driven/TASK_CATALOG.yaml") == "enforcement"
 
+    def test_hbtrack_lint_is_other_not_enforcement(self):
+        """scripts/hbtrack_lint/ não deve ser classificado como enforcement (P2 fix)."""
+        assert _classify("scripts/hbtrack_lint/__init__.py") == "other"
+        assert _classify("scripts/hbtrack_lint/rules.py") == "other"
+
+    def test_hb_subfile_is_enforcement(self):
+        """scripts/hb/utils.py (hipotético) deve ser enforcement se estiver sob scripts/hb/."""
+        assert _classify("scripts/hb") == "enforcement"  # arquivo exato
     def test_src_is_product(self):
         assert _classify("src/modules/training/api.py") == "product"
 
@@ -223,3 +231,48 @@ class TestRuleChangeQuarantineGateLive:
         assert result["status"] in ("PASS", "SKIP_NOT_APPLICABLE"), (
             f"Gate falhou no PR atual — changeset misto detectado: {result}"
         )
+
+
+class TestGetPrChangesetBaseBranch:
+    """Testes da resolução dinâmica do base branch (P1 fix)."""
+
+    def test_uses_github_base_ref_env_when_set(self):
+        """Com GITHUB_BASE_REF=develop, deve usar origin/develop...HEAD."""
+        captured = {}
+
+        def mock_run(cmd, **kwargs):
+            captured["cmd"] = cmd
+            r = mock.MagicMock()
+            r.returncode = 0
+            r.stdout = "src/modules/training/api.py\n"
+            return r
+
+        with mock.patch("subprocess.run", side_effect=mock_run), \
+             mock.patch.dict("os.environ", {"GITHUB_BASE_REF": "develop"}):
+            vc._get_pr_changeset(REPO_ROOT)
+
+        assert captured["cmd"] == ["git", "diff", "--name-only", "origin/develop...HEAD"]
+
+    def test_defaults_to_main_when_no_env(self):
+        """Sem GITHUB_BASE_REF, deve usar origin/main...HEAD."""
+        captured = {}
+
+        def mock_run(cmd, **kwargs):
+            captured["cmd"] = cmd
+            r = mock.MagicMock()
+            r.returncode = 0
+            r.stdout = "src/modules/training/api.py\n"
+            return r
+
+        with mock.patch("subprocess.run", side_effect=mock_run), \
+             mock.patch.dict("os.environ", {}, clear=False):
+            env_backup = mock.patch.dict("os.environ")
+            env_backup.start()
+            import os
+            os.environ.pop("GITHUB_BASE_REF", None)
+            try:
+                vc._get_pr_changeset(REPO_ROOT)
+            finally:
+                env_backup.stop()
+
+        assert captured["cmd"] == ["git", "diff", "--name-only", "origin/main...HEAD"]

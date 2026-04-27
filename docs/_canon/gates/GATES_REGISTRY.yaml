@@ -1436,7 +1436,7 @@ gates:
     order: "20S"
     name: "Rule Change Quarantine Gate"
     blocking: true
-    active_stage: pre_check
+    active_stage: pre_contract
     severity: HIGH
     parallelizable: false
     applies_when: always

@@ -11020,8 +11020,16 @@ _PRODUCT_ZONE_PREFIXES: tuple[str, ...] = (
 def _classify_changed_file(rel_path: str) -> str:
     """Classifica um arquivo alterado em 'enforcement', 'product' ou 'other'."""
     for prefix in _ENFORCEMENT_QUARANTINE_PREFIXES:
-        if rel_path == prefix or rel_path.startswith(prefix):
-            return "enforcement"
+        # Para prefixos sem separador de diretório (ex: 'scripts/hb'), comparar
+        # estritamente como arquivo exato OU como prefixo de subdiretório
+        # (ex: 'scripts/hb/' com barra), evitando falsos positivos em
+        # caminhos como 'scripts/hbtrack_lint/' que começam com 'scripts/hb'.
+        if prefix.endswith("/"):
+            if rel_path == prefix.rstrip("/") or rel_path.startswith(prefix):
+                return "enforcement"
+        else:
+            if rel_path == prefix or rel_path.startswith(prefix + "/"):
+                return "enforcement"
     for prefix in _PRODUCT_ZONE_PREFIXES:
         if rel_path.startswith(prefix):
             return "product"
@@ -11033,14 +11041,20 @@ def _get_pr_changeset(root: pathlib.Path) -> tuple[list[str] | None, str]:
     Obtém a lista de arquivos alterados no changeset atual.
 
     Estratégias (em ordem de prioridade):
-    1. git diff --name-only origin/main...HEAD  (PR CI)
+    1. git diff --name-only <base>...HEAD  (PR CI — base resolvida dinamicamente
+       via GITHUB_BASE_REF env, com fallback para 'main')
     2. git diff --name-only --cached            (pre-commit)
     3. git diff --name-only HEAD~1..HEAD        (último commit)
 
     Retorna (lista de paths relativos, fonte_usada) ou (None, motivo_do_skip).
     """
+    # Resolver a branch base dinamicamente: GITHUB_BASE_REF é definido pelo
+    # runner de CI (ex: 'main', 'develop'); fallback para 'main' localmente.
+    import os as _os
+    base_branch = _os.environ.get("GITHUB_BASE_REF", "main").strip() or "main"
+    pr_diff_ref = f"origin/{base_branch}...HEAD"
     strategies: list[tuple[list[str], str]] = [
-        (["git", "diff", "--name-only", "origin/main...HEAD"], "pr_diff"),
+        (["git", "diff", "--name-only", pr_diff_ref], "pr_diff"),
         (["git", "diff", "--name-only", "--cached"], "staged"),
         (["git", "diff", "--name-only", "HEAD~1..HEAD"], "last_commit"),
     ]
