@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-26"
-branch_ativo: main
+branch_ativo: fix/handoff-post-pr93-coherence
 modo_operacao: CDD
 ci_status: PASS
 modulo_foco: notifications
@@ -20,7 +20,7 @@ evidence_paths:
 # SESSION HANDOFF — CDD Architecture Review
 
 ## Estado Geral
-**Data:** 2026-04-26 | **Branch:** main | **CI:** PASS
+**Data:** 2026-04-26 | **Branch:** fix/handoff-post-pr93-coherence | **CI:** PASS
 **Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
 **Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** GATES_REGISTRY_PREFLIGHT_INTEGRITY_GATE | **Resultado:** DONE
 
