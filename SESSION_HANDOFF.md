@@ -20,7 +20,7 @@ evidence_paths:
 # SESSION HANDOFF — RULE_CHANGE_QUARANTINE_GATE
 
 ## Estado Geral
-**Data:** 2026-04-26 | **Branch:** main | **CI:** PASS
+**Data:** 2026-04-26 | **Branch:** chore/post-merge-report-95 | **CI:** PASS
 **Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
 **Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** RULE_CHANGE_QUARANTINE_GATE | **Resultado:** DONE
 
