@@ -1,0 +1,45 @@
+# -------------------------------------------------------------------------
+# DECISION_MATERIALIZATION_MATRIX.template.yaml
+# Template operacional derivado para matrizes de materialização de decisões.
+#
+# ARTEFATO DERIVADO — NÃO É SSOT SEMÂNTICA.
+# Política canônica: docs/_canon/DECISION_MATERIALIZATION_POLICY.md
+# Usage: copie para .contract_driven/decisions/materialization/DECISION_MATERIALIZATION_<MODULE>.yaml
+#        e preencha os campos conforme a Decision IR soberana do módulo.
+# -------------------------------------------------------------------------
+module: "<module>"
+source_decision_ir: ".contract_driven/decisions/DECISION_IR_<MODULE>.yaml"
+source_adr: []
+
+freshness:
+  main_ref: null
+  generated_at_utc: null
+  report_ref: "_reports/decision_materialization/<module>.json"
+
+decisions:
+  - decision_id: "<DECISION-ID>"
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "<path-or-anchor>"
+
+    decision_ir_refs:
+      entities: []
+      relations: []
+      state_models: []
+
+    runtime_obligations:
+      - id: "<DECISION-ID>-RUNTIME-001"
+        statement: "<runtime obligation>"
+        required: true
+        expected_runtime_locations: []
+
+    required_runtime_artifacts: []
+
+    required_behavior_tests_negative: []
+
+    required_behavior_tests_positive: []
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null

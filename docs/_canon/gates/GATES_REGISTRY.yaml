@@ -362,6 +362,40 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: DECISION_MATERIALIZATION_GATE
+    order: "2O"
+    name: "Decision Materialization Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_has_decision_materialization_matrix
+    depends_on: [ DECISION_IR_CONFORMANCE_GATE ]
+    description: >
+      Verifica que decisões arquiteturais aprovadas (ADR + Decision IR soberana)
+      foram efetivamente materializadas em runtime, testes adversariais negativos,
+      testes comportamentais positivos e evidência fresca pós-main.
+      Bloqueia feature work quando decisão crítica com blocks_feature_work=true
+      está em not_materialized ou partially_materialized sem waiver válido.
+      Fonte soberana: .contract_driven/decisions/DECISION_IR_<MODULE>.yaml.
+      Matriz derivada: .contract_driven/decisions/materialization/DECISION_MATERIALIZATION_<MODULE>.yaml.
+      Relatório: _reports/decision_materialization/<module>.json.
+      Implementado em PR 2 (DECISION_MATERIALIZATION_GATE).
+    blocking_codes:
+      - FAIL_DECISION_MATERIALIZATION
+      - FAIL_CANON_ENFORCEMENT_DRIFT
+      - NON_SOVEREIGN_DECISION_IR_SOURCE
+      - CANON_REGISTRATION_INCOMPLETE
+    status: deferred
+    deferred_reason: >
+      Policy, canon registration and matrix format introduced in PR 1
+      (DECISION_MATERIALIZATION_CANON_BOOTSTRAP); executable gate implemented
+      in PR 2 (DECISION_MATERIALIZATION_GATE). Gate registered as deferred to
+      allow CANON_ALLOWLIST_GATE to accept the new artifacts without triggering
+      enforcement prematurely.
+    deferred_since: "2026-04-27"
+    implementation_target: PR 2 — DECISION_MATERIALIZATION_GATE
+
   - gate_id: PLACEHOLDER_RESIDUE_GATE
     order: 3
     name: "Placeholder Residue Gate"
