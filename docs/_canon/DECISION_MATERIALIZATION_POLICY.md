@@ -105,8 +105,8 @@ Campos obrigatórios por decisão:
 | Campo | Tipo | Descrição |
 |---|---|---|
 | `decision_id` | string | ID canônico da decisão |
-| `decision_policy_criticality` | enum | `obrigatoria` \| `recomendada` \| `opcional` |
-| `execution_priority` | enum | P0 \| P1 \| P2 |
+| `decision_policy_criticality` | enum | `obrigatoria` \| `importante` \| `opcional` |
+| `execution_priority` | enum | P0 \| P1 \| P2 \| P3 |
 | `canonical_source` | path#anchor | Localização canônica da decisão |
 | `decision_ir_refs` | object | Referências no IR soberano |
 | `runtime_obligations` | list | Obrigações de comportamento runtime |
@@ -150,10 +150,11 @@ Se qualquer camada faltar, **nunca** pode ser `materialized`.
 
 `decision_policy_criticality` vem da política canônica e da Decision IR soberana — não pode ser alterada na matriz.
 
-`execution_priority` (P0/P1/P2) é operacional e reflete urgência de remediação:
+`execution_priority` (P0/P1/P2/P3) é operacional e reflete urgência de remediação:
 - **P0** — bloqueia qualquer feature work no módulo
 - **P1** — bloqueia feature work no contexto específico da decisão
 - **P2** — registrado, não bloqueia imediatamente
+- **P3** — informativo, sem impacto de bloqueio
 
 ---
 
