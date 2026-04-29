@@ -369,10 +369,14 @@ contract_sources:
 - contracts/schemas/shared/.gitkeep
 - contracts/schemas/shared/domain_axioms.schema.json
 - contracts/schemas/shared/domain_axioms_module.schema.json
+- contracts/schemas/shared/implementation_evidence_pack.schema.json
+- contracts/schemas/shared/implementation_flow_state.schema.json
 - contracts/schemas/shared/merge-readiness.schema.json
 - contracts/schemas/shared/module_registry.schema.json
 - contracts/schemas/shared/module_source_authority_matrix.schema.json
+- contracts/schemas/shared/negative_test_manifest.schema.json
 - contracts/schemas/shared/owasp_api_control_matrix.schema.json
+- contracts/schemas/shared/plan_to_diff_trace.schema.json
 - contracts/schemas/shared/readiness_confirmation.schema.json
 - contracts/schemas/shared/session_handoff.schema.json
 - contracts/schemas/shared/session_start.schema.json

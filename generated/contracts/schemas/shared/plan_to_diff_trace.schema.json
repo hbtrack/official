@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/plan_to_diff_trace.schema.json",
+  "title": "HB Track — Plan to Diff Trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "approved_plan_path",
+    "base_sha",
+    "head_sha",
+    "entries",
+    "extra_files",
+    "uncovered_requirements"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "approved_plan_path": { "type": "string", "minLength": 1 },
+    "base_sha": { "type": "string", "pattern": "^[a-f0-9]{7,40}$" },
+    "head_sha": { "type": "string", "pattern": "^[a-f0-9]{7,40}$" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["plan_requirement", "changed_file", "test_command", "evidence_path", "status"],
+        "properties": {
+          "plan_requirement": { "type": "string", "minLength": 1 },
+          "changed_file": { "type": "string", "minLength": 1 },
+          "test_command": { "type": "string", "minLength": 1 },
+          "evidence_path": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["COVERED", "UNCOVERED", "EXTRA_FILE"] }
+        }
+      }
+    },
+    "extra_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "uncovered_requirements": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}
