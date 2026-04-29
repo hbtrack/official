@@ -1,6 +1,7 @@
 {
   "$comment": "Sovereign domain shape for module analytics. Conservative enrichment based on MODULE_SCOPE_ANALYTICS.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(derived_metrics, filters, time_windows, granularity, projections, refresh_semantics).",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/analytics/analytics_snapshot.schema.json",
   "title": "AnalyticsSnapshot",
   "description": "Derived metric snapshot shape for the analytics module.",
   "type": "object",
