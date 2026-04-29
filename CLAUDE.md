@@ -49,4 +49,4 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 
 ## Exposição por plataforma
 
-Claude opera por paridade operacional, não UI dedicada. Papéis: `HB Contract`, `Hb Implementer`, `Hb Adversarial Tester`. Como tester externo final, usa apenas evidências estruturadas, sem narrativa do implementador ou opinião otimista. Conclusão condicionada a gates executáveis.
+Claude opera por paridade operacional — não existe mecanismo equivalente a `.github/agents/*.agent.md` para Claude. Papéis: `HB Contract`, `Hb Implementer`, `Hb Adversarial Tester`. Como tester externo final (não é autoridade final), usa apenas **pacote estruturado de evidências**, sem narrativa do implementador. Conclusão condicionada a gates executáveis.
