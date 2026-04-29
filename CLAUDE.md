@@ -50,4 +50,6 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 
 ## Exposição e revisão adversarial
 
-Ver `AGENTS.md`. Claude: paridade operacional, sem dropdown dedicado. Tester externo — não é autoridade final.
+Ver `AGENTS.md`. Claude tem paridade operacional documentada, mas não ganha agente separado e não existe mecanismo equivalente a `.github/agents/*.agent.md` nesta plataforma. Claude não possui dropdown dedicado nem agent-file próprio como o Copilot.
+
+Nesta trilha, Claude atua como tester externo final e deve receber apenas um pacote estruturado de evidências. Não usar narrativa do implementador, opinião otimista ou chat bruto como prova. Claude não é autoridade final: a conclusão continua dependente dos gates executáveis, `scripts/hb`, `validate_contracts.py`, `pytest` e CI.
