@@ -19,6 +19,7 @@
 /exercises:
   get:
     operationId: listExercises
+    tags: [exercises]
     summary: List exercises (preview DTO)
     description: >
       Returns a paginated list of exercises visible to the authenticated user.
@@ -161,6 +162,7 @@
               $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: createExercise
+    tags: [exercises]
     summary: Create a new exercise (ORG scope)
     description: >
       Creates a new ORG exercise. The first ExerciseVersion is created automatically
@@ -314,6 +316,7 @@
 /exercises/{id}:
   get:
     operationId: getExercise
+    tags: [exercises]
     summary: Get full exercise detail (latest version)
     description: >
       Returns full exercise DTO at the current version.
@@ -361,6 +364,7 @@
               $ref: "../components/schemas/shared/problem.yaml"
   patch:
     operationId: updateExercise
+    tags: [exercises]
     summary: Update exercise (creates new version)
     description: >
       Updates an exercise by creating a new ExerciseVersion (append-only, TRAIN-DEC-048).
@@ -521,6 +525,7 @@
               $ref: "../components/schemas/shared/problem.yaml"
   delete:
     operationId: deleteExercise
+    tags: [exercises]
     summary: Soft-delete exercise
     description: >
       Soft-deletes an exercise (sets deleted_at). The exercise remains accessible
@@ -586,6 +591,7 @@
 /exercises/{id}/copy:
   post:
     operationId: copyExerciseToOrg
+    tags: [exercises]
     summary: Copy SYSTEM exercise to ORG scope
     description: >
       Creates an ORG copy of a SYSTEM exercise for the authenticated user's organization.
@@ -636,6 +642,7 @@
 /exercises/{id}/versions:
   get:
     operationId: listExerciseVersions
+    tags: [exercises]
     summary: List all versions of an exercise
     description: >
       Returns all versions of an exercise in descending order (newest first).
@@ -694,6 +701,7 @@
 /exercises/{id}/versions/{versionId}:
   get:
     operationId: getExerciseVersion
+    tags: [exercises]
     summary: Get a specific historical version
     description: >
       Returns a specific ExerciseVersion by versionId.
@@ -749,6 +757,7 @@
 /exercises/{id}/relations:
   get:
     operationId: listExerciseRelations
+    tags: [exercises]
     summary: List semantic relations of an exercise
     description: >
       Returns all relations where this exercise is the source (fromExerciseId).
@@ -802,6 +811,7 @@
               $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: addExerciseRelation
+    tags: [exercises]
     summary: Add a semantic relation between exercises
     description: >
       Creates a directed semantic relation from this exercise to another.
@@ -884,6 +894,7 @@
 /exercises/{id}/relations/{relationId}:
   delete:
     operationId: deleteExerciseRelation
+    tags: [exercises]
     summary: Remove a semantic relation
     description: Removes a directed semantic relation from this exercise to another. Only the creator of the source exercise may delete its relations.
     security:
@@ -939,6 +950,7 @@
 /exercises/{id}/acl:
   get:
     operationId: getExerciseAcl
+    tags: [exercises]
     summary: Get ACL of a restricted ORG exercise
     description: >
       Returns users explicitly granted access to this exercise.
@@ -1004,6 +1016,7 @@
               $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: addExerciseAclEntry
+    tags: [exercises]
     summary: Grant access to a user for a restricted ORG exercise
     description: >
       Adds a user to the ACL of a restricted exercise.
@@ -1076,6 +1089,7 @@
 /exercises/{id}/acl/{userId}:
   delete:
     operationId: removeExerciseAclEntry
+    tags: [exercises]
     summary: Revoke access for a user
     description: Revokes explicit access for the specified user to a RESTRICTED exercise. Cannot remove the creator's own access (INV-EXB-009).
     security:

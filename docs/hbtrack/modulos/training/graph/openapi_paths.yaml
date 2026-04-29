@@ -2537,8 +2537,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 /training/training-sessions/{id}/start:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Start a training session (transition to IN_PROGRESS)
     description: >
       Triggers the SESSION_STARTED append-only fact (TRAIN-DEC-029).
@@ -2622,8 +2621,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training/training-sessions/{id}/complete:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Complete a training session (transition to COMPLETED)
     description: >
       Triggers the SESSION_COMPLETED append-only fact (TRAIN-DEC-029).
@@ -2737,8 +2735,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/execution-records:
   get:
-    tags:
-      - Execution Records
+    tags: [training]
     summary: List execution records for a session
     description: >
       Returns all execution records for a session.
@@ -2814,8 +2811,7 @@
     security:
       - HTTPBearer: []
   post:
-    tags:
-      - Execution Records
+    tags: [training]
     summary: Create an execution record for a session
     description: >
       Append-only execution fact. sessionId is immutable after creation (TRAIN-DEC-007).
@@ -2897,8 +2893,7 @@
       - HTTPBearer: []
 /training/training-sessions/{id}/execution-records/{recordId}:
   get:
-    tags:
-      - Execution Records
+    tags: [training]
     summary: Get a specific execution record
     description: Returns a specific execution record for a training session, identified by its record ID.
     operationId: getExecutionRecord
@@ -2943,8 +2938,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/feedback-threads:
   get:
-    tags:
-      - Feedback Threads
+    tags: [training]
     summary: List feedback threads for a session
     description: Returns all feedback threads anchored to this session. Can be filtered by context type and athlete.
     operationId: listFeedbackThreads
@@ -3007,8 +3001,7 @@
     security:
       - HTTPBearer: []
   post:
-    tags:
-      - Feedback Threads
+    tags: [training]
     summary: Create a feedback thread for a session
     description: >
       Feedback must reference an operational context (TRAIN-DEC-010).
@@ -3080,8 +3073,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/objectives:
   get:
-    tags:
-      - Session Objectives
+    tags: [training]
     summary: List objectives for a session
     description: Returns all objectives defined for the specified training session. Every session must have at least one objective (TRAIN-DEC-004).
     operationId: listSessionObjectives
@@ -3127,8 +3119,7 @@
     security:
       - HTTPBearer: []
   post:
-    tags:
-      - Session Objectives
+    tags: [training]
     summary: Add an objective to a session
     description: >
       Session must have at least one objective before transitioning from DRAFT (TRAIN-DEC-006).
@@ -3200,8 +3191,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/attention-queue:
   get:
-    tags:
-      - Attention Queue
+    tags: [training]
     summary: List attention queue items for a session
     description: >
       Returns items requiring coach attention.
@@ -3265,8 +3255,7 @@
       - HTTPBearer: []
 /training/training-sessions/{id}/cancel:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Cancel a training session
     description: >
       Structured cancellation. Allowed from DRAFT, SCHEDULED, PUBLISHED, IN_PROGRESS.
@@ -3352,8 +3341,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training/training-sessions/{id}/publish:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Publish a training session (SCHEDULED → PUBLISHED)
     description: >
       Triggers transition SCHEDULED→PUBLISHED (ADR-017 FSM). Captures
@@ -3433,8 +3421,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training/training-sessions/{id}/unpublish:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Unpublish a training session (PUBLISHED → SCHEDULED)
     description: >
       Triggers transition PUBLISHED→SCHEDULED (ADR-017 FSM, explicit depublication).
@@ -3517,8 +3504,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training/training-sessions/{id}/archive:
   post:
-    tags:
-      - Training Sessions
+    tags: [training]
     summary: Archive a training session (COMPLETED → ARCHIVED)
     description: >
       Explicitly triggers COMPLETED→ARCHIVED (ADR-017 FSM). This transition also
@@ -3603,8 +3589,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/recommendations:
   get:
-    tags:
-      - Recommendations
+    tags: [training]
     summary: List analytics recommendations for a session
     description: >
       Returns analytics recommendations generated for this session (ADR-006 Coach-in-Loop).
@@ -3669,8 +3654,7 @@
       - HTTPBearer: []
 /training/training-sessions/{id}/recommendations/{recommendationId}/accept:
   post:
-    tags:
-      - Recommendations
+    tags: [training]
     summary: Accept an analytics recommendation
     description: >
       Coach accepts a PENDING recommendation (ADR-006 Coach-in-Loop).
@@ -3756,8 +3740,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA — G-01
 /training/training-sessions/{id}/recommendations/{recommendationId}/dismiss:
   post:
-    tags:
-      - Recommendations
+    tags: [training]
     summary: Dismiss an analytics recommendation
     description: >
       Coach dismisses a PENDING recommendation (ADR-006 Coach-in-Loop).
@@ -3852,8 +3835,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/ineligibility:
   post:
-    tags:
-      - Athlete Check-in
+    tags: [training]
     summary: Submit athlete ineligibility declaration for a session
     description: >
       Athlete declares ineligibility for this session (TRAIN-DEC-024).
@@ -3927,8 +3909,7 @@
     security:
       - HTTPBearer: [] # OWASP API5:2023 BFLA — G-02
   get:
-    tags:
-      - Athlete Check-in
+    tags: [training]
     summary: Get athlete ineligibility status for a session
     description: >
       Returns the current ineligibility declaration for the authenticated athlete in this session.
@@ -3987,8 +3968,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/attention-queue/{itemId}/resolve:
   post:
-    tags:
-      - Attention Queue
+    tags: [training]
     summary: Resolve an attention queue item
     description: >
       Coach marks an attention queue item as RESOLVED (TRAIN-DEC-027).
@@ -4076,8 +4056,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
 /training/training-sessions/{id}/attention-queue/{itemId}/dismiss:
   post:
-    tags:
-      - Attention Queue
+    tags: [training]
     summary: Dismiss an attention queue item
     description: >
       Coach dismisses an attention queue item (TRAIN-DEC-027).
@@ -4165,8 +4144,7 @@
       - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
 /training/training-sessions/{id}/attention-queue/{itemId}/escalate:
   post:
-    tags:
-      - Attention Queue
+    tags: [training]
     summary: Escalate an attention queue item to coordinator/medical
     description: >
       Coach escalates an attention queue item (TRAIN-DEC-027).
@@ -4268,8 +4246,7 @@
 # ---------------------------------------------------------------------------
 /training/training-sessions/{id}/feedback-threads/{threadId}/close:
   post:
-    tags:
-      - Feedback Threads
+    tags: [training]
     summary: Close a feedback thread
     description: >
       Marks a feedback thread as closed (TRAIN-DEC-010, TRAIN-DEC-015).

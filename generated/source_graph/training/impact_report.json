@@ -29,7 +29,7 @@
     },
     {
       "relpath": "contracts/openapi/paths/training.yaml",
-      "sha256": "6718907d2fb53a3a02125d6b4f19ca1bdec70845a77bd3b2b950a2550344e501"
+      "sha256": "155b5182db39fd207f2b12f9100262263f0237a1793cbf84a32fd1ee70374463"
     },
     {
       "relpath": "contracts/schemas/training/.gitkeep",
@@ -197,5 +197,5 @@
     "generated/source_graph/training/training.openapi_contract_view.yaml",
     "generated/source_graph/training/impact_report.json"
   ],
-  "source_fingerprint": "cfcd9d5ea659e85f2a7f7d5cf779923f60203b223bab6ef81b2c06a27d8f05e6"
+  "source_fingerprint": "b7713191de04b91e294d23ac2338e7998d4eb3c4b741c2912cc856a66cef37c7"
 }

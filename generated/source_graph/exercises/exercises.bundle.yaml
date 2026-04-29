@@ -7,7 +7,7 @@ inputs:
 - relpath: contracts/openapi/components/schemas/exercises/exercise.yaml
   sha256: 9a11941f583d22a8eaad4c35314243c8ab3f344e16f06edfe587e560adb3b398
 - relpath: contracts/openapi/paths/exercises.yaml
-  sha256: 4ae1eb6b9b2910d13e7ccfbbc405e8264e5abff3cf302a3d2e495400390b89f3
+  sha256: 33b3a49519e71a81fedd1c91f53802a857aba03709308d234073c706063538d2
 - relpath: contracts/schemas/exercises/.gitkeep
   sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 - relpath: contracts/schemas/exercises/exercise.schema.json
