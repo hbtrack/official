@@ -1,6 +1,7 @@
 {
   "$comment": "Sovereign request shape for /analytics/query. Free-text DSL is forbidden; filters are structured and scoped.",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/analytics/analytics_query_request.schema.json",
   "title": "AnalyticsQueryRequest",
   "description": "Structured analytics query request with closed metric catalog, closed source modules, and scope-bound filters.",
   "type": "object",
