@@ -92,7 +92,9 @@
                 "contract_execution",
                 "architecture_decision",
                 "diagnostic",
-                "roadmap_execution"
+                "roadmap_execution",
+                "implementation_execution",
+                "adversarial_validation"
             ],
             "description": "Boot profile declarado para o estado consolidado."
         },
@@ -133,6 +135,33 @@
             }
         }
     },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "task_type": {
+                        "enum": [
+                            "implementation_execution",
+                            "adversarial_test_execution"
+                        ]
+                    }
+                },
+                "required": [
+                    "task_type"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "evidence_paths": {
+                        "contains": {
+                            "type": "string",
+                            "pattern": "^_reports/implementation_flow/"
+                        }
+                    }
+                }
+            }
+        }
+    ],
     "examples": [
         {
             "data_ultima_sessao": "2026-03-23",

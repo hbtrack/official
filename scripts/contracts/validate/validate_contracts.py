@@ -118,6 +118,13 @@ BLOCKED_REPORT_TRUTHFULNESS = "BLOCKED_REPORT_TRUTHFULNESS"
 BLOCKED_LIVE_ENFORCEMENT_PARITY = "BLOCKED_LIVE_ENFORCEMENT_PARITY"
 BLOCKED_MODULE_BEHAVIORAL_READINESS = "BLOCKED_MODULE_BEHAVIORAL_READINESS"
 BLOCKED_RULE_CHANGE_QUARANTINE = "BLOCKED_RULE_CHANGE_QUARANTINE"
+BLOCKED_MISSING_REMOTE_PR = "BLOCKED_MISSING_REMOTE_PR"
+BLOCKED_MISSING_EVIDENCE_PACK = "BLOCKED_MISSING_EVIDENCE_PACK"
+BLOCKED_ADVERSARIAL_NOT_RUN = "BLOCKED_ADVERSARIAL_NOT_RUN"
+BLOCKED_STATE_TRANSITION_INVALID = "BLOCKED_STATE_TRANSITION_INVALID"
+BLOCKED_DIRTY_WORKTREE = "BLOCKED_DIRTY_WORKTREE"
+BLOCKED_CANON_PLAN_CONFLICT = "BLOCKED_CANON_PLAN_CONFLICT"
+REPROVADO_OPERACIONALMENTE = "REPROVADO_OPERACIONALMENTE"
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -221,6 +228,13 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_LIVE_ENFORCEMENT_PARITY,
     BLOCKED_MODULE_BEHAVIORAL_READINESS,
     BLOCKED_RULE_CHANGE_QUARANTINE,
+    BLOCKED_MISSING_REMOTE_PR,
+    BLOCKED_MISSING_EVIDENCE_PACK,
+    BLOCKED_ADVERSARIAL_NOT_RUN,
+    BLOCKED_STATE_TRANSITION_INVALID,
+    BLOCKED_DIRTY_WORKTREE,
+    BLOCKED_CANON_PLAN_CONFLICT,
+    REPROVADO_OPERACIONALMENTE,
 }
 
 
@@ -501,6 +515,67 @@ def _module_doc_expected_target(root: pathlib.Path, module: str, field: str) -> 
 
 def load_json_file(path: str) -> dict:
     return _load_json(pathlib.Path(path))
+
+
+def _implementation_flow_dir(root: pathlib.Path) -> pathlib.Path:
+    return root / "_reports" / "implementation_flow"
+
+
+def _implementation_flow_path(root: pathlib.Path, filename: str) -> pathlib.Path:
+    return _implementation_flow_dir(root) / filename
+
+
+def _load_json_schema_file(path: pathlib.Path) -> dict:
+    return _load_json(path)
+
+
+def _validate_instance_against_schema(instance: dict, schema: dict) -> list[dict]:
+    try:
+        validator_cls = jsonschema.validators.validator_for(schema)
+        validator_cls.check_schema(schema)
+        validator = validator_cls(schema)
+        errors = sorted(validator.iter_errors(instance), key=lambda er: (list(er.path), er.message))
+    except Exception as exc:
+        return [{
+            "type": "schema_invalid",
+            "message": str(exc),
+            "severity": "error",
+        }]
+    out: list[dict] = []
+    for err in errors:
+        out.append({
+            "type": "schema_validation_error",
+            "path": "$" if not err.path else "$." + ".".join(str(p) for p in err.path),
+            "message": err.message,
+            "severity": "error",
+            "validator": err.validator,
+        })
+    return out
+
+
+def _implementation_state_order() -> list[str]:
+    return [
+        "PLAN_APPROVED",
+        "IMPLEMENTATION_BRANCH_CREATED",
+        "IMPLEMENTATION_DIFF_READY",
+        "IMPLEMENTATION_PR_OPENED",
+        "IMPLEMENTATION_CHECKS_PASS",
+        "ADVERSARIAL_TESTS_RUN",
+        "EVIDENCE_GENERATED",
+        "HANDTRACKER_REVIEW",
+        "MERGE_APPROVED",
+        "MAIN_REFRESHED",
+        "NEXT_PR_ALLOWED",
+    ]
+
+
+def _implementation_state_rank(state: str | None) -> int:
+    if not state:
+        return -1
+    try:
+        return _implementation_state_order().index(state)
+    except ValueError:
+        return -1
 
 
 def _violation(blocking_code: str, message: str, artifact: str, details: dict | None = None) -> dict:
@@ -5268,6 +5343,7 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "VPS_SETUP.md",
         # Adicionados pelo pipeline B10-001 (source graph + context bundle compilers)
         "DOC_USAGE_MANIFEST.yaml",
+        "AI_EXECUTION_ROLES_POLICY.md",
         "SYNC_MANIFEST.yaml",
         "SOURCE_AUTHORITY_GRAPH.yaml",
         # Pre-work autorizado por ADR-016 (MCP Surface)
@@ -11002,6 +11078,8 @@ _ENFORCEMENT_QUARANTINE_PREFIXES: tuple[str, ...] = (
     "merge-readiness.json",
     ".contract_driven/DOMAIN_AXIOMS.json",
     ".contract_driven/TASK_CATALOG.yaml",
+    ".contract_driven/BOOT_PROFILES.yaml",
+    "contracts/schemas/shared/",
 )
 
 # Caminhos de produto: código de aplicação, contratos API, frontend, migrations.
@@ -11161,6 +11239,355 @@ def _g_rule_change_quarantine(root: pathlib.Path) -> dict:
         [],
         _ms(t0),
     )
+
+
+def _implementation_session_active(root: pathlib.Path) -> tuple[bool, dict | None]:
+    session_path = root / "_reports" / "session_start.json"
+    if not session_path.exists():
+        return False, None
+    try:
+        session = _load_json(session_path)
+    except Exception:
+        return False, None
+    return session.get("task_type") in {"implementation_execution", "adversarial_test_execution"}, session
+
+
+def _g_implementation_scope_firewall(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "IMPLEMENTATION_SCOPE_FIREWALL_GATE"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    active, session = _implementation_session_active(root)
+    if not state_path.exists():
+        if active:
+            return _pg(
+                gate_id,
+                "FAIL",
+                True,
+                BLOCKED_STATE_TRANSITION_INVALID,
+                "current_state.json ausente para sessão de implementação ativa.",
+                [],
+                [],
+                [],
+                [{
+                    "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+                    "artifact": str(state_path.relative_to(root)),
+                    "message": "Artifact obrigatório ausente.",
+                    "severity": "error",
+                }],
+                _ms(t0),
+            )
+        return _skip(gate_id, "Sem current_state.json — gate não aplicável.", _ms(t0))
+
+    checked = [str(state_path.relative_to(root))]
+    try:
+        state = _load_json(state_path)
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, BLOCKED_STATE_TRANSITION_INVALID,
+                   f"Falha ao carregar current_state.json: {exc}",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+                       "artifact": str(state_path.relative_to(root)),
+                       "message": str(exc),
+                       "severity": "error",
+                   }], _ms(t0))
+
+    allowed_files = set(state.get("allowed_files") or [])
+    changed_files = list(state.get("changed_files") or [])
+    if not changed_files:
+        git_files, _ = _get_pr_changeset(root)
+        changed_files = git_files or []
+    if not allowed_files:
+        return _pg(gate_id, "FAIL", True, BLOCKED_CANON_PLAN_CONFLICT,
+                   "allowed_files ausente/vazio no current_state.json.",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_CANON_PLAN_CONFLICT,
+                       "artifact": str(state_path.relative_to(root)),
+                       "message": "Plano não materializou allowed_files.",
+                       "severity": "error",
+                   }], _ms(t0))
+
+    extra = sorted([f for f in changed_files if f not in allowed_files])
+    if extra:
+        return _pg(gate_id, "FAIL", True, BLOCKED_SCOPE_OVERFLOW,
+                   f"{len(extra)} arquivo(s) fora de allowed_files detectado(s).",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_SCOPE_OVERFLOW,
+                       "artifact": "git changeset",
+                       "message": "Diff contém arquivos fora do plano aprovado.",
+                       "severity": "error",
+                       "details": {"extra_files": extra},
+                   }], _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               "Diff compatível com allowed_files do plano aprovado.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_plan_diff_trace(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "PLAN_DIFF_TRACE_GATE"
+    trace_path = _implementation_flow_path(root, "plan_to_diff_trace.json")
+    schema_path = root / "contracts" / "schemas" / "shared" / "plan_to_diff_trace.schema.json"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    active, session = _implementation_session_active(root)
+    if not state_path.exists() and not active:
+        return _skip(gate_id, "Sem contexto de implementation flow — gate não aplicável.", _ms(t0))
+    checked = [str(schema_path.relative_to(root))]
+    if not trace_path.exists():
+        return _pg(gate_id, "FAIL", True, BLOCKED_MISSING_EVIDENCE_PACK,
+                   "plan_to_diff_trace.json ausente.",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_MISSING_EVIDENCE_PACK,
+                       "artifact": str(trace_path.relative_to(root)),
+                       "message": "Plan-to-diff trace obrigatório ausente.",
+                       "severity": "error",
+                   }], _ms(t0))
+    checked.append(str(trace_path.relative_to(root)))
+    try:
+        trace = _load_json(trace_path)
+        schema = _load_json_schema_file(schema_path)
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, BLOCKED_MISSING_EVIDENCE_PACK,
+                   f"Falha ao carregar trace/schema: {exc}",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_MISSING_EVIDENCE_PACK,
+                       "artifact": str(trace_path.relative_to(root)),
+                       "message": str(exc),
+                       "severity": "error",
+                   }], _ms(t0))
+    violations = _validate_instance_against_schema(trace, schema)
+    if trace.get("extra_files") or trace.get("uncovered_requirements"):
+        violations.append({
+            "blocking_code": BLOCKED_SCOPE_OVERFLOW,
+            "artifact": str(trace_path.relative_to(root)),
+            "message": "Trace contém extra_files ou uncovered_requirements.",
+            "severity": "error",
+            "details": {
+                "extra_files": trace.get("extra_files", []),
+                "uncovered_requirements": trace.get("uncovered_requirements", []),
+            },
+        })
+    if violations:
+        primary = BLOCKED_SCOPE_OVERFLOW if any(v.get("blocking_code") == BLOCKED_SCOPE_OVERFLOW for v in violations) else BLOCKED_MISSING_EVIDENCE_PACK
+        return _pg(gate_id, "FAIL", True, primary,
+                   "Plan-to-diff trace inválido ou incompleto.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               "Plan-to-diff trace schema-valid e sem lacunas.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_negative_test_coverage(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "NEGATIVE_TEST_COVERAGE_GATE"
+    manifest_path = _implementation_flow_path(root, "negative_test_manifest.json")
+    schema_path = root / "contracts" / "schemas" / "shared" / "negative_test_manifest.schema.json"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    if not state_path.exists():
+        return _skip(gate_id, "Sem current_state.json — gate não aplicável.", _ms(t0))
+    checked = [str(state_path.relative_to(root)), str(schema_path.relative_to(root))]
+    try:
+        state = _load_json(state_path)
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, BLOCKED_STATE_TRANSITION_INVALID,
+                   f"Falha ao carregar current_state.json: {exc}",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+                       "artifact": str(state_path.relative_to(root)),
+                       "message": str(exc),
+                       "severity": "error",
+                   }], _ms(t0))
+    if not state.get("decision_ids_affected"):
+        return _skip(gate_id, "Sem decision_ids_affected — gate não aplicável.", _ms(t0))
+    if not manifest_path.exists():
+        return _pg(gate_id, "FAIL", True, BLOCKED_ADVERSARIAL_NOT_RUN,
+                   "negative_test_manifest.json ausente.",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_ADVERSARIAL_NOT_RUN,
+                       "artifact": str(manifest_path.relative_to(root)),
+                       "message": "Manifesto negativo obrigatório ausente.",
+                       "severity": "error",
+                   }], _ms(t0))
+    checked.append(str(manifest_path.relative_to(root)))
+    manifest = _load_json(manifest_path)
+    schema = _load_json_schema_file(schema_path)
+    violations = _validate_instance_against_schema(manifest, schema)
+    if float(manifest.get("coverage_ratio", 0)) < 0.8 or manifest.get("verdict") != "PASS":
+        violations.append({
+            "blocking_code": BLOCKED_ADVERSARIAL_NOT_RUN,
+            "artifact": str(manifest_path.relative_to(root)),
+            "message": "coverage_ratio < 0.8 ou verdict != PASS.",
+            "severity": "error",
+            "details": {
+                "coverage_ratio": manifest.get("coverage_ratio"),
+                "verdict": manifest.get("verdict"),
+            },
+        })
+    if violations:
+        return _pg(gate_id, "FAIL", True, BLOCKED_ADVERSARIAL_NOT_RUN,
+                   "Negative test manifest inválido ou insuficiente.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               "Negative test manifest válido com cobertura mínima atendida.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_post_pr_adversarial(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "POST_PR_ADVERSARIAL_GATE"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    report_path = _implementation_flow_path(root, "adversarial_report.json")
+    if not state_path.exists():
+        return _skip(gate_id, "Sem current_state.json — gate não aplicável.", _ms(t0))
+    checked = [str(state_path.relative_to(root))]
+    state = _load_json(state_path)
+    if _implementation_state_rank(state.get("current_state")) < _implementation_state_rank("IMPLEMENTATION_PR_OPENED"):
+        return _skip(gate_id, "PR ainda não aberto — gate não aplicável.", _ms(t0))
+    if not report_path.exists():
+        return _pg(gate_id, "FAIL", True, BLOCKED_ADVERSARIAL_NOT_RUN,
+                   "adversarial_report.json ausente após abertura do PR.",
+                   [], checked, [], [{
+                       "blocking_code": BLOCKED_ADVERSARIAL_NOT_RUN,
+                       "artifact": str(report_path.relative_to(root)),
+                       "message": "Relatório adversarial obrigatório ausente.",
+                       "severity": "error",
+                   }], _ms(t0))
+    checked.append(str(report_path.relative_to(root)))
+    report = _load_json(report_path)
+    state_pr_url = state.get("pr_url")
+    report_pr_url = report.get("pr_url")
+    verdict = report.get("verdict")
+    violations = []
+    if not report_pr_url or report_pr_url != state_pr_url:
+        violations.append({
+            "blocking_code": BLOCKED_ADVERSARIAL_NOT_RUN,
+            "artifact": str(report_path.relative_to(root)),
+            "message": "pr_url do relatório não corresponde ao current_state.",
+            "severity": "error",
+        })
+    if verdict not in {"PASS", "PARTIAL"}:
+        violations.append({
+            "blocking_code": BLOCKED_ADVERSARIAL_NOT_RUN,
+            "artifact": str(report_path.relative_to(root)),
+            "message": "verdict do relatório adversarial deve ser PASS ou PARTIAL.",
+            "severity": "error",
+        })
+    if violations:
+        return _pg(gate_id, "FAIL", True, BLOCKED_ADVERSARIAL_NOT_RUN,
+                   "Relatório adversarial pós-PR inválido.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               "Relatório adversarial pós-PR presente e coerente.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_implementation_state(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "IMPLEMENTATION_STATE_GATE"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    schema_path = root / "contracts" / "schemas" / "shared" / "implementation_flow_state.schema.json"
+    active, session = _implementation_session_active(root)
+    checked = [str(schema_path.relative_to(root))]
+    if not state_path.exists():
+        if active:
+            return _pg(gate_id, "FAIL", True, BLOCKED_STATE_TRANSITION_INVALID,
+                       "current_state.json ausente para trilho de implementação ativo.",
+                       [], checked, [], [{
+                           "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+                           "artifact": str(state_path.relative_to(root)),
+                           "message": "Artifact de estado obrigatório ausente.",
+                           "severity": "error",
+                       }], _ms(t0))
+        return _skip(gate_id, "Sem current_state.json — gate não aplicável.", _ms(t0))
+    checked.append(str(state_path.relative_to(root)))
+    state = _load_json(state_path)
+    schema = _load_json_schema_file(schema_path)
+    violations = _validate_instance_against_schema(state, schema)
+    current_state = state.get("current_state")
+    if _implementation_state_rank(current_state) < 0:
+        violations.append({
+            "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+            "artifact": str(state_path.relative_to(root)),
+            "message": "current_state inválido.",
+            "severity": "error",
+        })
+    transitions = state.get("transitions") or []
+    order = _implementation_state_order()
+    for transition in transitions:
+        src = transition.get("from_state")
+        dst = transition.get("to_state")
+        if _implementation_state_rank(src) >= _implementation_state_rank(dst):
+            violations.append({
+                "blocking_code": BLOCKED_STATE_TRANSITION_INVALID,
+                "artifact": str(state_path.relative_to(root)),
+                "message": "Transição não avança linearmente na máquina de estados.",
+                "severity": "error",
+                "details": {"from_state": src, "to_state": dst},
+            })
+    if violations:
+        return _pg(gate_id, "FAIL", True, BLOCKED_STATE_TRANSITION_INVALID,
+                   "Estado de implementação inválido ou incoerente.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               f"Estado de implementação válido: {current_state}.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_evidence_pack_completeness(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "EVIDENCE_PACK_COMPLETENESS_GATE"
+    pack_path = _implementation_flow_path(root, "implementation_evidence_pack.json")
+    schema_path = root / "contracts" / "schemas" / "shared" / "implementation_evidence_pack.schema.json"
+    state_path = _implementation_flow_path(root, "current_state.json")
+    active, session = _implementation_session_active(root)
+    checked = [str(schema_path.relative_to(root))]
+    if not pack_path.exists():
+        if active:
+            return _pg(gate_id, "FAIL", True, BLOCKED_MISSING_EVIDENCE_PACK,
+                       "implementation_evidence_pack.json ausente.",
+                       [], checked, [], [{
+                           "blocking_code": BLOCKED_MISSING_EVIDENCE_PACK,
+                           "artifact": str(pack_path.relative_to(root)),
+                           "message": "Evidence pack obrigatório ausente.",
+                           "severity": "error",
+                       }], _ms(t0))
+        return _skip(gate_id, "Sem evidence pack — gate não aplicável.", _ms(t0))
+    checked.append(str(pack_path.relative_to(root)))
+    pack = _load_json(pack_path)
+    schema = _load_json_schema_file(schema_path)
+    violations = _validate_instance_against_schema(pack, schema)
+    if not pack.get("pr_url"):
+        violations.append({
+            "blocking_code": REPROVADO_OPERACIONALMENTE,
+            "artifact": str(pack_path.relative_to(root)),
+            "message": "pr_url obrigatório ausente.",
+            "severity": "error",
+        })
+    for command_run in pack.get("validation_commands_run", []):
+        output_path = command_run.get("output_path")
+        if output_path and not (root / output_path).exists():
+            violations.append({
+                "blocking_code": BLOCKED_MISSING_EVIDENCE_PACK,
+                "artifact": str(pack_path.relative_to(root)),
+                "message": f"output_path inexistente: {output_path}",
+                "severity": "error",
+            })
+    adversarial_report_path = pack.get("adversarial_report_path")
+    if adversarial_report_path and not (root / adversarial_report_path).exists():
+        violations.append({
+            "blocking_code": BLOCKED_MISSING_EVIDENCE_PACK,
+            "artifact": str(pack_path.relative_to(root)),
+            "message": f"adversarial_report_path inexistente: {adversarial_report_path}",
+            "severity": "error",
+        })
+    if violations:
+        primary = REPROVADO_OPERACIONALMENTE if any(v.get("blocking_code") == REPROVADO_OPERACIONALMENTE for v in violations) else BLOCKED_MISSING_EVIDENCE_PACK
+        return _pg(gate_id, "FAIL", True, primary,
+                   "Evidence pack inválido ou incompleto.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               "Evidence pack válido, completo e com paths existentes.",
+               [], checked, [], [], _ms(t0))
 
 
 def _g16_readiness_summary(gates: list[dict], *, canonical_full_run: bool) -> dict:
@@ -12143,6 +12570,12 @@ def run_pipeline(
         "MODULE_BEHAVIORAL_READINESS_GATE",
         "REPORT_TRUTHFULNESS_GATE",
         "GOVERNANCE_REGRESSION_GATE",
+        "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+        "PLAN_DIFF_TRACE_GATE",
+        "NEGATIVE_TEST_COVERAGE_GATE",
+        "POST_PR_ADVERSARIAL_GATE",
+        "IMPLEMENTATION_STATE_GATE",
+        "EVIDENCE_PACK_COMPLETENESS_GATE",
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
@@ -12163,6 +12596,12 @@ def run_pipeline(
         "HOOK_EFFECTIVENESS_GATE",
         "MODULE_BEHAVIORAL_READINESS_GATE",
         "REPORT_TRUTHFULNESS_GATE",
+        "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+        "PLAN_DIFF_TRACE_GATE",
+        "NEGATIVE_TEST_COVERAGE_GATE",
+        "POST_PR_ADVERSARIAL_GATE",
+        "IMPLEMENTATION_STATE_GATE",
+        "EVIDENCE_PACK_COMPLETENESS_GATE",
     }
 
     # Stage-specific gate sets (Fase 0 / 1 / 2)
@@ -12295,6 +12734,12 @@ def run_pipeline(
         ("CANON_CONTRACT_DRIVEN_PARITY_GATE", lambda: _g_canon_contract_driven_parity(root)),
         ("HBTRACK_CANON_PARITY_GATE", lambda: _g_hbtrack_canon_parity(root)),
         ("RULE_CHANGE_QUARANTINE_GATE", lambda: _g_rule_change_quarantine(root)),
+        ("IMPLEMENTATION_SCOPE_FIREWALL_GATE", lambda: _g_implementation_scope_firewall(root)),
+        ("PLAN_DIFF_TRACE_GATE", lambda: _g_plan_diff_trace(root)),
+        ("NEGATIVE_TEST_COVERAGE_GATE", lambda: _g_negative_test_coverage(root)),
+        ("POST_PR_ADVERSARIAL_GATE", lambda: _g_post_pr_adversarial(root)),
+        ("IMPLEMENTATION_STATE_GATE", lambda: _g_implementation_state(root)),
+        ("EVIDENCE_PACK_COMPLETENESS_GATE", lambda: _g_evidence_pack_completeness(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

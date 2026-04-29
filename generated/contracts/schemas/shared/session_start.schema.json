@@ -4,7 +4,7 @@
     "title": "session_start JSON Schema",
     "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
     "type": "object",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "additionalProperties": false,
     "required": [
         "session_id",
@@ -71,7 +71,9 @@
                 "contract_execution",
                 "architecture_decision",
                 "diagnostic",
-                "roadmap_execution"
+                "roadmap_execution",
+                "implementation_execution",
+                "adversarial_validation"
             ]
         },
         "task_type": {
@@ -100,7 +102,9 @@
                 "pre_contract_boot",
                 "pr_fix",
                 "implementation_promotion",
-                "feature_update"
+                "feature_update",
+                "implementation_execution",
+                "adversarial_test_execution"
             ],
             "not": {
                 "enum": [
@@ -153,10 +157,55 @@
                 "backend",
                 "docs",
                 "generated",
+                "implementation",
                 "migrations",
                 "roadmap",
                 "readonly"
             ]
+        },
+        "approved_plan_path": {
+            "type": "string",
+            "description": "Plano aprovado consumido pela execução de implementação.",
+            "minLength": 1
+        },
+        "allowed_files": {
+            "type": "array",
+            "description": "Lista de arquivos permitidos pelo plano aprovado.",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "forbidden_files": {
+            "type": "array",
+            "description": "Lista de arquivos explicitamente proibidos pelo plano aprovado.",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "pr_url": {
+            "type": "string",
+            "description": "URL remota do PR associado à execução.",
+            "format": "uri"
+        },
+        "evidence_pack_path": {
+            "type": "string",
+            "description": "Path para implementation_evidence_pack.json.",
+            "minLength": 1
+        },
+        "implementation_state_path": {
+            "type": "string",
+            "description": "Path para current_state.json.",
+            "minLength": 1
+        },
+        "decision_ids_affected": {
+            "type": "array",
+            "description": "Decision IDs afetados pela execução.",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
         },
         "worker_id": {
             "type": "string",
@@ -394,6 +443,61 @@
             "pattern": "^[a-f0-9]{64}$"
         }
     },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "task_type": {
+                        "const": "implementation_execution"
+                    }
+                },
+                "required": [
+                    "task_type"
+                ]
+            },
+            "then": {
+                "required": [
+                    "module",
+                    "approved_plan_path"
+                ],
+                "properties": {
+                    "write_scope": {
+                        "const": "implementation"
+                    },
+                    "boot_profile_id": {
+                        "const": "implementation_execution"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "task_type": {
+                        "const": "adversarial_test_execution"
+                    }
+                },
+                "required": [
+                    "task_type"
+                ]
+            },
+            "then": {
+                "required": [
+                    "module",
+                    "pr_url",
+                    "implementation_state_path"
+                ],
+                "properties": {
+                    "write_scope": {
+                        "const": "readonly"
+                    },
+                    "boot_profile_id": {
+                        "const": "adversarial_validation"
+                    }
+                }
+            }
+        }
+    ],
     "definitions": {
         "constraints": {
             "constraint_1": "task_type nunca pode ser 'unknown'. Sempre deve ser um valor do enum.",

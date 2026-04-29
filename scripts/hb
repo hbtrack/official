@@ -52,6 +52,7 @@ class HBCLIv2:
         self.session_schema = self._load_json(self.root / "contracts/schemas/shared/session_start.schema.json")
         
         self.session = self._load_session()
+        self._profile_validation_context: Dict[str, Any] = {}
         
         # Detectar se sessão está obsoleta e migrar se necessário
         self._migrate_legacy_session_if_needed()
@@ -85,6 +86,24 @@ class HBCLIv2:
             raise FileNotFoundError(f"Schema não encontrado: {path}")
         with open(path) as f:
             return json.load(f)
+
+    @staticmethod
+    def _write_json(path: pathlib.Path, payload: Dict[str, Any]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def _is_git_worktree_clean(self) -> bool:
+        try:
+            result = subprocess.run(
+                ["git", "status", "--porcelain"],
+                capture_output=True,
+                text=True,
+                check=True,
+                cwd=str(self.root),
+            )
+        except Exception:
+            return False
+        return not result.stdout.strip()
 
     def _state_artifacts(self) -> list[pathlib.Path]:
         """Artefatos canônicos que devem sobreviver a execuções observacionais."""
@@ -531,6 +550,74 @@ class HBCLIv2:
                     )
                     # Aviso informativo — formato pode variar
 
+        if raw_validations.get("approved_plan_read") is True:
+            approved_plan_path = self._profile_validation_context.get("approved_plan_path")
+            if not approved_plan_path:
+                print(
+                    "❌ approved_plan_path obrigatório para implementation_execution.",
+                    file=sys.stderr,
+                )
+                all_good = False
+            else:
+                plan_path = self.root / approved_plan_path
+                if not plan_path.exists() or not plan_path.is_file():
+                    print(
+                        f"❌ Plano aprovado não encontrado: {approved_plan_path}",
+                        file=sys.stderr,
+                    )
+                    all_good = False
+
+        if raw_validations.get("clean_worktree_required") is True:
+            if not self._is_git_worktree_clean():
+                print(
+                    "❌ [BLOCKED] BLOCKED_DIRTY_WORKTREE: worktree deve estar limpo para implementation_execution.",
+                    file=sys.stderr,
+                )
+                all_good = False
+
+        if raw_validations.get("remote_pr_required") is True:
+            pr_url = self._profile_validation_context.get("pr_url")
+            if not pr_url:
+                print(
+                    "❌ pr_url obrigatório para adversarial_test_execution.",
+                    file=sys.stderr,
+                )
+                all_good = False
+
+        if raw_validations.get("evidence_pack_required") is True:
+            evidence_pack_path = self._profile_validation_context.get("evidence_pack_path")
+            if not evidence_pack_path:
+                print(
+                    "❌ evidence_pack_path obrigatório para adversarial_test_execution.",
+                    file=sys.stderr,
+                )
+                all_good = False
+            else:
+                pack_path = self.root / evidence_pack_path
+                if not pack_path.exists():
+                    print(
+                        f"❌ Evidence pack não encontrado: {evidence_pack_path}",
+                        file=sys.stderr,
+                    )
+                    all_good = False
+
+        if raw_validations.get("implementation_state_required") is True:
+            state_path_value = self._profile_validation_context.get("implementation_state_path")
+            if not state_path_value:
+                print(
+                    "❌ implementation_state_path obrigatório para adversarial_test_execution.",
+                    file=sys.stderr,
+                )
+                all_good = False
+            else:
+                state_path = self.root / state_path_value
+                if not state_path.exists():
+                    print(
+                        f"❌ Implementation state não encontrado: {state_path_value}",
+                        file=sys.stderr,
+                    )
+                    all_good = False
+
         return all_good
 
     @staticmethod
@@ -557,8 +644,12 @@ class HBCLIv2:
             return "roadmap"
         if task_type == "generate_code":
             return "backend"
+        if task_type == "implementation_execution":
+            return "implementation"
         if task_type in docs_tasks:
             return "docs"
+        if task_type == "adversarial_test_execution":
+            return "readonly"
         if task_type in readonly_tasks or task_type.startswith("audit_"):
             return "readonly"
         return "contracts"
@@ -595,6 +686,61 @@ class HBCLIv2:
             json.dumps(evidence, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
+
+    @staticmethod
+    def _implementation_state_order() -> list[str]:
+        return [
+            "PLAN_APPROVED",
+            "IMPLEMENTATION_BRANCH_CREATED",
+            "IMPLEMENTATION_DIFF_READY",
+            "IMPLEMENTATION_PR_OPENED",
+            "IMPLEMENTATION_CHECKS_PASS",
+            "ADVERSARIAL_TESTS_RUN",
+            "EVIDENCE_GENERATED",
+            "HANDTRACKER_REVIEW",
+            "MERGE_APPROVED",
+            "MAIN_REFRESHED",
+            "NEXT_PR_ALLOWED",
+        ]
+
+    def _implementation_state_rank(self, state: str | None) -> int:
+        if not state:
+            return -1
+        order = self._implementation_state_order()
+        try:
+            return order.index(state)
+        except ValueError:
+            return -1
+
+    def _write_implementation_state_stub(
+        self,
+        *,
+        approved_plan_path: str,
+        task_type: str,
+        pr_url: Optional[str] = None,
+        allowed_files: Optional[list[str]] = None,
+        forbidden_files: Optional[list[str]] = None,
+        decision_ids: Optional[list[str]] = None,
+    ) -> pathlib.Path:
+        flow_dir = self.root / "_reports" / "implementation_flow"
+        flow_dir.mkdir(parents=True, exist_ok=True)
+        current_state_path = flow_dir / "current_state.json"
+        current_state = (
+            "IMPLEMENTATION_PR_OPENED" if task_type == "adversarial_test_execution" else "PLAN_APPROVED"
+        )
+        payload = {
+            "schema_version": "1.0.0",
+            "current_state": current_state,
+            "approved_plan_path": approved_plan_path,
+            "transitions": [],
+            "allowed_files": allowed_files or [],
+            "forbidden_files": forbidden_files or [],
+            "decision_ids_affected": decision_ids or [],
+        }
+        if pr_url:
+            payload["pr_url"] = pr_url
+        self._write_json(current_state_path, payload)
+        return current_state_path
     
     def _save_session(self):
         """Salvar session_start.json."""
@@ -813,6 +959,13 @@ class HBCLIv2:
         roadmap_phase: Optional[int] = None,
         roadmap_task_id: Optional[str] = None,
         check_context: Optional[str] = None,
+        approved_plan_path: Optional[str] = None,
+        pr_url: Optional[str] = None,
+        implementation_state_path: Optional[str] = None,
+        evidence_pack_path: Optional[str] = None,
+        allowed_files: Optional[list[str]] = None,
+        forbidden_files: Optional[list[str]] = None,
+        decision_ids: Optional[list[str]] = None,
     ) -> int:
         """
         FASE 0: SESSION_BOOT
@@ -925,6 +1078,14 @@ class HBCLIv2:
         profile_id = task_config.get("profile_id") or "default"
         if not self._validate_boot_profile_id(profile_id):
             return 1
+
+        self._profile_validation_context = {
+            "approved_plan_path": approved_plan_path,
+            "pr_url": pr_url,
+            "implementation_state_path": implementation_state_path,
+            "evidence_pack_path": evidence_pack_path,
+        }
+
         boot_paths_valid, required_sections_valid = self._validate_boot_profile_structure(profile_id)
         if not boot_paths_valid or not required_sections_valid:
             return 1
@@ -952,6 +1113,48 @@ class HBCLIv2:
 
         if self._validate_operation_mode_coherence(task_type, operation_mode) != 0:
             return 1
+
+        if task_type == "adversarial_test_execution":
+            state_path = self.root / (implementation_state_path or "")
+            evidence_pack = self.root / (evidence_pack_path or "")
+            try:
+                state_payload = self._load_json(state_path)
+            except Exception as exc:
+                print(
+                    f"❌ implementation_state inválido: {exc}",
+                    file=sys.stderr,
+                )
+                return 1
+            try:
+                evidence_payload = self._load_json(evidence_pack)
+            except Exception as exc:
+                print(
+                    f"❌ evidence_pack inválido: {exc}",
+                    file=sys.stderr,
+                )
+                return 1
+
+            current_state = state_payload.get("current_state")
+            if self._implementation_state_rank(current_state) < self._implementation_state_rank("IMPLEMENTATION_PR_OPENED"):
+                print(
+                    "❌ [BLOCKED] BLOCKED_STATE_TRANSITION_INVALID: adversarial_test_execution requer estado >= IMPLEMENTATION_PR_OPENED.",
+                    file=sys.stderr,
+                )
+                return 1
+            state_pr_url = state_payload.get("pr_url")
+            pack_pr_url = evidence_payload.get("pr_url")
+            if pr_url and state_pr_url and pr_url != state_pr_url:
+                print(
+                    "❌ pr_url divergente entre argumento e implementation_state.",
+                    file=sys.stderr,
+                )
+                return 1
+            if pr_url and pack_pr_url and pr_url != pack_pr_url:
+                print(
+                    "❌ pr_url divergente entre argumento e evidence_pack.",
+                    file=sys.stderr,
+                )
+                return 1
 
         pr_fix_check: Optional[dict[str, Any]] = None
         if task_type == "pr_fix":
@@ -1030,6 +1233,20 @@ class HBCLIv2:
         if pr_fix_check is not None:
             session_update["stage0_validation_results"]["check_context"] = check_context
             session_update["stage0_validation_results"]["local_equivalent"] = pr_fix_check.get("local_equivalent")
+        if approved_plan_path is not None:
+            session_update["approved_plan_path"] = approved_plan_path
+        if allowed_files:
+            session_update["allowed_files"] = allowed_files
+        if forbidden_files:
+            session_update["forbidden_files"] = forbidden_files
+        if pr_url is not None:
+            session_update["pr_url"] = pr_url
+        if evidence_pack_path is not None:
+            session_update["evidence_pack_path"] = evidence_pack_path
+        if implementation_state_path is not None:
+            session_update["implementation_state_path"] = implementation_state_path
+        if decision_ids:
+            session_update["decision_ids_affected"] = decision_ids
 
         self.session.update(session_update)
 
@@ -1038,6 +1255,26 @@ class HBCLIv2:
         if task_type != "execute_roadmap_phase":
             self.session.pop("roadmap_phase", None)
             self.session.pop("roadmap_task_id", None)
+
+        if task_type == "implementation_execution" and approved_plan_path is not None:
+            state_path = self._write_implementation_state_stub(
+                approved_plan_path=approved_plan_path,
+                task_type=task_type,
+                allowed_files=allowed_files,
+                forbidden_files=forbidden_files,
+                decision_ids=decision_ids,
+            )
+            self.session["implementation_state_path"] = str(state_path.relative_to(self.root))
+        elif task_type == "adversarial_test_execution" and approved_plan_path is not None:
+            state_path = self._write_implementation_state_stub(
+                approved_plan_path=approved_plan_path,
+                task_type=task_type,
+                pr_url=pr_url,
+                allowed_files=allowed_files,
+                forbidden_files=forbidden_files,
+                decision_ids=decision_ids,
+            )
+            self.session["implementation_state_path"] = str(state_path.relative_to(self.root))
         
         # Validar contra schema
         if not self._validate_session_against_schema():
@@ -1066,6 +1303,10 @@ class HBCLIv2:
                 "worker_frontmatter": worker_frontmatter,
                 "write_scope": self.session.get("write_scope"),
                 "operation_mode": operation_mode,
+                "approved_plan_path": approved_plan_path,
+                "pr_url": pr_url,
+                "implementation_state_path": self.session.get("implementation_state_path"),
+                "evidence_pack_path": evidence_pack_path,
                 "retries": 0,
                 "cause_ids": [],
                 "scope_overflow_detected": False,
@@ -2625,6 +2866,20 @@ class HBCLIv2:
                               help="Identificador da tarefa roadmap (ex: 'phase-1-foundation').")
         verify_p.add_argument("--check-context", default=None,
                       help="Context exato do check do GitHub. Obrigatório para task_type=pr_fix.")
+        verify_p.add_argument("--approved-plan-path", default=None,
+                              help="Path do plano aprovado. Obrigatório para task_type=implementation_execution.")
+        verify_p.add_argument("--pr-url", default=None,
+                              help="URL remota do PR. Obrigatório para task_type=adversarial_test_execution.")
+        verify_p.add_argument("--implementation-state-path", default=None,
+                              help="Path do current_state.json. Obrigatório para task_type=adversarial_test_execution.")
+        verify_p.add_argument("--evidence-pack-path", default=None,
+                              help="Path do implementation_evidence_pack.json. Obrigatório para task_type=adversarial_test_execution.")
+        verify_p.add_argument("--allowed-file", action="append", default=None,
+                              help="Arquivo permitido pelo plano. Pode ser repetido.")
+        verify_p.add_argument("--forbidden-file", action="append", default=None,
+                              help="Arquivo proibido pelo plano. Pode ser repetido.")
+        verify_p.add_argument("--decision-id", action="append", default=None,
+                              help="Decision ID afetado. Pode ser repetido.")
         
         # check
         check_p = subparsers.add_parser("check", help="Fase 1: Validação de módulo")
@@ -2739,6 +2994,13 @@ class HBCLIv2:
                     roadmap_phase=getattr(parsed_args, "roadmap_phase", None),
                     roadmap_task_id=getattr(parsed_args, "roadmap_task_id", None),
                     check_context=getattr(parsed_args, "check_context", None),
+                    approved_plan_path=getattr(parsed_args, "approved_plan_path", None),
+                    pr_url=getattr(parsed_args, "pr_url", None),
+                    implementation_state_path=getattr(parsed_args, "implementation_state_path", None),
+                    evidence_pack_path=getattr(parsed_args, "evidence_pack_path", None),
+                    allowed_files=getattr(parsed_args, "allowed_file", None),
+                    forbidden_files=getattr(parsed_args, "forbidden_file", None),
+                    decision_ids=getattr(parsed_args, "decision_id", None),
                 )
             elif parsed_args.command == "check":
                 return self.cmd_check(parsed_args.module)

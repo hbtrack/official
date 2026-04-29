@@ -1680,3 +1680,6 @@
 {"run_id": "20260427T015920_d32d96", "timestamp_utc": "2026-04-27T01:59:20Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "315cb044"}
 {"run_id": "20260427T052836_97d3fa", "timestamp_utc": "2026-04-27T05:28:36Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "12e9053f"}
 {"run_id": "20260427T054540_a57dda", "timestamp_utc": "2026-04-27T05:45:40Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "12e9053f"}
+{"run_id": "20260429T083030_9ab80a", "timestamp_utc": "2026-04-29T08:30:30Z", "overall_status": "FAIL", "exit_code": 3, "health_score": 90, "git_commit": "d49ba3cb"}
+{"run_id": "20260429T083155_b7d3b0", "timestamp_utc": "2026-04-29T08:31:55Z", "overall_status": "FAIL", "exit_code": 3, "health_score": 90, "git_commit": "d49ba3cb"}
+{"run_id": "20260429T083402_ba275b", "timestamp_utc": "2026-04-29T08:34:02Z", "overall_status": "FAIL", "exit_code": 3, "health_score": 90, "git_commit": "d49ba3cb"}

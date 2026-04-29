@@ -16,19 +16,24 @@
 
 ### GitHub Copilot
 - **Bridge doc:** `.github/copilot-instructions.md` (auto-load)
-- **Agent definition:** `.github/agents/hb-contract.agent.md`
+- **Agent definitions:** `.github/agents/hb-contract.agent.md`, `.github/agents/hb-implementer.agent.md`, `.github/agents/hb-adversarial-tester.agent.md`, `.github/agents/Mesclado.agent.md`
 - **Skills:** `.github/skills/hb-pipeline-orchestrator/SKILL.md`, `.github/skills/hb-roadmap-executor/SKILL.md`
 - **Instructions:** `.github/instructions/hb-contract-guards.instructions.md` (scope: `src/**`)
 - **Enforcement:** `scripts/hb`, `validate_contracts.py`, `pre-commit hook`, CI workflows
+- **Camada adicional desta trilha:** revisão externa recomendada via `Claude` + gates executáveis
 
 ### Claude Code
 - **Bridge doc:** `CLAUDE.md` (auto-load)
 - **Hooks:** `.claude/settings.local.json` → `PreToolUse` (`check_backend_gate.py`), `Stop` (`check_session_commit.py`)
 - **Enforcement:** `scripts/hb`, `validate_contracts.py`, `pre-commit hook`, CI workflows
+- **UI dedicada:** não há mecanismo equivalente a `.github/agents/*.agent.md`
+- **Uso recomendado nesta trilha:** testador adversarial externo com pacote estruturado de evidências
 
 ### Codex
 - **Bridge doc:** `.codex` (auto-load)
 - **Enforcement:** CI workflows (único enforcement ativo para Codex)
+- **UI dedicada:** não há mecanismo equivalente a `.github/agents/*.agent.md`
+- **Uso nesta trilha:** paridade operacional documentada, sem agente separado
 
 ### Gemini (AI Review)
 - **Style guide:** `.github/ai-review/styleguide.md`
@@ -48,3 +53,40 @@ enforcement executável > schemas ativos > SOURCE_AUTHORITY_GRAPH > concept_owne
 Diretório: `.contract_driven/agent_prompts/`
 - Workers são prompts especializados carregados pelo mesmo agente
 - Não assumir subagente autônomo, fila ou runtime distribuído
+
+## Exposição por plataforma
+
+### GitHub Copilot
+- Suporta agentes selecionáveis via `.github/agents/*.agent.md`
+- Exposição real agora:
+  - `HB Contract`
+  - `Hb Implementer`
+  - `Hb Adversarial Tester`
+  - `HandTracker`
+- Os papéis usam o mesmo enforcement central do repo; o dropdown não cria soberania nova.
+- A revisão adversarial final forte não depende só do mesmo chat: o handoff
+  recomendado é para Claude usando pacote estruturado de evidências + gates.
+
+### Claude Code
+- Não há, neste repositório, mecanismo equivalente a `.github/agents/` para criar opções novas no dropdown do VS Code.
+- Exposição possível no mesmo padrão operacional:
+  - `CLAUDE.md` como bridge doc auto-load
+  - `.contract_driven/TASK_CATALOG.yaml` para task routing
+  - `.contract_driven/BOOT_PROFILES.yaml` para pré-condições
+  - `.contract_driven/agent_prompts/*.prompt.md` para workers especializados
+  - hooks locais em `.claude/settings.local.json`
+- Resultado: Claude pode executar os mesmos papéis operacionais, mas não aparece como agentes separados por dropdown a partir deste mecanismo.
+- Nesta trilha, Claude é a camada recomendada de revisão adversarial externa,
+  recebendo apenas pacote de evidências sem narrativa do executor.
+
+### Codex
+- Não há, neste repositório, mecanismo equivalente a `.github/agents/` para criar opções novas no dropdown do VS Code.
+- Exposição possível no mesmo padrão operacional:
+  - `.codex` como bridge doc auto-load
+  - `.contract_driven/TASK_CATALOG.yaml` para task routing
+  - `.contract_driven/BOOT_PROFILES.yaml` para boot
+  - `.contract_driven/agent_prompts/*.prompt.md` para workers especializados
+  - enforcement por `scripts/hb`, `validate_contracts.py` e CI
+- Resultado: Codex pode operar como `Hb Implementer` ou `Hb Adversarial Tester`, mas não como opções de UI nativas do Copilot.
+- Codex mantém paridade operacional documentada, mas não é a camada preferida
+  de revisão externa final nesta trilha.

@@ -1447,15 +1447,125 @@ gates:
 
       Enforcement zone (quarantine): scripts/hb, scripts/contracts/validate/,
       scripts/audit/, docs/_canon/gates/, merge-readiness.json,
-      .contract_driven/DOMAIN_AXIOMS.json, .contract_driven/TASK_CATALOG.yaml.
+      .contract_driven/DOMAIN_AXIOMS.json, .contract_driven/TASK_CATALOG.yaml,
+      .contract_driven/BOOT_PROFILES.yaml, contracts/schemas/shared/.
 
       Product zone: src/, frontend/, migrations/, contracts/openapi/,
-      contracts/asyncapi/, contracts/schemas/.
+      contracts/asyncapi/, contracts/schemas/ (exceto shared/).
 
       FAIL se o changeset contiver arquivos de ambas as zonas simultaneamente.
       Obtém changeset via: (1) git diff origin/main...HEAD, (2) staging area,
       (3) último commit. SKIP_NOT_APPLICABLE se git não estiver disponível.
     blocking_codes: [ BLOCKED_RULE_CHANGE_QUARANTINE ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: IMPLEMENTATION_SCOPE_FIREWALL_GATE
+    order: "20T"
+    name: "Implementation Scope Firewall Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: [ IMPLEMENTATION_STATE_GATE ]
+    description: >
+      Verifica que o diff/changeset observado pela sessão de implementation flow
+      está contido em `allowed_files` do plano aprovado materializado em
+      `_reports/implementation_flow/current_state.json`. FAIL se houver arquivo
+      extra fora do escopo.
+    blocking_codes: [ BLOCKED_SCOPE_OVERFLOW, BLOCKED_CANON_PLAN_CONFLICT ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: PLAN_DIFF_TRACE_GATE
+    order: "20U"
+    name: "Plan Diff Trace Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: [ IMPLEMENTATION_STATE_GATE ]
+    description: >
+      Verifica que `_reports/implementation_flow/plan_to_diff_trace.json`
+      existe, é schema-valid e não contém `extra_files` nem
+      `uncovered_requirements`.
+    blocking_codes: [ BLOCKED_MISSING_EVIDENCE_PACK, BLOCKED_SCOPE_OVERFLOW ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: NEGATIVE_TEST_COVERAGE_GATE
+    order: "20V"
+    name: "Negative Test Coverage Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: [ IMPLEMENTATION_STATE_GATE ]
+    description: >
+      Verifica que `_reports/implementation_flow/negative_test_manifest.json`
+      existe, é schema-valid e atende cobertura mínima de testes negativos
+      (`coverage_ratio >= 0.80`, `verdict=PASS`) quando há decisões afetadas.
+    blocking_codes: [ BLOCKED_ADVERSARIAL_NOT_RUN ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: POST_PR_ADVERSARIAL_GATE
+    order: "20W"
+    name: "Post PR Adversarial Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: [ IMPLEMENTATION_STATE_GATE ]
+    description: >
+      Verifica que o relatório adversarial pós-PR existe, referencia o mesmo
+      `pr_url` do estado atual e registra `verdict` aceitável após
+      `IMPLEMENTATION_PR_OPENED`.
+    blocking_codes: [ BLOCKED_ADVERSARIAL_NOT_RUN ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: IMPLEMENTATION_STATE_GATE
+    order: "20X"
+    name: "Implementation State Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: []
+    description: >
+      Verifica que `_reports/implementation_flow/current_state.json` existe,
+      é schema-valid e que as transições observadas são monotônicas e válidas
+      dentro da máquina de estados da execução de implementação.
+    blocking_codes: [ BLOCKED_STATE_TRANSITION_INVALID ]
+    skip_allowed_in_ci: true
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: EVIDENCE_PACK_COMPLETENESS_GATE
+    order: "20Y"
+    name: "Evidence Pack Completeness Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: implementation_flow_active
+    depends_on: [ IMPLEMENTATION_STATE_GATE ]
+    description: >
+      Verifica que `_reports/implementation_flow/implementation_evidence_pack.json`
+      existe, é schema-valid, contém `pr_url` remoto válido e só referencia
+      `output_path`/`adversarial_report_path` existentes em disco.
+    blocking_codes: [ BLOCKED_MISSING_EVIDENCE_PACK, BLOCKED_MISSING_REMOTE_PR, REPROVADO_OPERACIONALMENTE ]
     skip_allowed_in_ci: true
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py

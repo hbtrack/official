@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/implementation_evidence_pack.schema.json",
+  "title": "HB Track — Implementation Evidence Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "generated_by_task_type",
+    "base_sha",
+    "head_sha",
+    "pr_url",
+    "pr_number",
+    "approved_plan_path",
+    "changed_files",
+    "allowed_files",
+    "forbidden_files_touched",
+    "gate_results",
+    "validation_commands_run",
+    "positive_tests",
+    "negative_tests",
+    "adversarial_report_path",
+    "blocking_status"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "generated_by_task_type": { "type": "string", "enum": ["implementation_execution"] },
+    "base_sha": { "type": "string", "pattern": "^[a-f0-9]{7,40}$" },
+    "head_sha": { "type": "string", "pattern": "^[a-f0-9]{7,40}$" },
+    "pr_url": { "type": "string", "format": "uri" },
+    "pr_number": { "type": "integer", "minimum": 1 },
+    "approved_plan_path": { "type": "string", "minLength": 1 },
+    "changed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "allowed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "forbidden_files_touched": {
+      "type": "array",
+      "maxItems": 0,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "status", "report_path"],
+        "properties": {
+          "gate_id": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIP_NOT_APPLICABLE", "DEGRADED"] },
+          "report_path": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "validation_commands_run": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command", "exit_code", "output_path"],
+        "properties": {
+          "command": { "type": "string", "minLength": 1 },
+          "exit_code": { "type": "integer", "minimum": 0 },
+          "output_path": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "positive_tests": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "negative_tests": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "adversarial_report_path": { "type": "string", "minLength": 1 },
+    "blocking_status": {
+      "type": "string",
+      "enum": ["PASS", "PARTIAL_VALIDATION_ONLY", "REPROVADO_OPERACIONALMENTE"]
+    }
+  }
+}

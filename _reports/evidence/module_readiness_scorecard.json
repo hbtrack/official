@@ -1,7 +1,7 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-04-27T05:45:40Z",
-  "overall_status": "PASS",
+  "generated_at_utc": "2026-04-29T08:34:02Z",
+  "overall_status": "FAIL",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
     {
@@ -44,8 +44,8 @@
         "runtime_mount_present": true,
         "real_api_surface": "src/users/api.py",
         "total_test_count": 51,
-        "real_test_count": 41,
-        "placeholder_test_count": 10,
+        "real_test_count": 51,
+        "placeholder_test_count": 0,
         "generated_stub_excluded": true,
         "generated_stub_path": "src/users/generated/api.py",
         "behavioral_checks": {
@@ -91,9 +91,9 @@
         "decision_ir_gate_status": "PASS",
         "runtime_mount_present": true,
         "real_api_surface": "src/seasons/api.py",
-        "total_test_count": 68,
-        "real_test_count": 67,
-        "placeholder_test_count": 1,
+        "total_test_count": 69,
+        "real_test_count": 69,
+        "placeholder_test_count": 0,
         "generated_stub_excluded": true,
         "generated_stub_path": "src/seasons/generated/api.py",
         "behavioral_checks": {
@@ -139,9 +139,9 @@
         "decision_ir_gate_status": "PASS",
         "runtime_mount_present": true,
         "real_api_surface": "src/teams/api.py",
-        "total_test_count": 67,
-        "real_test_count": 66,
-        "placeholder_test_count": 1,
+        "total_test_count": 68,
+        "real_test_count": 68,
+        "placeholder_test_count": 0,
         "generated_stub_excluded": true,
         "generated_stub_path": "src/teams/generated/api.py",
         "behavioral_checks": {
@@ -200,8 +200,8 @@
         "runtime_mount_present": true,
         "real_api_surface": "src/training/api/__init__.py",
         "total_test_count": 306,
-        "real_test_count": 287,
-        "placeholder_test_count": 19,
+        "real_test_count": 306,
+        "placeholder_test_count": 0,
         "generated_stub_excluded": true,
         "generated_stub_path": "src/training/generated/api.py",
         "behavioral_checks": {
@@ -678,8 +678,8 @@
         "runtime_mount_present": true,
         "real_api_surface": "src/identity_access/api.py",
         "total_test_count": 52,
-        "real_test_count": 38,
-        "placeholder_test_count": 14,
+        "real_test_count": 52,
+        "placeholder_test_count": 0,
         "generated_stub_excluded": true,
         "generated_stub_path": "src/identity_access/generated/api.py",
         "behavioral_checks": {

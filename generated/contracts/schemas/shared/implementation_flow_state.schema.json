@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/implementation_flow_state.schema.json",
+  "title": "HB Track — Implementation Flow State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "current_state",
+    "approved_plan_path",
+    "transitions"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "current_state": {
+      "type": "string",
+      "enum": [
+        "PLAN_APPROVED",
+        "IMPLEMENTATION_BRANCH_CREATED",
+        "IMPLEMENTATION_DIFF_READY",
+        "IMPLEMENTATION_PR_OPENED",
+        "IMPLEMENTATION_CHECKS_PASS",
+        "ADVERSARIAL_TESTS_RUN",
+        "EVIDENCE_GENERATED",
+        "HANDTRACKER_REVIEW",
+        "MERGE_APPROVED",
+        "MAIN_REFRESHED",
+        "NEXT_PR_ALLOWED"
+      ]
+    },
+    "approved_plan_path": { "type": "string", "minLength": 1 },
+    "pr_url": { "type": "string", "format": "uri" },
+    "allowed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "forbidden_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "changed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "decision_ids_affected": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from_state", "to_state", "timestamp", "evidence_sha"],
+        "properties": {
+          "from_state": { "type": "string" },
+          "to_state": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "evidence_sha": { "type": "string", "pattern": "^[a-f0-9]{7,64}$" }
+        }
+      }
+    }
+  }
+}
