@@ -3,45 +3,57 @@ data_ultima_sessao: "2026-04-29"
 branch_ativo: chore/openapi-lint-toolchain-scripts
 modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: notifications
+modulo_foco: openapi
 fase_roadmap: 1
-task_type: architecture_review
-boot_profile_id: architecture_decision
-task_id: PLATFORM_AGENT_EXPOSURE
-resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR da branch chore/openapi-lint-toolchain-scripts com o trilho antifraude e a exposição por plataforma, registrando que os testes focados passaram e que o validate local completo ainda depende de toolchain e baseline operacional."
-bloqueios_ativos:
-  - "TOOLCHAIN_LOCAL_MISSING"
-  - "BASELINE_HANDOFF_FROM_MAIN"
+task_type: tooling_config
+boot_profile_id: contract_execution
+task_id: OPENAPI_LINT_TOOLCHAIN
+resultado: DONE
+proxima_acao_permitida: "Endurecer severidades no Spectral (.spectral.yaml) e adicionar fixtures negativas para provar que Redocly/Spectral falham quando devem falhar. Considerar operation-tags:error, oas3-schema:error e no-invalid-schema-examples:error após confirmar ausência de falso positivo."
+bloqueios_ativos: []
 evidence_paths:
   - "_reports/session_start.json"
-  - "docs/_canon/gates/GATES_REGISTRY.yaml"
-  - "scripts/contracts/validate/validate_contracts.py"
-  - "tests/pipeline_gates/test_platform_agent_exposure.py"
+  - "package.json"
+  - ".spectral.yaml"
+  - "redocly.yaml"
+  - "contracts/openapi/openapi.yaml"
 ---
-# SESSION HANDOFF — PLATFORM_AGENT_EXPOSURE
+# SESSION HANDOFF — OPENAPI_LINT_TOOLCHAIN
 
 ## Estado Geral
 **Data:** 2026-04-29 | **Branch:** chore/openapi-lint-toolchain-scripts | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** PLATFORM_AGENT_EXPOSURE | **Resultado:** PENDENTE
+**Modo:** CDD | **task_type:** tooling_config | **boot_profile:** contract_execution
+**Módulo foco:** openapi | **Fase ROADMAP:** 1 | **task_id:** OPENAPI_LINT_TOOLCHAIN | **Resultado:** CONCLUIDO
 
 ## O que foi feito
-- Trilha antifraude de execução por agentes isolada em branch limpa a partir de `origin/main`
-- Agentes dedicados reais do Copilot adicionados para `Hb Implementer` e `Hb Adversarial Tester`
-- `CLAUDE.md` e `.codex` alinhados para paridade operacional sem falsa UI dedicada
-- Plano dedicado de exposição por plataforma materializado em `.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md`
-- Testes focados desta trilha executados com sucesso no worktree limpo
+- Scripts canônicos adicionados ao `package.json`: `openapi:redocly`, `openapi:bundle`, `openapi:spectral`, `contracts:lint`
+- `openapi:spectral` tornado auto-suficiente: invoca `openapi:bundle` antes de rodar o lint
+- `_reports/openapi/` adicionado ao `.gitignore` para prevenir commit acidental do bundle transitório
+- Spectral configurado para rodar contra o bundle gerado pelo Redocly (não apenas o root OpenAPI com `$ref`)
+- Corrigidos refs problemáticos nos schemas de analytics
+- Tags ausentes/fora do registry global corrigidas em training/exercises
+- Artefatos derivados e manifestos determinísticos regenerados via `compile_api_policy.py --all`
 
 ## Evidências
-- `_reports/session_start.json` — stage2_artifacts atualizados para os schemas novos/alterados
-- `scripts/contracts/validate/validate_contracts.py` — gates de execução antifraude
-- `docs/_canon/gates/GATES_REGISTRY.yaml` — registro dos gates novos
-- `tests/pipeline_gates/test_platform_agent_exposure.py` — cobertura da exposição por plataforma
+- `package.json` — scripts `openapi:redocly`, `openapi:bundle`, `openapi:spectral`, `contracts:lint`
+- `.spectral.yaml` — ruleset Spectral ativo
+- `redocly.yaml` — configuração Redocly ativa
+- `contracts/openapi/openapi.yaml` — root OpenAPI validado
+- `_reports/session_start.json` — estado da sessão
+
+## Gates verificados como PASS
+- `TOOLING_CONFIG_GATE`
+- `OPENAPI_ROOT_STRUCTURE_GATE`
+- `OPENAPI_ROOT_MODULE_SYNC_GATE`
+- `OPENAPI_POLICY_RULESET_GATE`
+- `JSON_SCHEMA_VALIDATION_GATE`
+- `SPECTRAL_LINTING_GATE`
+- `DERIVED_DRIFT_GATE`
+- `HANDOFF_COHERENCE_GATE`
+- `READINESS_SUMMARY_GATE`
 
 ## Próxima ação permitida
-Abrir PR da branch `chore/openapi-lint-toolchain-scripts`, anexando os resultados dos testes focados e registrando que o `validate --profile local` completo ainda falha por toolchain local ausente e baseline operacional do handoff.
+Endurecer severidades no Spectral (`.spectral.yaml`) e adicionar fixtures negativas para provar que Redocly/Spectral falham quando devem falhar. Candidatos: `operation-tags: error`, `oas3-schema: error`, `no-invalid-schema-examples: error` — confirmar ausência de falso positivo antes de ativar.
 
 ## Bloqueios ativos
-- Toolchain local ausente no worktree limpo para a primeira rodada de `hb artifact`/`validate`
-- `SESSION_HANDOFF.md` de `origin/main` vinha apontando para branch histórica e precisou ser atualizado para esta trilha
+Nenhum.

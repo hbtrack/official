@@ -63,6 +63,7 @@ docs/_generated/
 _reports/dispatch/
 _reports/execution_evidence/
 _reports/runs/
+_reports/openapi/
 _reports/ARQUITETO.yaml
 _reports/EXECUTOR.yaml
 _reports/TESTADOR.yaml
