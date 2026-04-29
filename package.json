@@ -15,6 +15,6 @@
     "openapi:redocly": "redocly lint contracts/openapi/openapi.yaml --config redocly.yaml",
     "openapi:bundle": "mkdir -p _reports/openapi && redocly bundle contracts/openapi/openapi.yaml --output _reports/openapi/openapi.bundle.yaml --config redocly.yaml",
     "openapi:spectral": "npm run openapi:bundle && spectral lint _reports/openapi/openapi.bundle.yaml --ruleset .spectral.yaml",
-    "contracts:lint": "npm run openapi:redocly && npm run openapi:bundle && npm run openapi:spectral"
+    "contracts:lint": "npm run openapi:redocly && npm run openapi:spectral"
   }
 }
