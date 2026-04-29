@@ -115,6 +115,63 @@ profiles:
       - none_required: true # Diagnóstico não falha por falta de artefatos
     exit_on_fail: false
 
+  implementation_execution:
+    id: implementation_execution
+    description: "Boot para execução de implementação baseada em plano aprovado e evidência auditável."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - docs/_canon/CONTRACT_PIPELINE.md
+      - .contract_driven/CONTRACT_SYSTEM_RULES.md
+      - .contract_driven/TASK_CATALOG.yaml
+      - contracts/schemas/shared/session_start.schema.json
+      - contracts/schemas/shared/implementation_flow_state.schema.json
+      - contracts/schemas/shared/plan_to_diff_trace.schema.json
+      - contracts/schemas/shared/implementation_evidence_pack.schema.json
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0
+      - docs/_canon/AGENT_INSTRUCTIONS.md§4
+      - docs/_canon/AGENT_INSTRUCTIONS.md§5
+      - docs/_canon/AGENT_INSTRUCTIONS.md§6
+      - docs/_canon/CONTRACT_PIPELINE.md§1
+    validations:
+      task_type_in_catalog: true
+      module_in_registry: true
+      worker_prompt_exists: true
+      approved_plan_read: true
+      clean_worktree_required: true
+      task_type_active: true
+      boot_profile_in_session: true
+    exit_on_fail: true
+
+  adversarial_validation:
+    id: adversarial_validation
+    description: "Boot para validação adversarial pós-PR com evidência vinculada ao fluxo de implementação."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - .contract_driven/CONTRACT_SYSTEM_RULES.md
+      - .contract_driven/TASK_CATALOG.yaml
+      - contracts/schemas/shared/session_start.schema.json
+      - contracts/schemas/shared/implementation_flow_state.schema.json
+      - contracts/schemas/shared/implementation_evidence_pack.schema.json
+      - contracts/schemas/shared/negative_test_manifest.schema.json
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0
+      - docs/_canon/AGENT_INSTRUCTIONS.md§4
+      - docs/_canon/AGENT_INSTRUCTIONS.md§5
+      - docs/_canon/AGENT_INSTRUCTIONS.md§6
+    validations:
+      task_type_in_catalog: true
+      module_in_registry: true
+      worker_prompt_exists: true
+      remote_pr_required: true
+      evidence_pack_required: true
+      implementation_state_required: true
+      task_type_active: true
+      boot_profile_in_session: true
+    exit_on_fail: true
+
 # Regras de seleção de profile
 # status: not_implemented — estas regras NÃO são executadas por código.
 # Profile selection é feito estaticamente via TASK_CATALOG.profile_id.

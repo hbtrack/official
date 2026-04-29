@@ -78,6 +78,7 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 42 | `SOURCE_AUTHORITY_GRAPH.yaml` | Grafo de autoridade de fontes — define hierarquia entre SSOT canônicas e derivadas |
 | 43 | `SYNC_MANIFEST.yaml` | Manifesto de sincronização determinístico entre source graphs e artefatos derivados por módulo |
 | 44 | `DOC_USAGE_MANIFEST.yaml` | Manifesto de uso de documentos — rastreia ownership e freshness das doc-rules por módulo |
+| 45 | `AI_EXECUTION_ROLES_POLICY.md` | Política canônica de papéis de execução por agentes, evidências obrigatórias e limites de autoridade |
 
 ### Subdiretórios Autorizados
 

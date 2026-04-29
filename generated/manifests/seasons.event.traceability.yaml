@@ -1062,9 +1062,9 @@ traceability_manifest:
   - path: contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: contracts/schemas/shared/session_handoff.schema.json
-    sha256: a73c07962dc75dece4b50456742539109aca6d78b96bae8b5e3965b736b44681
+    sha256: a63852a4a5cf1c04f663e4f7ee913ce7daedd932ebc3b53fb106aac82ba491eb
   - path: contracts/schemas/shared/session_start.schema.json
-    sha256: 387211a1249195f6c0a7ec179cefb5045df00dd4bb44868bfb7ce6836e57f898
+    sha256: 9bd9060ca9e8fbdbea8abd75bb02ed0de8c369c3355292762fb7d5a487686f94
   - path: contracts/schemas/shared/toolchain.schema.json
     sha256: 70bba8678d838900d02d089b15011d5e1a05945e23e9292b242ca8f61b0ff97a
   - path: contracts/schemas/shared/waiver.schema.json
@@ -1130,4 +1130,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: e4e1f5fe48bf23131969bccad7b6d07cd2d428f9670c4d5bae85be49f65d83c1
-  source_tree_sha256: 4a4ef92bea57760135ed3f89acf5ea06e7f9666544a3126b12109e55b4f8d084
+  source_tree_sha256: 9e388ac6e29d4d809f99569774445dca2db16e6ab34279aa621b8d8949901538

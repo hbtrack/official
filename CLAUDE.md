@@ -47,3 +47,34 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - `schema.d.ts` **NUNCA** é editado manualmente — apenas regenerar com `npm run api:generate`
 - Deploy de produção **requer aprovação humana explícita** — nunca executar autonomamente
 - Waivers ativos: verificar `.contract_driven/waivers.json` antes de iniciar qualquer pipeline
+
+## Exposição por plataforma
+
+- Neste repositório, **não** existe mecanismo equivalente a `.github/agents/*.agent.md`
+  para criar agentes separados de dropdown para Claude.
+- Não existe mecanismo equivalente a `.github/agents/*.agent.md` para Claude.
+- Claude opera por paridade operacional documentada, não por UI dedicada.
+- Papéis que Claude pode exercer conceitualmente:
+  - `HB Contract`
+  - `Hb Implementer`
+  - `Hb Adversarial Tester`
+  - `HandTracker`
+
+## Revisão adversarial externa
+
+- Nesta trilha, o uso recomendado de Claude é como **tester externo final**.
+- Claude deve receber apenas um pacote estruturado de evidências:
+  - `approved_plan_path`
+  - `PR_URL`
+  - `current_state.json`
+  - `implementation_evidence_pack.json`
+  - `plan_to_diff_trace.json`
+  - `negative_test_manifest.json`
+  - `adversarial_report.json`, se existir
+  - diff, comandos executados, saídas brutas e limitações declaradas
+- Claude **não** deve usar narrativa longa do implementador, resumo otimista,
+  opinião do executor ou conclusão persuasiva como evidência.
+- Claude atua como adversário externo, tentando invalidar a implementação.
+- Claude **não** é autoridade final: a conclusão continua condicionada aos gates
+  executáveis (`pytest`, `scripts/hb validate`, `validate_contracts.py`, CI).
+- Claude não é autoridade final.

@@ -111,10 +111,39 @@ class TestSessionStartSchemaV13:
             data["module"] = module
         return data
 
-    def test_schema_version_is_1_4_0(self, schema):
-        assert schema.get("version") == "1.4.0", (
-            f"Esperado version='1.4.0', obtido '{schema.get('version')}'"
+    def test_schema_version_is_1_5_0(self, schema):
+        assert schema.get("version") == "1.5.0", (
+            f"Esperado version='1.5.0', obtido '{schema.get('version')}'"
         )
+
+    def test_implementation_execution_requires_approved_plan_path(self, schema):
+        session = self._base_session("implementation_execution", module="training")
+        session["boot_profile_id"] = "implementation_execution"
+        session["write_scope"] = "implementation"
+        with pytest.raises(jsonschema.ValidationError):
+            jsonschema.validate(session, schema)
+
+    def test_implementation_execution_with_plan_passes(self, schema):
+        session = self._base_session("implementation_execution", module="training")
+        session["boot_profile_id"] = "implementation_execution"
+        session["write_scope"] = "implementation"
+        session["approved_plan_path"] = ".claude/plans/test-plan.md"
+        jsonschema.validate(session, schema)
+
+    def test_adversarial_test_execution_requires_pr_and_state(self, schema):
+        session = self._base_session("adversarial_test_execution", module="training")
+        session["boot_profile_id"] = "adversarial_validation"
+        session["write_scope"] = "readonly"
+        with pytest.raises(jsonschema.ValidationError):
+            jsonschema.validate(session, schema)
+
+    def test_adversarial_test_execution_with_pr_and_state_passes(self, schema):
+        session = self._base_session("adversarial_test_execution", module="training")
+        session["boot_profile_id"] = "adversarial_validation"
+        session["write_scope"] = "readonly"
+        session["pr_url"] = "https://github.com/acme/hbtrack/pull/123"
+        session["implementation_state_path"] = "_reports/implementation_flow/current_state.json"
+        jsonschema.validate(session, schema)
 
     def test_new_contract_requires_module(self, schema):
         """new_contract sem module deve falhar validação."""
@@ -544,9 +573,10 @@ class TestStage23ExitCodes:
             f"hb stage3 não produziu saída de FASE 3 — comando pode não existir.\n"
             f"stdout={result.stdout}\nstderr={result.stderr}"
         )
-        # Exit 0 = PASS, 1 = WARN, 2 = pipeline FAIL — todos são válidos (validate rodou)
+        # Exit 0 = PASS, 1 = WARN, 2 = FAIL de pipeline, 3 = FAIL de profile/ambiente
+        # — todos são válidos desde que o comando tenha rodado de fato.
         # Argparse retornaria traceback + exit != 0, mas o stdout não teria "FASE 3"
-        assert result.returncode in (0, 1, 2), (
+        assert result.returncode in (0, 1, 2, 3), (
             f"hb stage3 retornou código inesperado {result.returncode}.\n"
             f"stdout={result.stdout}\nstderr={result.stderr}"
         )

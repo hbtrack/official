@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BRIDGE_DOCS: list[Path] = [
     ROOT / ".github" / "copilot-instructions.md",
     ROOT / "CLAUDE.md",
+    ROOT / ".codex",
     ROOT / ".github" / "skills" / "hb-pipeline-orchestrator" / "SKILL.md",
     ROOT / ".github" / "skills" / "hb-roadmap-executor" / "SKILL.md",
 ]
@@ -94,6 +95,14 @@ class TestBridgeDocBanners:
 
     def test_pipeline_orchestrator_skill_has_bridge_banner(self):
         path = ROOT / ".github" / "skills" / "hb-pipeline-orchestrator" / "SKILL.md"
+        assert path.exists(), f"Arquivo ausente: {path}"
+        text = path.read_text(encoding="utf-8")
+        assert BRIDGE_BANNER_PATTERN.search(text), (
+            f"{path.name} não contém banner BRIDGE ONLY — NON-SOVEREIGN."
+        )
+
+    def test_codex_has_bridge_banner(self):
+        path = ROOT / ".codex"
         assert path.exists(), f"Arquivo ausente: {path}"
         text = path.read_text(encoding="utf-8")
         assert BRIDGE_BANNER_PATTERN.search(text), (
@@ -247,6 +256,24 @@ class TestBridgeDocsNoOverride:
         assert not violations, (
             "Bridge docs com possível override normativo:\n"
             + "\n".join(f"  - {v}" for v in violations)
+        )
+
+    def test_claude_doc_does_not_claim_github_agents_ui(self):
+        text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        assert ".github/agents/*.agent.md" in text, (
+            "CLAUDE.md deve mencionar explicitamente a ausência de mecanismo equivalente ao Copilot."
+        )
+        assert "não existe mecanismo equivalente" in text.lower(), (
+            "CLAUDE.md deve negar explicitamente dropdown/agent-file equivalente ao Copilot."
+        )
+
+    def test_codex_doc_does_not_claim_github_agents_ui(self):
+        text = (ROOT / ".codex").read_text(encoding="utf-8")
+        assert ".github/agents/*.agent.md" in text, (
+            ".codex deve mencionar explicitamente a ausência de mecanismo equivalente ao Copilot."
+        )
+        assert "não existe mecanismo equivalente" in text.lower(), (
+            ".codex deve negar explicitamente dropdown/agent-file equivalente ao Copilot."
         )
 
     def test_new_root_md_files_without_banner_are_flagged(self):

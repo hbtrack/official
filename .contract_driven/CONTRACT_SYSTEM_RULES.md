@@ -449,6 +449,13 @@ Saídas de bloqueio permitidas:
 - `BLOCKED_MISSING_AGENT_PROMPT`
 - `BLOCKED_PRE_CONTRACT_SKIPPED` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
 - `BLOCKED_SCOPE_OVERFLOW` [→ ADR-034]
+- `BLOCKED_MISSING_REMOTE_PR`
+- `BLOCKED_MISSING_EVIDENCE_PACK`
+- `BLOCKED_ADVERSARIAL_NOT_RUN`
+- `BLOCKED_STATE_TRANSITION_INVALID`
+- `BLOCKED_DIRTY_WORKTREE`
+- `BLOCKED_CANON_PLAN_CONFLICT`
+- `REPROVADO_OPERACIONALMENTE`
 
 Uso de `BLOCKED_MISSING_CANON_ARTIFACT`:
 - emitir quando um artefato canônico listado (governança em `.contract_driven/` ou canon global em `docs/_canon/`) for necessário para a tarefa atual e estiver ausente no path canônico, e não existir um `BLOCKED_MISSING_*` mais específico aplicável.

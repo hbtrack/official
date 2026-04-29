@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/negative_test_manifest.schema.json",
+  "title": "HB Track — Negative Test Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pr_url",
+    "decision_ids_tested",
+    "rules_tested",
+    "coverage_ratio",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "pr_url": { "type": "string", "format": "uri" },
+    "decision_ids_tested": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "rules_tested": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "rule_source",
+          "prohibited_behavior",
+          "test_command",
+          "expected_result",
+          "actual_result",
+          "verdict"
+        ],
+        "properties": {
+          "rule_id": { "type": "string", "minLength": 1 },
+          "rule_source": { "type": "string", "minLength": 1 },
+          "prohibited_behavior": { "type": "string", "minLength": 1 },
+          "test_command": { "type": "string", "minLength": 1 },
+          "expected_result": { "type": "string", "minLength": 1 },
+          "actual_result": { "type": "string", "minLength": 1 },
+          "verdict": { "type": "string", "enum": ["PROTECTED", "UNPROTECTED"] }
+        }
+      }
+    },
+    "coverage_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "verdict": { "type": "string", "enum": ["PASS", "PARTIAL", "FAIL"] }
+  }
+}

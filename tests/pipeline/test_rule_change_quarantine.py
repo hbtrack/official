@@ -58,6 +58,9 @@ class TestClassifyChangedFile:
     def test_task_catalog_is_enforcement(self):
         assert _classify(".contract_driven/TASK_CATALOG.yaml") == "enforcement"
 
+    def test_boot_profiles_is_enforcement(self):
+        assert _classify(".contract_driven/BOOT_PROFILES.yaml") == "enforcement"
+
     def test_hbtrack_lint_is_other_not_enforcement(self):
         """scripts/hbtrack_lint/ não deve ser classificado como enforcement (P2 fix)."""
         assert _classify("scripts/hbtrack_lint/__init__.py") == "other"
@@ -83,6 +86,9 @@ class TestClassifyChangedFile:
 
     def test_json_schemas_is_product(self):
         assert _classify("contracts/schemas/training/session.schema.json") == "product"
+
+    def test_shared_json_schemas_is_enforcement(self):
+        assert _classify("contracts/schemas/shared/session_start.schema.json") == "enforcement"
 
     def test_session_handoff_is_other(self):
         assert _classify("SESSION_HANDOFF.md") == "other"
@@ -208,6 +214,13 @@ class TestRuleChangeQuarantineGateFail:
             "contracts/schemas/training/session.schema.json",
         ])
         assert result["status"] == "FAIL", result
+
+    def test_task_catalog_plus_shared_schema_passes(self):
+        result = self._run_with_files([
+            ".contract_driven/TASK_CATALOG.yaml",
+            "contracts/schemas/shared/session_start.schema.json",
+        ])
+        assert result["status"] == "PASS", result
 
 
 class TestRuleChangeQuarantineGateSkip:

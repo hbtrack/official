@@ -323,6 +323,98 @@ class TestValidateProfileValidations:
         result = instance._validate_profile_validations("p_none")
         assert result is True
 
+    def test_approved_plan_read_requires_existing_plan(self, tmp_path):
+        instance = self._fresh_cli()
+        instance.root = tmp_path
+        self._inject(instance, "p_plan", {"approved_plan_read": True})
+
+        stderr_buf = io.StringIO()
+        with redirect_stderr(stderr_buf):
+            result = instance._validate_profile_validations("p_plan")
+
+        assert result is False
+        assert "approved_plan_path" in stderr_buf.getvalue()
+
+        plan = tmp_path / "temp" / "approved-plan.md"
+        plan.parent.mkdir(parents=True, exist_ok=True)
+        plan.write_text("# approved plan\n", encoding="utf-8")
+        instance._profile_validation_context = {"approved_plan_path": "temp/approved-plan.md"}
+
+        result = instance._validate_profile_validations("p_plan")
+        assert result is True
+
+    def test_clean_worktree_required_uses_git_clean_check(self, tmp_path, monkeypatch):
+        instance = self._fresh_cli()
+        instance.root = tmp_path
+        self._inject(instance, "p_clean", {"clean_worktree_required": True})
+
+        monkeypatch.setattr(instance, "_is_git_worktree_clean", lambda: False)
+
+        stderr_buf = io.StringIO()
+        with redirect_stderr(stderr_buf):
+            result = instance._validate_profile_validations("p_clean")
+
+        assert result is False
+        assert "BLOCKED_DIRTY_WORKTREE" in stderr_buf.getvalue()
+
+    def test_remote_pr_required_needs_pr_url(self, tmp_path):
+        instance = self._fresh_cli()
+        instance.root = tmp_path
+        self._inject(instance, "p_pr", {"remote_pr_required": True})
+
+        stderr_buf = io.StringIO()
+        with redirect_stderr(stderr_buf):
+            result = instance._validate_profile_validations("p_pr")
+
+        assert result is False
+        assert "pr_url" in stderr_buf.getvalue()
+
+        instance._profile_validation_context = {"pr_url": "https://github.com/example/repo/pull/123"}
+        result = instance._validate_profile_validations("p_pr")
+        assert result is True
+
+    def test_evidence_pack_required_needs_existing_file(self, tmp_path):
+        instance = self._fresh_cli()
+        instance.root = tmp_path
+        self._inject(instance, "p_pack", {"evidence_pack_required": True})
+
+        stderr_buf = io.StringIO()
+        with redirect_stderr(stderr_buf):
+            result = instance._validate_profile_validations("p_pack")
+
+        assert result is False
+        assert "evidence_pack_path" in stderr_buf.getvalue()
+
+        pack = tmp_path / "_reports" / "implementation_flow" / "implementation_evidence_pack.json"
+        pack.parent.mkdir(parents=True, exist_ok=True)
+        pack.write_text("{}", encoding="utf-8")
+        instance._profile_validation_context = {
+            "evidence_pack_path": "_reports/implementation_flow/implementation_evidence_pack.json"
+        }
+        result = instance._validate_profile_validations("p_pack")
+        assert result is True
+
+    def test_implementation_state_required_needs_existing_file(self, tmp_path):
+        instance = self._fresh_cli()
+        instance.root = tmp_path
+        self._inject(instance, "p_state", {"implementation_state_required": True})
+
+        stderr_buf = io.StringIO()
+        with redirect_stderr(stderr_buf):
+            result = instance._validate_profile_validations("p_state")
+
+        assert result is False
+        assert "implementation_state_path" in stderr_buf.getvalue()
+
+        state = tmp_path / "_reports" / "implementation_flow" / "current_state.json"
+        state.parent.mkdir(parents=True, exist_ok=True)
+        state.write_text("{}", encoding="utf-8")
+        instance._profile_validation_context = {
+            "implementation_state_path": "_reports/implementation_flow/current_state.json"
+        }
+        result = instance._validate_profile_validations("p_state")
+        assert result is True
+
 
 # ===========================================================================
 # 5. Bug fix — profile_id null → "default"
@@ -590,5 +682,4 @@ class TestLoadSequenceContentValidation:
         assert isinstance(markers, dict)
         assert "docs/_canon/AGENT_INSTRUCTIONS.md" in markers
         assert "ROADMAP.md" in markers
-
 

@@ -172,3 +172,37 @@ class TestOperabilityMatrixWorkerPaths:
         assert not missing, (
             f"Prompts ausentes na matriz de operabilidade:\n" + "\n".join(missing)
         )
+
+
+class TestImplementationExecutionPrompts:
+    def test_implementation_execution_in_catalog(self):
+        catalog = _load_catalog()
+        assert "implementation_execution" in catalog["task_catalog"]
+
+    def test_adversarial_test_execution_in_catalog(self):
+        catalog = _load_catalog()
+        assert "adversarial_test_execution" in catalog["task_catalog"]
+
+    def test_implementation_execution_prompt_exists(self):
+        catalog = _load_catalog()
+        path = REPO_ROOT / catalog["task_catalog"]["implementation_execution"]["worker_path"]
+        assert path.exists()
+
+    def test_adversarial_test_execution_prompt_exists(self):
+        catalog = _load_catalog()
+        path = REPO_ROOT / catalog["task_catalog"]["adversarial_test_execution"]["worker_path"]
+        assert path.exists()
+
+    def test_implementation_execution_prompt_has_required_sections(self):
+        catalog = _load_catalog()
+        path = REPO_ROOT / catalog["task_catalog"]["implementation_execution"]["worker_path"]
+        content = path.read_text(encoding="utf-8")
+        assert "Pré-requisitos" in content
+        assert "Input esperado" in content
+
+    def test_adversarial_test_execution_prompt_has_required_sections(self):
+        catalog = _load_catalog()
+        path = REPO_ROOT / catalog["task_catalog"]["adversarial_test_execution"]["worker_path"]
+        content = path.read_text(encoding="utf-8")
+        assert "Pré-requisitos" in content
+        assert "Input esperado" in content

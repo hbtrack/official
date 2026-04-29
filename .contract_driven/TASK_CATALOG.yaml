@@ -364,6 +364,77 @@ task_catalog:
     artifacts_produced: []
     pre_contract_exception: null
 
+  implementation_execution:
+    task_type: implementation_execution
+    worker_id: hb_implementer
+    worker_path: .contract_driven/agent_prompts/hb_implementer.prompt.md
+    status: active
+    description: "Executar implementação de plano aprovado com evidência auditável obrigatória"
+    profile_id: implementation_execution
+    stage_allowed: [ 0, 1, 2, 3 ]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - approved_plan_path (string, existing path)
+      - allowed_files (list of repo-relative paths)
+      - forbidden_files (list of repo-relative paths)
+      - decision_ids_affected (list of strings)
+      - pr_sequence_step (string, ex "PR 1/3")
+    write_scope: implementation
+    allowed_modes: [ CDD ]
+    artifacts_produced:
+      - _reports/implementation_flow/current_state.json
+      - _reports/implementation_flow/plan_to_diff_trace.json
+      - _reports/implementation_flow/implementation_evidence_pack.json
+    blocking_gates:
+      - HANDOFF_COHERENCE_GATE
+      - IMPLEMENTATION_STATE_GATE
+      - IMPLEMENTATION_SCOPE_FIREWALL_GATE
+      - PLAN_DIFF_TRACE_GATE
+      - EVIDENCE_PACK_COMPLETENESS_GATE
+    prohibited_actions:
+      - alter_canon
+      - relax_gate
+      - declare_pass_without_pr_url
+      - use_no_verify
+      - modify_file_outside_allowed_files
+    notes: |
+      Task type formal para execução de implementação a partir de plano aprovado.
+      Opera exclusivamente em modo CDD e exige artifacts machine-readable sob
+      _reports/implementation_flow/.
+
+  adversarial_test_execution:
+    task_type: adversarial_test_execution
+    worker_id: hb_adversarial_tester
+    worker_path: .contract_driven/agent_prompts/hb_adversarial_tester.prompt.md
+    status: active
+    description: "Executar validação adversarial pós-PR com manifesto negativo vinculado ao PR remoto"
+    profile_id: adversarial_validation
+    stage_allowed: [ 0, 1, 2, 3 ]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - pr_url (string, GitHub pull request URL)
+      - approved_plan_path (string, existing path)
+      - implementation_state_path (string, existing path)
+      - implementation_evidence_pack_path (string, existing path)
+      - decision_ids_affected (list of strings)
+    write_scope: readonly
+    allowed_modes: [ CDD ]
+    artifacts_produced:
+      - _reports/implementation_flow/adversarial_report.json
+      - _reports/implementation_flow/negative_test_manifest.json
+    blocking_gates:
+      - IMPLEMENTATION_STATE_GATE
+      - POST_PR_ADVERSARIAL_GATE
+      - NEGATIVE_TEST_COVERAGE_GATE
+    prohibited_actions:
+      - fix_runtime
+      - relax_contract
+      - approve_own_output
+      - operate_without_pr_url
+    notes: |
+      Distinto de adversarial_analysis. Este task type opera apenas após a
+      abertura do PR remoto e valida a implementação real, não o contrato bruto.
+
   # Grupo: Auditorias do Pipeline (audit-only — não produzem artefato normativo)
   audit_sovereign_integrity:
     task_type: audit_sovereign_integrity

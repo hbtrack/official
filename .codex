@@ -60,3 +60,23 @@ Tarefas de identificação e correção de checks falhos em PR aberto.
 - Nunca iniciar fase N sem confirmar Critério de Done da fase N-1
 - Nunca editar `frontend/src/api/schema.d.ts` manualmente — regenerar com `npm run api:generate`
 - Nunca executar deploy de produção autonomamente (fases 6, 9, 12 — requer aprovação humana)
+
+## Exposição por plataforma
+
+- Neste repositório, **não** existe mecanismo equivalente a `.github/agents/*.agent.md`
+  para criar agentes separados de dropdown para Codex.
+- Não existe mecanismo equivalente a `.github/agents/*.agent.md` para Codex.
+- Codex opera por paridade operacional documentada, não por UI dedicada.
+- Papéis que Codex pode exercer conceitualmente:
+  - `HB Contract`
+  - `Hb Implementer`
+  - `Hb Adversarial Tester`
+  - `HandTracker`
+
+## Limite desta trilha
+
+- Codex mantém paridade operacional documentada com o runtime canônico.
+- Codex **não** ganha agente separado, dropdown equivalente ao Copilot ou
+  posição especial de revisão final nesta trilha.
+- Codex não ganha agente separado, dropdown equivalente ao Copilot ou posição
+  especial de revisão final nesta trilha.

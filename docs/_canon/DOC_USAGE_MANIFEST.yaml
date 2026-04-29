@@ -673,6 +673,20 @@ entries:
       - "docs/_canon/"
       - "docs/hbtrack/modulos/"
 
+  - rule_id: CANON_AI_EXECUTION_ROLES_POLICY
+    class: canon_governance
+    paths:
+      - "docs/_canon/AI_EXECUTION_ROLES_POLICY.md"
+    owner_source: ".contract_driven/TASK_CATALOG.yaml"
+    consumers:
+      - ".contract_driven/agent_prompts/hb_implementer.prompt.md"
+      - ".contract_driven/agent_prompts/hb_adversarial_tester.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+    freshness_mode: registry_guarded
+    update_triggers:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - ".contract_driven/BOOT_PROFILES.yaml"
+
   - rule_id: HBTRACK_MODULES_ROOT_README
     class: module_readme
     paths:
