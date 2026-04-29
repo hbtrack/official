@@ -11,19 +11,10 @@
     "@stoplight/spectral-cli": "^6.15.0"
   },
   "scripts": {
-    "asyncapi:validate": "asyncapi validate contracts/asyncapi/asyncapi.yaml"
-  },
-  "servers": [
-    {
-      "url": "https://api.hb-track.local",
-      "description": "Servidor placeholder exigido pela regra Spectral hbtrack-servers-defined."
-    }
-  ],
-  "security": [],
-  "tags": [
-    {
-      "name": "hb-track",
-      "description": "Tag root placeholder exigida pelas regras Spectral de tags."
-    }
-  ]
+    "asyncapi:validate": "asyncapi validate contracts/asyncapi/asyncapi.yaml",
+    "openapi:redocly": "redocly lint contracts/openapi/openapi.yaml --config redocly.yaml",
+    "openapi:bundle": "mkdir -p _reports/openapi && redocly bundle contracts/openapi/openapi.yaml --output _reports/openapi/openapi.bundle.yaml --config redocly.yaml",
+    "openapi:spectral": "spectral lint _reports/openapi/openapi.bundle.yaml --ruleset .spectral.yaml",
+    "contracts:lint": "npm run openapi:redocly && npm run openapi:bundle && npm run openapi:spectral"
+  }
 }
