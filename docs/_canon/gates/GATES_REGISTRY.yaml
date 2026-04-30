@@ -386,7 +386,9 @@ gates:
       - FAIL_CANON_ENFORCEMENT_DRIFT
       - NON_SOVEREIGN_DECISION_IR_SOURCE
       - CANON_REGISTRATION_INCOMPLETE
-    status: deferred
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+    implemented_since: "2026-04-30"
     deferred_reason: >
       Policy, canon registration and matrix format introduced in PR 1
       (DECISION_MATERIALIZATION_CANON_BOOTSTRAP); executable gate implemented

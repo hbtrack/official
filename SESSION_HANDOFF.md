@@ -1,21 +1,21 @@
 ---
 data_ultima_sessao: "2026-04-30"
-branch_ativo: main
+branch_ativo: feat/decision-materialization-gate
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: training
 fase_roadmap: 1
 task_type: new_contract
 boot_profile_id: architecture_decision
-task_id: DECISION_MATERIALIZATION_CANON_BOOTSTRAP
-resultado: DONE
-proxima_acao_permitida: "PR 1 mergeado (957e88ce). Próxima etapa: PR 2 — implementação executável do DECISION_MATERIALIZATION_GATE."
+task_id: DECISION_MATERIALIZATION_GATE
+resultado: PENDENTE
+proxima_acao_permitida: "PR 2 em andamento — gate implementado, testes criados, aguardando commit e push para CI."
 bloqueios_ativos: []
 evidence_paths:
-  - "docs/_canon/DECISION_MATERIALIZATION_POLICY.md"
-  - "docs/_canon/templates/DECISION_MATERIALIZATION_MATRIX.template.yaml"
+  - "scripts/contracts/validate/validate_contracts.py"
   - "docs/_canon/gates/GATES_REGISTRY.yaml"
-  - ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+  - "_reports/decision_materialization/training.json"
+  - "tests/pipeline_gates/test_decision_materialization_gate.py"
 ---
 # SESSION HANDOFF — DECISION_MATERIALIZATION_CANON_BOOTSTRAP
 

@@ -1,0 +1,89 @@
+{
+  "module": "training",
+  "status": "DEGRADED",
+  "truth_scope": "full_scan",
+  "main_ref": null,
+  "generated_at_utc": "2026-04-30T18:15:45Z",
+  "freshness_status": "UNKNOWN",
+  "source_decision_ir": ".contract_driven/decisions/DECISION_IR_TRAINING.yaml",
+  "decisions_total": 8,
+  "summary": {
+    "not_materialized": 7,
+    "blocked_by_contract_conflict": 1
+  },
+  "blocking_decisions": [
+    "TRAIN-DEC-001",
+    "TRAIN-DEC-004",
+    "TRAIN-DEC-006",
+    "TRAIN-DEC-007",
+    "TRAIN-DEC-008",
+    "TRAIN-DEC-012",
+    "TRAIN-DEC-047"
+  ],
+  "decisions": [
+    {
+      "decision_id": "TRAIN-DEC-001",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-004",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-006",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-007",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-008",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-012",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-020",
+      "materialization_status": "blocked_by_contract_conflict",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P0"
+    },
+    {
+      "decision_id": "TRAIN-DEC-047",
+      "materialization_status": "not_materialized",
+      "blocks_feature_work": true,
+      "has_valid_waiver": false,
+      "criticality": "obrigatoria",
+      "priority": "P1"
+    }
+  ]
+}

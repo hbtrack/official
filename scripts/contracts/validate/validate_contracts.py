@@ -5530,6 +5530,371 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     )
 
 
+# ---------------------------------------------------------------------------
+# DECISION_MATERIALIZATION_GATE (order 2O) — helpers e implementação
+# ---------------------------------------------------------------------------
+
+def _dm_detect_changed_files(root: pathlib.Path) -> "list[str] | None":
+    """Detecta arquivos alterados no PR via git diff.
+
+    Retorna lista de paths relativas ao root se o contexto de diff for
+    determinístico (CI com GITHUB_ACTIONS ou origin/main acessível).
+    Retorna None em modo full_scan (sem diff determinístico disponível).
+
+    O gate não depende de inferência implícita (§8 da política):
+    - Em CI: usa GITHUB_BASE_SHA ou rev-parse de origin/main
+    - Localmente: retorna None → full_scan (sem GITHUB_ACTIONS)
+    """
+    if not os.environ.get("GITHUB_ACTIONS"):
+        return None
+    try:
+        base_sha = os.environ.get("GITHUB_BASE_SHA", "").strip()
+        if not base_sha:
+            rev = subprocess.run(
+                ["git", "rev-parse", "origin/main"],
+                capture_output=True, text=True, cwd=str(root), timeout=10, check=False,
+            )
+            if rev.returncode == 0:
+                base_sha = rev.stdout.strip()
+        if base_sha:
+            diff = subprocess.run(
+                ["git", "diff", "--name-only", base_sha, "HEAD"],
+                capture_output=True, text=True, cwd=str(root), timeout=15, check=False,
+            )
+            if diff.returncode == 0:
+                return [f for f in diff.stdout.strip().splitlines() if f]
+    except Exception:
+        pass
+    return None
+
+
+def _dm_module_product_paths(module: str) -> list[str]:
+    """Retorna prefixos de path que constituem 'código de produto' do módulo."""
+    return [
+        f"src/{module}/",
+        f"contracts/openapi/paths/{module}/",
+        f"frontend/src/features/{module}/",
+    ]
+
+
+def _dm_has_valid_waiver(
+    root: pathlib.Path,
+    module: str,
+    decision_id: str,
+    inline_waiver: "dict | None",
+) -> bool:
+    """Verifica se existe waiver válido para a decisão.
+
+    Ordem de verificação:
+    1. Waiver inline na matriz (campo `waiver` por decisão)
+    2. Arquivo de waiver em contracts/_waivers/DECISION_MATERIALIZATION_GATE/<module>/<decision_id>.yaml
+
+    Waiver válido requer: waiver_id, approved_by, expires_at_utc, scope (§7 da política).
+    """
+    _REQUIRED_WAIVER_FIELDS = {"waiver_id", "approved_by", "expires_at_utc", "scope"}
+    if isinstance(inline_waiver, dict):
+        if _REQUIRED_WAIVER_FIELDS.issubset(inline_waiver.keys()):
+            return True
+    waiver_path = (
+        root / "contracts" / "_waivers" / "DECISION_MATERIALIZATION_GATE"
+        / module / f"{decision_id}.yaml"
+    )
+    if waiver_path.exists():
+        try:
+            waiver_data = yaml.safe_load(waiver_path.read_text(encoding="utf-8")) or {}
+            if _REQUIRED_WAIVER_FIELDS.issubset(waiver_data.keys()):
+                return True
+        except Exception:
+            pass
+    return False
+
+
+def _g2O_decision_materialization(root: pathlib.Path) -> dict:
+    """
+    DECISION_MATERIALIZATION_GATE (ordem 2O) — verifica que decisões arquiteturais
+    aprovadas (ADR + Decision IR soberana) foram materializadas em runtime,
+    testes adversariais e evidência fresca.
+
+    Bloqueia feature work (FAIL) quando:
+    - blocks_feature_work=true E status in {not_materialized, partially_materialized}
+    - E PR toca código de produto do módulo (determinístico via git diff em CI)
+    - E não há waiver válido
+
+    Em modo full_scan (sem diff determinístico): DEGRADED (warn, exit_code=0).
+    Violações estruturais (source não soberana, campos ausentes): sempre FAIL.
+
+    Fonte soberana: .contract_driven/decisions/DECISION_IR_<MODULE>.yaml
+    Matrizes: .contract_driven/decisions/materialization/DECISION_MATERIALIZATION_<MODULE>.yaml
+    Relatórios: _reports/decision_materialization/<module>.json
+    """
+    t0 = time.monotonic()
+    gate_id = "DECISION_MATERIALIZATION_GATE"
+
+    mat_dir = root / ".contract_driven" / "decisions" / "materialization"
+    if not mat_dir.exists():
+        return _skip(gate_id, "Diretório de matrizes de materialização ausente — gate não aplicável.", _ms(t0))
+
+    mat_files = sorted(mat_dir.glob("DECISION_MATERIALIZATION_*.yaml"))
+    if not mat_files:
+        return _skip(gate_id, "Nenhuma matriz de materialização encontrada — gate não aplicável.", _ms(t0))
+
+    changed_files = _dm_detect_changed_files(root)
+    full_scan = changed_files is None
+    truth_scope = "full_scan" if full_scan else "pr_diff"
+
+    _BLOCKING_STATUSES = {"not_materialized", "partially_materialized"}
+    _REQUIRED_ROOT_FIELDS = ["module", "source_decision_ir", "source_adr", "decisions"]
+    _REQUIRED_DEC_FIELDS = [
+        "decision_id", "decision_policy_criticality", "execution_priority",
+        "canonical_source", "materialization_status", "blocks_feature_work",
+    ]
+
+    violations: list[dict] = []
+    checked: list[str] = []
+    reports_written: list[str] = []
+    report_dir = root / "_reports" / "decision_materialization"
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    ts_now = datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+    for mat_file in mat_files:
+        rel_path = str(mat_file.relative_to(root))
+        checked.append(rel_path)
+        mat_violations: list[dict] = []
+
+        try:
+            mat_data = _load_structured_doc(mat_file)
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+                "artifact": rel_path,
+                "message": f"Falha ao ler matriz de materialização: {exc}",
+                "severity": "error",
+            })
+            continue
+
+        if not isinstance(mat_data, dict):
+            violations.append({
+                "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+                "artifact": rel_path,
+                "message": "Matriz deve ser objeto/dicionário no topo.",
+                "severity": "error",
+            })
+            continue
+
+        module = str(mat_data.get("module") or "")
+        source_ir = str(mat_data.get("source_decision_ir") or "")
+
+        # --- Validação de campos obrigatórios no nível raiz ---
+        for req in _REQUIRED_ROOT_FIELDS:
+            if req not in mat_data:
+                v = {
+                    "blocking_code": "CANON_REGISTRATION_INCOMPLETE",
+                    "artifact": rel_path,
+                    "message": f"Módulo `{module}`: campo obrigatório `{req}` ausente na raiz.",
+                    "severity": "error",
+                }
+                violations.append(v)
+                mat_violations.append(v)
+
+        # --- Validação de fonte soberana ---
+        if source_ir and "docs/hbtrack/" in source_ir:
+            v = {
+                "blocking_code": "NON_SOVEREIGN_DECISION_IR_SOURCE",
+                "artifact": rel_path,
+                "message": (
+                    f"Módulo `{module}`: `source_decision_ir` aponta para caminho não soberano "
+                    f"`{source_ir}`. Use `.contract_driven/decisions/DECISION_IR_<MODULE>.yaml`."
+                ),
+                "severity": "error",
+            }
+            violations.append(v)
+            mat_violations.append(v)
+
+        decisions = mat_data.get("decisions") or []
+        if not isinstance(decisions, list):
+            v = {
+                "blocking_code": "CANON_REGISTRATION_INCOMPLETE",
+                "artifact": rel_path,
+                "message": f"Módulo `{module}`: campo `decisions` deve ser lista.",
+                "severity": "error",
+            }
+            violations.append(v)
+            mat_violations.append(v)
+            decisions = []
+
+        # --- Determinar se PR toca código de produto do módulo ---
+        if full_scan:
+            pr_touches: "bool | None" = None  # Desconhecido
+        else:
+            module_paths = _dm_module_product_paths(module)
+            pr_touches = any(
+                cf.startswith(mp) for cf in changed_files for mp in module_paths
+            )
+
+        # --- Validar cada decisão ---
+        module_summary: dict[str, int] = {}
+        module_dec_reports: list[dict] = []
+        blocking_decisions: list[str] = []
+
+        for dec in decisions:
+            if not isinstance(dec, dict):
+                v = {
+                    "blocking_code": "CANON_REGISTRATION_INCOMPLETE",
+                    "artifact": rel_path,
+                    "message": f"Módulo `{module}`: entrada de decisão deve ser objeto.",
+                    "severity": "error",
+                }
+                violations.append(v)
+                mat_violations.append(v)
+                continue
+
+            dec_id = str(dec.get("decision_id") or "UNKNOWN")
+            status = str(dec.get("materialization_status") or "")
+            blocks = bool(dec.get("blocks_feature_work", False))
+            waiver_inline = dec.get("waiver") if isinstance(dec.get("waiver"), dict) else None
+
+            module_summary[status] = module_summary.get(status, 0) + 1
+
+            # Campos obrigatórios por decisão
+            for req in _REQUIRED_DEC_FIELDS:
+                if req not in dec:
+                    v = {
+                        "blocking_code": "CANON_REGISTRATION_INCOMPLETE",
+                        "artifact": rel_path,
+                        "message": f"Módulo `{module}`, decisão `{dec_id}`: campo `{req}` ausente.",
+                        "severity": "error",
+                    }
+                    violations.append(v)
+                    mat_violations.append(v)
+
+            has_valid_waiver = _dm_has_valid_waiver(root, module, dec_id, waiver_inline)
+
+            # --- Lógica de bloqueio por materialização ---
+            if blocks and status in _BLOCKING_STATUSES and not has_valid_waiver:
+                blocking_decisions.append(dec_id)
+                if pr_touches is True:
+                    # PR toca o módulo determinísticamente → FAIL
+                    sev = "error"
+                    msg = (
+                        f"Módulo `{module}`, decisão `{dec_id}`: `blocks_feature_work=true` e "
+                        f"`materialization_status={status}` sem waiver válido. "
+                        f"PR toca código de produto do módulo (diff determinístico)."
+                    )
+                elif pr_touches is None:
+                    # Modo full_scan — sem diff determinístico → DEGRADED (warn)
+                    sev = "warn"
+                    msg = (
+                        f"Módulo `{module}`, decisão `{dec_id}`: `blocks_feature_work=true` e "
+                        f"`materialization_status={status}` sem waiver válido. "
+                        f"Modo full_scan: diff não disponível — verifique em CI de PR."
+                    )
+                else:
+                    # pr_touches is False → PR não toca módulo → sem violação
+                    sev = None
+                    msg = ""
+
+                if sev:
+                    v = {
+                        "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+                        "artifact": rel_path,
+                        "message": msg,
+                        "severity": sev,
+                    }
+                    violations.append(v)
+                    mat_violations.append(v)
+
+            elif blocks and status == "blocked_by_contract_conflict" and not has_valid_waiver:
+                # Conflito canônico documentado — sempre warn, nunca error
+                v = {
+                    "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+                    "artifact": rel_path,
+                    "message": (
+                        f"Módulo `{module}`, decisão `{dec_id}`: `blocked_by_contract_conflict` "
+                        f"sem waiver formal em `contracts/_waivers/DECISION_MATERIALIZATION_GATE/`. "
+                        f"Classifique ou formalize o waiver no PR 3."
+                    ),
+                    "severity": "warn",
+                }
+                violations.append(v)
+                mat_violations.append(v)
+
+            module_dec_reports.append({
+                "decision_id": dec_id,
+                "materialization_status": status,
+                "blocks_feature_work": blocks,
+                "has_valid_waiver": has_valid_waiver,
+                "criticality": dec.get("decision_policy_criticality"),
+                "priority": dec.get("execution_priority"),
+            })
+
+        # --- Relatório por módulo ---
+        if module:
+            mod_errors = [v for v in mat_violations if v.get("severity") == "error"]
+            mod_warns = [v for v in mat_violations if v.get("severity") == "warn"]
+            if mod_errors:
+                mod_status = "FAIL"
+            elif mod_warns:
+                mod_status = "DEGRADED"
+            else:
+                mod_status = "PASS"
+
+            mod_report = {
+                "module": module,
+                "status": mod_status,
+                "truth_scope": truth_scope,
+                "main_ref": None,
+                "generated_at_utc": ts_now,
+                "freshness_status": "UNKNOWN",
+                "source_decision_ir": source_ir,
+                "decisions_total": len(decisions),
+                "summary": module_summary,
+                "blocking_decisions": blocking_decisions,
+                "decisions": module_dec_reports,
+            }
+            mod_report_path = report_dir / f"{module}.json"
+            try:
+                mod_report_path.write_text(
+                    json.dumps(mod_report, indent=2, ensure_ascii=False) + "\n",
+                    encoding="utf-8",
+                )
+                reports_written.append(str(mod_report_path.relative_to(root)))
+            except Exception:
+                pass
+
+    # --- Status final ---
+    all_errors = [v for v in violations if v.get("severity") == "error"]
+    all_warns = [v for v in violations if v.get("severity") == "warn"]
+    modules_scanned = len(mat_files)
+
+    if all_errors:
+        return _pg(
+            gate_id, "FAIL", True,
+            all_errors[0].get("blocking_code", "FAIL_DECISION_MATERIALIZATION"),
+            (
+                f"Decision Materialization: {len(all_errors)} erro(s), {len(all_warns)} aviso(s) "
+                f"em {modules_scanned} módulo(s). Modo: {truth_scope}."
+            ),
+            [], checked, reports_written, violations, _ms(t0),
+        )
+    elif all_warns:
+        return _pg(
+            gate_id, "DEGRADED", True, None,
+            (
+                f"Decision Materialization: {len(all_warns)} decisão(ões) não materializadas "
+                f"(modo {truth_scope} — sem diff determinístico de PR). Gate ativo. "
+                f"Módulos verificados: {modules_scanned}."
+            ),
+            [], checked, reports_written, violations, _ms(t0),
+        )
+    else:
+        return _pg(
+            gate_id, "PASS", True, None,
+            f"Decision Materialization: {modules_scanned} módulo(s) validados com sucesso. Gate ativo.",
+            [], checked, reports_written, [], _ms(t0),
+        )
+
+
 def _g3_placeholder_residue(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "PLACEHOLDER_RESIDUE_GATE"
@@ -12585,6 +12950,7 @@ def run_pipeline(
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
+        "DECISION_MATERIALIZATION_GATE",
         "DERIVED_DRIFT_GATE",
         "ADVERSARIAL_ANALYSIS_GATE",
         "FEATURE_READINESS_GATE",
@@ -12690,6 +13056,7 @@ def run_pipeline(
         ("SHADOW_AUTHORITY_GATE", lambda: _g2k_shadow_authority(root)),
         ("DECISION_IR_CONFORMANCE_GATE", lambda: _g2l_decision_ir_conformance(root)),
         ("CANON_ALLOWLIST_GATE", lambda: _g2n_canon_allowlist(root)),
+        ("DECISION_MATERIALIZATION_GATE", lambda: _g2O_decision_materialization(root)),
         ("PLACEHOLDER_RESIDUE_GATE", lambda: _g3_placeholder_residue(root)),
         ("REF_HERMETICITY_GATE", lambda: _g4_ref_hermeticity(root)),
         ("TOOLING_CONFIG_GATE", lambda: _g4a_tooling_config(root)),
