@@ -120,3 +120,31 @@ seção "PROTOCOLO DE ACESSO A LOGS".
 - `docs/_canon/gates/GATES_REGISTRY.yaml` — registro de todos os 63 gates
 - `.contract_driven/waivers.json` — waivers ativos
 - `.vscode/mcp.json` — configuração dos servidores MCP (Playwright + GitHub)
+
+## Estados operacionais
+
+(Visão operacional — alinhada com trilha canônica de AI_EXECUTION_ROLES_POLICY.md)
+
+```text
+READY_FOR_PR                     → evidências completas, pronto para abrir PR
+PR_OPENED_PENDING_CI             → PR aberto, aguardando GitHub Actions
+BLOCKED_BY_REQUIRED_CHECK        → check obrigatório falhando
+BLOCKED_BY_CONVERSATION          → conversa não resolvida no PR
+BLOCKED_BY_OUTDATED_BRANCH       → branch desatualizada em relação à main
+PASS_PENDING_MERGE               → todos os checks passando, aguardando merge
+MERGED_PENDING_POST_MERGE_CHECK  → merge feito, post-merge pendente
+POST_MERGE_VERIFIED              → main atualizada e verificada
+```
+
+Proibido emitir: `VALIDATED`, `APPROVED`, `COMPLETE`
+
+Mapeamento para trilha canônica (AI_EXECUTION_ROLES_POLICY.md):
+
+```text
+READY_FOR_PR              ↔ IMPLEMENTATION_CHECKS_PASS + ADVERSARIAL_TESTS_RUN
+PR_OPENED_PENDING_CI      ↔ IMPLEMENTATION_PR_OPENED
+PASS_PENDING_MERGE        ↔ EVIDENCE_GENERATED + HANDTRACKER_REVIEW
+MERGED_PENDING_POST_MERGE_CHECK ↔ MERGE_APPROVED
+POST_MERGE_VERIFIED       ↔ MAIN_REFRESHED → NEXT_PR_ALLOWED
+```
+

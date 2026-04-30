@@ -21,16 +21,31 @@ simetria entre interfaces que o repositório não possui.
 | Plataforma | Exposição dedicada | Onde vive | Observação |
 |---|---|---|---|
 | Copilot | Sim | `.github/agents/*.agent.md` | Dropdown/UI real |
-| Claude | Não | `CLAUDE.md` | Paridade operacional documentada |
-| Codex | Não | `.codex` | Paridade operacional documentada |
+| Claude | Sim | `.claude/agents/*.md` | Subagents com contexto isolado |
+| Codex | Sim | `.dev/codex-agents/*.toml` | Gate auditor / sandbox runner |
 
-## Regras fechadas
+## Evolução arquitetural
 
-- Não criar agentes Claude separados.
-- Não criar agentes Codex separados.
-- Não criar novo runtime.
-- Não criar novos task types.
-- Não criar nova soberania normativa.
+Esta versão **revoga** a regra anterior que proibia agentes Claude e Codex separados.
+Motivo: subagents Claude com contexto isolado e Codex em sandbox são a camada de
+revisão independente que o fluxo anterior não cobria.
+
+| Decisão | Razão |
+|---|---|
+| Criar `.claude/agents/*.md` | Contexto isolado reduz contaminação do revisor |
+| Criar `.dev/codex-agents/*.toml` | Sandbox/worktree reduz risco ambiental |
+| Não criar novo runtime | Copilot + Claude + Codex + CI já são suficientes |
+| Não criar novos task types | TASK_CATALOG existente cobre os papéis |
+| Não criar nova soberania normativa | Bridge docs, não canon |
+
+Regra principal:
+
+```text
+Troca de papel não é separação de confiança.
+Contexto isolado reduz contaminação.
+Sandbox reduz risco ambiental.
+Gate executável valida.
+```
 
 ## Fluxo-alvo
 

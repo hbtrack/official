@@ -49,6 +49,22 @@
 enforcement executável > schemas ativos > SOURCE_AUTHORITY_GRAPH > concept_owner > bridge_docs > derived > legacy
 ```
 
+## Arquitetura multiagente auditável
+
+Fonte de autoridade de papéis: `docs/_canon/AI_EXECUTION_ROLES_POLICY.md`
+
+| Plataforma | Papel no fluxo | Independência |
+|---|---|---|
+| Copilot | execução e workflow | same-chat não independente |
+| Claude | revisão adversarial isolada | contexto separado por subagent |
+| Codex | auditoria de gate/sandbox | ambiente separado quando em worktree/sandbox |
+| CI/scripts | validação final | determinística |
+
+**Nenhum agente Copilot, Claude ou Codex pode emitir `VALIDATED`.**
+
+Subagents Claude vivem em `.claude/agents/`: `hb-adversarial-tester`, `hb-governance-auditor`, `hb-evidence-verifier`.
+Agents Codex vivem em `.dev/codex-agents/`: `hb-gate-auditor`, `hb-pr-reviewer`.
+
 ## Worker prompts (20 — compartilhados por todos os agentes)
 Diretório: `.contract_driven/agent_prompts/`
 - Workers são prompts especializados carregados pelo mesmo agente

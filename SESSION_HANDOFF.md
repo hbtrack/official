@@ -5,45 +5,68 @@ modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: notifications
 fase_roadmap: 1
-task_type: pr_fix
+task_type: architecture_review
 boot_profile_id: architecture_decision
-task_id: FIX_DEPLOY_GH_TOKEN_STEP5
+task_id: MULTIAGENT_ARCH_IMPL_20260430
 resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR para fix/deploy-gh-token-contract-conformance → main e aguardar CI."
+proxima_acao_permitida: "Commit + PR para branch atual. Após merge do PR #106, validar que testes de pipeline_gates passam em CI."
 bloqueios_ativos: []
 evidence_paths:
-  - ".github/workflows/deploy.yml"
+  - ".claude/agents/hb-adversarial-tester.md"
+  - ".claude/agents/hb-governance-auditor.md"
+  - ".claude/agents/hb-evidence-verifier.md"
+  - ".github/agents/hb-implementer.agent.md"
+  - ".github/agents/hb-adversarial-tester.agent.md"
+  - ".github/agents/Mesclado.agent.md"
+  - ".dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md"
+  - ".dev/AGENT_PLATFORM_EXPOSURE_MAP.md"
+  - ".dev/schemas/hb_gate_report.schema.json"
+  - "tests/pipeline_gates/test_platform_agent_exposure.py"
+  - "tests/pipeline_gates/test_gate_report_schema.py"
 ---
-# SESSION HANDOFF — FIX_DEPLOY_GH_TOKEN
+# SESSION HANDOFF — MULTIAGENT_ARCH_IMPL_20260430
 
 ## Estado Geral
 **Data:** 2026-04-30 | **Branch:** fix/deploy-gh-token-contract-conformance | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** pr_fix | **boot_profile:** architecture_decision
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** FIX_DEPLOY_GH_TOKEN_STEP5 | **Resultado:** PENDENTE
+**Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
+**task_id:** MULTIAGENT_ARCH_IMPL_20260430 | **Resultado:** IMPLEMENTADO_PENDENTE_CI
+
+## Evidências
+- `.claude/agents/` — 3 subagents Claude criados (hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier)
+- `.github/agents/` — 3 agentes Copilot atualizados cirurgicamente
+- `.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md` — seção Evolução arquitetural adicionada
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de plataformas adicionada
+- `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido (46 testes)
+- `tests/pipeline_gates/test_gate_report_schema.py` — criado (15 testes)
+- **Resultado dos testes:** 46/46 PASSED
 
 ## O que foi feito
 
-### PR #106 (pendente) — fix step 5 Contract Conformance
-- Regressão pós-merge do PR #105: `5. Contract Conformance — <módulo> (Staging)` falhava em 7 módulos
-- Causa: step `Run HTTP_RUNTIME_CONTRACT_GATE` em `deploy.yml` chamava `validate_contracts.py` sem `GH_TOKEN`
-- Fix: `GH_TOKEN: ${{ github.token }}` adicionado ao step (linha ~475), padrão idêntico ao job 1 (linha ~60)
-- actionlint: PASS | validate --profile ci: PASS local
+### Implementação da Arquitetura Multiagente Auditável (PLANO.md)
 
-### PR #105 (merged 2026-04-30)
-- Fix: GH_TOKEN adicionado ao step `Run contract gates` em deploy.yml
-- `1. Validate Contracts` passou; deploy progrediu até stage 5
+**Criados:**
+- `.claude/agents/hb-adversarial-tester.md` — subagent Claude com contexto isolado
+- `.claude/agents/hb-governance-auditor.md` — auditor de governança Claude
+- `.claude/agents/hb-evidence-verifier.md` — verificador de evidências Claude
+- `tests/pipeline_gates/test_gate_report_schema.py` — 15 testes do schema de gate report
 
-### PR #102 (merged 2026-04-30T04:20Z)
-- Fix: evidence_paths sem referência gitignored
-- `ci / Validate Contracts` e `Validate Contract Gates` passaram
+**Atualizados (cirurgicamente):**
+- `.github/agents/hb-implementer.agent.md` — 3º handoff "Start adversarial pre-review" (send: false)
+- `.github/agents/hb-adversarial-tester.agent.md` — handoff renomeado + seção "Pacote para Claude"
+- `.github/agents/Mesclado.agent.md` — seção "Estados operacionais" (READY_FOR_PR ... POST_MERGE_VERIFIED)
+- `.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md` — "Regras fechadas" → "Evolução arquitetural"
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de exposição por plataforma adicionada
+- `AGENTS.md` — seção "Arquitetura multiagente auditável" adicionada
+- `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido com classes Claude/Codex/Coherence
 
-## Evidências
-- `.github/workflows/deploy.yml` — GH_TOKEN adicionado: step `Run contract gates` (job 1) + step `Run HTTP_RUNTIME_CONTRACT_GATE` (job 5)
-- PR #105 merged: https://github.com/hbtrack/official/pull/105
-- PR #106 (a abrir): fix/deploy-gh-token-contract-conformance → main
+**Resultado dos testes:** 46/46 PASSED
+
+## Contexto anterior — PR #106 (em aberto)
+- Fix: GH_TOKEN adicionado ao step `Run HTTP_RUNTIME_CONTRACT_GATE` em deploy.yml
+- PR #106: fix/deploy-gh-token-contract-conformance → main (aguardando CI)
 
 ## Próxima ação permitida
-Abrir PR `fix/deploy-gh-token-contract-conformance → main` e aguardar todos os checks passarem. Após merge, verificar que `5. Contract Conformance` passa no deploy pipeline.
+Commit das mudanças de arquitetura multiagente na branch atual. Após merge do PR #106, verificar que os novos testes passam em CI.
 
 ## Bloqueios ativos
 - Nenhum

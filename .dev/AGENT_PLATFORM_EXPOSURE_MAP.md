@@ -140,3 +140,21 @@ Copilot / Hb Implementer
 
 Claude melhora a independência da revisão, mas não substitui os gates
 executáveis.
+
+## Matriz de exposição por plataforma
+
+| Plataforma | Exposição | Onde vive | Papéis | Limite |
+|---|---|---|---|---|
+| Copilot | UI/workflow/custom agents | `.github/agents/*.agent.md` | HB Contract, Hb Implementer, Hb Adversarial Tester, HandTracker | Same-chat handoff não é validação independente |
+| Claude | Subagents com contexto isolado | `.claude/agents/*.md` | hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier | Revisa, não valida final |
+| Codex | Gate audit / sandbox / PR review | `.dev/codex-agents/*.toml` | hb-gate-auditor, hb-pr-reviewer | Não implementa durante gate |
+| CI/scripts | Validação executável | `scripts/hb`, `validate_contracts.py`, CI | final_validation_gate | Única autoridade para VALIDATED |
+
+O papel real vem de:
+
+```text
+TASK_CATALOG → BOOT_PROFILES → prompt → schema → gate → enforcement
+```
+
+UI/dropdown é apenas superfície de exposição.
+
