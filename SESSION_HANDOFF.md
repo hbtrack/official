@@ -6,10 +6,10 @@ ci_status: UNKNOWN
 modulo_foco: training
 fase_roadmap: 1
 task_type: new_contract
-boot_profile_id: architecture_decision
+boot_profile_id: contract_execution
 task_id: DECISION_MATERIALIZATION_GATE
 resultado: PENDENTE
-proxima_acao_permitida: "PR 2 (#110) aberto — CI: Validate Contract Gates success, ci/Validate Contracts success. Aguardando merge para prosseguir ao PR 3 (TRAINING_DECISION_MATERIALIZATION_BACKFILL)."
+proxima_acao_permitida: "PR 2 (#110) — 3 fixes Codex aplicados (commit 13766123, pushed). 3 threads Codex respondidos e resolvidos. CI rodando no novo commit. Aguardando CI pass + review approval para merge. Proxima acao: merge PR #110, iniciar PR 3 (TRAINING_DECISION_MATERIALIZATION_BACKFILL)."
 bloqueios_ativos: []
 evidence_paths:
   - "scripts/contracts/validate/validate_contracts.py"
