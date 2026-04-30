@@ -2530,7 +2530,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 /training/training-sessions/{id}/start:
   post:
-Remova as alterações em `contracts/openapi/paths/training.yaml`. As tags já foram corrigidas no arquivo fonte `docs/hbtrack/modulos/training/graph/openapi_paths.yaml`. O pipeline de compilação (`scripts/compile/compile_source_graph.py`) deve ser executado para regenerar o arquivo derivado.
+    tags: [training]
     summary: Start a training session (transition to IN_PROGRESS)
     description: >
       Triggers the SESSION_STARTED append-only fact (TRAIN-DEC-029).
