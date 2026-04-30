@@ -9,7 +9,7 @@ task_type: new_contract
 boot_profile_id: architecture_decision
 task_id: DECISION_MATERIALIZATION_GATE
 resultado: PENDENTE
-proxima_acao_permitida: "PR 2 em andamento — gate implementado, testes criados, aguardando commit e push para CI."
+proxima_acao_permitida: "PR 2 (#110) aberto — CI: Validate Contract Gates success, ci/Validate Contracts success. Aguardando merge para prosseguir ao PR 3 (TRAINING_DECISION_MATERIALIZATION_BACKFILL)."
 bloqueios_ativos: []
 evidence_paths:
   - "scripts/contracts/validate/validate_contracts.py"
