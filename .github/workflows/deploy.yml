@@ -56,6 +56,8 @@ jobs:
         run: pip install -r requirements-dev.txt
       - name: Run contract gates
         run: python3 scripts/contracts/validate/validate_contracts.py
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 2: Testes
