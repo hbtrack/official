@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-30"
-branch_ativo: decision-materialization-canon-bootstrap
+branch_ativo: main
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: training
@@ -8,8 +8,8 @@ fase_roadmap: 1
 task_type: new_contract
 boot_profile_id: architecture_decision
 task_id: DECISION_MATERIALIZATION_CANON_BOOTSTRAP
-resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR 1 de bootstrap canônico — política, template, registry deferred e matriz inicial de training. Enforcement executável é escopo do PR 2."
+resultado: DONE
+proxima_acao_permitida: "PR 1 mergeado (957e88ce). Próxima etapa: PR 2 — implementação executável do DECISION_MATERIALIZATION_GATE."
 bloqueios_ativos: []
 evidence_paths:
   - "docs/_canon/DECISION_MATERIALIZATION_POLICY.md"
