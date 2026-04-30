@@ -101,7 +101,7 @@
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.bundle.yaml",
-      "sha256": "c298e7dbe86e8f71844671c3e03428f4aa047885ef8f163f4948634c9c7d3563"
+      "sha256": "e63a1f8b3395e27b9abdec054fbbebd0276e7729b298c839566815dd02da5d91"
     },
     {
       "relpath": "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "relpath": "generated/source_graph/exercises/impact_report.json",
-      "sha256": "2acc14c3c85f70c709cebcf0965520c4762dbe40766fc984de7eda189b3820cb"
+      "sha256": "ca610d74e95c0e8a3e8ccc894b20e39abc76033103766333ff28fd770edfe22a"
     }
   ],
   "module": "exercises",
@@ -144,7 +144,7 @@
     "unit_tests": "src/exercises/tests/unit/test_exercises.py",
     "use_cases": "src/exercises/application/use_cases.py"
   },
-  "source_fingerprint": "9cbd2caa10a408e6673d2cb3b73a1aed3d2191cccaf903bba2d2aad1b7ce715d",
+  "source_fingerprint": "aa7cade5689462588ee57ad988c4a62a2a558d0abea514f7072dc4572e8adfbc",
   "source_graph": {
     "entities": {
       "Exercise": {
@@ -743,7 +743,7 @@
         "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`.",
         "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."
       ],
-      "source_fingerprint": "fd43558642a78cdbe91033f7dd1b74876210c3b69119bf71d4efebc742a19870"
+      "source_fingerprint": "cac05bde7ec2eda2b1ad1fa9b86a3063de863d4e594eafd7406ecb0382acfba8"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

@@ -43,15 +43,15 @@
     },
     {
       "relpath": "contracts/schemas/analytics/analytics_query_request.schema.json",
-      "sha256": "b80872fb0193c1d0269c6486445ed4f7a8b1dd7f36998b2f2cfa7043d0d3c22f"
+      "sha256": "50ee2ddff15e76ef7c4ef51e2384d17a389e3a5455584f7a819dd1434359e6a9"
     },
     {
       "relpath": "contracts/schemas/analytics/analytics_query_response.schema.json",
-      "sha256": "0e11abb77b349036db279347a8307611ca1d4e9dbcd811d931aafd96f72258d4"
+      "sha256": "f13a2ca783dad79a7a7a36834e1e0e2af6f61ee220b3f55e8c0e90814c736b44"
     },
     {
       "relpath": "contracts/schemas/analytics/analytics_snapshot.schema.json",
-      "sha256": "c4e5f15a19c341a7e4f7456119fe41b49692958db73007e20c99f7f542f3d3f2"
+      "sha256": "cc327ea63af7213cb3c87126059760c1b023c44274b3b10f667b8e4d2aa831ed"
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
@@ -161,5 +161,5 @@
     "generated/source_graph/analytics/analytics.openapi_contract_view.yaml",
     "generated/source_graph/analytics/impact_report.json"
   ],
-  "source_fingerprint": "5a2c003ef847de5318acd3aa22fe56d73fe9e1a20d91022b23ffb4c40e4cfc6d"
+  "source_fingerprint": "4144e37ce669c05b4649f251da0b55a7457206f322f6dd441fe8eb434b39f9be"
 }
