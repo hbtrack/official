@@ -5557,8 +5557,10 @@ def _dm_detect_changed_files(root: pathlib.Path) -> "list[str] | None":
             if rev.returncode == 0:
                 base_sha = rev.stdout.strip()
         if base_sha:
+            # Triple-dot diff: isola mudanças do branch do PR contra o merge-base,
+            # evitando incluir mudanças que já existiam no base branch.
             diff = subprocess.run(
-                ["git", "diff", "--name-only", base_sha, "HEAD"],
+                ["git", "diff", "--name-only", f"{base_sha}...HEAD"],
                 capture_output=True, text=True, cwd=str(root), timeout=15, check=False,
             )
             if diff.returncode == 0:
@@ -5589,11 +5591,27 @@ def _dm_has_valid_waiver(
     1. Waiver inline na matriz (campo `waiver` por decisão)
     2. Arquivo de waiver em contracts/_waivers/DECISION_MATERIALIZATION_GATE/<module>/<decision_id>.yaml
 
-    Waiver válido requer: waiver_id, approved_by, expires_at_utc, scope (§7 da política).
+    Waiver válido requer: waiver_id, approved_by, expires_at_utc (não expirado), scope (§7 da política).
     """
     _REQUIRED_WAIVER_FIELDS = {"waiver_id", "approved_by", "expires_at_utc", "scope"}
+
+    def _waiver_is_valid(w: dict) -> bool:
+        if not _REQUIRED_WAIVER_FIELDS.issubset(w.keys()):
+            return False
+        expiry_str = str(w.get("expires_at_utc") or "").strip()
+        if not expiry_str:
+            return False
+        try:
+            expiry = datetime.datetime.fromisoformat(expiry_str.replace("Z", "+00:00"))
+            now = datetime.datetime.now(datetime.timezone.utc)
+            if expiry <= now:
+                return False  # Waiver expirado
+        except (ValueError, TypeError):
+            return False  # expires_at_utc malformado
+        return True
+
     if isinstance(inline_waiver, dict):
-        if _REQUIRED_WAIVER_FIELDS.issubset(inline_waiver.keys()):
+        if _waiver_is_valid(inline_waiver):
             return True
     waiver_path = (
         root / "contracts" / "_waivers" / "DECISION_MATERIALIZATION_GATE"
@@ -5602,7 +5620,7 @@ def _dm_has_valid_waiver(
     if waiver_path.exists():
         try:
             waiver_data = yaml.safe_load(waiver_path.read_text(encoding="utf-8")) or {}
-            if _REQUIRED_WAIVER_FIELDS.issubset(waiver_data.keys()):
+            if _waiver_is_valid(waiver_data):
                 return True
         except Exception:
             pass
@@ -5697,19 +5715,29 @@ def _g2O_decision_materialization(root: pathlib.Path) -> dict:
                 violations.append(v)
                 mat_violations.append(v)
 
-        # --- Validação de fonte soberana ---
-        if source_ir and "docs/hbtrack/" in source_ir:
-            v = {
-                "blocking_code": "NON_SOVEREIGN_DECISION_IR_SOURCE",
-                "artifact": rel_path,
-                "message": (
-                    f"Módulo `{module}`: `source_decision_ir` aponta para caminho não soberano "
-                    f"`{source_ir}`. Use `.contract_driven/decisions/DECISION_IR_<MODULE>.yaml`."
-                ),
-                "severity": "error",
-            }
-            violations.append(v)
-            mat_violations.append(v)
+        # --- Validação de fonte soberana (positiva) ---
+        # Aceita apenas .contract_driven/decisions/DECISION_IR_<MODULE>.yaml.
+        # Rejeição negativa (só docs/hbtrack/) deixa paths arbitrários passarem.
+        _CANONICAL_IR_PREFIX = ".contract_driven/decisions/DECISION_IR_"
+        _CANONICAL_IR_SUFFIX = ".yaml"
+        if source_ir:
+            is_sovereign = (
+                source_ir.startswith(_CANONICAL_IR_PREFIX)
+                and source_ir.endswith(_CANONICAL_IR_SUFFIX)
+                and "/" not in source_ir[len(_CANONICAL_IR_PREFIX):]
+            )
+            if not is_sovereign:
+                v = {
+                    "blocking_code": "NON_SOVEREIGN_DECISION_IR_SOURCE",
+                    "artifact": rel_path,
+                    "message": (
+                        f"Módulo `{module}`: `source_decision_ir` aponta para caminho não soberano "
+                        f"`{source_ir}`. Use `.contract_driven/decisions/DECISION_IR_<MODULE>.yaml`."
+                    ),
+                    "severity": "error",
+                }
+                violations.append(v)
+                mat_violations.append(v)
 
         decisions = mat_data.get("decisions") or []
         if not isinstance(decisions, list):

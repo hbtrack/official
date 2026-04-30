@@ -368,3 +368,76 @@ def test_multiple_modules_all_pass(tmp_path: pathlib.Path) -> None:
     result = gates._g2O_decision_materialization(tmp_path)
     assert result["status"] == "PASS"
     assert result["exit_code"] == 0
+
+
+# ---------------------------------------------------------------------------
+# Testes adicionais: fixes das revisões do Codex
+# ---------------------------------------------------------------------------
+
+def test_fail_arbitrary_non_canonical_source(tmp_path: pathlib.Path) -> None:
+    """Qualquer path não canônico em source_decision_ir → NON_SOVEREIGN_DECISION_IR_SOURCE.
+
+    Fix P2 Codex: validação positiva — não só rejeitar docs/hbtrack/, mas
+    exigir .contract_driven/decisions/DECISION_IR_<MODULE>.yaml.
+    """
+    _write_matrix(
+        tmp_path, "training",
+        [_minimal_decision("DEC-001", status="materialized", blocks=False)],
+        source_decision_ir=".dev/training/DECISION_IR_TRAINING.yaml",  # path arbitrário não canônico
+    )
+    result = gates._g2O_decision_materialization(tmp_path)
+    assert result["status"] == "FAIL"
+    codes = [v["blocking_code"] for v in result["violations"]]
+    assert "NON_SOVEREIGN_DECISION_IR_SOURCE" in codes
+
+
+def test_degraded_with_expired_inline_waiver(tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Waiver com expires_at_utc no passado → inválido → decisão ainda bloqueante.
+
+    Fix P2 Codex: waiver expirado não deve suprimir bloqueio.
+    """
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    expired_waiver = {
+        "waiver_id": "DECISION_MATERIALIZATION_GATE-training-DEC-001-2025-01-01",
+        "approved_by": "davis",
+        "expires_at_utc": "2025-01-01T00:00:00Z",  # data no passado
+        "scope": ["src/training/"],
+    }
+    _write_matrix(tmp_path, "training", [
+        _minimal_decision("DEC-001", status="not_materialized", blocks=True, waiver=expired_waiver),
+    ])
+    result = gates._g2O_decision_materialization(tmp_path)
+    assert result["status"] == "DEGRADED"  # full_scan: warn, não error
+    assert any(v["blocking_code"] == "FAIL_DECISION_MATERIALIZATION" for v in result["violations"])
+
+
+def test_diff_uses_triple_dot_syntax(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """_dm_detect_changed_files deve usar triple-dot diff (base_sha...HEAD) não dois pontos.
+
+    Fix P1 Codex: dois pontos incluem mudanças do base branch não relacionadas ao PR.
+    """
+    import unittest.mock as mock
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    monkeypatch.setenv("GITHUB_BASE_SHA", "abc123")
+
+    captured_args = []
+
+    def fake_run(args, **kwargs):
+        captured_args.append(args)
+        m = mock.MagicMock()
+        m.returncode = 0
+        m.stdout = ""
+        return m
+
+    with mock.patch("subprocess.run", side_effect=fake_run):
+        gates._dm_detect_changed_files(tmp_path)
+
+    # Deve ter chamado git diff com triple-dot (base_sha...HEAD)
+    diff_calls = [a for a in captured_args if "diff" in a]
+    assert diff_calls, "git diff deve ter sido chamado"
+    diff_args = diff_calls[0]
+    assert any("abc123...HEAD" in str(arg) for arg in diff_args), (
+        f"Esperado triple-dot diff 'abc123...HEAD', mas argumentos foram: {diff_args}"
+    )
