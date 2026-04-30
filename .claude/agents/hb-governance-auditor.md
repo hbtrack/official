@@ -27,7 +27,7 @@ CLAUDE.md
 .codex/agents/*.toml
 .claude/agents/*.md
 .dev/AGENT_PLATFORM_EXPOSURE_MAP.md
-.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md
+.dev/AGENT_PLATFORM_EXPOSURE_MAP.md
 .dev/schemas/hb_gate_report.schema.json
 ```
 

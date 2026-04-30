@@ -98,12 +98,11 @@ class TestPlatformExposureDocs:
         assert "copilot / hb implementer" in text
         assert "claude (tester externo com pacote estruturado)" in text
 
-    def test_execution_plan_exists_and_disambiguates_other_artifacts(self):
-        path = ROOT / ".dev" / "AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md"
-        assert path.exists(), "Plano dedicado de exposição por plataforma ausente."
+    def test_exposure_map_disambiguates_other_artifacts(self):
+        path = ROOT / ".dev" / "AGENT_PLATFORM_EXPOSURE_MAP.md"
+        assert path.exists(), "Mapa unificado de exposição por plataforma ausente."
         text = _read(path)
         assert ".dev/CODEXPLAN.md" in text
-        assert ".dev/AGENT_PLATFORM_EXPOSURE_MAP.md" in text
         assert "Claude" in text
 
 
@@ -264,8 +263,8 @@ class TestMultiAgentArchitectureCoherence:
         # O handoff para HandTracker deve usar send: false agora
         assert "send: false" in text
 
-    def test_execution_plan_no_longer_prohibits_claude_codex_agents(self):
-        text = _read(ROOT / ".dev" / "AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md")
+    def test_exposure_map_no_longer_prohibits_claude_codex_agents(self):
+        text = _read(ROOT / ".dev" / "AGENT_PLATFORM_EXPOSURE_MAP.md")
         assert "Não criar agentes Claude separados" not in text
         assert "Não criar agentes Codex separados" not in text
-        assert "Evolução arquitetural" in text or "Evolu" in text
+        assert "Evolução arquitetural" in text

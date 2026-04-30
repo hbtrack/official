@@ -18,8 +18,6 @@ evidence_paths:
   - ".github/agents/hb-implementer.agent.md"
   - ".github/agents/hb-adversarial-tester.agent.md"
   - ".github/agents/Mesclado.agent.md"
-  - ".dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md"
-  - ".dev/AGENT_PLATFORM_EXPOSURE_MAP.md"
   - ".dev/schemas/hb_gate_report.schema.json"
   - "tests/pipeline_gates/test_platform_agent_exposure.py"
   - "tests/pipeline_gates/test_gate_report_schema.py"
@@ -34,7 +32,7 @@ evidence_paths:
 ## Evidências
 - `.claude/agents/` — 3 subagents Claude criados (hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier)
 - `.github/agents/` — 3 agentes Copilot atualizados cirurgicamente
-- `.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md` — seção Evolução arquitetural adicionada
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — bridge doc único consolidado; absorve decisão arquitetural, evolução, pacote Claude, proibições e critérios de aceite
 - `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de plataformas adicionada
 - `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido (46 testes)
 - `tests/pipeline_gates/test_gate_report_schema.py` — criado (15 testes)
@@ -54,7 +52,7 @@ evidence_paths:
 - `.github/agents/hb-implementer.agent.md` — 3º handoff "Start adversarial pre-review" (send: false)
 - `.github/agents/hb-adversarial-tester.agent.md` — handoff renomeado + seção "Pacote para Claude"
 - `.github/agents/Mesclado.agent.md` — seção "Estados operacionais" (READY_FOR_PR ... POST_MERGE_VERIFIED)
-- `.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md` — "Regras fechadas" → "Evolução arquitetural"
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — consolidado como plano/mapa único da exposição multiagente
 - `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de exposição por plataforma adicionada
 - `AGENTS.md` — seção "Arquitetura multiagente auditável" adicionada
 - `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido com classes Claude/Codex/Coherence
