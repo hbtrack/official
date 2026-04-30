@@ -1,6 +1,7 @@
 {
   "$comment": "Sovereign response shape for /analytics/query. Result rows use a fixed envelope; ad-hoc columns are forbidden.",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/analytics/analytics_query_response.schema.json",
   "title": "AnalyticsQueryResponse",
   "description": "Structured analytics query response with deterministic row envelope.",
   "type": "object",
