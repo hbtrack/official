@@ -50,3 +50,17 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 ## Exposição por plataforma
 
 Claude opera por paridade operacional — não existe mecanismo equivalente a `.github/agents/*.agent.md` para Claude. Papéis: `HB Contract`, `Hb Implementer`, `Hb Adversarial Tester`. Como tester externo final (não é autoridade final), usa apenas **pacote estruturado de evidências**, sem narrativa do implementador. Conclusão condicionada a gates executáveis.
+
+## Papéis operacionais Claude (subagents)
+
+Claude Code suporta `.claude/agents/` como subagents com contexto isolado (mecanismo técnico diferente do dropdown Copilot):
+
+- `hb-adversarial-tester` — revisão adversarial com contexto isolado
+- `hb-governance-auditor` — auditoria de governança multi-plataforma
+- `hb-evidence-verifier` — verificação de claims vs evidência
+
+Claude atua como revisão isolada, não como autoridade final.
+
+Claude não deve receber o histórico completo do Copilot; deve receber
+apenas: `objective`, `acceptance_criteria`, `diff`, `commands_run`, `raw_logs`,
+`evidence_pack`, `known_limitations`.

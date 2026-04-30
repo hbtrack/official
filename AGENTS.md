@@ -90,3 +90,32 @@ Diretório: `.contract_driven/agent_prompts/`
 - Resultado: Codex pode operar como `Hb Implementer` ou `Hb Adversarial Tester`, mas não como opções de UI nativas do Copilot.
 - Codex mantém paridade operacional documentada, mas não é a camada preferida
   de revisão externa final nesta trilha.
+
+## Arquitetura multiagente auditável
+
+Fonte de autoridade de papéis: `docs/_canon/AI_EXECUTION_ROLES_POLICY.md`
+
+| Plataforma | Papel no fluxo | Independência | Onde vive |
+|---|---|---|---|
+| Copilot | Execução e workflow | Same-chat não independente | `.github/agents/*.agent.md` |
+| Claude | Revisão adversarial com contexto isolado | Contexto separado por subagent | `.claude/agents/*.md` |
+| Codex | Auditoria de gate em sandbox | Ambiente separado (sandbox/worktree) | `.dev/codex-agents/*.toml` |
+| CI/scripts | Validação final | Determinística | `scripts/hb`, `validate_contracts.py`, CI |
+
+**Nenhum agente Copilot, Claude ou Codex pode emitir `VALIDATED`.**
+
+`VALIDATED` só pode ser produzido por CI, `scripts/hb`, `validate_contracts.py`
+ou gate executável determinístico equivalente com logs.
+
+### Agentes Claude (subagents com contexto isolado)
+
+- `.claude/agents/hb-adversarial-tester.md` — revisão adversarial isolada
+- `.claude/agents/hb-governance-auditor.md` — auditoria de governança multi-plataforma
+- `.claude/agents/hb-evidence-verifier.md` — verificação de claims vs evidência
+
+### Agentes Codex (gate auditors em sandbox)
+
+- `.dev/codex-agents/hb-gate-auditor.toml` — auditor de gate em sandbox/worktree
+- `.dev/codex-agents/hb-pr-reviewer.toml` — revisor de PR
+
+> Nota: `.codex` é arquivo único neste repo; agentes Codex ficam em `.dev/codex-agents/`.

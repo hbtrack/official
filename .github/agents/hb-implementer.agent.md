@@ -31,6 +31,14 @@ handoffs:
       A implementação local já foi concluída e validada. Assuma o fluxo de PR, CI,
       revisão, checks e merge mantendo a trilha antifraude e sem bypass de gate.
     send: true
+  - label: Start adversarial pre-review
+    agent: Hb Adversarial Tester
+    prompt: >
+      Review only the implementation checkpoint, diff, logs and evidence_pack.
+      Treat this as same-chat review — NOT independent validation.
+      Do not inherit the full Copilot history or implementer narrative.
+      Return REVIEWED_PENDING_ISOLATED_REVIEW, ADVERSARIAL_FAIL, or INCONCLUSIVE.
+    send: false
 ---
 
 # Hb Implementer — Agente de Execução de Implementação

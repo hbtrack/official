@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-04-29"
-branch_ativo: chore/openapi-lint-toolchain-scripts
+branch_ativo: chore/multiagent-auditable-arch
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: notifications
@@ -9,7 +9,7 @@ task_type: architecture_review
 boot_profile_id: architecture_decision
 task_id: PLATFORM_AGENT_EXPOSURE
 resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR da branch chore/openapi-lint-toolchain-scripts com o trilho antifraude e a exposição por plataforma, registrando que os testes focados passaram e que o validate local completo ainda depende de toolchain e baseline operacional."
+proxima_acao_permitida: "Abrir PR da branch chore/multiagent-auditable-arch com o trilho antifraude e a exposição por plataforma, registrando que os testes focados passaram e que o validate local completo ainda depende de toolchain e baseline operacional."
 bloqueios_ativos:
   - "TOOLCHAIN_LOCAL_MISSING"
   - "BASELINE_HANDOFF_FROM_MAIN"
@@ -22,7 +22,7 @@ evidence_paths:
 # SESSION HANDOFF — PLATFORM_AGENT_EXPOSURE
 
 ## Estado Geral
-**Data:** 2026-04-29 | **Branch:** chore/openapi-lint-toolchain-scripts | **CI:** UNKNOWN
+**Data:** 2026-04-29 | **Branch:** chore/multiagent-auditable-arch | **CI:** UNKNOWN
 **Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
 **Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** PLATFORM_AGENT_EXPOSURE | **Resultado:** PENDENTE
 
@@ -40,7 +40,7 @@ evidence_paths:
 - `tests/pipeline_gates/test_platform_agent_exposure.py` — cobertura da exposição por plataforma
 
 ## Próxima ação permitida
-Abrir PR da branch `chore/openapi-lint-toolchain-scripts`, anexando os resultados dos testes focados e registrando que o `validate --profile local` completo ainda falha por toolchain local ausente e baseline operacional do handoff.
+Abrir PR da branch `chore/multiagent-auditable-arch`, anexando os resultados dos testes focados e registrando que o `validate --profile local` completo ainda falha por toolchain local ausente e baseline operacional do handoff.
 
 ## Bloqueios ativos
 - Toolchain local ausente no worktree limpo para a primeira rodada de `hb artifact`/`validate`

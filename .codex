@@ -80,3 +80,16 @@ Tarefas de identificação e correção de checks falhos em PR aberto.
   posição especial de revisão final nesta trilha.
 - Codex não ganha agente separado, dropdown equivalente ao Copilot ou posição
   especial de revisão final nesta trilha.
+
+## Papéis operacionais Codex (gate agents)
+
+Codex pode ser configurado via `.dev/codex-agents/` como gate auditor em sandbox/worktree
+(mecanismo técnico diferente do dropdown Copilot; `.codex` é arquivo único neste repo):
+
+- `hb-gate-auditor` — auditor de gate em sandbox/worktree
+- `hb-pr-reviewer` — revisor de PR
+
+Codex é auditor de gate/sandbox runner. Não é closer autônomo.
+
+Na fase de gate, Codex não deve editar arquivos, aplicar patches,
+criar commits ou declarar `VALIDATED`, `APPROVED` ou `COMPLETE`.

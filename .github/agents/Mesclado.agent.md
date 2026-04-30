@@ -110,6 +110,29 @@ seção "PROTOCOLO DE ACESSO A LOGS".
 5. Se detectar task CDD → handoff para `@HB Contract`
 6. Comunicar em português, linguagem de produto
 
+## Estados operacionais
+
+(Visão operacional — alinhada com trilha canônica de `docs/_canon/AI_EXECUTION_ROLES_POLICY.md`)
+
+```text
+READY_FOR_PR                     → evidências completas, pronto para abrir PR
+PR_OPENED_PENDING_CI             → PR aberto, aguardando GitHub Actions
+BLOCKED_BY_REQUIRED_CHECK        → check obrigatório falhando
+BLOCKED_BY_CONVERSATION          → conversa não resolvida no PR
+BLOCKED_BY_OUTDATED_BRANCH       → branch desatualizada em relação à main
+PASS_PENDING_MERGE               → todos os checks passando, aguardando merge
+MERGED_PENDING_POST_MERGE_CHECK  → merge feito, post-merge pendente
+POST_MERGE_VERIFIED              → main atualizada e verificada
+```
+
+**Proibido emitir**: `VALIDATED`, `APPROVED`, `COMPLETE`
+
+Mapeamento para trilha canônica (`AI_EXECUTION_ROLES_POLICY.md`):
+- `READY_FOR_PR`          ↔ `IMPLEMENTATION_CHECKS_PASS` + `ADVERSARIAL_TESTS_RUN`
+- `PR_OPENED_PENDING_CI`  ↔ `HANDTRACKER_REVIEW` em curso
+- `PASS_PENDING_MERGE`    ↔ `MERGE_APPROVED` (aguardando ação humana)
+- `POST_MERGE_VERIFIED`   ↔ `MAIN_REFRESHED` → `NEXT_PR_ALLOWED`
+
 ## Referências canônicas
 
 - `merge-readiness.json` — SSOT de CI checks → local_equivalent

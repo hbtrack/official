@@ -25,12 +25,16 @@ handoffs:
       gate que impede validar a implementação com segurança. Assuma a análise no
       pipeline CDD antes de qualquer conclusão sobre PASS/FAIL.
     send: true
-  - label: Checks e tratamento de PR
+  - label: Checks e tratamento de PR — prepare isolated Claude review
     agent: HandTracker
     prompt: >
-      O relatório adversarial foi produzido. Assuma o tratamento dos checks, do
-      PR e das correções subsequentes sem relaxar gates ou diluir evidências.
-    send: true
+      O relatório adversarial foi produzido. Prepare o pacote de evidências para
+      revisão isolada por Claude. Incluir APENAS: objective, acceptance_criteria,
+      diff, commands_run, raw_logs, evidence_pack, known_limitations.
+      NÃO incluir: histórico completo do Copilot, narrativa persuasiva do
+      implementador, conclusão textual sem log.
+      Não declarar aprovação. Não declarar validação.
+    send: false
 ---
 
 # Hb Adversarial Tester — Agente de Validação Pós-PR
@@ -104,3 +108,15 @@ Antes de qualquer ação, devem existir:
   estruturado de evidências produzido pelo trilho.
 - O veredito final continua dependendo de gates executáveis, não apenas deste
   relatório.
+
+## Pacote para Claude isolated review
+
+Ao preparar handoff para Claude (via HandTracker), incluir APENAS:
+- `objective`, `acceptance_criteria`, `diff`, `commands_run`, `raw_logs`
+- `evidence_pack`, `known_limitations`
+
+NÃO incluir:
+- histórico completo do Copilot
+- narrativa persuasiva do implementador
+- conclusão textual sem log
+- `_reports/session_start.json` completo (apenas referência ao path)

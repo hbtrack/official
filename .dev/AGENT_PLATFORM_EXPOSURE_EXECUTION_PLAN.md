@@ -24,13 +24,25 @@ simetria entre interfaces que o repositório não possui.
 | Claude | Não | `CLAUDE.md` | Paridade operacional documentada |
 | Codex | Não | `.codex` | Paridade operacional documentada |
 
-## Regras fechadas
+## Evolução arquitetural
 
-- Não criar agentes Claude separados.
-- Não criar agentes Codex separados.
+Esta trilha **revoga** a regra anterior que proibia agentes Claude e Codex separados.
+
+**Motivo**: subagents Claude com contexto isolado e Codex em sandbox são a camada de revisão
+independente que o fluxo anterior não cobria.
+
+| Plataforma | Exposição | Onde vive | Papel no fluxo | Limite |
+|---|---|---|---|---|
+| Copilot | UI/workflow/custom agents | `.github/agents/*.agent.md` | Execução e workflow | Same-chat handoff não é validação independente |
+| Claude | Subagents com contexto isolado | `.claude/agents/*.md` | Revisão adversarial isolada | Revisa, não valida final |
+| Codex | Gate audit / sandbox | `.codex/agents/*.toml` | Auditoria de gate em sandbox | Não implementa durante gate |
+| CI/scripts | Enforcement executável | `scripts/hb`, `validate_contracts.py`, CI | Validação final | Única autoridade para `VALIDATED` |
+
+**Regras invariantes (mantidas)**:
 - Não criar novo runtime.
 - Não criar novos task types.
 - Não criar nova soberania normativa.
+- `VALIDATED` só pode ser produzido por CI, `scripts/hb`, `validate_contracts.py` ou gate executável determinístico.
 
 ## Fluxo-alvo
 
