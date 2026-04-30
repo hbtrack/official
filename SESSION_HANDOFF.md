@@ -9,10 +9,9 @@ task_type: architecture_review
 boot_profile_id: architecture_decision
 task_id: MULTIAGENT_ARCH
 resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR para revisão humana + CI."
+proxima_acao_permitida: "Aguardar CI do push — pr_fix aplicado, HANDOFF_COHERENCE_GATE resolvido localmente."
 bloqueios_ativos: []
 evidence_paths:
-  - ".dev/evidence/gates/planning_gate_report.json"
   - "tests/pipeline_gates/test_platform_agent_exposure.py"
 ---
 # SESSION HANDOFF — MULTIAGENT_ARCH
@@ -47,11 +46,10 @@ Implementação completa da arquitetura multiagente auditável conforme `.dev/PL
 - `tests/pipeline_gates/test_agent_operability_matrix.py` — PASS
 - `tests/pipeline_gates/test_implementation_execution_boot.py` — PASS
 - `tests/pipeline_gates/test_implementation_flow_gates.py` — PASS
-- `.dev/evidence/gates/planning_gate_report.json` — gate report da fase de planejamento
 - `governance_changed = false` para arquivos criados por esta trilha (nenhum em .contract_driven/, docs/_canon/)
 
 ## Próxima ação permitida
-Abrir PR para revisão humana + CI.
+Corrigir HANDOFF_COHERENCE_GATE: push do fix (evidence_paths sem referência gitignored) → CI reativo.
 
 ## Bloqueios ativos
-- Nenhum
+- Nenhum (pr_fix aplicado: referência gitignored removida de `evidence_paths`; validate --profile ci PASS local)
