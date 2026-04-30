@@ -1,25 +1,25 @@
 ---
-data_ultima_sessao: "2026-04-29"
-branch_ativo: chore/openapi-lint-toolchain-scripts
+data_ultima_sessao: "2026-04-30"
+branch_ativo: fix/deploy-live-enforcement-parity-gh-token
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: notifications
 fase_roadmap: 1
-task_type: architecture_review
+task_type: pr_fix
 boot_profile_id: architecture_decision
-task_id: MULTIAGENT_ARCH
+task_id: FIX_DEPLOY_GH_TOKEN
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI do push — pr_fix aplicado, HANDOFF_COHERENCE_GATE resolvido localmente."
+proxima_acao_permitida: "Aguardar CI do PR fix — GH_TOKEN adicionado ao deploy.yml step 1."
 bloqueios_ativos: []
 evidence_paths:
-  - "tests/pipeline_gates/test_platform_agent_exposure.py"
+  - ".github/workflows/deploy.yml"
 ---
-# SESSION HANDOFF — MULTIAGENT_ARCH
+# SESSION HANDOFF — FIX_DEPLOY_GH_TOKEN
 
 ## Estado Geral
-**Data:** 2026-04-29 | **Branch:** chore/openapi-lint-toolchain-scripts | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
-**Módulo foco:** notifications | **Fase ROADMAP:** 1 | **task_id:** MULTIAGENT_ARCH | **Resultado:** PENDENTE
+**Data:** 2026-04-30 | **Branch:** fix/deploy-live-enforcement-parity-gh-token | **CI:** UNKNOWN
+**Modo:** CDD | **task_type:** pr_fix | **boot_profile:** architecture_decision
+**Módulo foco:** openapi | **Fase ROADMAP:** 1 | **task_id:** FIX_DEPLOY_GH_TOKEN | **Resultado:** PENDENTE
 
 ## O que foi feito
 Implementação completa da arquitetura multiagente auditável conforme `.dev/PLANO.md` com correções A1-A8:
