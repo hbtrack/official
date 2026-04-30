@@ -471,6 +471,8 @@ jobs:
         run: pip install -r requirements-dev.txt
       - name: Run HTTP_RUNTIME_CONTRACT_GATE
         run: python3 scripts/contracts/validate/validate_contracts.py
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 6: Aprovação humana obrigatória antes de produção

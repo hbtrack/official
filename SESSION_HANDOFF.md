@@ -1,55 +1,70 @@
 ---
 data_ultima_sessao: "2026-04-30"
-branch_ativo: fix/deploy-live-enforcement-parity-gh-token
+branch_ativo: fix/deploy-gh-token-contract-conformance
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: notifications
 fase_roadmap: 1
-task_type: pr_fix
+task_type: architecture_review
 boot_profile_id: architecture_decision
-task_id: FIX_DEPLOY_GH_TOKEN
+task_id: MULTIAGENT_ARCH_IMPL_20260430
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI do PR fix — GH_TOKEN adicionado ao deploy.yml step 1."
+proxima_acao_permitida: "Commit + PR para branch atual. Após merge do PR #106, validar que testes de pipeline_gates passam em CI."
 bloqueios_ativos: []
 evidence_paths:
-  - ".github/workflows/deploy.yml"
+  - ".claude/agents/hb-adversarial-tester.md"
+  - ".claude/agents/hb-governance-auditor.md"
+  - ".claude/agents/hb-evidence-verifier.md"
+  - ".github/agents/hb-implementer.agent.md"
+  - ".github/agents/hb-adversarial-tester.agent.md"
+  - ".github/agents/Mesclado.agent.md"
+  - ".dev/schemas/hb_gate_report.schema.json"
+  - "tests/pipeline_gates/test_platform_agent_exposure.py"
+  - "tests/pipeline_gates/test_gate_report_schema.py"
 ---
-# SESSION HANDOFF — FIX_DEPLOY_GH_TOKEN
+# SESSION HANDOFF — MULTIAGENT_ARCH_IMPL_20260430
 
 ## Estado Geral
-**Data:** 2026-04-30 | **Branch:** fix/deploy-live-enforcement-parity-gh-token | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** pr_fix | **boot_profile:** architecture_decision
-**Módulo foco:** openapi | **Fase ROADMAP:** 1 | **task_id:** FIX_DEPLOY_GH_TOKEN | **Resultado:** PENDENTE
-
-## O que foi feito
-Implementação completa da arquitetura multiagente auditável conforme `.dev/PLANO.md` com correções A1-A8:
-
-- **PLANO.md** atualizado com 8 correções de auditoria (C1-C6 eliminados)
-- **`.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md`** atualizado — "Regras fechadas" removidas, "Evolução arquitetural" adicionada
-- **`.dev/schemas/hb_gate_report.schema.json`** criado (experimental, não em contracts/)
-- **`.dev/evidence/gates/planning_gate_report.json`** criado como exemplo de gate report
-- **Agentes Copilot** atualizados cirurgicamente:
-  - `hb-implementer`: 3º handoff adicionado (`Hb Adversarial Tester`, `send: false`)
-  - `hb-adversarial-tester`: HandTracker handoff `send: true → false` + seção pacote isolado
-  - `Mesclado` (HandTracker): seção "Estados operacionais" adicionada
-- **`.claude/agents/`** criado com 3 subagents (hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier)
-- **`.dev/codex-agents/`** criado com 2 gate agents (hb-gate-auditor, hb-pr-reviewer)
-- **Bridge docs** atualizados: AGENTS.md, CLAUDE.md, .codex, MAP.md — frases testadas preservadas
-- **`test_gate_report_schema.py`** criado: 14 testes (7 positivos + 7 negativos)
-- **`test_platform_agent_exposure.py`** estendido: 35 testes total (23 novos, itens 11-22)
-- **Resultado de testes:** 98/98 PASS (6 suítes de pipeline_gates)
+**Data:** 2026-04-30 | **Branch:** fix/deploy-gh-token-contract-conformance | **CI:** UNKNOWN
+**Modo:** CDD | **task_type:** architecture_review | **boot_profile:** architecture_decision
+**task_id:** MULTIAGENT_ARCH_IMPL_20260430 | **Resultado:** IMPLEMENTADO_PENDENTE_CI
 
 ## Evidências
-- `tests/pipeline_gates/test_platform_agent_exposure.py` — 35/35 PASS
-- `tests/pipeline_gates/test_gate_report_schema.py` — 14/14 PASS
-- `tests/pipeline_gates/test_agent_compliance_phase0.py` — PASS
-- `tests/pipeline_gates/test_agent_operability_matrix.py` — PASS
-- `tests/pipeline_gates/test_implementation_execution_boot.py` — PASS
-- `tests/pipeline_gates/test_implementation_flow_gates.py` — PASS
-- `governance_changed = false` para arquivos criados por esta trilha (nenhum em .contract_driven/, docs/_canon/)
+- `.claude/agents/` — 3 subagents Claude criados (hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier)
+- `.github/agents/` — 3 agentes Copilot atualizados cirurgicamente
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — bridge doc único consolidado; absorve decisão arquitetural, evolução, pacote Claude, proibições e critérios de aceite
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de plataformas adicionada
+- `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido (46 testes)
+- `tests/pipeline_gates/test_gate_report_schema.py` — criado (15 testes)
+- **Resultado dos testes:** 46/46 PASSED
+
+## O que foi feito
+
+### Implementação da Arquitetura Multiagente Auditável (PLANO.md)
+
+**Criados:**
+- `.claude/agents/hb-adversarial-tester.md` — subagent Claude com contexto isolado
+- `.claude/agents/hb-governance-auditor.md` — auditor de governança Claude
+- `.claude/agents/hb-evidence-verifier.md` — verificador de evidências Claude
+- `tests/pipeline_gates/test_gate_report_schema.py` — 15 testes do schema de gate report
+
+**Atualizados (cirurgicamente):**
+- `.github/agents/hb-implementer.agent.md` — 3º handoff "Start adversarial pre-review" (send: false)
+- `.github/agents/hb-adversarial-tester.agent.md` — handoff renomeado + seção "Pacote para Claude"
+- `.github/agents/Mesclado.agent.md` — seção "Estados operacionais" (READY_FOR_PR ... POST_MERGE_VERIFIED)
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — consolidado como plano/mapa único da exposição multiagente
+- `.dev/AGENT_PLATFORM_EXPOSURE_MAP.md` — matriz de exposição por plataforma adicionada
+- `AGENTS.md` — seção "Arquitetura multiagente auditável" adicionada
+- `tests/pipeline_gates/test_platform_agent_exposure.py` — estendido com classes Claude/Codex/Coherence
+
+**Resultado dos testes:** 46/46 PASSED
+
+## Contexto anterior — PR #106 (em aberto)
+- Fix: GH_TOKEN adicionado ao step `Run HTTP_RUNTIME_CONTRACT_GATE` em deploy.yml
+- PR #106: fix/deploy-gh-token-contract-conformance → main (aguardando CI)
 
 ## Próxima ação permitida
-Corrigir HANDOFF_COHERENCE_GATE: push do fix (evidence_paths sem referência gitignored) → CI reativo.
+Commit das mudanças de arquitetura multiagente na branch atual. Após merge do PR #106, verificar que os novos testes passam em CI.
 
 ## Bloqueios ativos
-- Nenhum (pr_fix aplicado: referência gitignored removida de `evidence_paths`; validate --profile ci PASS local)
+- Nenhum

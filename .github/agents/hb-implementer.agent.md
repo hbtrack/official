@@ -31,6 +31,12 @@ handoffs:
       A implementação local já foi concluída e validada. Assuma o fluxo de PR, CI,
       revisão, checks e merge mantendo a trilha antifraude e sem bypass de gate.
     send: true
+  - label: Start adversarial pre-review
+    agent: Hb Adversarial Tester
+    prompt: >
+      A implementação local foi concluída. Inicie a triagem adversarial interna
+      antes de abrir PR. Receba o evidence_pack e tente invalidar a implementação.
+    send: false
 ---
 
 # Hb Implementer — Agente de Execução de Implementação
