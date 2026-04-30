@@ -79,13 +79,14 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 43 | `SYNC_MANIFEST.yaml` | Manifesto de sincronização determinístico entre source graphs e artefatos derivados por módulo |
 | 44 | `DOC_USAGE_MANIFEST.yaml` | Manifesto de uso de documentos — rastreia ownership e freshness das doc-rules por módulo |
 | 45 | `AI_EXECUTION_ROLES_POLICY.md` | Política canônica de papéis de execução por agentes, evidências obrigatórias e limites de autoridade |
+| 46 | `DECISION_MATERIALIZATION_POLICY.md` | Política de materialização de decisões: liga ADR + Decision IR a obrigações runtime, testes adversariais, gates e evidência fresca pós-main. |
 
 ### Subdiretórios Autorizados
 
 - **`decisions/`** — ADRs aprovadas no padrão `ADR-NNN-<slug>.md`
 - **`gates/`** — GATES_REGISTRY.yaml (registry de gates) e README.md
 - **`security/`** — OWASP_API_CONTROL_MATRIX.yaml (matriz de controles)
-- **`templates/`** — SESSION_HANDOFF.template.md (template de handoff)
+- **`templates/`** — `SESSION_HANDOFF.template.md` (template de handoff); `DECISION_MATERIALIZATION_MATRIX.template.yaml` (template de matriz de materialização de decisões)
 - **`graph/`** — Regras globais do source graph: global_rules.yaml, global_policies.yaml, lifecycle.yaml, source_map.yaml
 
 > **Nota**: `BOOT_PROFILES.yaml` e `TASK_CATALOG.yaml` foram movidos para `.contract_driven/` — veja [docs/_canon/AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md) §7 para referência atualizada.

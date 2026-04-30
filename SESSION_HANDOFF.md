@@ -1,20 +1,23 @@
 ---
 data_ultima_sessao: "2026-04-30"
-branch_ativo: fix/deploy-live-enforcement-parity-gh-token
+branch_ativo: decision-materialization-canon-bootstrap
 modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: notifications
+modulo_foco: training
 fase_roadmap: 1
-task_type: pr_fix
+task_type: new_contract
 boot_profile_id: architecture_decision
-task_id: FIX_DEPLOY_GH_TOKEN
+task_id: DECISION_MATERIALIZATION_CANON_BOOTSTRAP
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI do PR fix — GH_TOKEN adicionado ao deploy.yml step 1."
+proxima_acao_permitida: "Abrir PR 1 de bootstrap canônico — política, template, registry deferred e matriz inicial de training. Enforcement executável é escopo do PR 2."
 bloqueios_ativos: []
 evidence_paths:
-  - ".github/workflows/deploy.yml"
+  - "docs/_canon/DECISION_MATERIALIZATION_POLICY.md"
+  - "docs/_canon/templates/DECISION_MATERIALIZATION_MATRIX.template.yaml"
+  - "docs/_canon/gates/GATES_REGISTRY.yaml"
+  - ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
 ---
-# SESSION HANDOFF — FIX_DEPLOY_GH_TOKEN
+# SESSION HANDOFF — DECISION_MATERIALIZATION_CANON_BOOTSTRAP
 
 ## Estado Geral
 **Data:** 2026-04-30 | **Branch:** fix/deploy-live-enforcement-parity-gh-token | **CI:** UNKNOWN

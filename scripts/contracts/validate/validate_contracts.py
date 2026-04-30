@@ -5356,6 +5356,8 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "UX_SHELL_CONTRACT.md",
         "AUTH_EXPERIENCE_CONTRACT.md",
         "NAVIGATION_VISIBILITY_CONTRACT.md",
+        # Política de materialização de decisões (PR 1 — DECISION_MATERIALIZATION_CANON_BOOTSTRAP)
+        "DECISION_MATERIALIZATION_POLICY.md",
     })
 
     # Subdiretórios autorizados
@@ -5368,7 +5370,11 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     SECURITY_ALLOWLIST: frozenset[str] = frozenset({"OWASP_API_CONTROL_MATRIX.yaml"})
 
     # templates/ — templates de sessão/handoff
-    TEMPLATES_ALLOWLIST: frozenset[str] = frozenset({"SESSION_HANDOFF.template.md"})
+    TEMPLATES_ALLOWLIST: frozenset[str] = frozenset({
+        "SESSION_HANDOFF.template.md",
+        # Template de matriz de materialização de decisões (PR 1 — DECISION_MATERIALIZATION_CANON_BOOTSTRAP)
+        "DECISION_MATERIALIZATION_MATRIX.template.yaml",
+    })
 
     # decisions/ — padrão ADR-NNN-*.md (README.md é excepcionado como arquivo de suporte)
     adr_pattern = re.compile(r"^ADR-\d{3}-.+\.md$")

@@ -1,0 +1,484 @@
+# -------------------------------------------------------------------------
+# DECISION_MATERIALIZATION_TRAINING.yaml
+# Matriz operacional derivada — Decision Materialization do módulo training.
+#
+# ARTEFATO DERIVADO — NÃO É SSOT SEMÂNTICA.
+# Fonte soberana da Decision IR: .contract_driven/decisions/DECISION_IR_TRAINING.yaml
+# ADRs canônicas: docs/_canon/decisions/ADR-032-training-arch-decisions.md
+# Política canônica: docs/_canon/DECISION_MATERIALIZATION_POLICY.md
+#
+# STATUS PR 1 (BOOTSTRAP):
+# - Todas as classificações são conservadoras (not_materialized),
+#   exceto TRAIN-DEC-020 que é blocked_by_contract_conflict.
+# - decision_ir_refs usam IDs qualificados lidos diretamente do IR soberano.
+# - Nenhuma classificação "partially_materialized" ou "materialized" neste PR.
+# - Classificação honesta por camada ocorre no PR 3
+#   (TRAINING_DECISION_MATERIALIZATION_BACKFILL).
+# -------------------------------------------------------------------------
+module: training
+source_decision_ir: ".contract_driven/decisions/DECISION_IR_TRAINING.yaml"
+source_adr:
+  - "docs/_canon/decisions/ADR-032-training-arch-decisions.md"
+
+freshness:
+  main_ref: null
+  generated_at_utc: null
+  report_ref: "_reports/decision_materialization/training.json"
+
+decisions:
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-001 — training_intervention_cycle como unidade soberana
+  # IR soberana: entities training.training_intervention_cycle (line ~267),
+  #   state model STM-TRAINING-002 (entity_ref: training.training_intervention_cycle),
+  #   surface_mapping decision_ref: TRAIN-DEC-001 (lines 2000–2006)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-001
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-001"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_intervention_cycle"
+        - "training.training_session"
+      relations:
+        - "source_entity_ref: training.training_session → target_entity_ref: training.training_intervention_cycle"
+      state_models:
+        - "STM-TRAINING-002"
+
+    runtime_obligations:
+      - id: TRAIN-DEC-001-RUNTIME-001
+        statement: >
+          O módulo training deve representar o ciclo completo de intervenção
+          (need → objective → prescription → session → execution → response →
+          review → adjustment) como unidade operacional soberana, não apenas
+          CRUD de sessão.
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "src/training/application/"
+
+    required_runtime_artifacts:
+      - "src/training/domain/entities/training_session.py"
+      - "src/training/domain/entities/training_intervention_cycle.py"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-001-NEG-001
+        description: >
+          Criar training_session sem objetivo ou ciclo de intervenção vinculado
+          deve ser bloqueado pelo domínio.
+        test_type: adversarial
+        target_path: "tests/training/test_intervention_cycle_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-001-POS-001
+        description: >
+          Criar training_session com need + objective + prescrição deve resultar
+          em intervenção válida com lifecycle completo rastreável.
+        test_type: behavioral
+        target_path: "tests/training/test_intervention_cycle.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-004 — objective requires linked need or rationale
+  # IR soberana: entity training.session_objective (line ~377),
+  #   rule training.rule.session_requires_objective (RUL-TRAINING-001),
+  #   events EVT-TRAINING-004, EVT-TRAINING-005,
+  #   api_use_case decision_ref: TRAIN-DEC-004 (lines ~1676, 1685),
+  #   surface_mapping decision_ref: TRAIN-DEC-004 (lines 2036–2045)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-004
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-004"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_session"
+        - "training.session_objective"
+      relations:
+        - "source_entity_ref: training.session_objective → target_entity_ref: training.need_detected"
+      state_models: []
+
+    runtime_obligations:
+      - id: TRAIN-DEC-004-RUNTIME-001
+        statement: >
+          Toda training_session publicada deve ter ao menos um objetivo vinculado
+          com need ou rationale. Sessão sem objetivo não pode ser publicada.
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "contracts/schemas/training/training_session.schema.json"
+
+    required_runtime_artifacts:
+      - "contracts/schemas/training/training_session.schema.json"
+      - "src/training/domain/rules/session_objective_rule.py"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-004-NEG-001
+        description: >
+          Tentativa de publicar session sem objetivo vinculado deve retornar 422.
+        test_type: adversarial
+        target_path: "tests/training/test_session_objective_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-004-POS-001
+        description: >
+          Publicar session com objetivo vinculado a need deve ser aceito.
+        test_type: behavioral
+        target_path: "tests/training/test_session_objective.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-006 — published session requires minimum content
+  # IR soberana: entity training.training_session (line ~175),
+  #   rule training.rule.publication_preconditions_met (RUL-TRAINING-*),
+  #   error training.error.session_publish_preconditions_not_met (ERR-TRAINING-001),
+  #   event EVT-TRAINING-009, state model STM-TRAINING-001,
+  #   api_use_case training.session.publish (line ~1339),
+  #   surface_mapping decision_ref: TRAIN-DEC-006 (lines 2067–2076)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-006
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-006"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_session"
+        - "training.session_block"
+      relations: []
+      state_models:
+        - "STM-TRAINING-001"
+
+    runtime_obligations:
+      - id: TRAIN-DEC-006-RUNTIME-001
+        statement: >
+          Uma session no estado published deve conter ao menos um bloco com
+          ao menos um exercício. Transição sem conteúdo mínimo deve ser bloqueada
+          com training.error.session_publish_preconditions_not_met (422).
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "contracts/schemas/training/training_session.schema.json"
+
+    required_runtime_artifacts:
+      - "contracts/schemas/training/training_session.schema.json"
+      - "src/training/domain/rules/session_publish_rule.py"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-006-NEG-001
+        description: >
+          Publicar session sem nenhum bloco/exercício deve retornar 422
+          (training.error.session_publish_preconditions_not_met).
+        test_type: adversarial
+        target_path: "tests/training/test_session_publish_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-006-POS-001
+        description: >
+          Publicar session com bloco e exercício deve ser aceito com estado
+          published persistido.
+        test_type: behavioral
+        target_path: "tests/training/test_session_publish.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-007 — execution_record requires prescription context
+  # IR soberana: entity training.execution_record (line ~485),
+  #   rule training.rule.execution_requires_prescription_context,
+  #   error training.error.execution_without_context (ERR-TRAINING-003),
+  #   event EVT-TRAINING-012,
+  #   api_use_case training.execution.record (line ~1367),
+  #   surface_mapping decision_ref: TRAIN-DEC-007 (lines 2081–2090)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-007
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-007"
+
+    decision_ir_refs:
+      entities:
+        - "training.execution_record"
+        - "training.training_session"
+      relations:
+        - "source_entity_ref: training.execution_record → target_entity_ref: training.training_session"
+      state_models: []
+
+    runtime_obligations:
+      - id: TRAIN-DEC-007-RUNTIME-001
+        statement: >
+          Cada execution_record deve ter contexto explícito de prescrição, bloco
+          ou improviso. Criar execution_record sem contexto de session ou block
+          deve ser bloqueado com training.error.execution_without_context (422).
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "contracts/schemas/training/"
+
+    required_runtime_artifacts:
+      - "contracts/schemas/training/execution_record.schema.json"
+      - "src/training/domain/rules/execution_context_rule.py"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-007-NEG-001
+        description: >
+          Criar execution_record sem contexto de prescrição/bloco deve retornar
+          422 (training.error.execution_without_context).
+        test_type: adversarial
+        target_path: "tests/training/test_execution_record_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-007-POS-001
+        description: >
+          Criar execution_record com contexto de bloco vinculado à sessão deve
+          ser aceito.
+        test_type: behavioral
+        target_path: "tests/training/test_execution_record.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-008 — planned vs actual must not merge
+  # IR soberana: entity training.training_session (line ~175),
+  #   entity training.execution_record (line ~485),
+  #   rule training.rule.planned_actual_must_not_merge,
+  #   error training.error.invalid_state_transition (ERR-TRAINING-002),
+  #   event EVT-TRAINING-013,
+  #   state model STM-TRAINING-001,
+  #   surface_mapping decision_ref: TRAIN-DEC-008 (lines 2095–2101)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-008
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-008"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_session"
+        - "training.execution_record"
+      relations:
+        - "source_entity_ref: training.execution_record → target_entity_ref: training.training_session"
+      state_models:
+        - "STM-TRAINING-001"
+
+    runtime_obligations:
+      - id: TRAIN-DEC-008-RUNTIME-001
+        statement: >
+          O estado planejado (planned) de uma session deve ser preservado
+          imutável após publicação. Divergências durante execução são registradas
+          em execution_record sem alterar o planned original
+          (training.rule.planned_actual_must_not_merge).
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "contracts/schemas/training/"
+
+    required_runtime_artifacts:
+      - "contracts/schemas/training/training_session.schema.json"
+      - "src/training/domain/rules/planned_immutability_rule.py"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-008-NEG-001
+        description: >
+          Tentativa de alterar o plano original de uma session já em execução
+          deve ser bloqueada (training.error.invalid_state_transition, 422).
+        test_type: adversarial
+        target_path: "tests/training/test_planned_immutability_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-008-POS-001
+        description: >
+          Registrar divergência de execução via execution_record sem alterar o
+          planned deve ser aceito e preservar ambos os estados.
+        test_type: behavioral
+        target_path: "tests/training/test_planned_vs_actual.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-012 — completion evidence required
+  # IR soberana: entity training.training_session (line ~175),
+  #   rule training.rule.completion_evidence_required,
+  #   error training.error.completion_without_evidence (ERR-TRAINING-004),
+  #   event EVT-TRAINING-015,
+  #   api_use_case training.session.complete (line ~1381),
+  #   surface_mapping decision_ref: TRAIN-DEC-012 (lines 2145–2154)
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-012
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-012"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_session"
+        - "training.execution_record"
+      relations:
+        - "source_entity_ref: training.execution_record → target_entity_ref: training.training_session"
+      state_models:
+        - "STM-TRAINING-001"
+
+    runtime_obligations:
+      - id: TRAIN-DEC-012-RUNTIME-001
+        statement: >
+          Completar uma session exige evidência mínima de execução. Tentativa de
+          completar session sem evidência deve ser bloqueada com
+          training.error.completion_without_evidence (422).
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "src/training/application/"
+
+    required_runtime_artifacts:
+      - "src/training/domain/rules/completion_evidence_rule.py"
+      - "contracts/schemas/training/training_session.schema.json"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-012-NEG-001
+        description: >
+          Tentar completar session sem nenhuma execution_record vinculada deve
+          retornar 422 (training.error.completion_without_evidence).
+        test_type: adversarial
+        target_path: "tests/training/test_completion_evidence_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-012-POS-001
+        description: >
+          Completar session com ao menos uma execution_record vinculada deve
+          ser aceito.
+        test_type: behavioral
+        target_path: "tests/training/test_completion_evidence.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-020 — audit via módulo transversal (conflito canônico com ADR-017)
+  # IR soberana: rule training.rule.audit_via_transversal_module (RUL-TRAINING-040),
+  #   event training.event.audit_event_emitted (EVT-TRAINING-022),
+  #   integration training (INT-TRAINING-005, decision_refs: TRAIN-DEC-016, TRAIN-DEC-020)
+  # Conflito: training.rule.audit_via_transversal_module direciona audit para
+  #   módulo transversal; ADR-017 define fronteiras do módulo audit soberano.
+  #   A resolução deste conflito requer PR formal de ADR, não é resolvível no PR 1.
+  # blocked_by_contract_conflict bloqueia feature work que tente implementar
+  #   audit diretamente em training. Não bloqueia PR cujo único objetivo seja
+  #   resolver o conflito canônico via processo ADR.
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-020
+    decision_policy_criticality: obrigatoria
+    execution_priority: P0
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-020"
+
+    decision_ir_refs:
+      entities:
+        - "training.training_session"
+      relations:
+        - "integration: training → audit (INT-TRAINING-005, type: event_emission)"
+      state_models: []
+
+    runtime_obligations:
+      - id: TRAIN-DEC-020-RUNTIME-001
+        statement: >
+          Resolução do conflito canônico entre TRAIN-DEC-020 e ADR-017 é
+          pré-requisito. Nenhuma implementação parcial de audit direta em
+          training é permitida até o conflito ser resolvido via ADR formal.
+          (training.rule.audit_via_transversal_module: RUL-TRAINING-040)
+        required: true
+        expected_runtime_locations: []
+
+    required_runtime_artifacts: []
+
+    required_behavior_tests_negative: []
+
+    required_behavior_tests_positive: []
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: blocked_by_contract_conflict
+    blocks_feature_work: true
+    waiver: null
+
+  # ---------------------------------------------------------------------------
+  # TRAIN-DEC-047 — exercise_id + exercise_version_id (boundary exercises/training)
+  # Verificação do IR soberano (.contract_driven/decisions/DECISION_IR_TRAINING.yaml):
+  #   TRAIN-DEC-047 NÃO aparece como decision_ref no IR soberano de training.
+  #   O DECISION_IR_EXERCISES.yaml não existe em .contract_driven/decisions/
+  #   (verificado em 2026-04-28).
+  #   A decisão aparece apenas em:
+  #     - docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-047
+  #     - docs/hbtrack/modulos/exercises/ (documentação de módulo não soberana)
+  #   Gap de rastreabilidade: TRAIN-DEC-047 deve ser adicionado ao
+  #   DECISION_IR_TRAINING.yaml (.contract_driven) antes de poder ser classificado
+  #   como materializado. A avaliação deste gap é escopo do PR 3.
+  # ---------------------------------------------------------------------------
+  - decision_id: TRAIN-DEC-047
+    decision_policy_criticality: obrigatoria
+    execution_priority: P1
+    canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-047"
+
+    decision_ir_refs:
+      entities: []
+      relations: []
+      state_models: []
+      unresolved_decision_ir_refs:
+        - ref: "training boundary — exercise_id + exercise_version_id"
+          reason: >
+            TRAIN-DEC-047 não aparece como decision_ref no IR soberano
+            .contract_driven/decisions/DECISION_IR_TRAINING.yaml (verificado em 2026-04-28).
+            DECISION_IR_EXERCISES.yaml não existe em .contract_driven/decisions/.
+            Gap deve ser avaliado e corrigido no PR 3.
+
+    runtime_obligations:
+      - id: TRAIN-DEC-047-RUNTIME-001
+        statement: >
+          O módulo training deve referenciar exercícios exclusivamente via
+          exercise_id + exercise_version_id. Training não pode armazenar atributos
+          de exercício fora desses dois campos de referência.
+        required: true
+        expected_runtime_locations:
+          - "src/training/domain/"
+          - "contracts/schemas/training/"
+
+    required_runtime_artifacts:
+      - "contracts/schemas/training/session_exercise.schema.json"
+
+    required_behavior_tests_negative:
+      - id: TRAIN-DEC-047-NEG-001
+        description: >
+          Criar session_exercise com atributos de exercício embarcados em vez de
+          exercise_id + exercise_version_id deve ser rejeitado.
+        test_type: adversarial
+        target_path: "tests/training/test_exercise_boundary_adversarial.py"
+
+    required_behavior_tests_positive:
+      - id: TRAIN-DEC-047-POS-001
+        description: >
+          Criar session_exercise com exercise_id + exercise_version_id válidos
+          deve ser aceito sem exigir atributos do exercício.
+        test_type: behavioral
+        target_path: "tests/training/test_exercise_boundary.py"
+
+    enforcement_gate: DECISION_MATERIALIZATION_GATE
+    materialization_status: not_materialized
+    blocks_feature_work: true
+    waiver: null
