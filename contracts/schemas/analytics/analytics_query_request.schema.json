@@ -6,12 +6,22 @@
   "description": "Structured analytics query request with closed metric catalog, closed source modules, and scope-bound filters.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["scope", "sourceModules", "metricKeys", "timeWindow", "granularity", "filters"],
+  "required": [
+    "scope",
+    "sourceModules",
+    "metricKeys",
+    "timeWindow",
+    "granularity",
+    "filters"
+  ],
   "properties": {
     "scope": {
       "type": "string",
       "x-domain-enum-ref": "analytics_query_scope",
-      "enum": ["TEAM", "ATHLETE"]
+      "enum": [
+        "TEAM",
+        "ATHLETE"
+      ]
     },
     "sourceModules": {
       "type": "array",
@@ -20,7 +30,10 @@
       "items": {
         "type": "string",
         "x-domain-enum-ref": "analytics_source_module",
-        "enum": ["TRAINING", "WELLNESS"]
+        "enum": [
+          "TRAINING",
+          "WELLNESS"
+        ]
       }
     },
     "metricKeys": {
@@ -53,12 +66,20 @@
     "granularity": {
       "type": "string",
       "x-domain-enum-ref": "analytics_granularity",
-      "enum": ["DAILY", "WEEKLY", "MONTHLY"]
+      "enum": [
+        "DAILY",
+        "WEEKLY",
+        "MONTHLY"
+      ]
     },
     "filters": {
       "oneOf": [
-        { "$ref": "#/definitions/team_filters" },
-        { "$ref": "#/definitions/athlete_filters" }
+        {
+          "$ref": "#/definitions/team_filters"
+        },
+        {
+          "$ref": "#/definitions/athlete_filters"
+        }
       ]
     }
   },
@@ -66,18 +87,33 @@
     {
       "if": {
         "properties": {
-          "timeWindow": { "const": "CUSTOM" }
+          "timeWindow": {
+            "const": "CUSTOM"
+          }
         },
-        "required": ["timeWindow"]
+        "required": [
+          "timeWindow"
+        ]
       },
       "then": {
-        "required": ["dateFrom", "dateTo"]
+        "required": [
+          "dateFrom",
+          "dateTo"
+        ]
       },
       "else": {
         "not": {
           "anyOf": [
-            { "required": ["dateFrom"] },
-            { "required": ["dateTo"] }
+            {
+              "required": [
+                "dateFrom"
+              ]
+            },
+            {
+              "required": [
+                "dateTo"
+              ]
+            }
           ]
         }
       }
@@ -85,26 +121,38 @@
     {
       "if": {
         "properties": {
-          "scope": { "const": "TEAM" }
+          "scope": {
+            "const": "TEAM"
+          }
         },
-        "required": ["scope"]
+        "required": [
+          "scope"
+        ]
       },
       "then": {
         "properties": {
-          "filters": { "$ref": "#/definitions/team_filters" }
+          "filters": {
+            "$ref": "#/definitions/team_filters"
+          }
         }
       }
     },
     {
       "if": {
         "properties": {
-          "scope": { "const": "ATHLETE" }
+          "scope": {
+            "const": "ATHLETE"
+          }
         },
-        "required": ["scope"]
+        "required": [
+          "scope"
+        ]
       },
       "then": {
         "properties": {
-          "filters": { "$ref": "#/definitions/athlete_filters" }
+          "filters": {
+            "$ref": "#/definitions/athlete_filters"
+          }
         }
       }
     }
@@ -121,7 +169,9 @@
     "team_filters": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["teamIds"],
+      "required": [
+        "teamIds"
+      ],
       "properties": {
         "teamIds": {
           "type": "array",
@@ -137,7 +187,9 @@
     "athlete_filters": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["athleteIds"],
+      "required": [
+        "athleteIds"
+      ],
       "properties": {
         "athleteIds": {
           "type": "array",
@@ -154,12 +206,20 @@
   "examples": [
     {
       "scope": "TEAM",
-      "sourceModules": ["TRAINING", "WELLNESS"],
-      "metricKeys": ["READINESS_SCORE", "ENGAGEMENT_SIGNAL"],
+      "sourceModules": [
+        "TRAINING",
+        "WELLNESS"
+      ],
+      "metricKeys": [
+        "READINESS_SCORE",
+        "ENGAGEMENT_SIGNAL"
+      ],
       "timeWindow": "LAST_28_DAYS",
       "granularity": "WEEKLY",
       "filters": {
-        "teamIds": ["550e8400-e29b-41d4-a716-446655440101"]
+        "teamIds": [
+          "550e8400-e29b-41d4-a716-446655440101"
+        ]
       }
     }
   ]

@@ -6,7 +6,11 @@
   "description": "Structured analytics query response with deterministic row envelope.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["data", "resultCount", "computedAt"],
+  "required": [
+    "data",
+    "resultCount",
+    "computedAt"
+  ],
   "properties": {
     "data": {
       "type": "array",
@@ -37,8 +41,12 @@
     },
     "nullable_uuid_v4": {
       "anyOf": [
-        { "$ref": "#/definitions/uuid_v4" },
-        { "type": "null" }
+        {
+          "$ref": "#/definitions/uuid_v4"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "query_row": {
@@ -63,7 +71,10 @@
         "scope": {
           "type": "string",
           "x-domain-enum-ref": "analytics_query_scope",
-          "enum": ["TEAM", "ATHLETE"]
+          "enum": [
+            "TEAM",
+            "ATHLETE"
+          ]
         },
         "teamId": {
           "$ref": "#/definitions/nullable_uuid_v4"
@@ -80,7 +91,11 @@
         "granularity": {
           "type": "string",
           "x-domain-enum-ref": "analytics_granularity",
-          "enum": ["DAILY", "WEEKLY", "MONTHLY"]
+          "enum": [
+            "DAILY",
+            "WEEKLY",
+            "MONTHLY"
+          ]
         },
         "value": {
           "type": "number"
@@ -92,7 +107,10 @@
           "items": {
             "type": "string",
             "x-domain-enum-ref": "analytics_source_module",
-            "enum": ["TRAINING", "WELLNESS"]
+            "enum": [
+              "TRAINING",
+              "WELLNESS"
+            ]
           }
         },
         "computedAt": {
@@ -103,26 +121,38 @@
         {
           "if": {
             "properties": {
-              "scope": { "const": "TEAM" }
+              "scope": {
+                "const": "TEAM"
+              }
             },
-            "required": ["scope"]
+            "required": [
+              "scope"
+            ]
           },
           "then": {
             "properties": {
-              "athleteId": { "type": "null" }
+              "athleteId": {
+                "type": "null"
+              }
             }
           }
         },
         {
           "if": {
             "properties": {
-              "scope": { "const": "ATHLETE" }
+              "scope": {
+                "const": "ATHLETE"
+              }
             },
-            "required": ["scope"]
+            "required": [
+              "scope"
+            ]
           },
           "then": {
             "properties": {
-              "athleteId": { "$ref": "#/definitions/uuid_v4" }
+              "athleteId": {
+                "$ref": "#/definitions/uuid_v4"
+              }
             }
           }
         }
@@ -141,7 +171,10 @@
           "bucketEndDate": "2026-03-07",
           "granularity": "WEEKLY",
           "value": 74.2,
-          "sourceModuleLabels": ["TRAINING", "WELLNESS"],
+          "sourceModuleLabels": [
+            "TRAINING",
+            "WELLNESS"
+          ],
           "computedAt": "2026-03-20T12:30:00Z"
         }
       ],

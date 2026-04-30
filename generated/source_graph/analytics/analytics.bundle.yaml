@@ -13,11 +13,11 @@ inputs:
 - relpath: contracts/schemas/analytics/analytics_metric_key.schema.json
   sha256: 97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c
 - relpath: contracts/schemas/analytics/analytics_query_request.schema.json
-  sha256: 669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976
+  sha256: 50ee2ddff15e76ef7c4ef51e2384d17a389e3a5455584f7a819dd1434359e6a9
 - relpath: contracts/schemas/analytics/analytics_query_response.schema.json
-  sha256: eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20
+  sha256: f13a2ca783dad79a7a7a36834e1e0e2af6f61ee220b3f55e8c0e90814c736b44
 - relpath: contracts/schemas/analytics/analytics_snapshot.schema.json
-  sha256: db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581
+  sha256: cc327ea63af7213cb3c87126059760c1b023c44274b3b10f667b8e4d2aa831ed
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
   sha256: 070a89709be42dfddd15cad7a1f44083dd252b76b4c0e2b2be59f22d74968747
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
