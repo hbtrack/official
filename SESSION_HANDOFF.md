@@ -8,8 +8,9 @@ fase_roadmap: 1
 task_type: contract_revision
 boot_profile_id: contract_execution
 task_id: SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION
-resultado: PENDENTE
-proxima_acao_permitida: "Commit + push de fix/session-handoff-schema-pr-opened. Abrir PR contra main. Após PR aberto: atualizar resultado para PR_OPENED e adicionar pr_url."
+resultado: PR_OPENED
+pr_url: "https://github.com/hbtrack/official/pull/113"
+proxima_acao_permitida: "Aguardar CI verde no PR #113. Após CI verde: squash merge em main, iniciar próximos PRs da fila (PR B: LIVE_ENFORCEMENT_PARITY_GATE, PR C: waiver hygiene)."
 bloqueios_ativos: []
 evidence_paths:
   - "contracts/schemas/shared/session_handoff.schema.json"
