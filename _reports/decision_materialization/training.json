@@ -3,7 +3,7 @@
   "status": "DEGRADED",
   "truth_scope": "full_scan",
   "main_ref": null,
-  "generated_at_utc": "2026-04-30T18:15:45Z",
+  "generated_at_utc": "2026-05-01T03:58:13Z",
   "freshness_status": "UNKNOWN",
   "source_decision_ir": ".contract_driven/decisions/DECISION_IR_TRAINING.yaml",
   "decisions_total": 8,

@@ -1,23 +1,19 @@
 ---
 data_ultima_sessao: "2026-05-01"
-branch_ativo: feat/negative-enforcement-tests
+branch_ativo: fix/session-handoff-schema-pr-opened
 modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: audit
 fase_roadmap: 1
-task_type: implementation_execution
+task_type: contract_revision
 boot_profile_id: contract_execution
-task_id: NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108
+task_id: SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI verde no PR #112. Após CI verde: squash merge em main, fechar issue #108, iniciar PR B."
+proxima_acao_permitida: "Commit + push de fix/session-handoff-schema-pr-opened. Abrir PR contra main. Após PR aberto: atualizar resultado para PR_OPENED e adicionar pr_url."
 bloqueios_ativos: []
 evidence_paths:
-  - "tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py"
-  - "tests/pipeline_gates/test_asyncapi_validation_gate_negative.py"
-  - "tests/pipeline_gates/test_agent_governance_negative_enforcement.py"
-  - "scripts/generate_negative_test_manifest.py"
-  - ".github/workflows/contract-gates.yml"
-  - "_reports/implementation_flow/negative_test_manifest.json"
+  - "contracts/schemas/shared/session_handoff.schema.json"
+  - "generated/manifests/"
 ---
 # SESSION HANDOFF — NEGATIVE_ENFORCEMENT_TESTS (Issue #108)
 

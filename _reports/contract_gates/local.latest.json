@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-25T12:04:34Z",
+  "timestamp_utc": "2026-05-01T03:57:59Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "4e941f08",
+    "git_commit": "8c02e09a",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "PARTIAL_PASS",
+  "overall_status": "PARTIAL_DEGRADED",
   "execution_context": {
     "profile": "local",
     "stage": null,
@@ -31,13 +31,13 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T120434_0ae882"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260501T035759_d5d891"
   },
   "status_detail": {
     "proof_scope": "mixed",
-    "active_gates_total": 33,
-    "active_gates_passed": 33,
-    "skip_count": 35,
+    "active_gates_total": 34,
+    "active_gates_passed": 32,
+    "skip_count": 42,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -102,6 +102,10 @@
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
         "status": "PASS"
+      },
+      {
+        "gate_id": "DECISION_MATERIALIZATION_GATE",
+        "status": "DEGRADED"
       },
       {
         "gate_id": "PLACEHOLDER_RESIDUE_GATE",
@@ -260,6 +264,34 @@
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "RULE_CHANGE_QUARANTINE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PLAN_DIFF_TRACE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "POST_PR_ADVERSARIAL_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPLEMENTATION_STATE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "REPORT_TRUTHFULNESS_GATE",
         "status": "PASS"
       }
@@ -374,7 +406,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 313
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -408,7 +440,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 990
+        "duration_ms": 13521
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -573,7 +605,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 68
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -798,7 +830,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 124
+        "duration_ms": 216
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -822,6 +854,7 @@
         "/home/davis/HB-TRACK/docs/_canon",
         "docs/_canon/ADR_INDEX.md",
         "docs/_canon/AGENT_INSTRUCTIONS.md",
+        "docs/_canon/AI_EXECUTION_ROLES_POLICY.md",
         "docs/_canon/ARCHITECTURE.md",
         "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
         "docs/_canon/AUTH_EXPERIENCE_CONTRACT.md",
@@ -834,6 +867,7 @@
         "docs/_canon/CONTRACT_PIPELINE.md",
         "docs/_canon/DATA_CONVENTIONS.md",
         "docs/_canon/DATA_MIGRATION_POLICY.md",
+        "docs/_canon/DECISION_MATERIALIZATION_POLICY.md",
         "docs/_canon/DECISION_POLICY.md",
         "docs/_canon/DEPLOY_PIPELINE.md",
         "docs/_canon/DOC_USAGE_MANIFEST.yaml",
@@ -872,6 +906,7 @@
         "docs/_canon/gates/GATES_REGISTRY.yaml",
         "docs/_canon/gates/README.md",
         "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
+        "docs/_canon/templates/DECISION_MATERIALIZATION_MATRIX.template.yaml",
         "docs/_canon/templates/SESSION_HANDOFF.template.md",
         "docs/_canon/decisions/ADR-001-contract-driven-development.md",
         "docs/_canon/decisions/ADR-002-uuid-v4-identifiers.md",
@@ -913,7 +948,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 23
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -926,12 +961,92 @@
       "applicability_reason": "always"
     },
     {
+      "gate_id": "DECISION_MATERIALIZATION_GATE",
+      "status": "DEGRADED",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Decision Materialization: 8 decisão(ões) não materializadas (modo full_scan — sem diff determinístico de PR). Gate ativo. Módulos verificados: 1.",
+      "inputs": [],
+      "artifacts_checked": [
+        ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+      ],
+      "evidence_files": [
+        "_reports/decision_materialization/training.json"
+      ],
+      "violations": [
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-001`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-004`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-006`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-007`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-008`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-012`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-020`: `blocked_by_contract_conflict` sem waiver formal em `contracts/_waivers/DECISION_MATERIALIZATION_GATE/`. Classifique ou formalize o waiver no PR 3.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
+          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+          "message": "Módulo `training`, decisão `TRAIN-DEC-047`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
+          "severity": "warn"
+        }
+      ],
+      "metrics": {
+        "errors": 0,
+        "warnings": 8,
+        "violations": 8,
+        "duration_ms": 43
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "applicable",
+      "applicability_reason": "module_has_decision_materialization_matrix"
+    },
+    {
       "gate_id": "PLACEHOLDER_RESIDUE_GATE",
       "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 354 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 358 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
@@ -1234,10 +1349,14 @@
         "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_evidence_pack.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_flow_state.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/negative_test_manifest.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/plan_to_diff_trace.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
@@ -1295,7 +1414,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 148
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1390,7 +1509,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 732
+        "duration_ms": 1037
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1422,7 +1541,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1321
+        "duration_ms": 12465
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1453,7 +1572,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1233
+        "duration_ms": 6770
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1501,7 +1620,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 605
+        "duration_ms": 887
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1519,7 +1638,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "spectral: PASS (144 aviso(s)).",
+      "summary": "spectral: PASS (107 aviso(s)).",
       "inputs": [
         "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
       ],
@@ -3670,799 +3789,13 @@
               "character": 52
             }
           }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 12,
-              "character": 6
-            },
-            "end": {
-              "line": 153,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises",
-            "post"
-          ],
-          "range": {
-            "start": {
-              "line": 154,
-              "character": 7
-            },
-            "end": {
-              "line": 305,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 307,
-              "character": 6
-            },
-            "end": {
-              "line": 353,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}",
-            "patch"
-          ],
-          "range": {
-            "start": {
-              "line": 354,
-              "character": 8
-            },
-            "end": {
-              "line": 513,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}",
-            "delete"
-          ],
-          "range": {
-            "start": {
-              "line": 514,
-              "character": 9
-            },
-            "end": {
-              "line": 577,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/copy",
-            "post"
-          ],
-          "range": {
-            "start": {
-              "line": 579,
-              "character": 7
-            },
-            "end": {
-              "line": 627,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/versions",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 629,
-              "character": 6
-            },
-            "end": {
-              "line": 685,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/versions/{versionId}",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 687,
-              "character": 6
-            },
-            "end": {
-              "line": 740,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/relations",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 742,
-              "character": 6
-            },
-            "end": {
-              "line": 794,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/relations",
-            "post"
-          ],
-          "range": {
-            "start": {
-              "line": 795,
-              "character": 7
-            },
-            "end": {
-              "line": 875,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/relations/{relationId}",
-            "delete"
-          ],
-          "range": {
-            "start": {
-              "line": 877,
-              "character": 9
-            },
-            "end": {
-              "line": 930,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/acl",
-            "get"
-          ],
-          "range": {
-            "start": {
-              "line": 932,
-              "character": 6
-            },
-            "end": {
-              "line": 996,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/acl",
-            "post"
-          ],
-          "range": {
-            "start": {
-              "line": 997,
-              "character": 7
-            },
-            "end": {
-              "line": 1067,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-          "message": "[operation-tags] Operation must have non-empty \"tags\" array.",
-          "severity": "warn",
-          "path": [
-            "/exercises/{id}/acl/{userId}",
-            "delete"
-          ],
-          "range": {
-            "start": {
-              "line": 1069,
-              "character": 9
-            },
-            "end": {
-              "line": 1122,
-              "character": 63
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/start",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2533,
-              "character": 8
-            },
-            "end": {
-              "line": 2533,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/complete",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2618,
-              "character": 8
-            },
-            "end": {
-              "line": 2618,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/execution-records",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2733,
-              "character": 8
-            },
-            "end": {
-              "line": 2733,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/execution-records",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2810,
-              "character": 8
-            },
-            "end": {
-              "line": 2810,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/execution-records/{recordId}",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2893,
-              "character": 8
-            },
-            "end": {
-              "line": 2893,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/feedback-threads",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 2939,
-              "character": 8
-            },
-            "end": {
-              "line": 2939,
-              "character": 24
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/feedback-threads",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3003,
-              "character": 8
-            },
-            "end": {
-              "line": 3003,
-              "character": 24
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/objectives",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3076,
-              "character": 8
-            },
-            "end": {
-              "line": 3076,
-              "character": 26
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/objectives",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3123,
-              "character": 8
-            },
-            "end": {
-              "line": 3123,
-              "character": 26
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/attention-queue",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3196,
-              "character": 8
-            },
-            "end": {
-              "line": 3196,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/cancel",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3261,
-              "character": 8
-            },
-            "end": {
-              "line": 3261,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/publish",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3348,
-              "character": 8
-            },
-            "end": {
-              "line": 3348,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/unpublish",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3429,
-              "character": 8
-            },
-            "end": {
-              "line": 3429,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/archive",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3513,
-              "character": 8
-            },
-            "end": {
-              "line": 3513,
-              "character": 25
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/recommendations",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3599,
-              "character": 8
-            },
-            "end": {
-              "line": 3599,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/recommendations/{recommendationId}/accept",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3665,
-              "character": 8
-            },
-            "end": {
-              "line": 3665,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/recommendations/{recommendationId}/dismiss",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3752,
-              "character": 8
-            },
-            "end": {
-              "line": 3752,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/ineligibility",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3848,
-              "character": 8
-            },
-            "end": {
-              "line": 3848,
-              "character": 24
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/ineligibility",
-            "get",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3923,
-              "character": 8
-            },
-            "end": {
-              "line": 3923,
-              "character": 24
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/attention-queue/{itemId}/resolve",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 3983,
-              "character": 8
-            },
-            "end": {
-              "line": 3983,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/attention-queue/{itemId}/dismiss",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 4072,
-              "character": 8
-            },
-            "end": {
-              "line": 4072,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/attention-queue/{itemId}/escalate",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 4161,
-              "character": 8
-            },
-            "end": {
-              "line": 4161,
-              "character": 23
-            }
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_OPENAPI_POLICY",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-          "message": "[operation-tag-defined] Operation tags must be defined in global tags.",
-          "severity": "warn",
-          "path": [
-            "/training/training-sessions/{id}/feedback-threads/{threadId}/close",
-            "post",
-            "tags",
-            "0"
-          ],
-          "range": {
-            "start": {
-              "line": 4264,
-              "character": 8
-            },
-            "end": {
-              "line": 4264,
-              "character": 24
-            }
-          }
         }
       ],
       "metrics": {
         "errors": 0,
-        "warnings": 144,
-        "violations": 144,
-        "duration_ms": 2034
+        "warnings": 107,
+        "violations": 107,
+        "duration_ms": 2715
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -4480,7 +3813,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "JSON Schema: 49 arquivo(s) válido(s), 0 aviso(s).",
+      "summary": "JSON Schema: 53 arquivo(s) válido(s), 0 aviso(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
@@ -4503,10 +3836,14 @@
         "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_evidence_pack.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_flow_state.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/negative_test_manifest.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/plan_to_diff_trace.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
@@ -4539,7 +3876,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 62
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4851,10 +4188,14 @@
         "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_evidence_pack.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/implementation_flow_state.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/merge-readiness.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/negative_test_manifest.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/plan_to_diff_trace.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
@@ -5165,7 +4506,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1719
+        "duration_ms": 1987
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5277,7 +4618,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1557
+        "duration_ms": 2358
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5329,7 +4670,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 59
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5360,7 +4701,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1406
+        "duration_ms": 1424
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5425,7 +4766,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 66
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5454,7 +4795,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 8
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5544,7 +4885,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 229
+        "duration_ms": 1348
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5573,7 +4914,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41712
+        "duration_ms": 49486
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5618,7 +4959,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 36
       },
       "proof_class": "behavioral",
       "promotion_power": "advisory",
@@ -5647,7 +4988,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 25
       },
       "proof_class": "presence",
       "promotion_power": "advisory",
@@ -5840,7 +5181,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 72
+        "duration_ms": 1969
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5872,7 +5213,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 62
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5921,18 +5262,12 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/generated/resolved_policy/training.sync.resolved.yaml"
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/graph/openapi_paths.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/generated/resolved_policy/training.sync.resolved.yaml"
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5940,7 +5275,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 1518
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5971,7 +5306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 160
+        "duration_ms": 650
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6020,7 +5355,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "17 módulo(s) implementados possuem superfície real, runtime mount e teste executável. placeholder_tests=45.",
+      "summary": "17 módulo(s) implementados possuem superfície real, runtime mount e teste executável. placeholder_tests=0.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
@@ -6104,7 +5439,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 79
+        "duration_ms": 175
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -6192,7 +5527,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 17
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6223,7 +5558,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 17
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -6250,7 +5585,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6374,6 +5709,8 @@
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_frontend.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/adversarial_analysis.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/hb_implementer.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/hb_adversarial_tester.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_sovereign_integrity.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_context_efficiency.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/audit_red_team_pipeline.prompt.md",
@@ -6399,6 +5736,8 @@
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/feature_update.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_code.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_frontend.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/hb_adversarial_tester.prompt.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/hb_implementer.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/implementation_promotion.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pr_fix.prompt.md",
         "/home/davis/HB-TRACK/.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md",
@@ -6410,7 +5749,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 41
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6612,6 +5951,195 @@
       "applicability_reason": "Pulado no perfil 'local'."
     },
     {
+      "gate_id": "RULE_CHANGE_QUARANTINE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no perfil 'local'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no perfil 'local'."
+    },
+    {
+      "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem current_state.json — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem current_state.json — gate não aplicável."
+    },
+    {
+      "gate_id": "PLAN_DIFF_TRACE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem contexto de implementation flow — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem contexto de implementation flow — gate não aplicável."
+    },
+    {
+      "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem current_state.json — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem current_state.json — gate não aplicável."
+    },
+    {
+      "gate_id": "POST_PR_ADVERSARIAL_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem current_state.json — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem current_state.json — gate não aplicável."
+    },
+    {
+      "gate_id": "IMPLEMENTATION_STATE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem current_state.json — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem current_state.json — gate não aplicável."
+    },
+    {
+      "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Sem evidence pack — gate não aplicável.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Sem evidence pack — gate não aplicável."
+    },
+    {
       "gate_id": "REPORT_TRUTHFULNESS_GATE",
       "status": "PASS",
       "blocking": true,
@@ -6642,11 +6170,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "PASS",
+      "status": "DEGRADED",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Resumo de gates: 32 PASS, 35 SKIP.",
+      "summary": "Resumo de gates: 1 gate(s) locais operaram em fallback explícito.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
