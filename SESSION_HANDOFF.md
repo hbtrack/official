@@ -1,58 +1,57 @@
 ---
-data_ultima_sessao: "2026-04-30"
-branch_ativo: feat/decision-materialization-gate
+data_ultima_sessao: "2026-05-01"
+branch_ativo: feat/negative-enforcement-tests
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: training
 fase_roadmap: 1
-task_type: new_contract
+task_type: implementation_execution
 boot_profile_id: contract_execution
-task_id: DECISION_MATERIALIZATION_GATE
+task_id: NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108
 resultado: PENDENTE
-proxima_acao_permitida: "PR 2 (#110) — 3 fixes Codex aplicados (commit 13766123, pushed). 3 threads Codex respondidos e resolvidos. CI rodando no novo commit. Aguardando CI pass + review approval para merge. Proxima acao: merge PR #110, iniciar PR 3 (TRAINING_DECISION_MATERIALIZATION_BACKFILL)."
+proxima_acao_permitida: "Abrir PR para issue #108. Verdict local PASS, coverage_ratio=1.0 (21/21 PROTECTED). Aguardando CI remoto."
 bloqueios_ativos: []
 evidence_paths:
-  - "scripts/contracts/validate/validate_contracts.py"
-  - "docs/_canon/gates/GATES_REGISTRY.yaml"
-  - "_reports/decision_materialization/training.json"
-  - "tests/pipeline_gates/test_decision_materialization_gate.py"
+  - "tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py"
+  - "tests/pipeline_gates/test_asyncapi_validation_gate_negative.py"
+  - "tests/pipeline_gates/test_agent_governance_negative_enforcement.py"
+  - "scripts/generate_negative_test_manifest.py"
+  - ".github/workflows/contract-gates.yml"
+  - "_reports/implementation_flow/negative_test_manifest.json"
 ---
-# SESSION HANDOFF — DECISION_MATERIALIZATION_CANON_BOOTSTRAP
+# SESSION HANDOFF — NEGATIVE_ENFORCEMENT_TESTS (Issue #108)
 
 ## Estado Geral
-**Data:** 2026-04-30 | **Branch:** fix/deploy-live-enforcement-parity-gh-token | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** pr_fix | **boot_profile:** architecture_decision
-**Módulo foco:** openapi | **Fase ROADMAP:** 1 | **task_id:** FIX_DEPLOY_GH_TOKEN | **Resultado:** PENDENTE
+**Data:** 2026-05-01 | **Branch:** feat/negative-enforcement-tests | **CI:** UNKNOWN
+**Modo:** CDD | **task_type:** implementation_execution | **boot_profile:** contract_execution
+**Módulo foco:** training (alinhado a session_start; trabalho cross-cutting OpenAPI/AsyncAPI/agent-governance) | **Fase ROADMAP:** 1 | **task_id:** NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108 | **Resultado:** PENDENTE
 
 ## O que foi feito
-Implementação completa da arquitetura multiagente auditável conforme `.dev/PLANO.md` com correções A1-A8:
+PR A da estratégia "frente A vs frente B" — provar que os gates falham sob violação controlada antes de corrigir as decisões expostas pelo PR #110.
 
-- **PLANO.md** atualizado com 8 correções de auditoria (C1-C6 eliminados)
-- **`.dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md`** atualizado — "Regras fechadas" removidas, "Evolução arquitetural" adicionada
-- **`.dev/schemas/hb_gate_report.schema.json`** criado (experimental, não em contracts/)
-- **`.dev/evidence/gates/planning_gate_report.json`** criado como exemplo de gate report
-- **Agentes Copilot** atualizados cirurgicamente:
-  - `hb-implementer`: 3º handoff adicionado (`Hb Adversarial Tester`, `send: false`)
-  - `hb-adversarial-tester`: HandTracker handoff `send: true → false` + seção pacote isolado
-  - `Mesclado` (HandTracker): seção "Estados operacionais" adicionada
-- **`.claude/agents/`** criado com 3 subagents (hb-adversarial-tester, hb-governance-auditor, hb-evidence-verifier)
-- **`.dev/codex-agents/`** criado com 2 gate agents (hb-gate-auditor, hb-pr-reviewer)
-- **Bridge docs** atualizados: AGENTS.md, CLAUDE.md, .codex, MAP.md — frases testadas preservadas
-- **`test_gate_report_schema.py`** criado: 14 testes (7 positivos + 7 negativos)
-- **`test_platform_agent_exposure.py`** estendido: 35 testes total (23 novos, itens 11-22)
-- **Resultado de testes:** 98/98 PASS (6 suítes de pipeline_gates)
+- 3 test files novos em `tests/pipeline_gates/`:
+  - `test_openapi_policy_ruleset_gate_negative.py` — 9 testes (1 baseline + 8 negativos cobrindo as 8 regras `error` de `.spectral.yaml`)
+  - `test_asyncapi_validation_gate_negative.py` — 7 testes (1 baseline + 6 negativos cobrindo schema, versão, info, channels, YAML)
+  - `test_agent_governance_negative_enforcement.py` — 8 testes (1 baseline + 7 negativos cobrindo `.github/agents/`, frontmatter, bridge docs CLAUDE.md/.codex, doc de plano de exposição)
+- `scripts/generate_negative_test_manifest.py` — gera `_reports/implementation_flow/negative_test_manifest.json` validado contra `contracts/schemas/shared/negative_test_manifest.schema.json` (schema canônico já existente)
+- `.github/workflows/contract-gates.yml` — novo job `negative-enforcement` que roda os 3 test files, gera o manifesto e publica como artifact (com `pr_url` real do PR remoto)
 
 ## Evidências
-- `tests/pipeline_gates/test_platform_agent_exposure.py` — 35/35 PASS
-- `tests/pipeline_gates/test_gate_report_schema.py` — 14/14 PASS
-- `tests/pipeline_gates/test_agent_compliance_phase0.py` — PASS
-- `tests/pipeline_gates/test_agent_operability_matrix.py` — PASS
-- `tests/pipeline_gates/test_implementation_execution_boot.py` — PASS
-- `tests/pipeline_gates/test_implementation_flow_gates.py` — PASS
-- `governance_changed = false` para arquivos criados por esta trilha (nenhum em .contract_driven/, docs/_canon/)
+- 24 testes locais: PASS (3 baselines + 21 negativos)
+- Manifesto gerado: `_reports/implementation_flow/negative_test_manifest.json`
+  - `verdict=PASS`, `coverage_ratio=1.0` (21 PROTECTED, 0 UNPROTECTED)
+  - schema-valid contra `contracts/schemas/shared/negative_test_manifest.schema.json`
+- Pipeline `hb validate --profile ci`: bloqueado APENAS por HANDOFF_COHERENCE (este arquivo, agora atualizado)
+- `NEGATIVE_TEST_COVERAGE_GATE` continua SKIP_NOT_APPLICABLE: o gate só ativa quando `implementation_flow_active=true` (current_state.json + IMPLEMENTATION_PR_OPENED). Esperado.
 
 ## Próxima ação permitida
-Corrigir HANDOFF_COHERENCE_GATE: push do fix (evidence_paths sem referência gitignored) → CI reativo.
+Commitar (3 testes + script + workflow + handoff + manifesto), push, abrir PR contra `main` referenciando issue #108. Aguardar CI remoto verde.
 
 ## Bloqueios ativos
-- Nenhum (pr_fix aplicado: referência gitignored removida de `evidence_paths`; validate --profile ci PASS local)
+- Nenhum.
+
+## Próximos PRs (estratégia frente B)
+- **PR B**: LIVE_ENFORCEMENT_PARITY_GATE local como `ERROR_INFRA` (separar ruído WSL de falha semântica)
+- **PR C**: waiver hygiene (remover waiver expirado + teste anti-zumbi)
+- **PR D**: issue #111 — TRAINING_DECISION_MATERIALIZATION_BACKFILL (TRAIN-DEC-001/004/006/007/008/012)
+- **PR E**: TRAIN-DEC-020 (audit_event_emitted.yaml) e TRAIN-DEC-047 (exercise_id boundary) — conflitos contratuais R1/R2
