@@ -9,7 +9,7 @@ task_type: implementation_execution
 boot_profile_id: contract_execution
 task_id: NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108
 resultado: PENDENTE
-proxima_acao_permitida: "Abrir PR para issue #108. Verdict local PASS, coverage_ratio=1.0 (21/21 PROTECTED). Aguardando CI remoto."
+proxima_acao_permitida: "Aguardar CI verde no PR #112. Após CI verde: squash merge em main, fechar issue #108, iniciar PR B."
 bloqueios_ativos: []
 evidence_paths:
   - "tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py"
@@ -45,7 +45,7 @@ PR A da estratégia "frente A vs frente B" — provar que os gates falham sob vi
 - `NEGATIVE_TEST_COVERAGE_GATE` continua SKIP_NOT_APPLICABLE: o gate só ativa quando `implementation_flow_active=true` (current_state.json + IMPLEMENTATION_PR_OPENED). Esperado.
 
 ## Próxima ação permitida
-Commitar (3 testes + script + workflow + handoff + manifesto), push, abrir PR contra `main` referenciando issue #108. Aguardar CI remoto verde.
+Aguardar CI verde no PR #112 (https://github.com/hbtrack/official/pull/112). Após CI verde: squash merge em main, fechar issue #108, iniciar PR B.
 
 ## Bloqueios ativos
 - Nenhum.
