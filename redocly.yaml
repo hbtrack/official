@@ -14,7 +14,7 @@ apis:
 
 rules:
   # Estrutura obrigatória
-  info-license: warn
+  info-license: error
   no-invalid-media-type-examples: warn
   no-unresolved-refs: error
 
@@ -26,13 +26,13 @@ rules:
   # Descrições
   operation-description: warn
   operation-summary: warn
-  tag-description: warn
-  no-empty-servers: warn
+  tag-description: error
+  no-empty-servers: error
 
   # Segurança
   # Validado no root (openapi.yaml define securitySchemes.HTTPBearer);
   # path files são sempre referenciados pelo root e não declaram securitySchemes.
-  security-defined: warn
+  security-defined: error
 
   # Schema
   no-invalid-schema-examples: warn
