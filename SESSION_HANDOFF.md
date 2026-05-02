@@ -37,21 +37,12 @@ PR A da estratégia "frente A vs frente B" — provar que os gates falham sob vi
 - `.github/workflows/contract-gates.yml` — novo job `negative-enforcement` que roda os 3 test files, gera o manifesto e publica como artifact (com `pr_url` real do PR remoto)
 
 ## Evidências
-- 24 testes locais: PASS (3 baselines + 21 negativos)
-- Manifesto gerado: `_reports/implementation_flow/negative_test_manifest.json`
-  - `verdict=PASS`, `coverage_ratio=1.0` (21 PROTECTED, 0 UNPROTECTED)
-  - schema-valid contra `contracts/schemas/shared/negative_test_manifest.schema.json`
-- Pipeline `hb validate --profile ci`: bloqueado APENAS por HANDOFF_COHERENCE (este arquivo, agora atualizado)
-- `NEGATIVE_TEST_COVERAGE_GATE` continua SKIP_NOT_APPLICABLE: o gate só ativa quando `implementation_flow_active=true` (current_state.json + IMPLEMENTATION_PR_OPENED). Esperado.
+- 24 testes: PASS (3 baselines + 21 negativos)
+- Manifesto: `_reports/implementation_flow/negative_test_manifest.json` — `verdict=PASS`, `coverage_ratio=1.0`
+- `hb validate --profile ci`: PASS (exceto HANDOFF_COHERENCE, resolvido neste commit)
 
 ## Próxima ação permitida
-Aguardar CI verde no PR #112 (https://github.com/hbtrack/official/pull/112). Após CI verde: squash merge em main, fechar issue #108, iniciar PR B.
+CI verde no PR #112 → squash merge → fechar issue #108.
 
 ## Bloqueios ativos
 - Nenhum.
-
-## Próximos PRs (estratégia frente B)
-- **PR B**: LIVE_ENFORCEMENT_PARITY_GATE local como `ERROR_INFRA` (separar ruído WSL de falha semântica)
-- **PR C**: waiver hygiene (remover waiver expirado + teste anti-zumbi)
-- **PR D**: issue #111 — TRAINING_DECISION_MATERIALIZATION_BACKFILL (TRAIN-DEC-001/004/006/007/008/012)
-- **PR E**: TRAIN-DEC-020 (audit_event_emitted.yaml) e TRAIN-DEC-047 (exercise_id boundary) — conflitos contratuais R1/R2
