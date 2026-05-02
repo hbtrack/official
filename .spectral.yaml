@@ -129,7 +129,7 @@ rules:
       security global deve estar declarado (pode ser []) para default-deny explícito
       (API5:2023 BFLA — nunca depender de ausência do campo como proteção).
     message: "security global deve ser declarado explicitamente (mesmo que [])"
-    severity: warn
+    severity: error
     formats: [oas3]
     given: "$"
     then:
@@ -142,7 +142,7 @@ rules:
       Segmentos de path devem usar kebab-case (api_rules.yaml §canonical_conventions).
       Parâmetros de path ({id}) são excluídos.
     message: "Segmento de path deve ser kebab-case: {{value}}"
-    severity: warn
+    severity: error
     formats: [oas3]
     given: "$.paths.*~"
     then:
@@ -154,7 +154,7 @@ rules:
   # ── 10. Tags root devem existir quando há operações ───────────────────────
   hbtrack-tags-array-defined:
     description: "tags array deve estar declarado no root quando houver módulos."
-    severity: warn
+    severity: error
     formats: [oas3]
     given: "$"
     then:
