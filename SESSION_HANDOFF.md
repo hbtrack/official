@@ -1,41 +1,41 @@
 ---
 data_ultima_sessao: "2026-05-02"
-branch_ativo: fix/session-handoff-schema-pr-opened
+branch_ativo: fix/phase1-cleanup-post-merge
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: audit
 fase_roadmap: 1
 task_type: contract_revision
 boot_profile_id: contract_execution
-task_id: SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION
-resultado: PR_OPENED
-pr_url: "https://github.com/hbtrack/official/pull/113"
-proxima_acao_permitida: "CI verde no PR #113 → squash merge → iniciar Fase 2 (issue #111)."
+task_id: PHASE1_POST_MERGE_CLEANUP
+resultado: DONE
+proxima_acao_permitida: "Iniciar Fase 2: triage DECISION_MATERIALIZATION_TRAINING.yaml (issue #111)."
 bloqueios_ativos: []
 evidence_paths:
-  - "contracts/schemas/shared/session_handoff.schema.json"
-  - "generated/manifests/"
+  - "_reports/contract_gates/latest.json"
+  - "_reports/implementation_flow/negative_test_manifest.json"
 ---
-# SESSION HANDOFF — SESSION_HANDOFF_SCHEMA_REVISION (PR #113)
+# SESSION HANDOFF — PHASE1_POST_MERGE_CLEANUP
 
 ## Estado Geral
-**Data:** 2026-05-02 | **Branch:** fix/session-handoff-schema-pr-opened | **CI:** UNKNOWN
+**Data:** 2026-05-02 | **Branch:** fix/phase1-cleanup-post-merge | **CI:** UNKNOWN
 **Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
-**Módulo foco:** audit | **Fase ROADMAP:** 1 | **task_id:** SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION | **Resultado:** PR_OPENED
+**Módulo foco:** audit | **Fase ROADMAP:** 1 | **task_id:** PHASE1_POST_MERGE_CLEANUP | **Resultado:** DONE
 
 ## O que foi feito
-Correção do schema `contracts/schemas/shared/session_handoff.schema.json`:
-- Adicionado valor `PR_OPENED` ao enum `resultado`
-- Adicionado campo opcional `pr_url` (string, format: uri)
-- Regenerados manifests derivados em `generated/manifests/`
+Fase 1 concluída — PRs #114, #112 e #113 mergeados em main (squash):
+- #114: hardening de regras de lint OpenAPI (Redocly + Spectral)
+- #112: 24 testes de enforcement negativo (OpenAPI, AsyncAPI, agent governance)
+- #113: schema `session_handoff` + `PR_OPENED` enum + `ASYNCAPI_DISABLE_TRACKING`
+
+Waiver expirado `CI-VALIDATE-TIMING` (PR#92, until 2026-04-26) removido.
 
 ## Evidências
-- Schema válido: `contracts/schemas/shared/session_handoff.schema.json`
-- Manifests regenerados: `generated/manifests/`
-- `hb validate --profile ci`: PASS (pré-rebase; CI rodando no PR)
+- CI: todos os checks PASS nos 3 merges
+- Testes negativos: `_reports/implementation_flow/negative_test_manifest.json`
 
 ## Próxima ação permitida
-CI verde no PR #113 → squash merge → Fase 2: resolver issue #111 (DECISION_MATERIALIZATION_GATE).
+Iniciar Fase 2: triage `DECISION_MATERIALIZATION_TRAINING.yaml` — 8 decisões em violação (issue #111).
 
 ## Bloqueios ativos
 - Nenhum.
