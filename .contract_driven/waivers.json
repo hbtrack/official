@@ -8,17 +8,6 @@
       "approved_by": "arquitetura",
       "date": "2026-04-24",
       "status": "N/A"
-    },
-    {
-      "waiver_id": "CI-VALIDATE-TIMING",
-      "item": "ci/validate-contracts-timing",
-      "title": "Timing issue: CI checks iniciados antes do push completar",
-      "reason": "Github Actions dispara checks quando PR é criado. Alguns jobs (ci/Validate Contracts, Validate Contract Gates) podem ser acionados antes do último commit (fix SESSION_HANDOFF) ser completamente sincronizado ao remote. Fix confirmado localmente (validate --profile ci PASS). Waiver permite merge conforme checks iniciais passam + teste local confirmado.",
-      "approved_by": "pipeline-engineering",
-      "date": "2026-04-25",
-      "status": "temporary",
-      "until": "2026-04-26",
-      "tracked_in": "PR#92"
     }
   ]
 }
