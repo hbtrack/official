@@ -1,8 +1,8 @@
 ---
 data_ultima_sessao: "2026-05-02"
-branch_ativo: fix/phase1-cleanup-post-merge
+branch_ativo: main
 modo_operacao: CDD
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: audit
 fase_roadmap: 1
 task_type: contract_revision
@@ -18,7 +18,7 @@ evidence_paths:
 # SESSION HANDOFF — PHASE1_POST_MERGE_CLEANUP
 
 ## Estado Geral
-**Data:** 2026-05-02 | **Branch:** fix/phase1-cleanup-post-merge | **CI:** UNKNOWN
+**Data:** 2026-05-02 | **Branch:** main | **CI:** PASS
 **Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
 **Módulo foco:** audit | **Fase ROADMAP:** 1 | **task_id:** PHASE1_POST_MERGE_CLEANUP | **Resultado:** DONE
 
