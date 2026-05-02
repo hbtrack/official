@@ -1,13 +1,13 @@
 {
   "session_id": "cd1cd71c-53f1-4b69-89a9-3b66008a2266",
-  "session_timestamp": "2026-04-26T09:09:44.245633+00:00",
-  "branch": "feat/decision-materialization-gate",
+  "session_timestamp": "2026-05-01T03:48:48.448847+00:00",
+  "branch": "fix/session-handoff-schema-pr-opened",
   "pipeline_version": "1.0.0",
-  "boot_profile_id": "architecture_decision",
-  "task_type": "new_contract",
+  "boot_profile_id": "contract_execution",
+  "task_type": "new_schema",
   "stage": 2,
-  "write_scope": "docs",
-  "worker_id": "architecture_review",
+  "write_scope": "contracts",
+  "worker_id": "create_json_schema_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "operation_mode": "CDD",
@@ -18,7 +18,7 @@
     "boot_profile_exists": true,
     "boot_paths_valid": true,
     "required_sections_resolvable": true,
-    "worker_frontmatter_validated": true,
+    "worker_frontmatter_validated": false,
     "worker_frontmatter_matches_catalog": true,
     "authority_source_used": "TASK_CATALOG"
   },
@@ -465,18 +465,17 @@
     },
     {
       "path": "contracts/schemas/shared/session_handoff.schema.json",
-      "sha256": "a63852a4a5cf1c04f663e4f7ee913ce7daedd932ebc3b53fb106aac82ba491eb",
+      "sha256": "5f07356b96bcf720e1eac49b36ad26b92b01ca45416cf5117d70db6fc7b19c29",
       "created_at": "2026-04-29T07:54:44.015405+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-04-29T07:56:26.982032+00:00"
+      "validated_at": "2026-05-01T03:50:27.943182+00:00"
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-30T17:22:11.177733+00:00",
-  "module_focus": "training",
-  "worker_prompt_sha256": "fbea2faed6111e58671c12e48a0894c0c1c6ead7aab2729df2742b103033dd03",
-  "module": "notifications",
-  "stage1_exit_code": 0,
-  "roadmap_phase": 1
+  "hook_validated_at": "2026-05-01T03:44:39.443127+00:00",
+  "module_focus": "audit",
+  "worker_prompt_sha256": "73c35b49c524a79c9c5823c5949e81198ce6e705ed8822635dd9e4096552bd61",
+  "module": "audit",
+  "stage1_exit_code": 0
 }

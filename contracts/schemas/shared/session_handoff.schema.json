@@ -108,9 +108,15 @@
             "enum": [
                 "DONE",
                 "PENDENTE",
-                "BLOCKED"
+                "BLOCKED",
+                "PR_OPENED"
             ],
-            "description": "Resultado consolidado da sessão no ponto em que o handoff foi gerado."
+            "description": "Resultado consolidado da sessão no ponto em que o handoff foi gerado. PR_OPENED: PR foi aberto e aguarda CI remoto; sessão não concluída nem bloqueada."
+        },
+        "pr_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL do PR aberto no GitHub associado a esta sessão. Presente apenas quando resultado=PR_OPENED."
         },
         "proxima_acao_permitida": {
             "type": "string",

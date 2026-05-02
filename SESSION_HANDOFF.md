@@ -1,48 +1,41 @@
 ---
-data_ultima_sessao: "2026-05-01"
-branch_ativo: feat/negative-enforcement-tests
+data_ultima_sessao: "2026-05-02"
+branch_ativo: fix/session-handoff-schema-pr-opened
 modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: audit
 fase_roadmap: 1
-task_type: implementation_execution
+task_type: contract_revision
 boot_profile_id: contract_execution
-task_id: NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108
-resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI verde no PR #112. Após CI verde: squash merge em main, fechar issue #108, iniciar PR B."
+task_id: SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION
+resultado: PR_OPENED
+pr_url: "https://github.com/hbtrack/official/pull/113"
+proxima_acao_permitida: "CI verde no PR #113 → squash merge → iniciar Fase 2 (issue #111)."
 bloqueios_ativos: []
 evidence_paths:
-  - "tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py"
-  - "tests/pipeline_gates/test_asyncapi_validation_gate_negative.py"
-  - "tests/pipeline_gates/test_agent_governance_negative_enforcement.py"
-  - "scripts/generate_negative_test_manifest.py"
-  - ".github/workflows/contract-gates.yml"
-  - "_reports/implementation_flow/negative_test_manifest.json"
+  - "contracts/schemas/shared/session_handoff.schema.json"
+  - "generated/manifests/"
 ---
-# SESSION HANDOFF — NEGATIVE_ENFORCEMENT_TESTS (Issue #108)
+# SESSION HANDOFF — SESSION_HANDOFF_SCHEMA_REVISION (PR #113)
 
 ## Estado Geral
-**Data:** 2026-05-01 | **Branch:** feat/negative-enforcement-tests | **CI:** UNKNOWN
-**Modo:** CDD | **task_type:** implementation_execution | **boot_profile:** contract_execution
-**Módulo foco:** training (alinhado a session_start; trabalho cross-cutting OpenAPI/AsyncAPI/agent-governance) | **Fase ROADMAP:** 1 | **task_id:** NEGATIVE_ENFORCEMENT_TESTS_ISSUE_108 | **Resultado:** PENDENTE
+**Data:** 2026-05-02 | **Branch:** fix/session-handoff-schema-pr-opened | **CI:** UNKNOWN
+**Modo:** CDD | **task_type:** contract_revision | **boot_profile:** contract_execution
+**Módulo foco:** audit | **Fase ROADMAP:** 1 | **task_id:** SESSION_HANDOFF_SCHEMA_PR_OPENED_REVISION | **Resultado:** PR_OPENED
 
 ## O que foi feito
-PR A da estratégia "frente A vs frente B" — provar que os gates falham sob violação controlada antes de corrigir as decisões expostas pelo PR #110.
-
-- 3 test files novos em `tests/pipeline_gates/`:
-  - `test_openapi_policy_ruleset_gate_negative.py` — 9 testes (1 baseline + 8 negativos cobrindo as 8 regras `error` de `.spectral.yaml`)
-  - `test_asyncapi_validation_gate_negative.py` — 7 testes (1 baseline + 6 negativos cobrindo schema, versão, info, channels, YAML)
-  - `test_agent_governance_negative_enforcement.py` — 8 testes (1 baseline + 7 negativos cobrindo `.github/agents/`, frontmatter, bridge docs CLAUDE.md/.codex, doc de plano de exposição)
-- `scripts/generate_negative_test_manifest.py` — gera `_reports/implementation_flow/negative_test_manifest.json` validado contra `contracts/schemas/shared/negative_test_manifest.schema.json` (schema canônico já existente)
-- `.github/workflows/contract-gates.yml` — novo job `negative-enforcement` que roda os 3 test files, gera o manifesto e publica como artifact (com `pr_url` real do PR remoto)
+Correção do schema `contracts/schemas/shared/session_handoff.schema.json`:
+- Adicionado valor `PR_OPENED` ao enum `resultado`
+- Adicionado campo opcional `pr_url` (string, format: uri)
+- Regenerados manifests derivados em `generated/manifests/`
 
 ## Evidências
-- 24 testes: PASS (3 baselines + 21 negativos)
-- Manifesto: `_reports/implementation_flow/negative_test_manifest.json` — `verdict=PASS`, `coverage_ratio=1.0`
-- `hb validate --profile ci`: PASS (exceto HANDOFF_COHERENCE, resolvido neste commit)
+- Schema válido: `contracts/schemas/shared/session_handoff.schema.json`
+- Manifests regenerados: `generated/manifests/`
+- `hb validate --profile ci`: PASS (pré-rebase; CI rodando no PR)
 
 ## Próxima ação permitida
-CI verde no PR #112 → squash merge → fechar issue #108.
+CI verde no PR #113 → squash merge → Fase 2: resolver issue #111 (DECISION_MATERIALIZATION_GATE).
 
 ## Bloqueios ativos
 - Nenhum.
