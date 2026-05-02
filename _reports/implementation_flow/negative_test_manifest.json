@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0.0",
+  "pr_url": "https://github.com/hbtrack/official/pull/0",
+  "decision_ids_tested": [],
+  "rules_tested": [
+    {
+      "rule_id": "hbtrack-openapi-version",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "openapi version diferente de 3.1.x",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_openapi_version_violated",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-operation-id-required",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "operação HTTP sem operationId",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_operation_id_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-tag-description",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "tag declarada sem description",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_tag_description_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-no-uri-versioning",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "versão na URI (ex.: /v1/)",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_uri_versioning_present",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-info-title",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "info.title ausente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_info_title_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-info-version",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "info.version ausente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_info_version_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-servers-defined",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "servers ausente ou vazio",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_servers_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "hbtrack-problem-schema-declared",
+      "rule_source": ".spectral.yaml",
+      "prohibited_behavior": "components.schemas.problem ausente (RFC 7807)",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_openapi_policy_ruleset_gate_negative.py::test_fail_when_problem_schema_undeclared",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-version-field-required",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "campo top-level 'asyncapi' ausente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_asyncapi_version_field_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-version-supported",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "versão AsyncAPI inexistente / não suportada",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_asyncapi_version_unsupported",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-info-title-required",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "info.title ausente em AsyncAPI",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_asyncapi_info_title_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-info-version-required",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "info.version ausente em AsyncAPI",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_asyncapi_info_version_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-yaml-syntactically-valid",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "YAML sintaticamente inválido",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_yaml_is_malformed",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "asyncapi-channels-required",
+      "rule_source": "asyncapi-cli (validate)",
+      "prohibited_behavior": "channels ausente em AsyncAPI 2.x",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_asyncapi_validation_gate_negative.py::test_fail_when_channels_field_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "agent-copilot-required-files",
+      "rule_source": "tests/pipeline_gates/test_platform_agent_exposure.py",
+      "prohibited_behavior": "arquivo de agente Copilot esperado ausente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_required_copilot_agent_missing",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "agent-frontmatter-name-matches-file",
+      "rule_source": "tests/pipeline_gates/test_platform_agent_exposure.py",
+      "prohibited_behavior": "frontmatter.name divergente do arquivo do agente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_agent_frontmatter_name_mismatches",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "agent-implementer-runtime-task-type-declared",
+      "rule_source": "tests/pipeline_gates/test_platform_agent_exposure.py",
+      "prohibited_behavior": "hb-implementer sem referência a implementation_execution",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_implementer_missing_runtime_task_type",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "agent-handtracker-not-runtime-executor",
+      "rule_source": "tests/pipeline_gates/test_platform_agent_exposure.py",
+      "prohibited_behavior": "HandTracker apresentado como executor runtime",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_handtracker_presented_as_runtime_executor",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "bridge-claude-declares-external-tester-role",
+      "rule_source": "CLAUDE.md",
+      "prohibited_behavior": "CLAUDE.md sem declaração de tester externo final",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_claude_md_missing_external_tester_role",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "bridge-codex-declares-no-equivalent-ui",
+      "rule_source": ".codex",
+      "prohibited_behavior": ".codex sem declaração de não-equivalência de UI a Copilot",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_codex_missing_no_equivalent_clause",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    },
+    {
+      "rule_id": "bridge-execution-plan-doc-required",
+      "rule_source": ".dev/AGENT_PLATFORM_EXPOSURE_EXECUTION_PLAN.md",
+      "prohibited_behavior": "doc dedicado de exposição por plataforma ausente",
+      "test_command": "python3 -m pytest tests/pipeline_gates/test_agent_governance_negative_enforcement.py::test_fail_when_execution_plan_doc_deleted",
+      "expected_result": "FAIL (gate retorna status FAIL ou AssertionError)",
+      "actual_result": "FAIL (gate detectou a violação injetada — comportamento esperado)",
+      "verdict": "PROTECTED"
+    }
+  ],
+  "coverage_ratio": 1.0,
+  "verdict": "PASS"
+}

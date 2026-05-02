@@ -320,3 +320,56 @@ jobs:
         run: python -m pytest tests/pipeline_gates/test_session_state_phase3.py -v
         env:
           GH_TOKEN: ${{ github.token }}
+
+  # ── Negative Enforcement (issue #108) ────────────────────────────────────
+  # Prova que OPENAPI_POLICY_RULESET_GATE, ASYNCAPI_VALIDATION_GATE e os
+  # gates pytest de agent governance falham sob violação controlada. Gera
+  # _reports/implementation_flow/negative_test_manifest.json validado contra
+  # contracts/schemas/shared/negative_test_manifest.schema.json e o publica
+  # como artifact. Roda em todo PR — não depende de path filter.
+  negative-enforcement:
+    name: Negative Enforcement Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler versões de toolchain.json
+        id: versions
+        run: |
+          echo "node=$(jq -r .runtimes.node toolchain.json)" >> "$GITHUB_OUTPUT"
+          echo "python=$(jq -r .runtimes.python toolchain.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.versions.outputs.node }}
+          cache: "npm"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ steps.versions.outputs.python }}
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/_policy/requirements.txt pytest jsonschema PyYAML
+
+      - name: Install Node dependencies (spectral, asyncapi)
+        run: npm ci
+
+      - name: Run negative enforcement tests + generate manifest
+        run: |
+          python3 scripts/generate_negative_test_manifest.py \
+            --pr-url "${{ github.event.pull_request.html_url || format('https://github.com/{0}/commit/{1}', github.repository, github.sha) }}"
+
+      - name: Upload negative test manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: negative-test-manifest
+          path: |
+            _reports/implementation_flow/negative_test_manifest.json
+            _reports/implementation_flow/negative_tests.junit.xml
+          retention-days: 30
+          if-no-files-found: error
