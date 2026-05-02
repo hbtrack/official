@@ -3140,6 +3140,11 @@ def _try_node_cli(root: pathlib.Path, *, tool: str, args: list[str], cwd: pathli
             # asyncapi-cli usa spectral internamente e pode tentar resolver formatters via require().
             # Forçar resolution em um node_modules conhecido.
             **({"NODE_PATH": node_path} if node_path else {}),
+            # Desabilitar telemetria para evitar que o processo trave aguardando
+            # resposta de rede após validação (causa timeout de 30s em WSL/NVM).
+            # A validação em si é executada normalmente; apenas o envio de métricas
+            # de uso é suprimido. Idempotente em CI (CI já encerra antes do timeout).
+            "ASYNCAPI_DISABLE_TRACKING": "true",
         }
 
     # 1) tentar local (se existir)
