@@ -28,7 +28,7 @@ AGENT_FILES = (
     "hb-contract.agent.md",
     "hb-implementer.agent.md",
     "hb-adversarial-tester.agent.md",
-    "Mesclado.agent.md",
+    "hb-mesclado.agent.md",
 )
 
 BRIDGE_DOCS = ("CLAUDE.md", ".codex", "AGENTS.md")
@@ -123,9 +123,9 @@ def test_fail_when_implementer_missing_runtime_task_type(fake_repo) -> None:
 
 
 def test_fail_when_handtracker_presented_as_runtime_executor(fake_repo) -> None:
-    """Adiciona task_type runtime ao Mesclado.agent.md → asserção falha."""
+    """Adiciona task_type runtime ao hb-mesclado.agent.md → asserção falha."""
     tmp_path, exposure_test = fake_repo
-    target = tmp_path / ".github" / "agents" / "Mesclado.agent.md"
+    target = tmp_path / ".github" / "agents" / "hb-mesclado.agent.md"
     text = target.read_text(encoding="utf-8")
     mutated = text + "\n\nimplementation_execution\n"
     target.write_text(mutated, encoding="utf-8")
