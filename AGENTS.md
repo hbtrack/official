@@ -7,7 +7,7 @@
 
 | Agente | Plataforma | Instrução principal | Auto-load? | Hooks | Skills | Scope |
 |---|---|---|---|---|---|---|
-| **GitHub Copilot** | VS Code Chat / Agent | `.github/copilot-instructions.md` | ✅ | N/A | `hb-pipeline-orchestrator`, `hb-roadmap-executor` | Full workspace |
+| **GitHub Copilot** | VS Code Chat / Agent | `.github/copilot-instructions.md` | ✅ | N/A | `hb-pipeline-orchestrator`, `hb-roadmap-executor`, `hb-merge-orchestrator` | Full workspace |
 | **Claude Code** | VS Code Extension | `CLAUDE.md` | ✅ | `.claude/settings.local.json` → `PreToolUse` + `Stop` | N/A | Full workspace |
 | **Codex** | OpenAI Codex CLI | `.codex` | ✅ | N/A | N/A | Full workspace |
 | **Gemini (AI Review)** | GitHub Actions | `.github/ai-review/styleguide.md` | N/A (workflow) | N/A | N/A | PR reviews only |
@@ -17,8 +17,8 @@
 ### GitHub Copilot
 - **Bridge doc:** `.github/copilot-instructions.md` (auto-load)
 - **Agent definitions:** `.github/agents/hb-contract.agent.md`, `.github/agents/hb-implementer.agent.md`, `.github/agents/hb-adversarial-tester.agent.md`, `.github/agents/hb-mesclado.agent.md`
-- **Skills:** `.github/skills/hb-pipeline-orchestrator/SKILL.md`, `.github/skills/hb-roadmap-executor/SKILL.md`
-- **Instructions:** `.github/instructions/hb-contract-guards.instructions.md` (scope: `src/**`)
+- **Skills:** `.github/skills/hb-pipeline-orchestrator/SKILL.md`, `.github/skills/hb-roadmap-executor/SKILL.md`, `.github/skills/hb-merge-orchestrator/SKILL.md`
+- **Instructions:** `.github/instructions/hb-contract-guards.instructions.md` (scope: `src/**`), `.github/instructions/hb-roadmap-mode.instructions.md` (scope: infra/CI), `.github/instructions/hb-no-manual-schema-edit.instructions.md` (scope: `frontend/src/api/**`), `.github/instructions/hb-derived-not-sovereign.instructions.md` (scope: root `*.md`), `.github/instructions/hb-mesclado.instructions.md` (scope: global router)
 - **Enforcement:** `scripts/hb`, `validate_contracts.py`, `pre-commit hook`, CI workflows
 - **Camada adicional desta trilha:** revisão externa recomendada via `Claude` + gates executáveis
 

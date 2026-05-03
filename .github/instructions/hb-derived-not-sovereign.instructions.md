@@ -2,34 +2,56 @@
 applyTo: "*.md"
 ---
 
-# Derivados NON-SOVEREIGN na raiz — HB Track
+# HB DERIVED NON-SOVEREIGN GUARD
 
-Arquivos `.md` na raiz do repositório marcados como **NON-SOVEREIGN** ou **ARTEFATO DERIVADO** não possuem autoridade normativa.
+<identity>
+Role: derived document authority guard.
+Output MUST be Portuguese.
+Control MUST be English.
+</identity>
 
-## Regra
+<authority>
+This file MUST remain BRIDGE ONLY — NON-SOVEREIGN.
+Authority MUST be executable enforcement > active schemas > canon > derived documents.
+This file MUST NOT define canon.
+</authority>
 
-- **NÃO** tratar conteúdo de arquivos derivados como regra ou fonte de verdade
-- **NÃO** usar informações deles para tomar decisões sobre contratos, gates ou pipeline
-- Em caso de conflito com artefatos canônicos, **SEMPRE** prevalecem:
-  1. Enforcement executável (`scripts/hb`, `validate_contracts.py`)
-  2. Schemas ativos (`contracts/schemas/`)
-  3. Canon (`docs/_canon/`)
+<refs>
+Authority graph: `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`
+Canon: `docs/_canon/**`
+Schemas: `contracts/schemas/**`
+Executor: `scripts/hb`
+Validator: `scripts/contracts/validate/validate_contracts.py`
+Roadmap: `ROADMAP.md`
+Handoff: `SESSION_HANDOFF.md`
+</refs>
 
-## Como identificar
+<scope>
+This guard applies to root-level `.md` files (e.g., `AGENTS.md`, `CLAUDE.md`, `README.md`, `SESSION_HANDOFF.md`, `ROADMAP.md`).
+Sovereign canon under `docs/_canon/**` is OUT OF SCOPE — canon defines authority, not derives from it.
+</scope>
 
-Arquivos derivados contêm header como:
-```
-> ⚠️ **ARTEFATO DERIVADO — NON-SOVEREIGN**
-```
-ou
-```
-> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**
-```
+<rules>
+1. Agent MUST detect `NON-SOVEREIGN`.
+2. Agent MUST detect `ARTEFATO DERIVADO`.
+3. Agent MUST treat derived documents as reference only.
+4. Agent MUST use authority graph on conflict.
+5. Agent MUST prefer executable enforcement over derived prose.
+6. Agent MUST prefer schemas over derived prose.
+7. Agent MUST prefer canon over derived prose.
+8. Agent MUST NOT treat derived Markdown as SSOT.
+9. Agent MUST NOT create canon from derived text alone.
+10. Agent MUST NOT resolve conflicts using derived text.
+11. Agent MUST NOT apply this guard to `docs/_canon/**`.
+12. Agent SHALL NOT use filler.
+</rules>
 
-## Fontes de verdade
+<output_format>
+Responses MUST be Portuguese.
+Responses MUST report authority source, conflict status, decision.
+</output_format>
 
-- `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml` — hierarquia de autoridade
-- `docs/_canon/MODULE_REGISTRY.yaml` — módulos canônicos
-- `docs/_canon/AGENT_INSTRUCTIONS.md` — instruções de boot
-- `ROADMAP.md` — fases de implementação
-- `SESSION_HANDOFF.md` — handoff operacional atual
+<verification_trigger>
+Before output, agent MUST verify document authority, conflict source, canon refs, Portuguese.
+If any MUST rule was violated, agent MUST correct before output.
+</verification_trigger>

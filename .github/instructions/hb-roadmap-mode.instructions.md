@@ -2,27 +2,47 @@
 applyTo: "infra/**,config/**,Dockerfile*,.github/workflows/**"
 ---
 
-# Modo ROADMAP — Não rotear por CDD
+# HB ROADMAP MODE
 
-Arquivos neste escopo pertencem ao **Modo ROADMAP** (`execute_roadmap_phase`), não ao Modo CDD.
+<identity>
+Role: ROADMAP path guard.
+Output MUST be Portuguese.
+Control MUST be English.
+</identity>
 
-## Regras
+<authority>
+This file MUST remain BRIDGE ONLY — NON-SOVEREIGN.
+Authority MUST be `scripts/hb`, `validate_contracts.py` > `docs/_canon/**` > `ROADMAP.md` > this file.
+This file MUST NOT define canon.
+</authority>
 
-- **NÃO** rotear por `pre_contract_orchestrator`
-- **NÃO** executar `hb check` nem `hb artifact` sobre artefatos de infraestrutura
-- **NÃO** exigir `validated_contract` nem `ADVERSARIAL_ANALYSIS_GATE` para estes paths
-- Ponto de entrada: `ROADMAP.md` + `SESSION_HANDOFF.md`
-- Verificar Critério de Done da fase N-1 antes de iniciar fase N
+<refs>
+Roadmap: `ROADMAP.md`
+Skill: `.github/skills/hb-roadmap-executor/SKILL.md`
+Worker: `.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md`
+</refs>
 
-## Paths incluídos
+<rules>
+1. Agent MUST use ROADMAP mode for matched paths.
+2. Agent MUST follow `hb-roadmap-executor`.
+3. Agent MUST read `ROADMAP.md`.
+4. Agent MUST read `SESSION_HANDOFF.md` if present.
+5. Agent MUST verify phase N-1 criteria before phase N.
+6. Agent MUST NOT route matched paths through CDD.
+7. Agent MUST NOT use `pre_contract_orchestrator`.
+8. Agent MUST NOT run `hb check` for matched infra artifacts.
+9. Agent MUST NOT run `hb artifact` for matched infra artifacts.
+10. Agent MUST NOT require `validated_contract` for matched infra artifacts.
+11. Agent MUST NOT require `ADVERSARIAL_ANALYSIS_GATE` for matched infra artifacts.
+12. Agent SHALL NOT use filler.
+</rules>
 
-- `infra/` — Docker Compose, Nginx, scripts de deploy
-- `config/` — Celery, ASGI, settings Django
-- `Dockerfile`, `Dockerfile.frontend` — imagens de container
-- `.github/workflows/` — CI/CD pipelines
+<output_format>
+Responses MUST be Portuguese.
+Responses MUST report mode, path, evidence, blocker, next action.
+</output_format>
 
-## Referências
-
-- `ROADMAP.md` — fases 0-13, critérios de done, stack canônica
-- `.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md` — worker do modo ROADMAP
-- `.github/skills/hb-roadmap-executor/SKILL.md` — skill Copilot para ROADMAP
+<verification_trigger>
+Before output, agent MUST verify matched path, ROADMAP route, refs, prohibitions, Portuguese.
+If any MUST rule was violated, agent MUST correct before output.
+</verification_trigger>

@@ -2,46 +2,52 @@
 applyTo: "src/**"
 ---
 
-# Guarda de elegibilidade de backend — HB Track CDD
+# HB BACKEND CONTRACT GUARD
 
-Antes de criar ou modificar qualquer arquivo em `src/{module}/`:
+<identity>
+Role: backend implementation eligibility guard.
+Output MUST be Portuguese.
+Control MUST be English.
+</identity>
 
-## Verificação obrigatória (2 passos)
+<authority>
+This file MUST remain BRIDGE ONLY — NON-SOVEREIGN.
+Authority MUST be `scripts/hb`, `validate_contracts.py` > `docs/_canon/MODULE_REGISTRY.yaml` > `_reports/contract_gates/latest.json` > this file.
+This file MUST NOT define module readiness.
+</authority>
 
-**Passo 1 — Verificar `docs/_canon/MODULE_REGISTRY.yaml`:**
-```yaml
-# O módulo precisa estar em uma destas categorias:
-status: "validated_contract"   # mínimo para generate_code
-status: "implementation_ready"  # ideal — passou por readiness_promotion
-```
+<refs>
+Modules: `docs/_canon/MODULE_REGISTRY.yaml`
+Gates report: `_reports/contract_gates/latest.json`
+CDD skill: `.github/skills/hb-pipeline-orchestrator/SKILL.md`
+ROADMAP skill: `.github/skills/hb-roadmap-executor/SKILL.md`
+</refs>
 
-Se o status for `draft_contract` ou inferior → **PARAR e emitir:**
-```
-BLOCKED_REQUIRED_ARTIFACT_MISSING
-Módulo '<module>' está em '<status>'.
-Para gerar código, siga a sequência:
-  1. readiness_promotion (validated_contract → implementation_ready)
-  2. adversarial_analysis (ADVERSARIAL_ANALYSIS_GATE=PASS)
-  3. generate_code (somente então)
-```
+<exceptions>
+ROADMAP: `src/shared/**` | `src/*/tasks.py` | `src/*/consumers.py` | `src/*/middleware.py`
+ROADMAP refs: `config/**` | `infra/**` | `Dockerfile*` | `.github/workflows/**` | `frontend/**` | `mobile/**` | `scripts/seed.py` | `scripts/hooks/**`
+</exceptions>
 
-**Passo 2 — Verificar `adversarial_analysis`:**
-Confirmar que `_reports/contract_gates/latest.json` contém `ADVERSARIAL_ANALYSIS_GATE: PASS`.
+<rules>
+1. Agent MUST check module status before module backend changes.
+2. Module status MUST be `validated_contract` or `implementation_ready` for governed backend code.
+3. Agent MUST check adversarial/readiness evidence when flow requires generated code.
+4. Agent MUST emit `BLOCKED_REQUIRED_ARTIFACT_MISSING` when status is insufficient.
+5. Agent MUST route governed contract gaps to `hb-pipeline-orchestrator`.
+6. Agent MUST route ROADMAP exceptions to `hb-roadmap-executor`.
+7. Agent MUST NOT generate governed backend code for `draft_contract`.
+8. Agent MUST NOT bypass readiness by editing runtime.
+9. Agent MUST NOT relax canon to allow implementation.
+10. Agent MUST NOT apply CDD guard to listed ROADMAP exceptions.
+11. Agent SHALL NOT use filler.
+</rules>
 
-## Nunca gere código backend sem esses dois passos verificados.
+<output_format>
+Responses MUST be Portuguese.
+Responses MUST report module, status, evidence, blocker, route.
+</output_format>
 
-## Arquivos explicitamente fora deste escopo
-
-Este guarda aplica-se a **código de módulo em** `src/**`. Os seguintes paths pertencem ao **Modo ROADMAP** (`execute_roadmap_phase`) e não requerem `validated_contract` nem `ADVERSARIAL_ANALYSIS_GATE`:
-
-- `src/shared/` — middleware e utilitários transversais
-- `src/*/tasks.py`, `src/*/consumers.py`, `src/*/middleware.py` — infraestrutura assíncrona / auth / websocket
-- `config/` — Celery, ASGI, settings Django
-- `infra/` — Docker Compose, Nginx, scripts de deploy
-- `Dockerfile` (raiz do repositório)
-- `.github/workflows/`
-- `frontend/` — React + Vite
-- `mobile/` — React Native + Expo
-- `scripts/seed.py`, `scripts/hooks/`
-
-Criar esses artefatos diretamente, sem verificações CDD.
+<verification_trigger>
+Before output, agent MUST verify path class, module status, evidence, exception status, route, Portuguese.
+If any MUST rule was violated, agent MUST correct before output.
+</verification_trigger>

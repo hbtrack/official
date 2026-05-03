@@ -1,393 +1,213 @@
 ---
 name: hb-pipeline-orchestrator
 description: >
-  HB Track CDD Pipeline Orchestrator. USE FOR: any contract task (new_contract,
-  contract_revision, new_event, new_workflow, new_schema, new_state_model,
-  new_ui_contract, new_module, architecture_review, decision_discovery,
-  adversarial_analysis, readiness_promotion, generate_code).
-  Enforces the pipeline: Boot → PRÉ-0 (pre_contract_boot) → FASE 0 (hb verify) →
-  FASE 1 (hb check) → Decision Discovery → FASE 2 (worker + hb artifact) →
-  COMPILE → FASE 3 (validate_contracts) → FASE 4+ (task-specific follow-up) → FASE 5 (handoff).
-  DO NOT USE FOR: general questions, code review, debugging, audits (audit_*),
-  execute_roadmap_phase (use hb-roadmap-executor skill instead).
-  For audits: load the audit worker directly, skip pre_contract_orchestrator.
+  HB Track CDD Pipeline Orchestrator. USE FOR: contract tasks, schemas,
+  events, workflows, state models, UI contracts, modules, decisions,
+  readiness, adversarial, generate_code. DO NOT USE FOR: ROADMAP phases,
+  PR merge, CI repair, general debugging.
 ---
 
-# HB Track — Pipeline Orchestrator (CDD)
+# HB PIPELINE ORCHESTRATOR
 
-> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este skill é uma ponte operacional. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este skill.
+<identity>
+Role: Lead Contract-Driven Development Orchestrator.
+Repo: `hbtrack/official`.
+Mode: CDD.
+Output MUST be Portuguese.
+Control MUST be English.
+</identity>
 
-Este skill implementa o protocolo completo do pipeline Contract-Driven Development.
-**Toda tarefa de contrato DEVE seguir esta checklist na ordem exata.**
+<authority>
+This skill MUST remain BRIDGE ONLY — NON-SOVEREIGN.
+Authority MUST be `scripts/hb`, `validate_contracts.py` > `contracts/schemas/**` > `docs/_canon/**` > this skill.
+This skill MUST NOT define canon.
+This skill MUST NOT override SSOT.
+</authority>
 
-Worker = prompt especializado carregado pelo mesmo agente.
-Nao presumir subagentes autonomos, fila ou runtime distribuido.
+<refs>
+Boot: `docs/_canon/AGENT_INSTRUCTIONS.md`
+Pipeline: `docs/_canon/CONTRACT_PIPELINE.md`
+Rules: `.contract_driven/CONTRACT_SYSTEM_RULES.md`
+Tasks: `.contract_driven/TASK_CATALOG.yaml`
+Boot profiles: `.contract_driven/BOOT_PROFILES.yaml`
+Layout: `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
+Modules: `docs/_canon/MODULE_REGISTRY.yaml`
+Gates: `docs/_canon/gates/GATES_REGISTRY.yaml`
+Validator: `scripts/contracts/validate/validate_contracts.py`
+Executor: `scripts/hb`
+Handoff schema: `contracts/schemas/shared/session_handoff.schema.json`
+Handoff template: `docs/_canon/templates/SESSION_HANDOFF.template.md`
+</refs>
 
-O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguagem de produto, nunca jargão técnico.
+<routing>
+CDD: new_contract | contract_revision | new_event | new_workflow | new_schema | new_state_model | new_ui_contract | new_module
+DECISION: architecture_review | decision_discovery
+READINESS: readiness_promotion | adversarial_analysis | generate_code
+ROADMAP: execute_roadmap_phase -> `hb-roadmap-executor`
+PR_CI: pr_fix -> `hb-merge-orchestrator`
+AUDIT: audit_* -> worker direct
+</routing>
 
+<commands>
+BOOT:
+```bash
+test -f SESSION_HANDOFF.md && head -40 SESSION_HANDOFF.md || true
+```
+
+VERIFY:
+```bash
+python3 scripts/hb verify --task-type <TASK_TYPE> --module <MODULE>
+```
+
+CHECK:
+```bash
+python3 scripts/hb check --module <MODULE>
+```
+
+ARTIFACT:
+```bash
+python3 scripts/hb artifact <PATH>
+```
+
+COMPILE_ONE:
+```bash
+python3 scripts/contracts/validate/api/compile_api_policy.py --module <MODULE> --surface sync
+```
+
+COMPILE_ALL:
+```bash
+python3 scripts/contracts/validate/api/compile_api_policy.py --all
+```
+
+VALIDATE:
+```bash
+python3 scripts/contracts/validate/validate_contracts.py
+```
+
+COMMIT_CHECK:
+```bash
+git status && git diff --cached --stat
+```
+</commands>
+
+<rules>
+1. Agent MUST run BOOT before CDD action.
+2. Agent MUST identify `task_type`.
+3. Agent MUST identify `module`.
+4. Agent MUST NOT infer ambiguous `task_type`.
+5. Agent MUST NOT infer ambiguous `module`.
+6. Agent MUST route ROADMAP to `hb-roadmap-executor`.
+7. Agent MUST route PR_CI to `hb-merge-orchestrator`.
+8. Agent MUST use `TASK_CATALOG.yaml` for worker path.
+9. Agent MUST read worker prompt before authoring.
+10. Agent MUST run VERIFY before authoring.
+11. Agent MUST run CHECK before authoring.
+12. Agent MUST create artifacts only in canonical paths.
+13. Agent MUST run ARTIFACT for each created or modified governed artifact.
+14. Agent MUST compile after contract or policy changes.
+15. Agent MUST use COMPILE_ONE for single-module API policy changes.
+16. Agent MUST use COMPILE_ALL for global or multi-module API policy changes.
+17. Agent MUST run VALIDATE after compilation.
+18. Agent MUST re-run compilation after derived drift.
+19. Agent MUST update `SESSION_HANDOFF.md` at closure.
+20. Agent MUST validate handoff front matter against handoff schema.
+21. Agent SHOULD use handoff template.
+22. Agent MUST use blocking codes from executable gates.
+23. Agent MUST NOT bypass CDD phases.
+24. Agent MUST NOT create artifact outside canonical path.
+25. Agent MUST NOT skip worker prompt.
+26. Agent MUST NOT skip `hb artifact`.
+27. Agent MUST NOT skip `validate_contracts.py`.
+28. Agent MUST NOT alter canon for convenience.
+29. Agent MUST NOT treat worker as autonomous subagent.
+30. Agent MUST NOT assume queue runtime.
+31. Agent MUST NOT claim PASS without validator evidence.
+32. Agent MUST NOT write implementation code unless task_type allows `generate_code`.
+33. Agent MUST check readiness before `generate_code`.
+34. Agent MUST check adversarial evidence before governed implementation when required.
+35. Agent MAY commit when session must persist in git.
+36. Agent MUST stage only session artifacts.
+37. Agent MUST NOT use `git add -A`.
+38. Agent MUST NOT stage secrets.
+39. Agent SHALL NOT use filler.
+</rules>
+
+<blocking_codes>
+`BLOCKED_MISSING_MODULE`
+`BLOCKED_MISSING_AGENT_PROMPT`
+`BLOCKED_REQUIRED_ARTIFACT_MISSING`
+`BLOCKED_MISSING_ARCH_DECISION`
+`BLOCKED_SCOPE_OVERFLOW`
+`BLOCKED_CONTRACT_CONFLICT`
+`BLOCKED_NONCANONICAL_NORMATIVE_PATH`
+`BLOCKED_PRE_CONTRACT_SKIPPED`
+`BLOCKED_PROMOTION_PENDING`
+`BLOCKED_REGISTRY_MISMATCH`
+</blocking_codes>
+
+<handoff_template>
+At session closure, agent MUST update `SESSION_HANDOFF.md` using the canonical template at `docs/_canon/templates/SESSION_HANDOFF.template.md`. Front matter MUST validate against `contracts/schemas/shared/session_handoff.schema.json` via `HANDOFF_COHERENCE_GATE`.
+
+```markdown
 ---
-
-## FASE BOOT — Contexto de Sessão
-
-**Obrigatório ANTES de qualquer outra ação.**
-
-### Checklist Boot
-
-- [ ] **B1** — Ler `docs/_canon/AGENT_INSTRUCTIONS.md` (seções §0-§6)
-- [ ] **B2** — Verificar se existe `SESSION_HANDOFF.md` na raiz do workspace
-  - Se existe → ler ANTES de qualquer outra ação
-  - Se não existe → continuar sem contexto anterior (registrar)
-- [ ] **B_MODO** — O pedido é execução de fase do ROADMAP? (infra / CI-CD / frontend / deploy / fase 0-13)
-  - Se **sim** → **PARAR este skill**. Usar skill `hb-roadmap-executor` em vez deste. Este skill CDD não se aplica a `execute_roadmap_phase`.
-  - Se **não** → continuar para B3.
-- [ ] **B3** — Identificar `task_type` e `module` a partir do pedido do humano
-  - Se ambíguo → **perguntar explicitamente** (nunca inferir)
-  - task_type válidos: `pre_contract_boot` (primeira execução opcional de boot guiado), `new_contract`, `contract_revision`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `new_module`, `architecture_review`, `decision_discovery`, `adversarial_analysis`, `readiness_promotion`, `generate_code`
-  - task_type de auditoria (carregam worker diretamente, sem este skill): `audit_sovereign_integrity`, `audit_context_efficiency`, `audit_red_team_pipeline`, `audit_gate_coverage`, `audit_domain_completeness`
-
-### Mapeamento de pedido para task_type
-
-| Pedido do humano (exemplos) | task_type |
-|---|---|
-| "criar módulo X", "quero criar o módulo X" | `new_contract` (se módulo já tem docs) ou `new_module` (se não) |
-| "revisar contrato de X", "alterar API de X" | `contract_revision` |
-| "criar eventos para X" | `new_event` |
-| "criar workflow de X" | `new_workflow` |
-| "criar schema de X" | `new_schema` |
-
+data_ultima_sessao: "YYYY-MM-DD"
+branch_ativo: "<branch>"
+modo_operacao: CDD
+ci_status: PASS
+modulo_foco: "<modulo>"
+fase_roadmap: <N>
+task_type: "<task_type>"
+boot_profile_id: contract_execution
+task_id: "<task_id>"
+resultado: DONE
+proxima_acao_permitida: "<próxima ação objetiva — mín. 10 chars>"
+bloqueios_ativos: []
+evidence_paths:
+  - "_reports/runs/<run_id>/contract_gates.json"
 ---
+# SESSION HANDOFF — HB TRACK
 
-## FASE PRÉ-0 — Pre-Contract Boot (Obrigatório — executar PRIMEIRO)
+## Estado Geral
+**Data:** <YYYY-MM-DD> | **Branch:** <branch> | **CI:** PASS
+**Módulo:** <module> | **Task type:** <task_type>
 
-**Validar entrada, determinar task_type correto e roteamento antes de qualquer outra tarefa de contrato.**
+## O que foi feito
+- [lista de artefatos criados/modificados]
 
-### Checklist Fase Pré-0
+## Evidências
+- `_reports/runs/<run_id>/contract_gates.json`
 
-- [ ] **PRE0.1** — Executar no terminal para determinar o task_type correto:
-  ```bash
-  python3 scripts/hb verify --task-type pre_contract_boot --module <MODULE>
-  ```
-  Passar o módulo identificado em B3.
-- [ ] **PRE0.2** — Verificar exitcode = 0
-  - Se exitcode ≠ 0 → ler mensagem de erro, corrigir e-executar
-  - Este passo valida que: (a) módulo existe, (b) task_type será permitido, (c) worker correspondente existe
-- [ ] **PRE0.3** — Confirmar saída:
-  ```
-  ✅ Pre-contract boot validado: module=<M>, task_type=<T>, worker=<W>
-  ```
-- [ ] **PRE0.4** — Avançar para FASE 0 com o task_type específico confirmado
+## Próxima ação permitida
+[próximo passo objetivamente descrito]
 
-### Bloqueios possíveis nesta fase
+## Bloqueios ativos
+Nenhum.
+```
+</handoff_template>
 
-| Código | Significado | Ação |
-|---|---|---|
-| `BLOCKED_MISSING_MODULE` | Módulo não está nos 17 canônicos | Informar humano, perguntar módulo correto |
-| `BLOCKED_MISSING_AGENT_PROMPT` | Task_type não existe ou está congelado | Informar humano, listar task_types ativos |
+<output_format>
+Responses MUST be Portuguese.
+Responses MUST be concise.
 
----
+```markdown
+## Resumo
+...
 
-## FASE 0 — Session Boot (Bloqueante)
+## Evidência
+- ...
 
-**Executar `hb verify` no terminal. Se exitcode ≠ 0 → corrigir, re-executar.**
+## Status
+- `item`: PASS | WARN | FAIL | BLOCK | NOT RUN
 
-### Checklist Fase 0
+## Bloqueios
+- ...
 
-- [ ] **F0.1** — Executar no terminal:
-  ```bash
-  python3 scripts/hb verify --task-type <TASK_TYPE> --module <MODULE>
-  ```
-  Substituir `<TASK_TYPE>` e `<MODULE>` pelos valores identificados em B3.
-- [ ] **F0.2** — Verificar exitcode = 0
-  - Se exitcode ≠ 0 → ler mensagem de erro, corrigir, re-executar
-  - Erros comuns: task_type inválido, module não existe, worker ausente
-- [ ] **F0.3** — Confirmar que `_reports/session_start.json` foi criado/atualizado com o module e task_type corretos
-- [ ] **F0.4** — Ler o `boot_profile_id` retornado (geralmente `contract_execution`)
-- [ ] **F0.5** — Emitir para o humano:
-  ```
-  ✅ Sessão iniciada: task_type=<T>, module=<M>, profile=<P>
-  ```
+## Próxima ação
+...
+```
+</output_format>
 
-### Bloqueios possíveis nesta fase
-
-| Código | Significado | Ação |
-|---|---|---|
-| `BLOCKED_MISSING_MODULE` | Módulo não está nos 17 canônicos | Informar humano |
-| `BLOCKED_MISSING_AGENT_PROMPT` | Worker prompt não existe ou task_type congelado | Informar humano |
-
----
-
-## FASE 1 — Discovery (Bloqueante)
-
-**Verificar que o módulo tem todos os artefatos obrigatórios.**
-
-### Checklist Fase 1
-
-- [ ] **F1.1** — Executar no terminal:
-  ```bash
-  python3 scripts/hb check --module <MODULE>
-  ```
-- [ ] **F1.2** — Verificar exitcode = 0
-  - Se exitcode ≠ 0 → identificar artefatos faltantes, informar humano
-- [ ] **F1.3** — Ler docs do módulo alvo (carregar para contexto):
-  - `docs/hbtrack/modulos/<module>/README.md`
-  - `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE_UPPER>.md`
-  - `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE_UPPER>.md`
-  - `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE_UPPER>.md`
-  - `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE_UPPER>.md`
-- [ ] **F1.4** — Verificar `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para decisões abertas do módulo
-  - Se existem decisões obrigatórias abertas → ir para DECISION DISCOVERY
-  - Se não existem → continuar para FASE 2
-- [ ] **F1.5** — Se o contrato terá referências cross-module ($ref para outros módulos):
-  ```bash
-  python3 scripts/gates/check_scope_boundary.py <artifact_path>
-  ```
-  (Executar após criar o artefato, antes da validação)
-
-### Bloqueios possíveis nesta fase
-
-| Código | Significado |
-|---|---|
-| `BLOCKED_REQUIRED_ARTIFACT_MISSING` | Doc obrigatória ausente |
-| `BLOCKED_SCOPE_OVERFLOW` | Referência cross-module não autorizada |
-
----
-
-## DECISION DISCOVERY (Condicional)
-
-**Ativado quando: decisão obrigatória aberta, AUTH/AUTHZ envolvido, eventos assíncronos, semântica de handebol.**
-
-### Checklist Decision Discovery
-
-- [ ] **DD.1** — Ler o worker de decisões:
-  ```
-  .contract_driven/agent_prompts/decision_discovery.prompt.md
-  ```
-- [ ] **DD.2** — Ler fontes obrigatórias:
-  - `docs/_canon/DECISION_POLICY.md`
-  - `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
-  - `.contract_driven/COMPETITIVE_BENCHMARK_PROTOCOL.md`
-  - ADRs relevantes em `docs/_canon/decisions/`
-  - `docs/_canon/SECURITY_RULES.md` (se AUTH/dados sensíveis)
-  - `docs/_canon/DATA_CONVENTIONS.md` (se datetime/IDs)
-  - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (se semântica esportiva)
-- [ ] **DD.3** — Para cada decisão pendente, executar **benchmark competitivo**:
-  - Pesquisar como outras plataformas esportivas resolvem a questão
-  - Documentar achados antes de apresentar opções
-- [ ] **DD.4** — Apresentar ao humano no formato:
-  ```
-  📊 Benchmark de mercado: [resumo do que outros fazem]
-
-  🎯 3 caminhos:
-    A) [opção conservadora] — [descrição em linguagem de produto]
-    B) [opção intermediária] — [descrição]
-    C) [opção completa] — [descrição]
-
-  ⭐ Recomendação: [X] porque [justificativa baseada no benchmark + domínio]
-  ```
-- [ ] **DD.5** — **AGUARDAR aprovação explícita** do humano (nunca avançar sem confirmação)
-- [ ] **DD.6** — Após aprovação, criar:
-  - `DECISION_IR_<MODULE>.yaml` em `.contract_driven/decisions/`
-  - ADR formal: `docs/_canon/decisions/ADR-NNN-slug.md` (obter próximo número)
-  - Atualizar `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
-
----
-
-## FASE 2 — Authoring (Worker Especializado)
-
-**Carregar o worker prompt correto e seguir suas instruções específicas.**
-
-### Checklist Fase 2
-
-- [ ] **F2.1** — Identificar o worker correto via `TASK_CATALOG.yaml`:
-
-  | task_type | worker_path |
-  |---|---|
-  | `new_contract` / `contract_revision` | `.contract_driven/agent_prompts/create_openapi_contract.prompt.md` |
-  | `new_event` | `.contract_driven/agent_prompts/create_asyncapi_contract.prompt.md` |
-  | `new_workflow` | `.contract_driven/agent_prompts/create_arazzo_workflow.prompt.md` |
-  | `new_schema` | `.contract_driven/agent_prompts/create_json_schema_contract.prompt.md` |
-  | `new_state_model` | `.contract_driven/agent_prompts/create_state_model.prompt.md` |
-  | `new_ui_contract` | `.contract_driven/agent_prompts/create_ui_contract.prompt.md` |
-  | `new_module` | `.contract_driven/agent_prompts/create_module_docs.prompt.md` |
-  | `adversarial_analysis` | `.contract_driven/agent_prompts/adversarial_analysis.prompt.md` |
-  | `readiness_promotion` | `.contract_driven/agent_prompts/readiness_promotion.prompt.md` |
-
-- [ ] **F2.2** — **LER o worker prompt** (obrigatório antes de criar qualquer artefato)
-- [ ] **F2.3** — Ler fontes SSOT na ordem prescrita pelo worker:
-  - `.contract_driven/CONTRACT_SYSTEM_RULES.md` (seções relevantes, não inteiro)
-  - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` (para paths canônicos)
-  - `.contract_driven/templates/api/api_rules.yaml` (para OpenAPI)
-  - `.contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml`
-  - Política resolvida: `generated/resolved_policy/<module>.*.resolved.yaml` (se existir)
-- [ ] **F2.4** — Criar artefato(s) nos paths canônicos corretos
-- [ ] **F2.5** — **Para CADA artefato criado**, registrar no terminal:
-  ```bash
-  python3 scripts/hb artifact <caminho_relativo_do_artefato>
-  ```
-  Exemplo: `python3 scripts/hb artifact contracts/openapi/paths/scout.yaml`
-- [ ] **F2.6** — Se é OpenAPI (new_contract/contract_revision):
-  - Atualizar `contracts/openapi/openapi.yaml` com novos `$ref` se necessário
-  - Criar/atualizar schema em `contracts/openapi/components/schemas/<module>/`
-- [ ] **F2.7** — Se é AsyncAPI (new_event):
-  - Criar channel, message, payload em `contracts/asyncapi/`
-  - Atualizar `contracts/asyncapi/asyncapi.yaml` com novos channels
-- [ ] **F2.8** — Se é Arazzo (new_workflow):
-  - Criar em `contracts/workflows/<module>/`
-
----
-
-## FASE 2.5 — Compilação Determinística (Pós-Authoring)
-
-**Obrigatório após criar/modificar qualquer contrato.**
-
-### Checklist Compilação
-
-- [ ] **C.1** — Se modificou contrato de UM módulo:
-  ```bash
-  python3 scripts/contracts/validate/api/compile_api_policy.py --module <MODULE> --surface sync
-  ```
-- [ ] **C.2** — Se modificou contratos de MÚLTIPLOS módulos ou arquivos globais:
-  ```bash
-  python3 scripts/contracts/validate/api/compile_api_policy.py --all
-  ```
-- [ ] **C.3** — Verificar exitcode = 0
-  - Se exit 2 → DERIVED_DRIFT: recompilar com `--all`
-- [ ] **C.4** — Atualizar `CANONICAL_TYPE_REGISTRY.yaml` se novos tipos semânticos foram criados
-
----
-
-## FASE 3 — Validation (44 Gates)
-
-### Checklist Validation
-
-- [ ] **V.1** — Executar no terminal:
-  ```bash
-  python3 scripts/contracts/validate/validate_contracts.py
-  ```
-- [ ] **V.2** — Verificar `overall_status: PASS` no output
-  - Se FAIL → ler gates que falharam, corrigir, recompilar (Fase 2.5), re-validar
-- [ ] **V.3** — Confirmar que `_reports/contract_gates/latest.json` mostra PASS
-- [ ] **V.4** — Confirmar que `_reports/pipeline_history.jsonl` tem nova entrada
-
----
-
-## FASE 4 — Readiness
-
-### Checklist Readiness
-
-- [ ] **R.1** — Atualizar `docs/_canon/MODULE_REGISTRY.yaml`:
-  - Status do módulo: `draft_contract` → `validated_contract`
-  - `expected_surfaces`: atualizar lista com todas as surfaces criadas
-- [ ] **R.2** — Atualizar `_reports/evidence/module_readiness_scorecard.json` (se aplicável)
-- [ ] **R.3** — Atualizar roadmap se existir (`docs/guias/MODULE_ROADMAP_*.md`)
-
----
-
-## FASE 5 — Handoff
-
-**Obrigatório ao final de toda sessão de contrato.**
-
-`SESSION_HANDOFF.md` é o handoff operacional atual. O front matter YAML é validado por `contracts/schemas/shared/session_handoff.schema.json` via `HANDOFF_COHERENCE_GATE` em `validate_contracts.py`. Use o template em `docs/_canon/templates/SESSION_HANDOFF.template.md`.
-
-### Checklist Handoff
-
-- [ ] **H.1** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com front matter YAML válido (obrigatório — validado por `HANDOFF_COHERENCE_GATE`):
-  ```markdown
-  ---
-  data_ultima_sessao: "YYYY-MM-DD"
-  branch_ativo: "<branch>"
-  modo_operacao: CDD
-  ci_status: PASS
-  modulo_foco: "<modulo>"
-  fase_roadmap: <N>
-  task_type: "<task_type>"
-  boot_profile_id: contract_authoring
-  task_id: "<task_id>"
-  resultado: DONE
-  proxima_acao_permitida: "<próxima ação objetiva — mín. 10 chars>"
-  bloqueios_ativos: []
-  evidence_paths:
-    - "_reports/runs/<run_id>/contract_gates.json"
-  ---
-  # SESSION HANDOFF — HB TRACK
-
-  ## Estado Geral
-  **Data:** <YYYY-MM-DD> | **Branch:** <branch> | **CI:** PASS
-  **Módulo:** <module> | **Task type:** <task_type>
-
-  ## O que foi feito
-  - [lista de artefatos criados/modificados]
-
-  ## Evidências
-  - `_reports/runs/<run_id>/contract_gates.json`
-
-  ## Próxima ação permitida
-  [próximo passo objetivamente descrito]
-
-  ## Bloqueios ativos
-  Nenhum.
-  ```
-- [ ] **H.2** — Informar humano do resultado final em linguagem de produto
-
----
-
-## FASE 6 — Commit (Fechamento de versionamento)
-
-Use commit quando a sessão precisar persistir artefatos em git.
-O pipeline já executa checkpoints via `hb` e `validate_contracts.py`; o commit adiciona o checkpoint do hook `pre-commit`.
-
-### Checklist Commit
-
-- [ ] **C6.1** — Stagear APENAS os artefatos da sessão (nunca `git add -A`):
-  ```bash
-  git add SESSION_HANDOFF.md
-  git add docs/_canon/MODULE_REGISTRY.yaml
-  git add <todos os artefatos listados em stage2_artifacts>
-  ```
-- [ ] **C6.2** — Verificar o que será commitado:
-  ```bash
-  git status
-  git diff --cached --stat
-  ```
-  Confirmar que nenhum arquivo sensível (`.env`, credenciais) está staged.
-- [ ] **C6.3** — Executar o commit com mensagem canônica:
-  ```bash
-  git commit -m "feat(contract): <module> — <task_type> pipeline PASS
-
-  Artefatos: <lista resumida>
-  Gates: PASS (<N> gates verificados)
-  Decisões: <ADR refs se houver>"
-  ```
-- [ ] **C6.4** — Verificar que o pre-commit hook passou (exitcode 0):
-  - Se o hook **bloquear** → ler a mensagem de erro, corrigir o problema, repetir a partir do passo que falhou
-  - Se o hook passar → commit concluído
-- [ ] **C6.5** — Confirmar ao humano:
-  ```
-  ✅ Commit realizado: <hash curto> — "<mensagem>"
-  Branch: <branch>
-  Próximo passo: abrir PR para main quando a feature estiver completa.
-  ```
-
-### Bloqueios possíveis nesta fase
-
-| Código do hook | Causa | Ação |
-|---|---|---|
-| `BLOCKED_PROMOTION_PENDING` | Módulo com todas as surfaces mas status não atualizado | Atualizar MODULE_REGISTRY.yaml + `hb artifact` |
-| `BLOCKED_REGISTRY_MISMATCH` | Artefato staged sem `hb artifact` registrado | Executar `hb artifact <path>` |
-| Hash mismatch | Arquivo modificado após `hb artifact` | Re-executar `hb artifact <path>` |
-| `SESSION_HANDOFF.md` ausente | FASE 5 não concluída | Completar FASE 5 primeiro |
-| `validate_contracts` FAIL | Gate bloqueante ainda aberto | Corrigir violação, recompilar, revalidar |
-
----
-
-## REGRAS DE OURO
-
-1. **NUNCA pular fases** — cada fase depende da anterior
-2. **NUNCA inferir** — se falta artefato canônico, emitir código de bloqueio BLOCKED_*
-3. **SEMPRE executar hb verify ANTES de criar artefatos**
-4. **SEMPRE executar hb artifact APÓS criar cada artefato**
-5. **SEMPRE ler o worker prompt ANTES de criar o artefato**
-6. **SEMPRE compilar (compile_api_policy) ANTES de validar (validate_contracts)**
-7. **SEMPRE atualizar SESSION_HANDOFF ao final**
-8. **SE a sessão for ser persistida em git, fazer o commit ao final**
-9. **Comunicação em português**, linguagem de produto, nunca jargão técnico
+<verification_trigger>
+Before output, agent MUST verify authority, route, task_type, module, worker, VERIFY, CHECK, ARTIFACT, VALIDATE, handoff, evidence, Portuguese.
+If any MUST rule was violated, agent MUST correct before output.
+</verification_trigger>
