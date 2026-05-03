@@ -1,0 +1,13 @@
+waiver_id: "WAIVER-DM-TRAINING-020-CONTRACT-CONFLICT-20260503"
+gate_id: "DECISION_MATERIALIZATION_GATE"
+scope: "module"
+module: "training"
+target_artifact: ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+justification: >
+  TRAIN-DEC-020 tem status blocked_by_contract_conflict entre training.rule.audit_via_transversal_module (RUL-TRAINING-040) e ADR-017 (fronteiras do modulo audit soberano). A resolucao requer PR formal de ADR. TRAIN-DEC-020 nao eh lido, chamado, persistido nem exposto por training_session_exercise_assignment: a feature nao implementa audit diretamente em training. Qualquer implementacao de audit direta em training permanece bloqueada ate a resolucao do conflito canonico via ADR formal.
+approved_by: "human:davis"
+approved_at_utc: "2026-05-03T00:00:00Z"
+expires_at_utc: "2026-11-03T00:00:00Z"
+fingerprint:
+  type: sha256
+  value: "df37e1ed4ae2735814652b5de2187883290ebcd2f95f8b4ff9b315d3c0d36b73"

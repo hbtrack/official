@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-05-03T03:07:49.615987+00:00",
+  "generated_at": "2026-05-03T15:21:56.771047+00:00",
   "branch_target": "main",
   "diff_classes": [
-    "governance_changed",
     "bridge_docs_changed",
-    "session_contract_changed",
-    "schema_changed"
+    "session_contract_changed"
   ],
   "checks_run": [
     {
       "step": "PREFLIGHT_ARTIFACT_INTEGRITY_GATE",
-      "result": "PASS",
+      "result": "WARN",
       "exit_code": 0,
-      "message": "Artefato de preflight íntegro e coerente com as entradas atuais.",
-      "reasons": []
+      "message": "Artefato de preflight íntegro, mas desatualizado em relação às entradas atuais.",
+      "reasons": [
+        "git_head_commit"
+      ]
     },
     {
       "step": "survival_suite",
@@ -47,41 +47,19 @@
     {
       "context": "ci / Tests",
       "category": "required",
-      "result": "PASS",
-      "exit_code": 0
+      "result": "FAIL",
+      "exit_code": 1
     },
     {
       "context": "ci / Frontend Build + Tests",
       "category": "required",
       "result": "PASS",
       "exit_code": 0
-    },
-    {
-      "context": "Governance Enforcement (survival-suite)",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
-    },
-    {
-      "context": "Paridade Registry × Executor",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
-    },
-    {
-      "context": "Paridade Schema × Template × Skills",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
-    },
-    {
-      "context": "Validação Cruzada SESSION_HANDOFF ↔ session_start",
-      "category": "conditional",
-      "result": "PASS",
-      "exit_code": 0
     }
   ],
-  "checks_failed": [],
+  "checks_failed": [
+    "ci / Tests"
+  ],
   "missing_evidence": [],
   "semantic_findings": [
     {
@@ -126,16 +104,16 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 98,
+    "changed_files": 33,
     "max_changed_files": 150,
-    "commits": 0,
+    "commits": 2,
     "max_commits": 20,
     "cross_domain_areas": 0,
     "max_cross_domain_areas": 3,
     "exceeded": false,
     "split_required": false
   },
-  "final_decision": "PASS",
+  "final_decision": "BLOCK",
   "artifact_integrity": {
     "gate_id": "PREFLIGHT_ARTIFACT_INTEGRITY_GATE",
     "schema_version": 1,
@@ -146,8 +124,8 @@
       "output_report": "_reports/preflight/latest.json",
       "manifest_sha256": "f88de8b67f35ae8d5a624b688f0abd168e30d48850600a09d1a126f5a7a82b4e",
       "hb_script_sha256": "a41430b69e6be15190b8ff8f51319f6acc7ae95436a7b01776d8d0974d00448f",
-      "git_head_commit": "f876dc8a8192"
+      "git_head_commit": "eb5d4d4d9077"
     },
-    "payload_sha256": "1bc18326ca21ebc194d1f4d91e81eb8061de04abbbe0c069c07a4272a2e01645"
+    "payload_sha256": "e767a6c38f73d59854bea7c9108ba73b41b4a85a4b85a41f20a86b691459becd"
   }
 }

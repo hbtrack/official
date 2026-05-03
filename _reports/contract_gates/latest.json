@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-05-02T09:14:25Z",
+  "timestamp_utc": "2026-05-03T22:34:43Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "30dfd6e3",
+    "git_commit": "6b3ab811",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,12 +31,12 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260502T091425_8926fa"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260503T223443_3b32b8"
   },
   "status_detail": {
     "proof_scope": "factual",
     "active_gates_total": 65,
-    "active_gates_passed": 62,
+    "active_gates_passed": 65,
     "skip_count": 11,
     "critical_gates": [
       {
@@ -105,7 +105,7 @@
       },
       {
         "gate_id": "DECISION_MATERIALIZATION_GATE",
-        "status": "DEGRADED"
+        "status": "PASS"
       },
       {
         "gate_id": "PLACEHOLDER_RESIDUE_GATE",
@@ -193,7 +193,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -299,7 +299,7 @@
     "mandatory_ci_skip_count": 0,
     "mandatory_ci_skips": []
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -321,7 +321,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 90
+        "duration_ms": 53
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -355,7 +355,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3161
+        "duration_ms": 485
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -569,7 +569,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 8
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -708,7 +708,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 139
+        "duration_ms": 119
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -776,7 +776,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "advisory",
@@ -806,7 +806,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 40
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -836,7 +836,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 34
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -866,7 +866,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 14
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -896,7 +896,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 98
+        "duration_ms": 91
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -926,7 +926,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 50
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -956,7 +956,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 55
+        "duration_ms": 43
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -986,7 +986,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 401
+        "duration_ms": 306
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1016,7 +1016,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 31
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1154,7 +1154,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 29
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1190,7 +1190,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 124
+        "duration_ms": 120
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1322,11 +1322,11 @@
     },
     {
       "gate_id": "DECISION_MATERIALIZATION_GATE",
-      "status": "DEGRADED",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Decision Materialization: 8 decisão(ões) não materializadas (modo full_scan — sem diff determinístico de PR). Gate ativo. Módulos verificados: 1.",
+      "summary": "Decision Materialization: 1 módulo(s) validados com sucesso. Gate ativo.",
       "inputs": [],
       "artifacts_checked": [
         ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
@@ -1334,61 +1334,12 @@
       "evidence_files": [
         "_reports/decision_materialization/training.json"
       ],
-      "violations": [
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-001`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-004`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-006`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-007`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-008`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-012`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-020`: `blocked_by_contract_conflict` sem waiver formal em `contracts/_waivers/DECISION_MATERIALIZATION_GATE/`. Classifique ou formalize o waiver no PR 3.",
-          "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-047`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
-        }
-      ],
+      "violations": [],
       "metrics": {
         "errors": 0,
-        "warnings": 8,
-        "violations": 8,
-        "duration_ms": 17
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 20
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1406,10 +1357,17 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 358 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 365 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-004.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-006.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-007.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PRE_CONTRACT_EVIDENCE_GATE.json",
         "/home/davis/HB-TRACK/contracts/_waivers/README.md",
@@ -1774,7 +1732,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 30
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1869,7 +1827,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 796
+        "duration_ms": 740
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1901,7 +1859,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1442
+        "duration_ms": 1008
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1932,7 +1890,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1497
+        "duration_ms": 1588
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1980,7 +1938,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 641
+        "duration_ms": 601
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4155,7 +4113,7 @@
         "errors": 0,
         "warnings": 107,
         "violations": 107,
-        "duration_ms": 2034
+        "duration_ms": 1790
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -4866,7 +4824,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1839
+        "duration_ms": 1743
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4899,7 +4857,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1777
+        "duration_ms": 1670
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4986,7 +4944,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2091
+        "duration_ms": 1463
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5038,7 +4996,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 61
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5069,7 +5027,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1293
+        "duration_ms": 1246
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5134,7 +5092,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 60
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5253,7 +5211,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 447
+        "duration_ms": 206
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5282,7 +5240,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43556
+        "duration_ms": 42032
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5327,7 +5285,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 8
       },
       "proof_class": "behavioral",
       "promotion_power": "advisory",
@@ -5584,7 +5542,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 131
+        "duration_ms": 69
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5616,7 +5574,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5651,7 +5609,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 679
+        "duration_ms": 530
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -5665,37 +5623,30 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/_reports/implementation_flow/negative_test_manifest.json"
+        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
+        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/_reports/implementation_flow/negative_test_manifest.json"
+        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
+        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "branch_ativo='main' != branch atual='fix/handoff-post-phase1-main'.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 19
+        "violations": 0,
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5726,7 +5677,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 170
+        "duration_ms": 166
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5757,7 +5708,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5859,7 +5810,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 120
+        "duration_ms": 94
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -5908,9 +5859,16 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os $refs em 350 arquivo(s) são resolvíveis.",
+      "summary": "Todos os $refs em 357 arquivo(s) são resolvíveis.",
       "inputs": [],
       "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-004.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-006.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-007.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PRE_CONTRACT_EVIDENCE_GATE.json",
         "/home/davis/HB-TRACK/contracts/_waivers/waiver.schema.json",
@@ -6268,7 +6226,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 956
+        "duration_ms": 939
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6302,7 +6260,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 11
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6390,7 +6348,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 28
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6422,7 +6380,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6452,7 +6410,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 28
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6535,7 +6493,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 25
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6626,7 +6584,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5786
+        "duration_ms": 5585
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6653,7 +6611,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       },
       "proof_class": "runtime",
       "promotion_power": "blocking",
@@ -6715,7 +6673,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 39
+        "duration_ms": 35
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6806,7 +6764,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -7011,11 +6969,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Resumo de gates: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Resumo de gates: 64 PASS, 11 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

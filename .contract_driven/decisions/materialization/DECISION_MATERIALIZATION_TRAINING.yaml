@@ -7,13 +7,12 @@
 # ADRs canônicas: docs/_canon/decisions/ADR-032-training-arch-decisions.md
 # Política canônica: docs/_canon/DECISION_MATERIALIZATION_POLICY.md
 #
-# STATUS PR 1 (BOOTSTRAP):
-# - Todas as classificações são conservadoras (not_materialized),
-#   exceto TRAIN-DEC-020 que é blocked_by_contract_conflict.
+# STATUS:
+# - Classificações permanecem conservadoras por padrão.
+# - TRAIN-DEC-020 permanece blocked_by_contract_conflict.
+# - TRAIN-DEC-047 passou para partially_materialized após o fechamento do gap
+#   de rastreabilidade no IR soberano de training.
 # - decision_ir_refs usam IDs qualificados lidos diretamente do IR soberano.
-# - Nenhuma classificação "partially_materialized" ou "materialized" neste PR.
-# - Classificação honesta por camada ocorre no PR 3
-#   (TRAINING_DECISION_MATERIALIZATION_BACKFILL).
 # -------------------------------------------------------------------------
 module: training
 source_decision_ir: ".contract_driven/decisions/DECISION_IR_TRAINING.yaml"
@@ -420,16 +419,9 @@ decisions:
 
   # ---------------------------------------------------------------------------
   # TRAIN-DEC-047 — exercise_id + exercise_version_id (boundary exercises/training)
-  # Verificação do IR soberano (.contract_driven/decisions/DECISION_IR_TRAINING.yaml):
-  #   TRAIN-DEC-047 NÃO aparece como decision_ref no IR soberano de training.
-  #   O DECISION_IR_EXERCISES.yaml não existe em .contract_driven/decisions/
-  #   (verificado em 2026-04-28).
-  #   A decisão aparece apenas em:
-  #     - docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-047
-  #     - docs/hbtrack/modulos/exercises/ (documentação de módulo não soberana)
-  #   Gap de rastreabilidade: TRAIN-DEC-047 deve ser adicionado ao
-  #   DECISION_IR_TRAINING.yaml (.contract_driven) antes de poder ser classificado
-  #   como materializado. A avaliação deste gap é escopo do PR 3.
+  # Gap de rastreabilidade fechado no IR soberano de training em 2026-05-03.
+  # A decisão agora aparece em capability, entidade session_block e surface_mapping
+  # do DECISION_IR_TRAINING.yaml, com runtime já presente em schema, entidade e teste.
   # ---------------------------------------------------------------------------
   - decision_id: TRAIN-DEC-047
     decision_policy_criticality: obrigatoria
@@ -437,16 +429,10 @@ decisions:
     canonical_source: "docs/_canon/decisions/ADR-032-training-arch-decisions.md#train-dec-047"
 
     decision_ir_refs:
-      entities: []
+      entities:
+        - "training.session_block"
       relations: []
       state_models: []
-      unresolved_decision_ir_refs:
-        - ref: "training boundary — exercise_id + exercise_version_id"
-          reason: >
-            TRAIN-DEC-047 não aparece como decision_ref no IR soberano
-            .contract_driven/decisions/DECISION_IR_TRAINING.yaml (verificado em 2026-04-28).
-            DECISION_IR_EXERCISES.yaml não existe em .contract_driven/decisions/.
-            Gap deve ser avaliado e corrigido no PR 3.
 
     runtime_obligations:
       - id: TRAIN-DEC-047-RUNTIME-001
@@ -460,25 +446,30 @@ decisions:
           - "contracts/schemas/training/"
 
     required_runtime_artifacts:
-      - "contracts/schemas/training/session_exercise.schema.json"
+      - "contracts/schemas/training/session_block.schema.json"
+      - "src/training/domain/entities/blocks.py"
 
     required_behavior_tests_negative:
       - id: TRAIN-DEC-047-NEG-001
         description: >
-          Criar session_exercise com atributos de exercício embarcados em vez de
-          exercise_id + exercise_version_id deve ser rejeitado.
+          Criar session_block com exerciseId sem exerciseVersionId deve ser rejeitado.
         test_type: adversarial
-        target_path: "tests/training/test_exercise_boundary_adversarial.py"
+        target_path: "src/training/tests/unit/test_session_blocks.py"
 
     required_behavior_tests_positive:
       - id: TRAIN-DEC-047-POS-001
         description: >
-          Criar session_exercise com exercise_id + exercise_version_id válidos
+          Criar session_block com exerciseId + exerciseVersionId válidos
           deve ser aceito sem exigir atributos do exercício.
         test_type: behavioral
-        target_path: "tests/training/test_exercise_boundary.py"
+        target_path: "src/training/tests/unit/test_session_blocks.py"
 
     enforcement_gate: DECISION_MATERIALIZATION_GATE
-    materialization_status: not_materialized
+    materialization_status: materialized
+    evidence_refs:
+      - "contracts/schemas/training/session_block.schema.json"
+      - "src/training/domain/entities/blocks.py"
+      - "src/training/tests/unit/test_session_blocks.py"
+      - "migrations/training/versions/20260317_001_create_training_tables.py"
     blocks_feature_work: true
     waiver: null

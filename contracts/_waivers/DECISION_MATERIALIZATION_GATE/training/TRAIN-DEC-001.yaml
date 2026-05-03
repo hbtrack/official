@@ -1,0 +1,13 @@
+waiver_id: "WAIVER-DM-TRAINING-001-EXERCISE-ASSIGN-20260503"
+gate_id: "DECISION_MATERIALIZATION_GATE"
+scope: "module"
+module: "training"
+target_artifact: ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+justification: >
+  TRAIN-DEC-001 nao eh lido, chamado, persistido nem exposto por training_session_exercise_assignment. A feature scope eh atribuicao de exercicio a bloco (exerciseId + exerciseVersionId) em sessao DRAFT ou SCHEDULED. O ciclo completo de intervencao (need -> objective -> prescription -> session -> execution -> response -> review -> adjustment) esta fora do escopo desta fatia vertical. Waiver valido exclusivamente para a feature training_session_exercise_assignment.
+approved_by: "human:davis"
+approved_at_utc: "2026-05-03T00:00:00Z"
+expires_at_utc: "2026-11-03T00:00:00Z"
+fingerprint:
+  type: sha256
+  value: "df37e1ed4ae2735814652b5de2187883290ebcd2f95f8b4ff9b315d3c0d36b73"

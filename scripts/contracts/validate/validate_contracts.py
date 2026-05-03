@@ -531,6 +531,7 @@ def _load_json_schema_file(path: pathlib.Path) -> dict:
 
 def _validate_instance_against_schema(instance: dict, schema: dict) -> list[dict]:
     try:
+        import jsonschema  # noqa: PLC0415
         validator_cls = jsonschema.validators.validator_for(schema)
         validator_cls.check_schema(schema)
         validator = validator_cls(schema)

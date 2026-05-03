@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "current_state": "IMPLEMENTATION_DIFF_READY",
+  "approved_plan_path": ".dev/HARMONIA.md",
+  "allowed_files": [
+    ".contract_driven/decisions/DECISION_IR_TRAINING.yaml",
+    ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+    "SESSION_HANDOFF.md",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-004.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-006.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-007.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml"
+  ],
+  "forbidden_files": [
+    "VPS/"
+  ],
+  "changed_files": [
+    ".contract_driven/decisions/DECISION_IR_TRAINING.yaml",
+    ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+    "SESSION_HANDOFF.md",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-004.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-006.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-007.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
+    "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml"
+  ],
+  "decision_ids_affected": [
+    "TRAIN-DEC-047"
+  ],
+  "transitions": [
+    {
+      "from_state": "PLAN_APPROVED",
+      "to_state": "IMPLEMENTATION_DIFF_READY",
+      "timestamp": "2026-05-03T00:00:00Z",
+      "evidence_sha": "3306a4b"
+    }
+  ]
+}

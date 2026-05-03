@@ -78,7 +78,7 @@ capabilities:
     description: create, manage, publish and complete training sessions
     priority: P1
     phase: core
-    decision_refs: [TRAIN-DEC-006, TRAIN-DEC-007, TRAIN-DEC-008]
+    decision_refs: [TRAIN-DEC-006, TRAIN-DEC-007, TRAIN-DEC-008, TRAIN-DEC-047]
 
   - id: training.intervention_cycle_management
     unique_governance_id: CAP-TRAINING-003
@@ -721,6 +721,18 @@ entities:
         required: true
         nullable: false
         description: order of block within session
+      - name: exerciseId
+        unique_governance_id: FLD-TRAINING-093
+        semantic_type_ref: core.id.uuid_v4
+        required: false
+        nullable: true
+        description: sovereign exercise reference consumed by training as lookup only
+      - name: exerciseVersionId
+        unique_governance_id: FLD-TRAINING-094
+        semantic_type_ref: core.id.uuid_v4
+        required: false
+        nullable: true
+        description: explicit exercise version reference required when exerciseId is present
     non_inferable:
       - block_content_schema
 
@@ -2332,6 +2344,23 @@ surface_mapping:
   - decision_ref: TRAIN-DEC-026
     target_surface: contracts/schemas/training/training_session.schema.json
     required: false
+
+  # TRAIN-DEC-047 — exercises sovereign boundary via exercise_id + exercise_version_id
+  - decision_ref: TRAIN-DEC-047
+    target_surface: docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-047
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-047
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-047
+    target_surface: contracts/schemas/training/session_block.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-047
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
 
 # ---------------------------------------------------------------------------
 # FORBIDDEN INFERENCE GLOBAL

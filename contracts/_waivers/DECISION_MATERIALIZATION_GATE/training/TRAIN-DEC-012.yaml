@@ -1,0 +1,13 @@
+waiver_id: "WAIVER-DM-TRAINING-012-EXERCISE-ASSIGN-20260503"
+gate_id: "DECISION_MATERIALIZATION_GATE"
+scope: "module"
+module: "training"
+target_artifact: ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+justification: >
+  TRAIN-DEC-012 nao eh lido, chamado, persistido nem exposto por training_session_exercise_assignment. A decisao governa que completar uma sessao exige evidencia minima de execucao. A feature assignExerciseToBlock apenas atribui exercicios a blocos em sessao DRAFT ou SCHEDULED; nao transiciona o estado da sessao para COMPLETED nem valida evidencia de conclusao.
+approved_by: "human:davis"
+approved_at_utc: "2026-05-03T00:00:00Z"
+expires_at_utc: "2026-11-03T00:00:00Z"
+fingerprint:
+  type: sha256
+  value: "df37e1ed4ae2735814652b5de2187883290ebcd2f95f8b4ff9b315d3c0d36b73"

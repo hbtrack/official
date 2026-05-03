@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-05-01T03:57:59Z",
+  "timestamp_utc": "2026-05-03T22:30:00Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "8c02e09a",
+    "git_commit": "6b3ab811",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260501T035759_d5d891"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260503T223000_3ee8a0"
   },
   "status_detail": {
     "proof_scope": "mixed",
@@ -406,7 +406,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 313
+        "duration_ms": 58
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -440,7 +440,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13521
+        "duration_ms": 472
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -605,7 +605,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 68
+        "duration_ms": 15
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -830,7 +830,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 216
+        "duration_ms": 121
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -948,7 +948,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -966,7 +966,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Decision Materialization: 8 decisão(ões) não materializadas (modo full_scan — sem diff determinístico de PR). Gate ativo. Módulos verificados: 1.",
+      "summary": "Decision Materialization: 7 decisão(ões) não materializadas (modo full_scan — sem diff determinístico de PR). Gate ativo. Módulos verificados: 1.",
       "inputs": [],
       "artifacts_checked": [
         ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
@@ -1016,19 +1016,13 @@
           "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
           "message": "Módulo `training`, decisão `TRAIN-DEC-020`: `blocked_by_contract_conflict` sem waiver formal em `contracts/_waivers/DECISION_MATERIALIZATION_GATE/`. Classifique ou formalize o waiver no PR 3.",
           "severity": "warn"
-        },
-        {
-          "blocking_code": "FAIL_DECISION_MATERIALIZATION",
-          "artifact": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
-          "message": "Módulo `training`, decisão `TRAIN-DEC-047`: `blocks_feature_work=true` e `materialization_status=not_materialized` sem waiver válido. Modo full_scan: diff não disponível — verifique em CI de PR.",
-          "severity": "warn"
         }
       ],
       "metrics": {
         "errors": 0,
-        "warnings": 8,
-        "violations": 8,
-        "duration_ms": 43
+        "warnings": 7,
+        "violations": 7,
+        "duration_ms": 15
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1414,7 +1408,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 148
+        "duration_ms": 30
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1509,7 +1503,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1037
+        "duration_ms": 723
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1541,7 +1535,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12465
+        "duration_ms": 1026
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1572,7 +1566,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6770
+        "duration_ms": 1208
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1620,7 +1614,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 887
+        "duration_ms": 584
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -3795,7 +3789,7 @@
         "errors": 0,
         "warnings": 107,
         "violations": 107,
-        "duration_ms": 2715
+        "duration_ms": 1890
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -3876,7 +3870,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4506,7 +4500,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1987
+        "duration_ms": 1741
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4618,7 +4612,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2358
+        "duration_ms": 1466
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4670,7 +4664,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 58
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4701,7 +4695,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1424
+        "duration_ms": 1309
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4766,7 +4760,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 60
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4795,7 +4789,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 2
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4885,7 +4879,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1348
+        "duration_ms": 192
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -4914,7 +4908,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49486
+        "duration_ms": 42545
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4959,7 +4953,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 8
       },
       "proof_class": "behavioral",
       "promotion_power": "advisory",
@@ -4988,7 +4982,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 20
       },
       "proof_class": "presence",
       "promotion_power": "advisory",
@@ -5181,7 +5175,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1969
+        "duration_ms": 70
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5213,7 +5207,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 0
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5262,12 +5256,14 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json"
+        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
+        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json"
+        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
+        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5275,7 +5271,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1518
+        "duration_ms": 4
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5306,7 +5302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 650
+        "duration_ms": 164
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5337,7 +5333,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5439,7 +5435,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 175
+        "duration_ms": 91
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -5527,7 +5523,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 11
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5585,7 +5581,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5749,7 +5745,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 27
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",

@@ -2,39 +2,56 @@
 data_ultima_sessao: "2026-05-03"
 branch_ativo: chore/copilot-agent-governance-ready
 modo_operacao: CDD
-ci_status: UNKNOWN
-modulo_foco: audit
-fase_roadmap: 1
-task_type: pr_fix
-boot_profile_id: contract_execution
-task_id: CI_FIX_GOVERNANCE_AGENTS_REWRITE
-resultado: PENDENTE
-proxima_acao_permitida: "Confirmar CI verde e mergear chore/copilot-agent-governance-ready para main via Hb Merger."
+ci_status: PASS
+modulo_foco: training
+fase_roadmap: 6
+task_type: implementation_execution
+boot_profile_id: implementation_execution
+task_id: HARMONIA_PR1_DECISION_MATERIALIZATION
+resultado: DONE
+proxima_acao_permitida: "Fase 3 — implementar POST /training-sessions/{id}/blocks/{blockId}/exercises (operationId: assignExerciseToBlock)"
 bloqueios_ativos: []
 evidence_paths:
-  - "_reports/preflight/latest.json"
-  - "_reports/contract_gates/precommit.latest.json"
+  - "_reports/implementation_flow/current_state.json"
+  - "_reports/implementation_flow/plan_to_diff_trace.json"
+  - "_reports/decision_materialization/training.json"
+  - "_reports/contract_gates/latest.json"
 ---
-# SESSION HANDOFF — CI_FIX_GOVERNANCE_AGENTS_REWRITE
+# SESSION HANDOFF — HARMONIA_PR1_DECISION_MATERIALIZATION
 
 ## Estado Geral
-**Data:** 2026-05-03 | **Branch:** chore/copilot-agent-governance-ready | **CI:** UNKNOWN
-**Módulo:** audit | **Task type:** pr_fix | **Fase:** 1
+**Data:** 2026-05-03 | **Branch:** chore/copilot-agent-governance-ready | **CI:** PASS
+**Módulo:** training | **Task type:** implementation_execution | **Fase:** 6
 
-## O que foi feito
-- PRs #112, #113, #114 mergeados em main (2026-05-02)
-- Waiver CI-VALIDATE-TIMING removido (PR #115)
-- SESSION_HANDOFF reconciliado pós-Fase-1 (PR #115)
-- latest.json regenerado (PR #116)
-- Reescrita de 13 artefatos de governança `.github/{agents,skills,instructions}` em branch ativo
-- 6 falhas de CI corrigidas localmente (6 passed): regex SKILL.md, Portuguese mesclado, Claude refs, SESSION_HANDOFF trim
+## O que foi feito (PR 1/3 — Fase 2 HARMONIA.md)
+- Triagem de todas as 8 decisões arquiteturais do módulo training
+- TRAIN-DEC-047 → `materialized` com 4 `evidence_refs` confirmados
+- 7 waivers criados em `contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/`
+- DECISION_IR_TRAINING.yaml atualizado (decision_refs + entity fields + surface mappings para TRAIN-DEC-047)
+- DECISION_MATERIALIZATION_TRAINING.yaml atualizado (status finais de todas as 8 decisões)
+- DECISION_MATERIALIZATION_GATE: **PASS** (0 violations)
+- `python3 scripts/hb validate --profile ci`: **PASS**
 
 ## Evidências
-- `_reports/preflight/latest.json`
-- `_reports/contract_gates/precommit.latest.json`
+- `_reports/implementation_flow/current_state.json`
+- `_reports/implementation_flow/plan_to_diff_trace.json`
+- `_reports/implementation_flow/implementation_evidence_pack.json`
+- `_reports/decision_materialization/training.json`
+- `_reports/contract_gates/latest.json`
+
+## Waivers criados
+| Decisão | Justificativa resumida |
+|---|---|
+| TRAIN-DEC-001 | Feature não implementa ciclo completo de intervenção |
+| TRAIN-DEC-004 | Feature não cria/valida objetivos de sessão |
+| TRAIN-DEC-006 | Regra de pré-condição de publicação está no handler publish_session |
+| TRAIN-DEC-007 | Feature não cria execution_records |
+| TRAIN-DEC-008 | Feature opera apenas em fase DRAFT/SCHEDULED |
+| TRAIN-DEC-012 | Feature não finaliza sessões |
+| TRAIN-DEC-020 | Conflito ADR-017 vs RUL-TRAINING-040 — feature não implementa auditoria |
 
 ## Bloqueios ativos
 Nenhum.
 
 ## Próxima ação permitida
-Confirmar CI verde no GitHub e mergear chore/copilot-agent-governance-ready para main via Hb Merger.
+Fase 3 — implementar POST /training-sessions/{id}/blocks/{blockId}/exercises (operationId: assignExerciseToBlock) conforme HARMONIA.md.

@@ -1,0 +1,13 @@
+waiver_id: "WAIVER-DM-TRAINING-008-EXERCISE-ASSIGN-20260503"
+gate_id: "DECISION_MATERIALIZATION_GATE"
+scope: "module"
+module: "training"
+target_artifact: ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml"
+justification: >
+  TRAIN-DEC-008 nao eh lido, chamado, persistido nem exposto por training_session_exercise_assignment. A regra de imutabilidade do planejado (planned vs actual must not merge) eh relevante durante e apos a fase de execucao. A feature assignExerciseToBlock opera exclusivamente em sessoes com status DRAFT ou SCHEDULED (fase de planejamento), validada por invariante de TRAIN-DEC-047. Nao ha geracao de execution_records nesta operacao.
+approved_by: "human:davis"
+approved_at_utc: "2026-05-03T00:00:00Z"
+expires_at_utc: "2026-11-03T00:00:00Z"
+fingerprint:
+  type: sha256
+  value: "df37e1ed4ae2735814652b5de2187883290ebcd2f95f8b4ff9b315d3c0d36b73"

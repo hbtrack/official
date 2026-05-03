@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "approved_plan_path": ".dev/HARMONIA.md",
+  "base_sha": "6b3ab811f0c762350426a103d406c6432f25caad",
+  "head_sha": "3306a4be5af1a2b42c27220f028ed7c7f9b3ef0c",
+  "entries": [
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: TRAIN-DEC-047 IR traceability",
+      "changed_file": ".contract_driven/decisions/DECISION_IR_TRAINING.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: TRAIN-DEC-047 materialization status update",
+      "changed_file": ".contract_driven/decisions/materialization/DECISION_MATERIALIZATION_TRAINING.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/decision_materialization/training.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: SESSION_HANDOFF updated",
+      "changed_file": "SESSION_HANDOFF.md",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-001",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-004",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-004.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-006",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-006.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-007",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-007.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-008",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-012",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    },
+    {
+      "plan_requirement": "HARMONIA.md Fase 2 — Resolver DECISION_MATERIALIZATION_GATE para modulo training: waiver para decisao nao bloqueante TRAIN-DEC-020",
+      "changed_file": "contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml",
+      "test_command": "python3 scripts/hb validate --profile ci",
+      "evidence_path": "_reports/contract_gates/latest.json",
+      "status": "COVERED"
+    }
+  ],
+  "extra_files": [],
+  "uncovered_requirements": []
+}
