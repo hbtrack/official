@@ -10,7 +10,7 @@ AGENT_FILES = {
     "hb-contract.agent.md": "HB Contract",
     "hb-implementer.agent.md": "Hb Implementer",
     "hb-adversarial-tester.agent.md": "Hb Adversarial Tester",
-    "Mesclado.agent.md": "HandTracker",
+    "hb-mesclado.agent.md": "Hb Merger",
 }
 
 
@@ -57,7 +57,7 @@ class TestCopilotAgentFiles:
         assert "Claude" in text
 
     def test_handtracker_is_not_presented_as_runtime_executor(self):
-        text = _read(ROOT / ".github" / "agents" / "Mesclado.agent.md")
+        text = _read(ROOT / ".github" / "agents" / "hb-mesclado.agent.md")
         assert "implementation_execution" not in text
         assert "adversarial_test_execution" not in text
         assert "merges, PRs e CI".lower() in text.lower()

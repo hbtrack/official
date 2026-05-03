@@ -16,7 +16,7 @@
 
 ### GitHub Copilot
 - **Bridge doc:** `.github/copilot-instructions.md` (auto-load)
-- **Agent definitions:** `.github/agents/hb-contract.agent.md`, `.github/agents/hb-implementer.agent.md`, `.github/agents/hb-adversarial-tester.agent.md`, `.github/agents/Mesclado.agent.md`
+- **Agent definitions:** `.github/agents/hb-contract.agent.md`, `.github/agents/hb-implementer.agent.md`, `.github/agents/hb-adversarial-tester.agent.md`, `.github/agents/hb-mesclado.agent.md`
 - **Skills:** `.github/skills/hb-pipeline-orchestrator/SKILL.md`, `.github/skills/hb-roadmap-executor/SKILL.md`
 - **Instructions:** `.github/instructions/hb-contract-guards.instructions.md` (scope: `src/**`)
 - **Enforcement:** `scripts/hb`, `validate_contracts.py`, `pre-commit hook`, CI workflows
@@ -62,7 +62,7 @@ Diretório: `.contract_driven/agent_prompts/`
   - `HB Contract`
   - `Hb Implementer`
   - `Hb Adversarial Tester`
-  - `HandTracker`
+  - `Hb Merger`
 - Os papéis usam o mesmo enforcement central do repo; o dropdown não cria soberania nova.
 - A revisão adversarial final forte não depende só do mesmo chat: o handoff
   recomendado é para Claude usando pacote estruturado de evidências + gates.
