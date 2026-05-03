@@ -57,9 +57,9 @@ ROADMAP: phase execution -> `hb-roadmap-executor`
 <boot>
 ```bash
 gh auth status
-python3 -c "import json;h=json.load(open('_reports/pipeline_health.json'));print(f"Health:{h['health_score']}/100 Status:{h['overall_status']} Blocking:{h['blocking_fails']}")"
+python3 -c 'import json;h=json.load(open("_reports/pipeline_health.json"));print("Health:"+str(h["health_score"])+"/100 Status:"+h["overall_status"]+" Blocking:"+str(h["blocking_fails"]))'
 head -20 SESSION_HANDOFF.md 2>/dev/null || echo "Sem handoff ativo"
-python3 -c "import json;w=json.load(open('.contract_driven/waivers.json'));[print(f"WAIVER:{x.get('gate_id','?')}") for x in w.get('waivers',[])]" 2>/dev/null || echo "Sem waivers"
+python3 -c 'import json;w=json.load(open(".contract_driven/waivers.json"));[print("WAIVER:"+x.get("gate_id","?")) for x in w.get("waivers",[])]' 2>/dev/null || echo "Sem waivers"
 ```
 </boot>
 

@@ -62,7 +62,7 @@ Diretório: `.contract_driven/agent_prompts/`
   - `HB Contract`
   - `Hb Implementer`
   - `Hb Adversarial Tester`
-  - `HandTracker`
+  - `Hb Merger`
 - Os papéis usam o mesmo enforcement central do repo; o dropdown não cria soberania nova.
 - A revisão adversarial final forte não depende só do mesmo chat: o handoff
   recomendado é para Claude usando pacote estruturado de evidências + gates.
