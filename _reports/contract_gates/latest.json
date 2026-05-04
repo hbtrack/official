@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-05-03T22:34:43Z",
+  "timestamp_utc": "2026-05-04T16:49:10Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "6b3ab811",
+    "git_commit": "030e7ad6",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "PASS",
+  "overall_status": "FAIL",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,13 +31,13 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260503T223443_3b32b8"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260504T164910_daf06e"
   },
   "status_detail": {
     "proof_scope": "factual",
-    "active_gates_total": 65,
-    "active_gates_passed": 65,
-    "skip_count": 11,
+    "active_gates_total": 70,
+    "active_gates_passed": 68,
+    "skip_count": 6,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -53,6 +53,10 @@
       },
       {
         "gate_id": "MODULE_DOC_CROSSREF_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
         "status": "PASS"
       },
       {
@@ -180,6 +184,38 @@
         "status": "PASS"
       },
       {
+        "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "FEATURE_READINESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "VERSIONING_POLICY_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "PACT_PROVIDER_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CODE_ARCHITECTURE_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "DEPLOY_READINESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "DATA_MIGRATION_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "MONITORING_POLICY_GATE",
+        "status": "PASS"
+      },
+      {
         "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
         "status": "PASS"
       },
@@ -205,6 +241,10 @@
       },
       {
         "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
+        "status": "PASS"
+      },
+      {
+        "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
         "status": "PASS"
       },
       {
@@ -240,16 +280,20 @@
         "status": "PASS"
       },
       {
+        "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
+        "status": "PASS"
+      },
+      {
         "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
         "status": "PASS"
       },
       {
         "gate_id": "IMPACT_ANALYSIS_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "FAIL"
       },
       {
         "gate_id": "PARTIAL_UPDATE_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "DOC_USAGE_GATE",
@@ -269,11 +313,11 @@
       },
       {
         "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "PLAN_DIFF_TRACE_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
@@ -285,7 +329,7 @@
       },
       {
         "gate_id": "IMPLEMENTATION_STATE_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
@@ -299,7 +343,7 @@
     "mandatory_ci_skip_count": 0,
     "mandatory_ci_skips": []
   },
-  "exit_code": 0,
+  "exit_code": 2,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -321,7 +365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 57
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -355,7 +399,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 485
+        "duration_ms": 1945
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -569,7 +613,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 9
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -708,7 +752,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 119
+        "duration_ms": 124
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -723,7 +767,7 @@
     {
       "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Sem risco detectável de duplicação normativa de API no canon.",
@@ -776,12 +820,12 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 8
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -806,7 +850,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40
+        "duration_ms": 41
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -836,7 +880,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 34
+        "duration_ms": 33
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -926,7 +970,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 49
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -986,7 +1030,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 306
+        "duration_ms": 310
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1016,7 +1060,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 32
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1154,7 +1198,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 64
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1190,7 +1234,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 120
+        "duration_ms": 122
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1339,7 +1383,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 19
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1357,7 +1401,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 365 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 366 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
@@ -1368,6 +1412,7 @@
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PRE_CONTRACT_EVIDENCE_GATE.json",
         "/home/davis/HB-TRACK/contracts/_waivers/README.md",
@@ -1827,7 +1872,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 740
+        "duration_ms": 727
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1859,7 +1904,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1008
+        "duration_ms": 1066
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1877,20 +1922,23 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "redocly lint: nenhum erro.",
+      "summary": "redocly lint falhou — waiver ativo aprovado. Ver contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json.",
       "inputs": [
         "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
       ],
       "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
+        "contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json"
       ],
-      "evidence_files": [],
+      "evidence_files": [
+        "contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json"
+      ],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1588
+        "duration_ms": 1503
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1938,7 +1986,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 601
+        "duration_ms": 595
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4113,7 +4161,7 @@
         "errors": 0,
         "warnings": 107,
         "violations": 107,
-        "duration_ms": 1790
+        "duration_ms": 1852
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -4824,7 +4872,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1743
+        "duration_ms": 1817
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4857,7 +4905,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1670
+        "duration_ms": 1769
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4886,7 +4934,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4944,7 +4992,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1463
+        "duration_ms": 1899
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4996,7 +5044,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 61
+        "duration_ms": 59
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5027,7 +5075,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1246
+        "duration_ms": 1389
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5092,7 +5140,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 63
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5211,7 +5259,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 206
+        "duration_ms": 452
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5240,7 +5288,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42032
+        "duration_ms": 43102
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5255,7 +5303,7 @@
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Análise adversarial: 17 relatório(s) — todos PASS.",
@@ -5285,12 +5333,12 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 12
       },
       "proof_class": "behavioral",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5300,7 +5348,7 @@
     {
       "gate_id": "FEATURE_READINESS_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "FEATURE_REGISTRY: 44 features — 43 implemented, 1 validated",
@@ -5317,9 +5365,9 @@
         "duration_ms": 20
       },
       "proof_class": "presence",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5329,7 +5377,7 @@
     {
       "gate_id": "VERSIONING_POLICY_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Política de versionamento: ADR-024 presente, SemVer válido, estratégia registrada.",
@@ -5348,9 +5396,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5360,7 +5408,7 @@
     {
       "gate_id": "PACT_PROVIDER_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "PACT_BROKER_BASE_URL não configurado — Pact Broker não ativo. Configurar quando o primeiro consumer contract for publicado.",
@@ -5375,9 +5423,9 @@
         "duration_ms": 0
       },
       "proof_class": "runtime",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
@@ -5387,7 +5435,7 @@
     {
       "gate_id": "CODE_ARCHITECTURE_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Arquitetura de código: ADR-026 presente, CODE_ARCHITECTURE.md presente.",
@@ -5424,7 +5472,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5434,7 +5482,7 @@
     {
       "gate_id": "DEPLOY_READINESS_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Deploy configurado: DEPLOY_PIPELINE.md, ADR-027 e deploy.yml presentes.",
@@ -5455,7 +5503,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5465,7 +5513,7 @@
     {
       "gate_id": "DATA_MIGRATION_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Migration configurada: DATA_MIGRATION_POLICY.md, ADR-028 e migrations/ presentes.",
@@ -5484,9 +5532,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5496,7 +5544,7 @@
     {
       "gate_id": "MONITORING_POLICY_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Monitoramento configurado: RUNTIME_CONTRACT_MONITORING_POLICY.md e ADR-029 presentes.",
@@ -5516,7 +5564,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5542,7 +5590,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 98
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5574,7 +5622,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5609,7 +5657,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 530
+        "duration_ms": 903
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -5631,14 +5679,14 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
-        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/_reports/implementation_flow/current_state.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/preflight/latest.json",
-        "/home/davis/HB-TRACK/_reports/decision_materialization/training.json"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/_reports/implementation_flow/current_state.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -5646,7 +5694,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 13
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5677,7 +5725,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 166
+        "duration_ms": 179
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5810,7 +5858,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 94
+        "duration_ms": 107
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -5825,7 +5873,7 @@
     {
       "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Fronteiras cross-módulo respeitadas.",
@@ -5841,12 +5889,12 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 23
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -5859,7 +5907,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os $refs em 357 arquivo(s) são resolvíveis.",
+      "summary": "Todos os $refs em 358 arquivo(s) são resolvíveis.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-001.yaml",
@@ -5869,6 +5917,7 @@
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-008.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-012.yaml",
         "/home/davis/HB-TRACK/contracts/_waivers/DECISION_MATERIALIZATION_GATE/training/TRAIN-DEC-020.yaml",
+        "/home/davis/HB-TRACK/contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PRE_CONTRACT_EVIDENCE_GATE.json",
         "/home/davis/HB-TRACK/contracts/_waivers/waiver.schema.json",
@@ -6226,7 +6275,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 939
+        "duration_ms": 980
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6244,8 +6293,9 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "2 waiver(s) válido(s) e em vigência.",
+      "summary": "3 waiver(s) válido(s) e em vigência.",
       "inputs": [
+        "/home/davis/HB-TRACK/contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PACT_PROVIDER_GATE_TRAINING_20260422.json",
         "/home/davis/HB-TRACK/contracts/_waivers/PRE_CONTRACT_EVIDENCE_GATE.json"
       ],
@@ -6260,7 +6310,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 17
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6380,7 +6430,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 11
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6410,7 +6460,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 31
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6493,7 +6543,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 34
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6508,7 +6558,7 @@
     {
       "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
       "status": "PASS",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "DOMAIN_GLOSSARY.md conforme: 48 termos canônicos extraídos.",
@@ -6525,9 +6575,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -6584,7 +6634,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5585
+        "duration_ms": 5773
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6598,20 +6648,29 @@
     },
     {
       "gate_id": "IMPACT_ANALYSIS_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_PARTIAL_CONSUMER_UPDATE",
+      "summary": "IMPACT_ANALYSIS: 1 regra(s) com consumers faltando no commit.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "docs/_canon/SYNC_MANIFEST.yaml"
+      ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_PARTIAL_CONSUMER_UPDATE",
+          "artifact": "scripts/contracts/validate/validate_contracts.py",
+          "message": "Regra 'VALIDATOR_REPORTING_SYNC': source master 'scripts/contracts/validate/validate_contracts.py' foi modificado mas os seguintes blocking_consumers estão ausentes do commit: _reports/, docs/_canon/RUNTIME_CURRENT_STATE.md",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 1,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 2
+        "violations": 1,
+        "duration_ms": 57
       },
       "proof_class": "runtime",
       "promotion_power": "blocking",
@@ -6620,25 +6679,27 @@
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
-      "applicability": "not_applicable",
-      "applicability_reason": "Staging area vazia — nenhuma mudança staged para analisar."
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "PARTIAL_UPDATE_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Staging area vazia — nenhuma mudança staged para analisar.",
+      "summary": "Todos os source masters modificados têm pelo menos um required_consumer no commit.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "docs/_canon/SYNC_MANIFEST.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 55
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6647,8 +6708,8 @@
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
-      "applicability": "not_applicable",
-      "applicability_reason": "Staging area vazia — nenhuma mudança staged para analisar."
+      "applicability": "applicable",
+      "applicability_reason": "always"
     },
     {
       "gate_id": "DOC_USAGE_GATE",
@@ -6673,7 +6734,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 35
+        "duration_ms": 40
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6704,7 +6765,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 54
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6735,7 +6796,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 8
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6753,7 +6814,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Changeset homogêneo (neutral): sem mistura de enforcement + produto.",
+      "summary": "Changeset homogêneo (enforcement-only): sem mistura de enforcement + produto.",
       "inputs": [],
       "artifacts_checked": [
         "(git changeset via pr_diff)"
@@ -6764,7 +6825,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 20
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6778,13 +6839,15 @@
     },
     {
       "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Sem current_state.json — gate não aplicável.",
+      "summary": "Diff compatível com allowed_files do plano aprovado.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "_reports/implementation_flow/current_state.json"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
@@ -6800,25 +6863,28 @@
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
-      "applicability": "not_applicable",
-      "applicability_reason": "Sem current_state.json — gate não aplicável."
+      "applicability": "applicable",
+      "applicability_reason": "implementation_flow_active"
     },
     {
       "gate_id": "PLAN_DIFF_TRACE_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Sem contexto de implementation flow — gate não aplicável.",
+      "summary": "Plan-to-diff trace schema-valid e sem lacunas.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "contracts/schemas/shared/plan_to_diff_trace.schema.json",
+        "_reports/implementation_flow/plan_to_diff_trace.json"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 4
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6827,8 +6893,8 @@
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
-      "applicability": "not_applicable",
-      "applicability_reason": "Sem contexto de implementation flow — gate não aplicável."
+      "applicability": "applicable",
+      "applicability_reason": "implementation_flow_active"
     },
     {
       "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
@@ -6836,7 +6902,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Sem current_state.json — gate não aplicável.",
+      "summary": "Sem decision_ids_affected — gate não aplicável.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -6855,7 +6921,7 @@
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
       "applicability": "not_applicable",
-      "applicability_reason": "Sem current_state.json — gate não aplicável."
+      "applicability_reason": "Sem decision_ids_affected — gate não aplicável."
     },
     {
       "gate_id": "POST_PR_ADVERSARIAL_GATE",
@@ -6863,7 +6929,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Sem current_state.json — gate não aplicável.",
+      "summary": "PR ainda não aberto — gate não aplicável.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -6882,24 +6948,27 @@
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
       "applicability": "not_applicable",
-      "applicability_reason": "Sem current_state.json — gate não aplicável."
+      "applicability_reason": "PR ainda não aberto — gate não aplicável."
     },
     {
       "gate_id": "IMPLEMENTATION_STATE_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Sem current_state.json — gate não aplicável.",
+      "summary": "Estado de implementação válido: PLAN_APPROVED.",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "contracts/schemas/shared/implementation_flow_state.schema.json",
+        "_reports/implementation_flow/current_state.json"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 4
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6908,8 +6977,8 @@
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
-      "applicability": "not_applicable",
-      "applicability_reason": "Sem current_state.json — gate não aplicável."
+      "applicability": "applicable",
+      "applicability_reason": "implementation_flow_active"
     },
     {
       "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
@@ -6969,11 +7038,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": false,
-      "exit_code": 0,
+      "exit_code": 2,
       "blocking_code": null,
-      "summary": "Resumo de gates: 64 PASS, 11 SKIP.",
+      "summary": "Resumo de gates: 1 gate(s) bloqueante(s) falharam.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

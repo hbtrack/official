@@ -238,5 +238,5 @@ jobs:
             });
 
       - name: Resumo
-        if: always()
+        if: always()  # justified: summary-echo
         run: echo "AI PR Review finalizado."

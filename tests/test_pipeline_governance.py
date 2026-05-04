@@ -551,3 +551,67 @@ def test_canon_does_not_delegate_to_guias_or_missing_environment_doc():
 def test_non_sovereign_roots_have_readme_disclaimers():
     assert Path("docs/guias/README.md").exists()
     assert Path("_reports/README.md").exists()
+
+
+# ---------------------------------------------------------------------------
+# Testes de regressão: OPENAPI_ROOT_STRUCTURE_GATE respeita waiver ativo
+# ---------------------------------------------------------------------------
+
+def _setup_openapi_root(tmp_path: Path) -> None:
+    """Cria estrutura mínima para que _g5_openapi_root_structure não retorne skip."""
+    openapi_dir = tmp_path / "contracts" / "openapi"
+    openapi_dir.mkdir(parents=True)
+    (openapi_dir / "openapi.yaml").write_text("openapi: 3.1.0\npaths: {}\n", encoding="utf-8")
+
+
+def _write_waiver(tmp_path: Path, expires_at_utc: str) -> None:
+    waivers_dir = tmp_path / "contracts" / "_waivers"
+    waivers_dir.mkdir(parents=True)
+    (waivers_dir / "OPENAPI_ROOT_STRUCTURE_GATE_test.json").write_text(
+        json.dumps({
+            "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
+            "scope": "system",
+            "module": None,
+            "expires_at_utc": expires_at_utc,
+        }),
+        encoding="utf-8",
+    )
+
+
+def test_openapi_root_waiver_absent_keeps_gate_failing(tmp_path, monkeypatch):
+    """Sem waiver → lint falha → gate deve retornar FAIL."""
+    _setup_openapi_root(tmp_path)
+    monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
+
+    result = gates._g5_openapi_root_structure(tmp_path)
+
+    assert result["status"] == "FAIL"
+
+
+def test_openapi_root_waiver_active_converts_redocly_failure_to_pass(tmp_path, monkeypatch):
+    """Waiver ativo (expiry futuro) → lint falha → gate deve retornar PASS."""
+    _setup_openapi_root(tmp_path)
+    future = (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    _write_waiver(tmp_path, future)
+    monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
+
+    result = gates._g5_openapi_root_structure(tmp_path)
+
+    assert result["status"] == "PASS"
+    assert "waiver" in result["summary"].lower()
+
+
+def test_openapi_root_waiver_expired_keeps_gate_failing(tmp_path, monkeypatch):
+    """Waiver expirado → lint falha → gate deve retornar FAIL."""
+    _setup_openapi_root(tmp_path)
+    past = (
+        datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=1)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    _write_waiver(tmp_path, past)
+    monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
+
+    result = gates._g5_openapi_root_structure(tmp_path)
+
+    assert result["status"] == "FAIL"

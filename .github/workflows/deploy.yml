@@ -1,5 +1,28 @@
 name: HB Track — Deploy Pipeline
 
+# ────────────────────────────────────────────────────────────────────────────
+# POLICY DE FALHAS JUSTIFICADAS (governance-health.yml valida)
+# ────────────────────────────────────────────────────────────────────────────
+# `|| true` e `|| echo "<fallback>"` são permitidos APENAS nas 4 categorias
+# abaixo. Toda nova ocorrência DEVE estar acompanhada de comentário inline
+# `# justified: <categoria>` na linha imediatamente acima ou no final da linha.
+# Categorias permitidas:
+#
+#   cleanup-idempotent   — `docker compose down`, `docker network create`,
+#                          `xargs docker stop` em recurso que pode não existir.
+#   diagnostic-only      — `docker compose ps`, `docker compose logs`,
+#                          `grep .env`, `cat .last_sha` para reportar estado;
+#                          falha do comando NÃO afeta correção do deploy.
+#   diagnostic-fallback  — `curl ... || echo "000"`, parse de JSON com default;
+#                          o fallback é usado pela lógica subsequente.
+#   control-flow         — `cmd && action_a || action_b` em short-circuit
+#                          legítimo (ex: detecção de cert presente/ausente).
+#
+# QUALQUER `|| true` em comando que faz mutação real (deploy, migração, seed,
+# build, push, restart) DEVE ser refatorado para capturar exit code via
+# `set +e; OUT=$(cmd); EC=$?; set -e` e tomar decisão explícita.
+# ────────────────────────────────────────────────────────────────────────────
+
 on:
   push:
     branches: [ main ]
@@ -285,7 +308,7 @@ jobs:
 
             if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
               echo "⚠️ .env contém linhas com formato inválido — verifique manualmente"
-              grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true
+              grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true  # justified: diagnostic-only
             else
               echo "✅ .env válido — credenciais existentes mantidas"
             fi
@@ -300,10 +323,10 @@ jobs:
 
             if [ "${{ inputs.destructive_reset }}" = "true" ]; then
               echo "🔄 DESTRUCTIVE RESET — removendo volumes de staging..."
-              docker compose -f infra/docker-compose.staging.yml down -v 2>/dev/null || true
+              docker compose -f infra/docker-compose.staging.yml down -v 2>/dev/null || true  # justified: cleanup-idempotent
               echo "⚠️ Volumes de staging removidos — dados recriados do zero"
             else
-              docker compose -f infra/docker-compose.staging.yml down 2>/dev/null || true
+              docker compose -f infra/docker-compose.staging.yml down 2>/dev/null || true  # justified: cleanup-idempotent
             fi
 
             # Staging não expõe portas 80/443 — o edge proxy gerencia a borda.
@@ -317,7 +340,7 @@ jobs:
             docker compose -f infra/docker-compose.staging.yml ps
 
             echo "--- LOGS DO CONTAINER API (últimas 80 linhas) ---"
-            docker compose -f infra/docker-compose.staging.yml logs api --tail=80 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml logs api --tail=80 2>&1 || true  # justified: diagnostic-only
 
             echo "✅ Deploy staging concluído — IMAGE_TAG=${SHORT_SHA}"
 
@@ -356,7 +379,7 @@ jobs:
 
             echo "Aguardando frontend interno responder com o build esperado..."
             for i in $(seq 1 24); do
-              HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T -e EXPECTED_SHA="${EXPECTED_SHA}" frontend sh -lc 'wget -qO- "http://127.0.0.1/?deploy_sha=${EXPECTED_SHA}" 2>/dev/null || true')"
+              HTML="$(docker compose -f infra/docker-compose.staging.yml exec -T -e EXPECTED_SHA="${EXPECTED_SHA}" frontend sh -lc 'wget -qO- "http://127.0.0.1/?deploy_sha=${EXPECTED_SHA}" 2>/dev/null || true')"  # justified: diagnostic-fallback
 
               if printf "%s" "$HTML" | grep -F "hb-build-sha" >/dev/null \
                 && printf "%s" "$HTML" | grep -F "${EXPECTED_SHA}" >/dev/null; then
@@ -396,9 +419,24 @@ jobs:
           script: |
             cd /opt/hbtrack/staging
             echo "🌱 Aplicando seed de dados de demonstração em staging..."
-            docker compose -f infra/docker-compose.staging.yml exec -T api \
-              python manage.py seed_demo 2>&1 || true
-            echo "✅ Seed demo concluído (ou já existia)"
+            # justified: idempotência — seed_demo retorna ≠0 quando dados já
+            # existem. Capturamos o exit, alertamos em caso de erro inesperado
+            # (não-zero E não-conhecido), mas não bloqueamos o pipeline.
+            set +e
+            SEED_OUT="$(docker compose -f infra/docker-compose.staging.yml exec -T api python manage.py seed_demo 2>&1)"
+            SEED_EC=$?
+            set -e
+            echo "$SEED_OUT"
+            if [ "$SEED_EC" -ne 0 ]; then
+              # Heurística simples: se o output mencionar "already" ou "exists", é idempotência
+              if echo "$SEED_OUT" | grep -iqE 'already|exists|duplicate|skipped'; then
+                echo "✅ Seed demo já estava aplicado (exit=$SEED_EC, idempotência detectada)"
+              else
+                echo "::warning::Seed demo terminou com exit=$SEED_EC e output não-idempotente — investigar."
+              fi
+            else
+              echo "✅ Seed demo concluído (exit=0)"
+            fi
 
       - name: Diagnóstico — logs container api (em caso de falha)
         if: failure()
@@ -410,11 +448,11 @@ jobs:
           script: |
             cd /opt/hbtrack/staging
             echo "--- CONTAINER STATUS ---"
-            docker compose -f infra/docker-compose.staging.yml ps 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml ps 2>&1 || true  # justified: diagnostic-only
             echo "--- LOGS API (100 linhas) ---"
-            docker compose -f infra/docker-compose.staging.yml logs api --tail=100 2>&1 || true
+            docker compose -f infra/docker-compose.staging.yml logs api --tail=100 2>&1 || true  # justified: diagnostic-only
             echo "--- LOGS EDGE (verificar se proxy está rodando) ---"
-            docker ps --filter name=hbtrack-edge 2>&1 || true
+            docker ps --filter name=hbtrack-edge 2>&1 || true  # justified: diagnostic-only
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 5: Validação de contratos contra staging live
@@ -599,7 +637,7 @@ jobs:
             SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
 
             # Salvar SHA anterior para rollback
-            PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
+            PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")  # justified: diagnostic-fallback
             if [ -n "${PREV_SHA}" ] && [ "${PREV_SHA}" != "latest" ]; then
               echo "${PREV_SHA}" > .last_sha
             fi
@@ -620,7 +658,7 @@ jobs:
 
             if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
               echo "⚠️ .env contém linhas com formato inválido"
-              grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true
+              grep -nvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env || true  # justified: diagnostic-only
             else
               echo "✅ .env válido"
             fi
@@ -634,7 +672,7 @@ jobs:
             docker compose -f infra/docker-compose.prod.yml pull
 
             echo "🔄 Deploy produção — parando containers, preservando dados..."
-            docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
+            docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true  # justified: cleanup-idempotent
 
             # Produção não expõe 80/443 — o edge proxy gerencia a borda.
             # Sem port guard, sem certbot nesta stack.
@@ -647,7 +685,7 @@ jobs:
             docker compose -f infra/docker-compose.prod.yml ps
 
             echo "--- LOGS DO CONTAINER API (últimas 80 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs api --tail=80 2>&1 || true
+            docker compose -f infra/docker-compose.prod.yml logs api --tail=80 2>&1 || true  # justified: diagnostic-only
 
             echo "✅ Deploy produção concluído — IMAGE_TAG=${SHORT_SHA}"
 
@@ -687,7 +725,7 @@ jobs:
           script: |
             set -e
             cd /opt/hbtrack/production
-            PREV_SHA=$(cat .last_sha 2>/dev/null | tr -d '[:space:]' || echo "")
+            PREV_SHA=$(cat .last_sha 2>/dev/null | tr -d '[:space:]' || echo "")  # justified: diagnostic-fallback
             if [ -n "${PREV_SHA}" ] && [ "${PREV_SHA}" != "latest" ] && [ "${PREV_SHA}" != "none" ]; then
               echo "⏪ Rollback para SHA ${PREV_SHA}..."
               sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${PREV_SHA}|" .env
@@ -697,7 +735,7 @@ jobs:
             else
               echo "⚠️ Sem SHA válido para rollback (PREV_SHA='${PREV_SHA}')"
               echo "   Stack atual mantida — investigar manualmente"
-              docker compose -f infra/docker-compose.prod.yml ps || true
+              docker compose -f infra/docker-compose.prod.yml ps || true  # justified: diagnostic-only
             fi
 
       - name: Diagnóstico — logs container api (em caso de falha)
@@ -710,11 +748,11 @@ jobs:
           script: |
             cd /opt/hbtrack/production
             echo "--- CONTAINER STATUS ---"
-            docker compose -f infra/docker-compose.prod.yml ps 2>&1 || true
+            docker compose -f infra/docker-compose.prod.yml ps 2>&1 || true  # justified: diagnostic-only
             echo "--- LOGS API (100 linhas) ---"
-            docker compose -f infra/docker-compose.prod.yml logs api --tail=100 2>&1 || true
+            docker compose -f infra/docker-compose.prod.yml logs api --tail=100 2>&1 || true  # justified: diagnostic-only
             echo "--- LOGS EDGE (verificar se proxy está rodando) ---"
-            docker ps --filter name=hbtrack-edge 2>&1 || true
+            docker ps --filter name=hbtrack-edge 2>&1 || true  # justified: diagnostic-only
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 8: Deploy Edge Proxy (proxy único de borda)
@@ -765,8 +803,8 @@ jobs:
             mkdir -p /opt/hbtrack/edge
             cd /opt/hbtrack/edge
 
-            docker network create hbtrack-prod-net 2>/dev/null || true
-            docker network create hbtrack-staging-net 2>/dev/null || true
+            docker network create hbtrack-prod-net 2>/dev/null || true  # justified: cleanup-idempotent
+            docker network create hbtrack-staging-net 2>/dev/null || true  # justified: cleanup-idempotent
 
             EDGE_CONF_VOL="hbtrack-edge_certbot_conf"
             EDGE_WWW_VOL="hbtrack-edge_certbot_www"
@@ -794,7 +832,7 @@ jobs:
             # Parar qualquer nginx legado que ocupe 80/443
             docker ps --format '{{.ID}} {{.Ports}} {{.Names}}' \
               | awk '/:80->|:443->/ && !/hbtrack-edge/ {print $1}' \
-              | xargs -r docker stop >/dev/null 2>&1 || true
+              | xargs -r docker stop >/dev/null 2>&1 || true  # justified: cleanup-idempotent
 
             if [ ! -f .env ]; then
               { echo "NGINX_EDGE_CONF=nginx.edge.bootstrap.conf"; echo "COMPOSE_PROJECT_NAME=hbtrack-edge"; } > .env
@@ -804,10 +842,10 @@ jobs:
             STAGING_CERT_OK=false
             docker run --rm -v ${EDGE_CONF_VOL}:/etc/letsencrypt alpine \
               test -f /etc/letsencrypt/live/handballtrack.app/fullchain.pem 2>/dev/null \
-              && PROD_CERT_OK=true && echo "✅ Cert produção: presente" || echo "📜 Cert produção: ausente"
+              && PROD_CERT_OK=true && echo "✅ Cert produção: presente" || echo "📜 Cert produção: ausente"  # justified: control-flow
             docker run --rm -v ${EDGE_CONF_VOL}:/etc/letsencrypt alpine \
               test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null \
-              && STAGING_CERT_OK=true && echo "✅ Cert staging: presente" || echo "📜 Cert staging: ausente"
+              && STAGING_CERT_OK=true && echo "✅ Cert staging: presente" || echo "📜 Cert staging: ausente"  # justified: control-flow
 
             if [ "${PROD_CERT_OK}" = "false" ] || [ "${STAGING_CERT_OK}" = "false" ]; then
               sed -i "s|^NGINX_EDGE_CONF=.*|NGINX_EDGE_CONF=nginx.edge.bootstrap.conf|" .env
@@ -817,7 +855,7 @@ jobs:
 
               if [ "${PROD_CERT_OK}" = "false" ]; then
                 DNS_PROD=$(curl -s "https://dns.google/resolve?name=handballtrack.app&type=A" \
-                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)
+                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)  # justified: diagnostic-fallback
                 if [ "${DNS_PROD}" = "${VPS_IP}" ]; then
                   docker run --rm \
                     -v ${EDGE_CONF_VOL}:/etc/letsencrypt \
@@ -834,7 +872,7 @@ jobs:
 
               if [ "${STAGING_CERT_OK}" = "false" ]; then
                 DNS_STAG=$(curl -s "https://dns.google/resolve?name=staging.handballtrack.app&type=A" \
-                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)
+                  | python3 -c "import sys,json; r=json.load(sys.stdin); a=[x['data'] for x in r.get('Answer',[]) if x['type']==1]; print(a[0] if a else '')" 2>/dev/null || true)  # justified: diagnostic-fallback
                 if [ "${DNS_STAG}" = "${VPS_IP}" ]; then
                   docker run --rm \
                     -v ${EDGE_CONF_VOL}:/etc/letsencrypt \
@@ -864,10 +902,10 @@ jobs:
         if: steps.check-vps.outputs.skip != 'true'
         run: |
           for HOST in handballtrack.app www.handballtrack.app; do
-            STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://${HOST}/health" || echo "000")
+            STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://${HOST}/health" || echo "000")  # justified: diagnostic-fallback
             echo "${HOST}: HTTP ${STATUS}"
           done
-          PROD_STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://handballtrack.app/health" || echo "000")
+          PROD_STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://handballtrack.app/health" || echo "000")  # justified: diagnostic-fallback
           if [ "${PROD_STATUS}" != "200" ]; then
             echo "❌ handballtrack.app não respondeu 200 (status=${PROD_STATUS})"
             exit 1

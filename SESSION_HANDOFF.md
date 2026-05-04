@@ -1,21 +1,21 @@
 ---
-data_ultima_sessao: "2026-05-03"
+data_ultima_sessao: "2026-05-04"
 branch_ativo: chore/copilot-agent-governance-ready
 modo_operacao: CDD
-ci_status: PASS
+ci_status: FAIL
 modulo_foco: training
 fase_roadmap: 6
-task_type: implementation_execution
+task_type: pr_fix
 boot_profile_id: implementation_execution
-task_id: HARMONIA_PR1_DECISION_MATERIALIZATION
-resultado: DONE
-proxima_acao_permitida: "Fase 3 — implementar POST /training-sessions/{id}/blocks/{blockId}/exercises (operationId: assignExerciseToBlock)"
-bloqueios_ativos: []
+task_id: GOVERNANCE_FASE1_SILENCE_REMOVAL
+resultado: PR_OPENED
+proxima_acao_permitida: "Aguardar PR review + CI para Fase 1 (silence removal). Só após CI verde iniciar Fase 2."
+bloqueios_ativos:
+  - "3 Redocly errors expostos (no-invalid-schema-examples) — corrigir em PR separado"
+  - "OPENAPI_ROOT_STRUCTURE_GATE agora falha corretamente — erro real exposto pela Fase 1"
 evidence_paths:
-  - "_reports/implementation_flow/current_state.json"
-  - "_reports/implementation_flow/plan_to_diff_trace.json"
-  - "_reports/decision_materialization/training.json"
   - "_reports/contract_gates/latest.json"
+  - "_reports/implementation_flow/current_state.json"
 ---
 # SESSION HANDOFF — HARMONIA_PR1_DECISION_MATERIALIZATION
 
