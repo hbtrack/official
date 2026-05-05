@@ -1,11 +1,10 @@
 {
-  "generated_at": "2026-05-03T03:07:49.615987+00:00",
+  "generated_at": "2026-05-05T23:46:18.463901+00:00",
   "branch_target": "main",
   "diff_classes": [
     "governance_changed",
     "bridge_docs_changed",
-    "session_contract_changed",
-    "schema_changed"
+    "session_contract_changed"
   ],
   "checks_run": [
     {
@@ -126,7 +125,7 @@
     }
   ],
   "reviewability_check": {
-    "changed_files": 98,
+    "changed_files": 17,
     "max_changed_files": 150,
     "commits": 0,
     "max_commits": 20,
@@ -145,9 +144,9 @@
       "target_branch": "main",
       "output_report": "_reports/preflight/latest.json",
       "manifest_sha256": "f88de8b67f35ae8d5a624b688f0abd168e30d48850600a09d1a126f5a7a82b4e",
-      "hb_script_sha256": "a41430b69e6be15190b8ff8f51319f6acc7ae95436a7b01776d8d0974d00448f",
-      "git_head_commit": "f876dc8a8192"
+      "hb_script_sha256": "c79c378a5348f9f8c77913ad46712fd9aee946e677d9f871e5d60bfa332531e4",
+      "git_head_commit": "abde11beebb2"
     },
-    "payload_sha256": "1bc18326ca21ebc194d1f4d91e81eb8061de04abbbe0c069c07a4272a2e01645"
+    "payload_sha256": "c15936daab5ae65d3ae14afa4d17e29872cf821451bf58e646faf520ed3fd0d1"
   }
 }

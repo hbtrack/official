@@ -97,3 +97,8 @@ Estado apurado 2026-03-23 (FASE 1):
 | `SCOPE_BOUNDARY_GATE` | `integrated_in_validate_contracts: false` — passo pré-contrato externo |
 | `ARCH_DECISION_PRESENCE_GATE` | `status: deferred` — implementar quando priorizado |
 | `FRONTEND_CONTRACT_GATE` | `status: active` — valida frontend real contra stack, branding, shell, auth e navegação |
+
+## 8. Protocolos Pós-Merge (§26)
+
+**P2**: path é soberano; grep é auxiliar.
+**P3**: `main` protegido; handoff via `chore/<task>` + PR.

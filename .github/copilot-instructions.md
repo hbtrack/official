@@ -20,6 +20,7 @@ Roadmap: `ROADMAP.md`
 Handoff: `SESSION_HANDOFF.md`
 Session validator: `contracts/schemas/shared/session_handoff.schema.json`
 Roadmap verify: `hb verify --task-type execute_roadmap_phase --roadmap-phase <N>`
+Protocols: `docs/_canon/AGENT_INSTRUCTIONS.md`
 </refs>
 
 <routing>

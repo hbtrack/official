@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-25T09:58:07Z",
+  "timestamp_utc": "2026-05-05T23:43:03Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "41221e35",
+    "git_commit": "abde11be",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,13 +31,13 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.ci.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260425T095807_01b519"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260505T234303_c9b424"
   },
   "status_detail": {
     "proof_scope": "mixed",
     "active_gates_total": 5,
     "active_gates_passed": 3,
-    "skip_count": 63,
+    "skip_count": 71,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -53,6 +53,10 @@
       },
       {
         "gate_id": "MODULE_DOC_CROSSREF_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
@@ -101,6 +105,10 @@
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "DECISION_MATERIALIZATION_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
@@ -176,6 +184,38 @@
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "FEATURE_READINESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "VERSIONING_POLICY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PACT_PROVIDER_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CODE_ARCHITECTURE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "DEPLOY_READINESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "DATA_MIGRATION_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "MONITORING_POLICY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
@@ -201,6 +241,10 @@
       },
       {
         "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
@@ -236,6 +280,10 @@
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
@@ -260,11 +308,39 @@
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "RULE_CHANGE_QUARANTINE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "PLAN_DIFF_TRACE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "POST_PR_ADVERSARIAL_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "IMPLEMENTATION_STATE_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "REPORT_TRUTHFULNESS_GATE",
         "status": "PASS"
       }
     ],
-    "mandatory_ci_skip_count": 47,
+    "mandatory_ci_skip_count": 58,
     "mandatory_ci_skips": [
       {
         "gate_id": "PATH_CANONICALITY_GATE",
@@ -276,6 +352,10 @@
       },
       {
         "gate_id": "MODULE_DOC_CROSSREF_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
         "summary": "Pulado no estágio 'session-start'."
       },
       {
@@ -324,6 +404,10 @@
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "DECISION_MATERIALIZATION_GATE",
         "summary": "Pulado no estágio 'session-start'."
       },
       {
@@ -395,6 +479,34 @@
         "summary": "Pulado no estágio 'session-start'."
       },
       {
+        "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "FEATURE_READINESS_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "VERSIONING_POLICY_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "CODE_ARCHITECTURE_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "DEPLOY_READINESS_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "DATA_MIGRATION_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "MONITORING_POLICY_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
         "gate_id": "ARCHITECTURE_FACTUALITY_GATE",
         "summary": "Pulado no estágio 'session-start'."
       },
@@ -412,6 +524,10 @@
       },
       {
         "gate_id": "MODULE_BEHAVIORAL_READINESS_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
         "summary": "Pulado no estágio 'session-start'."
       },
       {
@@ -440,6 +556,10 @@
       },
       {
         "gate_id": "GOVERNANCE_REGRESSION_GATE",
+        "summary": "Pulado no estágio 'session-start'."
+      },
+      {
+        "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
         "summary": "Pulado no estágio 'session-start'."
       },
       {
@@ -478,7 +598,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 58
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -574,7 +694,7 @@
     {
       "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -589,9 +709,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -897,6 +1017,33 @@
     },
     {
       "gate_id": "CANON_ALLOWLIST_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": false,
+      "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "DECISION_MATERIALIZATION_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
@@ -1411,7 +1558,7 @@
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1426,9 +1573,9 @@
         "duration_ms": 0
       },
       "proof_class": "behavioral",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1438,7 +1585,7 @@
     {
       "gate_id": "FEATURE_READINESS_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1453,9 +1600,9 @@
         "duration_ms": 0
       },
       "proof_class": "presence",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1465,7 +1612,7 @@
     {
       "gate_id": "VERSIONING_POLICY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1480,9 +1627,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1492,7 +1639,7 @@
     {
       "gate_id": "PACT_PROVIDER_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1507,9 +1654,9 @@
         "duration_ms": 0
       },
       "proof_class": "runtime",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": true,
       "skip_allowed": true,
@@ -1519,7 +1666,7 @@
     {
       "gate_id": "CODE_ARCHITECTURE_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1536,7 +1683,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1546,7 +1693,7 @@
     {
       "gate_id": "DEPLOY_READINESS_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1563,7 +1710,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1573,7 +1720,7 @@
     {
       "gate_id": "DATA_MIGRATION_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1588,9 +1735,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1600,7 +1747,7 @@
     {
       "gate_id": "MONITORING_POLICY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1617,7 +1764,7 @@
       "proof_class": "presence",
       "promotion_power": "none",
       "truth_scope": "structural",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -1715,35 +1862,19 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/.dev/HBCONTROL.md",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/scripts/audit/check_architecture_docs.py",
-        "/home/davis/HB-TRACK/scripts/audit/check_live_ruleset_parity.py",
-        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/.github/merge-policy.md",
-        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/.dev/HBCONTROL.md",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/scripts/audit/check_architecture_docs.py",
-        "/home/davis/HB-TRACK/scripts/audit/check_live_ruleset_parity.py",
-        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/.github/merge-policy.md",
-        "/home/davis/HB-TRACK/.github/rulesets/contract-gates.snapshot.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_report_truthfulness.py"
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json"
       ],
       "evidence_files": [],
       "violations": [
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='architecture'.",
+          "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
           "severity": "error"
         },
         {
@@ -1755,7 +1886,7 @@
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência: SESSION_HANDOFF.roadmap_phase=1 != session_start.roadmap_phase=3.",
+          "message": "Campo 'roadmap_phase' ausente em SESSION_HANDOFF.md. Obrigatório quando task_type=execute_roadmap_phase.",
           "severity": "error"
         }
       ],
@@ -1763,7 +1894,7 @@
         "errors": 3,
         "warnings": 0,
         "violations": 3,
-        "duration_ms": 3
+        "duration_ms": 4
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1794,7 +1925,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 172
+        "duration_ms": 169
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1863,7 +1994,7 @@
     {
       "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -1878,9 +2009,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -2106,7 +2237,7 @@
     {
       "gate_id": "DOMAIN_GLOSSARY_CONSISTENCY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
-      "blocking": false,
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
       "summary": "Pulado no estágio 'session-start'.",
@@ -2121,9 +2252,9 @@
         "duration_ms": 0
       },
       "proof_class": "semantic",
-      "promotion_power": "advisory",
+      "promotion_power": "blocking",
       "truth_scope": "factual",
-      "ci_required": false,
+      "ci_required": true,
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
@@ -2289,6 +2420,195 @@
       "stage_only": false,
       "skip_allowed_in_ci": false,
       "skip_allowed": false,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "RULE_CHANGE_QUARANTINE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "IMPLEMENTATION_SCOPE_FIREWALL_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "PLAN_DIFF_TRACE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "NEGATIVE_TEST_COVERAGE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "POST_PR_ADVERSARIAL_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "behavioral",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "IMPLEMENTATION_STATE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
+      "applicability": "not_applicable",
+      "applicability_reason": "Pulado no estágio 'session-start'."
+    },
+    {
+      "gate_id": "EVIDENCE_PACK_COMPLETENESS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      },
+      "proof_class": "semantic",
+      "promotion_power": "blocking",
+      "truth_scope": "factual",
+      "ci_required": true,
+      "stage_only": false,
+      "skip_allowed_in_ci": true,
+      "skip_allowed": true,
       "applicability": "not_applicable",
       "applicability_reason": "Pulado no estágio 'session-start'."
     },

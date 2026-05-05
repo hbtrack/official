@@ -1900,3 +1900,24 @@ Este documento está sendo usado corretamente somente quando:
 	•	cada gate aplicável gera evidência
 	•	o pipeline falha de forma determinística para os casos bloqueantes
 	•	pelo menos um contrato já foi validado ponta a ponta com este pipeline
+
+---
+
+## 20. Semântica de `ci_status` no `SESSION_HANDOFF.md`
+
+**Fonte normativa**: `.contract_driven/CONTRACT_SYSTEM_RULES.md §26.1`
+
+Quando `validate --profile ci` retorna exit code 0, mas o report canônico está `overall_status: DEGRADED`, o valor coerente para `ci_status` em `SESSION_HANDOFF.md` é `UNKNOWN`.
+
+Declarar `ci_status: PASS` nesse cenário causa divergência no `HANDOFF_COHERENCE_GATE` porque o gate compara `ci_status` com `overall_status` e falha ao detectar o par `(PASS, DEGRADED)`.
+
+**Enum canônico**: `PASS | FAIL | UNKNOWN`
+
+| Valor | Condição |
+|---|---|
+| `PASS` | CI real passou E `overall_status` local é `PASS` |
+| `FAIL` | CI real falhou |
+| `UNKNOWN` | CI não executado localmente, ou `overall_status: DEGRADED` com exit code 0 |
+
+GitHub CI verde pode ser registrado no corpo do handoff ou na URL do PR, mas não deve forçar `ci_status: PASS` se o report canônico local está `DEGRADED`.
+

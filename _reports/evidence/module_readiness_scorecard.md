@@ -1,7 +1,7 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-04-29T08:34:02Z`
-- Pipeline status: `FAIL`
+- Generated at: `2026-05-05T23:44:49Z`
+- Pipeline status: `DEGRADED`
 
 | Module | Registry | Owner | Structural % | Behavioral % | Promotion | OpenAPI | Schemas | Missing / Drift |
 |---|---|---|---:|---:|---|---:|---:|---|
