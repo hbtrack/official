@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-05-05"
-branch_ativo: main
+branch_ativo: chore/phase1-post-merge-handoff
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: audit
