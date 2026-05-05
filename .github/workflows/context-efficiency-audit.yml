@@ -52,14 +52,14 @@ jobs:
           exit $exit_code
 
       - name: Generate audit report
-        if: always()
+        if: always()  # justified: diagnostic-report
         id: report
         run: |
           cp audit_output.txt "_reports/CE_AUDIT_$(date -u +%Y%m%d_%H%M%S).txt" 2>/dev/null || true
           echo "Report saved to _reports/"
 
       - name: Upload audit artifact
-        if: always()
+        if: always()  # justified: upload-artifact
         uses: actions/upload-artifact@v4
         with:
           name: context-efficiency-audit-${{ github.run_id }}

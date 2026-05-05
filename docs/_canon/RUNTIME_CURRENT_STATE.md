@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.1.1"
-last_reviewed: "2026-04-25"
+version: "1.1.2"
+last_reviewed: "2026-05-04"
 status: active
 state_semantics: current-state
 ---
@@ -124,6 +124,7 @@ Cada módulo possui as camadas: `Interface/API → Application → Domain → In
 | Snapshot versionado do ruleset e merge policy gerada | **materializado** | `.github/rulesets/contract-gates.snapshot.json`, `.github/merge-policy.md`, `scripts/audit/generate_merge_policy.py`, `merge-readiness.json` |
 | Hooks locais de enforcement e advisory de sessão | **materializados** | `scripts/hooks/check_backend_gate.py`, `scripts/hooks/check_session_commit.py`, `scripts/hooks/advisory_session_commit.py`, `.claude/settings.local.json` |
 | Indicadores operacionais de saúde do pipeline | **materializados** | `_reports/pipeline_health.json`, `_reports/READINESS_DASHBOARD.md` |
+| Fase 1 governance: OPENAPI_ROOT_STRUCTURE_GATE respeita waiver ativo; GATES_REGISTRY v1.5.0 (blocking:true em todos os gates); API_NORMATIVE_DUPLICATION_GATE promovido | **materializado** (2026-05-04) | `contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json`, `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/gates/GATES_REGISTRY.yaml` |
 
 ---
 

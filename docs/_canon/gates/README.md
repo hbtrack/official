@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.1"
-last_reviewed: "2026-04-25"
+version: "1.0.2"
+last_reviewed: "2026-05-04"
 status: active
 cross_refs:
   system_scope: "docs/_canon/SYSTEM_SCOPE.md"
@@ -34,7 +34,7 @@ machine-readable.
 | 1 | `PATH_CANONICALITY_GATE` | Sim | Não | Garante que nenhum artefato normativo existe fora do path canônico; bloqueia duplicatas soberanas | §9.1 |
 | 2 | `REQUIRED_ARTIFACT_PRESENCE_GATE` | Sim | Não | Presença obrigatória de artefatos globais e por módulo | §9.2 |
 | 2A | `MODULE_DOC_CROSSREF_GATE` | Sim | Não | Header YAML canônico nos docs de módulo; cross-refs apontam para paths soberanos | §9.2A |
-| 2B | `API_NORMATIVE_DUPLICATION_GATE` | Não (warning) | Não | Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml` | §9.2B |
+| 2B | `API_NORMATIVE_DUPLICATION_GATE` | Sim | Não | Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml` | §9.2B |
 | 2C | `OWASP_API_CONTROL_MATRIX_GATE` | Sim | Não | `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` presente, validado por schema, IDs únicos | §9.2C |
 | 2D | `MODULE_SOURCE_AUTHORITY_MATRIX_GATE` | Sim | Não | `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` presente, válido, alinhado com os 17 módulos | §9.2D |
 | 2D1 | `MODULE_REGISTRY_GATE` | Sim | Não | `docs/_canon/MODULE_REGISTRY.yaml` presente, válido e alinhado com a taxonomia canônica | §9.2D1 |

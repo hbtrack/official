@@ -20,14 +20,21 @@
 extends:
   - spectral:oas
 
-# Downgrade de oas3-schema: spectral:oas produz falso-positivo com fragmentos
-# de referências externas ($ref: ./file.yaml#/~1path). O Spectral não resolve
-# corretamente os fragmentos JSON Pointer em $ref para path items externos,
-# gerando "unevaluated properties" em path items válidos. Downgrade para warn
-# para não bloquear o pipeline com falsos positivos.
-# Ref: https://github.com/stoplightio/spectral/issues/2354
-# Nota: usar rule-level override em vez de overrides[].files para garantir
-# consistência entre invocação com --ruleset explícito e auto-discovery.
+# oas3-schema: WARN JUSTIFICADO (não promover sem resolver upstream)
+# ────────────────────────────────────────────────────────────────────
+# Bug upstream confirmado em 2026-05-04: spectral:oas reporta 105
+# "unevaluated properties" falso-positivos no openapi.yaml linhas 46–270,
+# todos em paths que usam $ref para arquivos externos (./paths/*.yaml).
+# Spectral não resolve corretamente JSON Pointers em $ref para path items
+# externos. Promover para error bloqueia o pipeline sem revelar erro real.
+#
+# Tracking: https://github.com/stoplightio/spectral/issues/2354
+# TODO: revisitar quando upstream for corrigido. Ao promover para error,
+# rodar `npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json
+# contracts/openapi/openapi.yaml | jq '[.[] | select(.code=="oas3-schema")] | length'`
+# e confirmar que retorna 0 antes de mudar.
+#
+# Outras regras deste ruleset estão em error (default) — esta é a única exceção.
 
 rules:
   oas3-schema: warn

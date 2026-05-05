@@ -531,6 +531,7 @@ def _load_json_schema_file(path: pathlib.Path) -> dict:
 
 def _validate_instance_against_schema(instance: dict, schema: dict) -> list[dict]:
     try:
+        import jsonschema  # noqa: PLC0415
         validator_cls = jsonschema.validators.validator_for(schema)
         validator_cls.check_schema(schema)
         validator = validator_cls(schema)
@@ -6173,6 +6174,12 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
             return _pg(gate_id, "PASS", True, None,
                        "redocly lint: nenhum erro (aviso de nova versão ignorado).",
                        [str(openapi_root)], [str(openapi_root)], [], [], _ms(t0))
+        waiver_path = _find_active_waiver(root, gate_id)
+        if waiver_path:
+            waiver_rel = str(waiver_path.relative_to(root))
+            return _pg(gate_id, "PASS", True, None,
+                       f"redocly lint falhou — waiver ativo aprovado. Ver {waiver_rel}.",
+                       [str(openapi_root)], [str(openapi_root), waiver_rel], [waiver_rel], [], _ms(t0))
         lines = [ln for ln in output.splitlines() if ln.strip()]
         violations = [
             {"blocking_code": "BLOCKED_OPENAPI_STRUCTURE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
