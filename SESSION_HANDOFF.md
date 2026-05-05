@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-05-04"
 branch_ativo: chore/copilot-agent-governance-ready
 modo_operacao: CDD
-ci_status: FAIL
+ci_status: PASS
 modulo_foco: training
 fase_roadmap: 6
 task_type: pr_fix

@@ -1,0 +1,15 @@
+{
+  "evidence_type": "formal_activation_evidence",
+  "transition": "canonical_status_transition",
+  "artifact": ".contract_driven/waivers.json",
+  "from": "absent",
+  "to": "ACTIVE",
+  "entry_id": "GOV-F1-REDOCLY-SCHEMA-REF",
+  "reason": "Fase 1/1.1: waiver formal para OPENAPI_ROOT_STRUCTURE_GATE exposto por Redocly no-invalid-schema-examples",
+  "validated_by": [
+    "python3 scripts/hb validate --profile ci",
+    "python3 scripts/hb artifact contracts/_waivers/OPENAPI_ROOT_STRUCTURE_GATE_20260504.json",
+    "python3 -m pytest tests/test_pipeline_governance.py -k openapi_root_waiver -v"
+  ],
+  "created_at_utc": "2026-05-04T00:00:00Z"
+}

@@ -1835,6 +1835,28 @@ class HBCLIv2:
                 continue
         return False
 
+    def _check_activation_evidence(self, evidence_type: str, transition: str, changed_files: list) -> bool:
+        """Verifica se existe evidência formal válida para uma transição canônica."""
+        evidence_path = self.root / "_reports" / "activation_evidence" / f"{evidence_type}.json"
+        if not evidence_path.exists():
+            return False
+        try:
+            ev = json.loads(evidence_path.read_text(encoding="utf-8"))
+        except Exception:
+            return False
+        if ev.get("evidence_type") != evidence_type:
+            return False
+        if ev.get("transition") != transition:
+            return False
+        artifact = ev.get("artifact", "")
+        if not artifact or artifact not in changed_files:
+            return False
+        if not ev.get("to"):
+            return False
+        if not ev.get("entry_id"):
+            return False
+        return True
+
     def _detect_bridge_doc_authority_language(self, changed_files: list) -> bool:
         """Detecta uso de linguagem autoritativa em bridge docs modificados."""
         import re
@@ -2144,7 +2166,14 @@ class HBCLIv2:
             if triggered:
                 print(f"  ⚠️  Detectado: {when} — requer: {require}")
                 if block:
-                    missing_evidence.extend(require)
+                    unsatisfied = [
+                        ev_type for ev_type in require
+                        if not self._check_activation_evidence(ev_type, when, changed_files)
+                    ]
+                    if unsatisfied:
+                        missing_evidence.extend(unsatisfied)
+                    else:
+                        print(f"  ✅ {when} — evidência formal válida: {require}")
             else:
                 print(f"  ✅ {when} — não detectado")
 
