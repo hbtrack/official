@@ -1,0 +1,15 @@
+{
+  "waiver_id": "WAIVER_OPENAPI_ROOT_STRUCTURE_GATE_ANALYTICS_SCHEMA_REF_20260504",
+  "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
+  "scope": "system",
+  "module": null,
+  "target_artifact": "contracts/schemas/analytics/",
+  "justification": "A Fase 1 de governance (2026-05-04) promoveu no-invalid-schema-examples de warn→error no redocly.yaml, expondo 3 erros reais em analytics schemas: 'can't resolve reference ./analytics_metric_key.schema.json from id https://hbtrack.local/schemas/analytics/...'. Erros causados por $ref relativo combinado com $id absoluto em analytics_snapshot e analytics_query schemas. Estes erros estavam mascarados como warn — sua exposição é o objetivo da Fase 1. Waiver temporário enquanto os analytics schemas são corrigidos para usar referência absoluta ou remover o $id conflitante.",
+  "approved_by": "human:davis",
+  "approved_at_utc": "2026-05-04T00:00:00Z",
+  "expires_at_utc": "2026-06-04T00:00:00Z",
+  "fingerprint": {
+    "type": "sha256",
+    "value": "8a7c743d583d279733c490a6bf15159912f925506456c6787e4d6d7d0771c66c"
+  }
+}

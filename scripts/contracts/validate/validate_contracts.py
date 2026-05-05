@@ -531,6 +531,7 @@ def _load_json_schema_file(path: pathlib.Path) -> dict:
 
 def _validate_instance_against_schema(instance: dict, schema: dict) -> list[dict]:
     try:
+        import jsonschema  # noqa: PLC0415
         validator_cls = jsonschema.validators.validator_for(schema)
         validator_cls.check_schema(schema)
         validator = validator_cls(schema)
@@ -6173,6 +6174,22 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
             return _pg(gate_id, "PASS", True, None,
                        "redocly lint: nenhum erro (aviso de nova versão ignorado).",
                        [str(openapi_root)], [str(openapi_root)], [], [], _ms(t0))
+        waiver_path = _find_active_waiver(root, gate_id)
+        if waiver_path:
+            if not _waiver_covers_current_failure(root, waiver_path):
+                lines_w = [ln for ln in output.splitlines() if ln.strip()]
+                violations_w = [
+                    {"blocking_code": "BLOCKED_OPENAPI_STRUCTURE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
+                    for ln in lines_w[:20]
+                ]
+                waiver_rel_w = str(waiver_path.relative_to(root))
+                return _pg(gate_id, "FAIL", True, "BLOCKED_OPENAPI_STRUCTURE",
+                           f"redocly lint falhou — waiver '{waiver_rel_w}' não cobre a falha atual (fingerprint incorreto ou target_artifact divergente).",
+                           [str(openapi_root)], [str(openapi_root), waiver_rel_w], [], violations_w, _ms(t0))
+            waiver_rel = str(waiver_path.relative_to(root))
+            return _pg(gate_id, "PASS", True, None,
+                       f"redocly lint falhou — waiver ativo aprovado e fingerprint verificado. Ver {waiver_rel}.",
+                       [str(openapi_root)], [str(openapi_root), waiver_rel], [waiver_rel], [], _ms(t0))
         lines = [ln for ln in output.splitlines() if ln.strip()]
         violations = [
             {"blocking_code": "BLOCKED_OPENAPI_STRUCTURE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
@@ -6573,6 +6590,41 @@ def _g8_cross_spec_alignment(root: pathlib.Path, axioms: "DomainAxioms") -> dict
     return _pg(gate_id, "PASS", True, None,
                "Alinhamento cross-spec: PASS.",
                inputs, all_artifacts, [], [], _ms(t0))
+
+
+def _compute_artifact_fingerprint(root: pathlib.Path, target_artifact: str) -> str:
+    """sha256 canônico do target_artifact: filepath-relativo + conteúdo em ordem lexicográfica."""
+    import hashlib as _hashlib
+    target = root / target_artifact.rstrip("/")
+    h = _hashlib.sha256()
+    if target.is_file():
+        h.update(target.read_bytes())
+    elif target.is_dir():
+        for f in sorted(target.rglob("*")):
+            if f.is_file():
+                rel = str(f.relative_to(target))
+                h.update(rel.encode("utf-8") + b"\n")
+                h.update(f.read_bytes() + b"\n")
+    return h.hexdigest()
+
+
+def _waiver_covers_current_failure(root: pathlib.Path, waiver_path: pathlib.Path) -> bool:
+    """Verifica se o waiver cobre a falha atual via target_artifact e fingerprint."""
+    try:
+        waiver = json.loads(waiver_path.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    target_artifact = waiver.get("target_artifact")
+    if not target_artifact:
+        return False
+    fp = waiver.get("fingerprint", {})
+    if fp.get("type") != "sha256":
+        return False
+    expected = fp.get("value", "")
+    if not expected:
+        return False
+    actual = _compute_artifact_fingerprint(root, target_artifact)
+    return actual == expected
 
 
 def _find_active_waiver(root: pathlib.Path, gate_id: str) -> pathlib.Path | None:

@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.2"
-last_reviewed: "2026-04-25"
+version: "1.0.3"
+last_reviewed: "2026-05-04"
 status: active
 ---
 
@@ -629,7 +629,7 @@ Detectar risco de duplicação normativa de convenções/shape HTTP no canon hum
 
 Severidade
 
-Não-bloqueante por padrão (warning forte). Pode ser promovido a bloqueante quando o canon estiver estabilizado.
+Bloqueante. Promovido de warning para bloqueante no GATES_REGISTRY v1.5.0 (2026-05-04).
 
 PASS
 

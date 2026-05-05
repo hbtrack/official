@@ -4,8 +4,14 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.4.0"
-last_reviewed: "2026-04-24"
+version: "1.5.0"
+last_reviewed: "2026-05-04"
+# 1.5.0 (2026-05-04): Promovidos a blocking: true os 11 gates antes não-bloqueantes
+# (API_NORMATIVE_DUPLICATION, FEATURE_READINESS, ADVERSARIAL_ANALYSIS, VERSIONING_POLICY,
+# PACT_PROVIDER, CODE_ARCHITECTURE, DEPLOY_READINESS, DATA_MIGRATION, MONITORING_POLICY,
+# CROSS_MODULE_BOUNDARY, DOMAIN_GLOSSARY_CONSISTENCY). Todos estavam PASS no último ciclo
+# — promoção captura regressões futuras. Para exceções legítimas, registrar waiver datado
+# em .contract_driven/waivers.json em vez de tornar o gate não-bloqueante.
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
@@ -123,14 +129,14 @@ gates:
   - gate_id: API_NORMATIVE_DUPLICATION_GATE
     order: "2B"
     name: "API Normative Duplication Gate"
-    blocking: false
-    severity: WARNING
+    blocking: true
+    severity: ERROR
     parallelizable: false
     applies_when: always
     depends_on: [ REQUIRED_ARTIFACT_PRESENCE_GATE ]
     description: >
       Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml`.
-      Não-bloqueante: emite warning para revisão humana.
+      Bloqueante: impede merge quando duplicação normativa é detectada.
     blocking_codes: []
     status: active
 
@@ -725,7 +731,7 @@ gates:
   - gate_id: FEATURE_READINESS_GATE
     order: "15B"
     name: "Feature Readiness Gate"
-    blocking: false
+    blocking: true
     severity: LOW
     parallelizable: true
     applies_when: always
@@ -743,7 +749,7 @@ gates:
   - gate_id: ADVERSARIAL_ANALYSIS_GATE
     order: "15C"
     name: "Adversarial Analysis Gate"
-    blocking: false
+    blocking: true
     severity: HIGH
     parallelizable: true
     applies_when: always
@@ -762,7 +768,7 @@ gates:
   - gate_id: VERSIONING_POLICY_GATE
     order: "15D"
     name: "Versioning Policy Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: always
@@ -781,7 +787,7 @@ gates:
   - gate_id: PACT_PROVIDER_GATE
     order: "15E"
     name: "Pact Provider Gate"
-    blocking: false
+    blocking: true
     severity: HIGH
     parallelizable: true
     applies_when: always
@@ -805,7 +811,7 @@ gates:
   - gate_id: CODE_ARCHITECTURE_GATE
     order: "15F"
     name: "Code Architecture Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: always
@@ -828,7 +834,7 @@ gates:
   - gate_id: DEPLOY_READINESS_GATE
     order: 15G
     name: "Deploy Readiness Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: always
@@ -848,7 +854,7 @@ gates:
   - gate_id: DATA_MIGRATION_GATE
     order: 15H
     name: "Data Migration Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: always
@@ -865,7 +871,7 @@ gates:
   - gate_id: MONITORING_POLICY_GATE
     order: 15I
     name: "Monitoring Policy Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: always
@@ -1119,7 +1125,7 @@ gates:
   - gate_id: CROSS_MODULE_BOUNDARY_GATE
     order: "20C"
     name: "Cross Module Boundary Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: "boundary rules defined in MODULE_SOURCE_AUTHORITY_MATRIX"
@@ -1277,7 +1283,7 @@ gates:
   - gate_id: DOMAIN_GLOSSARY_CONSISTENCY_GATE
     order: "20K"
     name: "Domain Glossary Consistency Gate"
-    blocking: false
+    blocking: true
     active_stage: registry_coherence
     severity: HIGH
     parallelizable: false

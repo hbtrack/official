@@ -15,7 +15,7 @@ apis:
 rules:
   # Estrutura obrigatória
   info-license: error
-  no-invalid-media-type-examples: warn
+  no-invalid-media-type-examples: error
   no-unresolved-refs: error
 
   # operationId
@@ -24,8 +24,8 @@ rules:
   operation-operationId-url-safe: error
 
   # Descrições
-  operation-description: warn
-  operation-summary: warn
+  operation-description: error
+  operation-summary: error
   tag-description: error
   no-empty-servers: error
 
@@ -35,7 +35,12 @@ rules:
   security-defined: error
 
   # Schema
-  no-invalid-schema-examples: warn
+  no-invalid-schema-examples: error
+  # scalar-property-missing-example: off — DECISÃO DELIBERADA (não promover).
+  # Regra exige `example:` em toda propriedade escalar (string, integer, etc.).
+  # Custo: ~milhares de violations no openapi.yaml. Benefício marginal (exemplos
+  # podem ser definidos no nível do schema/parent). Manter `off` até que haja
+  # decisão de produto sobre obrigar exemplos em todo campo.
   scalar-property-missing-example: off
 
   # Path

@@ -1,6 +1,17 @@
 {
   "waivers": [
     {
+      "waiver_id": "GOV-F1-REDOCLY-SCHEMA-REF",
+      "item": "OPENAPI_ROOT_STRUCTURE_GATE",
+      "title": "no-invalid-schema-examples: $ref resolution em analytics schemas",
+      "reason": "A Fase 1 de governance promoveu no-invalid-schema-examples de warn→error no redocly.yaml, expondo 3 erros reais em contracts/openapi/openapi.yaml (can't resolve reference ./analytics_metric_key.schema.json from id https://hbtrack.local/schemas/analytics/...). Erros causados por $ref relativo em schema com $id absoluto — problema real no contracts/schemas/analytics/. Waiver temporário enquanto analytics schemas são corrigidos em PR separado.",
+      "approved_by": "governance-cleanup",
+      "date": "2026-05-04",
+      "expires": "2026-06-04",
+      "status": "ACTIVE",
+      "follow_up": "Corrigir $ref em contracts/schemas/analytics/analytics_snapshot.schema.json e analytics_query.schema.json para apontar para $id correto ou usar referência relativa sem $id absoluto."
+    },
+    {
       "waiver_id": "REM-4D-N/A",
       "item": "REM-4D",
       "title": "Import condicional de generated/ — fechado como N/A",
