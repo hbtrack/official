@@ -1,15 +1,15 @@
 ---
-data_ultima_sessao: "2026-05-04"
+data_ultima_sessao: "2026-05-05"
 branch_ativo: fix/phase1-governance-waiver-evidence-clean
 modo_operacao: CDD
-ci_status: UNKNOWN
+ci_status: PASS
 modulo_foco: audit
 fase_roadmap: 6
 task_type: pr_fix
 boot_profile_id: implementation_execution
 task_id: GOVERNANCE_FASE1_SILENCE_REMOVAL
 resultado: PR_OPENED
-proxima_acao_permitida: "Aguardar PR review + CI para Fase 1 (silence removal). Só após CI verde iniciar Fase 2."
+proxima_acao_permitida: "CI verde em PR #118 (fix/phase1-governance-waiver-evidence-clean). Aguardar review humano para merge. Só após merge iniciar Fase 2."
 bloqueios_ativos:
   - "3 Redocly errors expostos (no-invalid-schema-examples) — corrigir em PR separado"
   - "OPENAPI_ROOT_STRUCTURE_GATE agora falha corretamente — erro real exposto pela Fase 1"
