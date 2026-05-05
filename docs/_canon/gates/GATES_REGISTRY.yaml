@@ -130,13 +130,13 @@ gates:
     order: "2B"
     name: "API Normative Duplication Gate"
     blocking: true
-    severity: WARNING
+    severity: ERROR
     parallelizable: false
     applies_when: always
     depends_on: [ REQUIRED_ARTIFACT_PRESENCE_GATE ]
     description: >
       Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml`.
-      Não-bloqueante: emite warning para revisão humana.
+      Bloqueante: impede merge quando duplicação normativa é detectada.
     blocking_codes: []
     status: active
 

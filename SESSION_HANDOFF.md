@@ -2,7 +2,7 @@
 data_ultima_sessao: "2026-05-05"
 branch_ativo: fix/phase1-governance-waiver-evidence-clean
 modo_operacao: CDD
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: audit
 fase_roadmap: 6
 task_type: pr_fix

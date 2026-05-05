@@ -123,7 +123,7 @@ def _write_valid_activation_evidence(root: Path, artifact: str = ".contract_driv
 
 def _mock_preflight_infrastructure(monkeypatch, cli, triggered: bool = True) -> None:
     """Mocka infraestrutura de git/fs exceto o mecanismo de evidência."""
-    monkeypatch.setattr(cli, "_get_diff_files", lambda _: [".contract_driven/waivers.json"])
+    monkeypatch.setattr(cli, "_get_diff_files", lambda _: [".contract_driven/waivers.json", "_reports/activation_evidence/formal_activation_evidence.json"])
     monkeypatch.setattr(cli, "_get_commit_count", lambda _: 1)
     monkeypatch.setattr(cli, "cmd_survival_suite", lambda: 0)
     monkeypatch.setattr(cli, "_detect_schema_field_removed", lambda _f, _t: False)
@@ -175,3 +175,64 @@ def test_canonical_status_transition_with_wrong_artifact_still_blocks(tmp_path, 
 
     result = cli.cmd_preflight()
     assert result == 2, f"evidência com artefato errado deve bloquear, obtido {result}"
+
+
+def test_canonical_status_transition_evidence_file_not_in_diff_blocks(tmp_path, monkeypatch):
+    """Evidência válida mas arquivo de evidência NÃO está em changed_files → BLOCK (exit 2)."""
+    _write_merge_readiness_blocking_canonical_transition(tmp_path)
+    _write_valid_activation_evidence(tmp_path)
+    cli = _build_cli(tmp_path)
+    # Mocka infraestrutura mas sem o arquivo de evidência no diff
+    monkeypatch.setattr(cli, "_get_diff_files", lambda _: [".contract_driven/waivers.json"])
+    monkeypatch.setattr(cli, "_get_commit_count", lambda _: 1)
+    monkeypatch.setattr(cli, "cmd_survival_suite", lambda: 0)
+    monkeypatch.setattr(cli, "_detect_schema_field_removed", lambda _f, _t: False)
+    monkeypatch.setattr(cli, "_detect_canonical_status_transition", lambda _f, _t: True)
+    monkeypatch.setattr(cli, "_detect_bridge_doc_authority_language", lambda _f: False)
+    monkeypatch.setattr(cli, "_detect_new_cross_module_boundary", lambda _f: False)
+    monkeypatch.setattr(cli, "_detect_diff_outside_handoff_scope", lambda _f: False)
+    monkeypatch.setattr(
+        cli,
+        "_verify_preflight_artifact_integrity",
+        lambda *a, **kw: {"status": "SKIP", "message": "skipped", "reasons": []},
+    )
+    monkeypatch.setattr(
+        cli,
+        "_attach_preflight_artifact_integrity",
+        lambda report_core, **kw: report_core,
+    )
+
+    result = cli.cmd_preflight()
+    assert result == 2, f"sem evidence_rel no diff deve bloquear, obtido {result}"
+
+
+def test_canonical_status_transition_evidence_file_in_diff_passes(tmp_path, monkeypatch):
+    """Evidência válida e arquivo de evidência ESTÁ em changed_files → PASS (exit 0)."""
+    _write_merge_readiness_blocking_canonical_transition(tmp_path)
+    _write_valid_activation_evidence(tmp_path)
+    cli = _build_cli(tmp_path)
+    # Inclui o evidence file no diff explicitamente
+    monkeypatch.setattr(
+        cli, "_get_diff_files",
+        lambda _: [".contract_driven/waivers.json", "_reports/activation_evidence/formal_activation_evidence.json"]
+    )
+    monkeypatch.setattr(cli, "_get_commit_count", lambda _: 1)
+    monkeypatch.setattr(cli, "cmd_survival_suite", lambda: 0)
+    monkeypatch.setattr(cli, "_detect_schema_field_removed", lambda _f, _t: False)
+    monkeypatch.setattr(cli, "_detect_canonical_status_transition", lambda _f, _t: True)
+    monkeypatch.setattr(cli, "_detect_bridge_doc_authority_language", lambda _f: False)
+    monkeypatch.setattr(cli, "_detect_new_cross_module_boundary", lambda _f: False)
+    monkeypatch.setattr(cli, "_detect_diff_outside_handoff_scope", lambda _f: False)
+    monkeypatch.setattr(
+        cli,
+        "_verify_preflight_artifact_integrity",
+        lambda *a, **kw: {"status": "SKIP", "message": "skipped", "reasons": []},
+    )
+    monkeypatch.setattr(
+        cli,
+        "_attach_preflight_artifact_integrity",
+        lambda report_core, **kw: report_core,
+    )
+
+    result = cli.cmd_preflight()
+    assert result == 0, f"com evidence_rel no diff deve passar, obtido {result}"

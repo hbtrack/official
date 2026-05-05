@@ -1836,7 +1836,13 @@ class HBCLIv2:
         return False
 
     def _check_activation_evidence(self, evidence_type: str, transition: str, changed_files: list) -> bool:
-        """Verifica se existe evidência formal válida para uma transição canônica."""
+        """Verifica se existe evidência formal válida para uma transição canônica.
+
+        Exige que o próprio arquivo de evidência esteja no diff (não pode ser reutilizado de PR anterior).
+        """
+        evidence_rel = f"_reports/activation_evidence/{evidence_type}.json"
+        if evidence_rel not in changed_files:
+            return False
         evidence_path = self.root / "_reports" / "activation_evidence" / f"{evidence_type}.json"
         if not evidence_path.exists():
             return False

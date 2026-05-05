@@ -589,12 +589,14 @@ def test_openapi_root_waiver_absent_keeps_gate_failing(tmp_path, monkeypatch):
 
 
 def test_openapi_root_waiver_active_converts_redocly_failure_to_pass(tmp_path, monkeypatch):
-    """Waiver ativo (expiry futuro) → lint falha → gate deve retornar PASS."""
+    """Waiver ativo com fingerprint correto → lint falha → gate deve retornar PASS."""
     _setup_openapi_root(tmp_path)
+    _setup_target_artifact(tmp_path)
     future = (
         datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
-    _write_waiver(tmp_path, future)
+    correct_fp = _fingerprint_of(tmp_path, "contracts/schemas/analytics/")
+    _write_waiver_with_fingerprint(tmp_path, future, correct_fp)
     monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
 
     result = gates._g5_openapi_root_structure(tmp_path)
@@ -615,3 +617,84 @@ def test_openapi_root_waiver_expired_keeps_gate_failing(tmp_path, monkeypatch):
     result = gates._g5_openapi_root_structure(tmp_path)
 
     assert result["status"] == "FAIL"
+
+
+def _write_waiver_with_fingerprint(tmp_path: Path, expires_at_utc: str, fingerprint_value: str, target_artifact: str = "contracts/schemas/analytics/") -> None:
+    """Waiver com target_artifact e fingerprint explícito."""
+    waivers_dir = tmp_path / "contracts" / "_waivers"
+    waivers_dir.mkdir(parents=True, exist_ok=True)
+    (waivers_dir / "OPENAPI_ROOT_STRUCTURE_GATE_test.json").write_text(
+        json.dumps({
+            "waiver_id": "WAIVER_TEST_FP",
+            "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
+            "scope": "system",
+            "module": None,
+            "target_artifact": target_artifact,
+            "justification": "test",
+            "approved_by": "human:test",
+            "approved_at_utc": "2026-05-05T00:00:00Z",
+            "expires_at_utc": expires_at_utc,
+            "fingerprint": {
+                "type": "sha256",
+                "value": fingerprint_value,
+            },
+        }),
+        encoding="utf-8",
+    )
+
+
+def _fingerprint_of(tmp_path: Path, target_artifact: str) -> str:
+    """Computa sha256 canônico do target_artifact (espelha _compute_artifact_fingerprint)."""
+    import hashlib
+    target = tmp_path / target_artifact.rstrip("/")
+    h = hashlib.sha256()
+    if target.is_file():
+        h.update(target.read_bytes())
+    elif target.is_dir():
+        for f in sorted(target.rglob("*")):
+            if f.is_file():
+                rel = str(f.relative_to(target))
+                h.update(rel.encode("utf-8") + b"\n")
+                h.update(f.read_bytes() + b"\n")
+    return h.hexdigest()
+
+
+def _setup_target_artifact(tmp_path: Path, target_artifact: str = "contracts/schemas/analytics/") -> None:
+    """Cria o diretório target_artifact com conteúdo mínimo."""
+    art_dir = tmp_path / target_artifact.rstrip("/")
+    art_dir.mkdir(parents=True, exist_ok=True)
+    (art_dir / "dummy.json").write_text('{"type": "dummy"}', encoding="utf-8")
+
+
+def test_openapi_root_waiver_correct_fingerprint_passes(tmp_path, monkeypatch):
+    """Waiver ativo com fingerprint correto → lint falha → gate retorna PASS."""
+    _setup_openapi_root(tmp_path)
+    _setup_target_artifact(tmp_path)
+    future = (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    correct_fp = _fingerprint_of(tmp_path, "contracts/schemas/analytics/")
+    _write_waiver_with_fingerprint(tmp_path, future, correct_fp)
+    monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
+
+    result = gates._g5_openapi_root_structure(tmp_path)
+
+    assert result["status"] == "PASS", f"fingerprint correto deve passar, obtido: {result['status']}"
+    assert "fingerprint verificado" in result["summary"]
+
+
+def test_openapi_root_waiver_wrong_fingerprint_fails(tmp_path, monkeypatch):
+    """Waiver ativo com fingerprint incorreto → lint falha → gate retorna FAIL."""
+    _setup_openapi_root(tmp_path)
+    _setup_target_artifact(tmp_path)
+    future = (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    wrong_fp = "a" * 64  # fingerprint inválido
+    _write_waiver_with_fingerprint(tmp_path, future, wrong_fp)
+    monkeypatch.setattr(gates, "_try_node_cli", lambda *a, **kw: (1, "Error: lint failed", ""))
+
+    result = gates._g5_openapi_root_structure(tmp_path)
+
+    assert result["status"] == "FAIL", f"fingerprint incorreto deve falhar, obtido: {result['status']}"
+    assert "fingerprint" in result["summary"]
