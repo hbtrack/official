@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-05-05"
-branch_ativo: fix/phase1-governance-waiver-evidence-clean
+branch_ativo: chore/phase1-post-merge-handoff
 modo_operacao: CDD
 ci_status: UNKNOWN
 modulo_foco: audit
@@ -8,11 +8,10 @@ fase_roadmap: 6
 task_type: pr_fix
 boot_profile_id: implementation_execution
 task_id: GOVERNANCE_FASE1_SILENCE_REMOVAL
-resultado: PR_OPENED
-proxima_acao_permitida: "CI verde em PR #118 (fix/phase1-governance-waiver-evidence-clean). Aguardar review humano para merge. Só após merge iniciar Fase 2."
-bloqueios_ativos:
-  - "3 Redocly errors expostos (no-invalid-schema-examples) — corrigir em PR separado"
-  - "OPENAPI_ROOT_STRUCTURE_GATE agora falha corretamente — erro real exposto pela Fase 1"
+resultado: DONE
+proxima_acao_permitida: "Escolher explicitamente a próxima trilha: Fase 2, Hook Integrity Enforcement ou retomada controlada de Training. Não iniciar nenhuma sem novo plano aprovado."
+pr_url: "https://github.com/hbtrack/official/pull/118"
+bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
 ---
