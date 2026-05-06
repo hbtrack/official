@@ -1063,3 +1063,57 @@ O `WAIVER_VALIDITY_GATE` em `validate_contracts.py` verifica:
 - **Arquivo operacional**: `.contract_driven/waivers.json`
 - **Gate de validação**: `WAIVER_VALIDITY_GATE` em `docs/_canon/gates/GATES_REGISTRY.yaml`
 - **Related rules**: §2A (Invariantes operacionais), §16 (DoD binário de contrato)
+
+---
+
+## 26. Protocolos de Operação Pós-Merge
+
+Protocolos operacionais aprendidos durante ciclos de merge e CI. São documentation-only: não introduzem gate ou script novo. Enforcement permanece nos mecanismos existentes.
+
+### 26.1 Semântica de `ci_status` no `SESSION_HANDOFF.md` (P1)
+
+Quando `validate --profile ci` retorna exit code 0, mas o report canônico está `overall_status: DEGRADED`, o valor coerente para `ci_status` em `SESSION_HANDOFF.md` é `UNKNOWN`.
+
+Declarar `ci_status: PASS` nesse cenário causa divergência no `HANDOFF_COHERENCE_GATE` porque o gate compara `ci_status` com `overall_status` e falha ao detectar o par `(PASS, DEGRADED)`.
+
+**Enum**: `PASS | FAIL | UNKNOWN`
+
+**Regra de uso**:
+- `PASS` — somente quando CI real passou E `overall_status` local também é `PASS`.
+- `FAIL` — CI real falhou.
+- `UNKNOWN` — CI não executado localmente, ou `overall_status: DEGRADED` com exit code 0.
+
+GitHub CI verde pode ser registrado no corpo do handoff ou na URL do PR, mas não deve forçar `ci_status: PASS` se o report canônico local está `DEGRADED`.
+
+**Registro operacional**: `docs/_canon/CI_CONTRACT_GATES.md §20`
+
+### 26.2 Classificação path-aware de escopo (P2)
+
+Grep por substring bruta é proibido como critério final de contaminação de escopo ou classificação de artefato. O prefixo de path completo DEVE ser usado.
+
+**Motivação**: arquivos em `_reports/` com nomes como `training.json` são derivados legítimos e não pertencem ao módulo `training`. Um grep por `"training"` sem prefixo de path produz falso positivo.
+
+**Regra**: classificar artefato pelo path canônico completo (ex.: `_reports/decision_materialization/training.json` ≠ `contracts/openapi/training/`). Grep é auxiliar; o path é soberano.
+
+**Registro operacional**: `docs/_canon/CONTRACT_PIPELINE.md §8`
+
+### 26.3 PR mínimo pós-merge via branch `chore/` (P3)
+
+`main` é protegido por branch protection. Push direto para `main` é bloqueado.
+
+**Protocolo obrigatório para handoff pós-merge**:
+1. Criar branch `chore/<task-descricao>` a partir do HEAD atual de `main`.
+2. Aplicar alterações de handoff/documentação nessa branch.
+3. Abrir PR mínimo vinculado à issue ou contexto da tarefa.
+4. Merge somente após `preflight` PASS local.
+
+**Registro operacional**: `docs/_canon/CONTRACT_PIPELINE.md §8`
+
+### 26.4 TDD operacional — quando aplicável (P4)
+
+Quando o comportamento a implementar é verificável por oráculo executável (teste, script ou gate existente), o ciclo RED → GREEN é obrigatório antes de marcar a tarefa como Done.
+
+**Escopo**: protocolo operacional "quando aplicável". Não é enforcement automático neste documento. Se enforcement real for necessário, abrir issue separada com teste vermelho/verde explícito antes de codificar.
+
+**Registro operacional**: `docs/_canon/TEST_STRATEGY.md §TDD Operacional`
+

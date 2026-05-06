@@ -49,3 +49,13 @@ Valida jornada do usuário.
 | Regras de domínio críticas | Alto | integration + e2e |
 | UI (fluxos principais) | Médio | e2e |
 
+## TDD Operacional
+
+**Fonte normativa**: `.contract_driven/CONTRACT_SYSTEM_RULES.md §26.4`
+
+Quando o comportamento a implementar é verificável por oráculo executável (teste, script ou gate existente), o ciclo RED → GREEN é obrigatório antes de marcar a tarefa como Done.
+
+**Escopo**: protocolo operacional "quando aplicável". Não é enforcement automático. Se enforcement real for necessário, abrir issue separada com teste vermelho/verde explícito antes de codificar.
+
+**Oráculo verificável sempre**: qualquer implementação com comportamento especificável deve ter pelo menos um teste que falha sem a implementação e passa com ela.
+

@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-05-05T06:38:21Z",
+  "timestamp_utc": "2026-05-05T23:37:39Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "b2b5aeea",
+    "git_commit": "abde11be",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260505T063821_a3b191"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260505T233739_7bb796"
   },
   "status_detail": {
     "proof_scope": "factual",
@@ -365,7 +365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 55
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -399,7 +399,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4508
+        "duration_ms": 4674
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -752,7 +752,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 138
+        "duration_ms": 148
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -820,7 +820,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 7
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -850,7 +850,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42
+        "duration_ms": 44
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -880,7 +880,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 38
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -910,7 +910,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 16
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -940,7 +940,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 103
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -970,7 +970,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51
+        "duration_ms": 56
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1000,7 +1000,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
+        "duration_ms": 56
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1030,7 +1030,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 319
+        "duration_ms": 337
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1060,7 +1060,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 36
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1126,7 +1126,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 9
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1198,7 +1198,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 89
+        "duration_ms": 75
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1234,7 +1234,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 118
+        "duration_ms": 135
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1432,7 +1432,7 @@
         "errors": 0,
         "warnings": 8,
         "violations": 8,
-        "duration_ms": 17
+        "duration_ms": 20
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1819,7 +1819,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 66
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1914,7 +1914,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 726
+        "duration_ms": 784
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1946,7 +1946,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1241
+        "duration_ms": 3179
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -1980,7 +1980,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1648
+        "duration_ms": 1485
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -2028,7 +2028,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 585
+        "duration_ms": 614
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4203,7 +4203,7 @@
         "errors": 0,
         "warnings": 107,
         "violations": 107,
-        "duration_ms": 1905
+        "duration_ms": 2035
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -4914,7 +4914,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1816
+        "duration_ms": 1955
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4947,7 +4947,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1699
+        "duration_ms": 1933
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -4976,7 +4976,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 8
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5034,7 +5034,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1707
+        "duration_ms": 2987
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5086,7 +5086,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 62
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5117,7 +5117,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1268
+        "duration_ms": 1519
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5182,7 +5182,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 67
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5211,7 +5211,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 6
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5301,7 +5301,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 423
+        "duration_ms": 1119
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -5330,7 +5330,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45560
+        "duration_ms": 46207
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5375,7 +5375,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 21
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -5435,7 +5435,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 1
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5509,7 +5509,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 12
       },
       "proof_class": "presence",
       "promotion_power": "none",
@@ -5632,7 +5632,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 293
+        "duration_ms": 238
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5664,7 +5664,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 1
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5699,7 +5699,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 860
+        "duration_ms": 929
       },
       "proof_class": "remote_live",
       "promotion_power": "blocking",
@@ -5765,7 +5765,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 237
+        "duration_ms": 205
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5796,7 +5796,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 14
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -5898,7 +5898,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 149
+        "duration_ms": 154
       },
       "proof_class": "behavioral",
       "promotion_power": "blocking",
@@ -5929,7 +5929,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 25
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6308,7 +6308,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1030
+        "duration_ms": 1009
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6401,7 +6401,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6431,7 +6431,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 29
       },
       "proof_class": "presence",
       "promotion_power": "blocking",
@@ -6463,7 +6463,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 15
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6493,7 +6493,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 30
+        "duration_ms": 34
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6576,7 +6576,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 37
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6667,7 +6667,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6421
+        "duration_ms": 6113
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6694,7 +6694,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 28
       },
       "proof_class": "runtime",
       "promotion_power": "blocking",
@@ -6756,7 +6756,7 @@
         "errors": 1,
         "warnings": 0,
         "violations": 1,
-        "duration_ms": 40
+        "duration_ms": 41
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6787,7 +6787,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 51
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",
@@ -6836,10 +6836,10 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Changeset homogêneo (enforcement-only): sem mistura de enforcement + produto.",
+      "summary": "Changeset homogêneo (neutral): sem mistura de enforcement + produto.",
       "inputs": [],
       "artifacts_checked": [
-        "(git changeset via pr_diff)"
+        "(git changeset via last_commit)"
       ],
       "evidence_files": [],
       "violations": [],
@@ -6847,7 +6847,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 9
       },
       "proof_class": "semantic",
       "promotion_power": "blocking",

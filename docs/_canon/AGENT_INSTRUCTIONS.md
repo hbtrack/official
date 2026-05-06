@@ -71,3 +71,13 @@ Em qualquer conflito de regra, schema, gate ou política, a resolução segue es
 ```
 
 **Regra de ouro**: bridge docs e artefatos derivados (níveis 4–6) **nunca** podem redefinir, sobrepor ou contradizer os itens dos níveis 1–3. Bridge docs só podem **repetir** o que o enforcement e o canon já estabelecem. Qualquer divergência é resolvida sempre a favor do nível mais alto.
+
+## 9. Protocolos Pós-Merge
+
+Protocolos operacionais para ciclos de merge e CI. Fonte normativa: `.contract_driven/CONTRACT_SYSTEM_RULES.md §26`.
+
+- **ci_status semântica**: `CI_CONTRACT_GATES.md §20`
+- **Path-aware scope**: `CONTRACT_PIPELINE.md §8.1`
+- **PR mínimo pós-merge**: `CONTRACT_PIPELINE.md §8.2`
+- **TDD operacional**: `TEST_STRATEGY.md §TDD Operacional`
+
